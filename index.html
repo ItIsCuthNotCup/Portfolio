@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jake Cuth. — Data Systems That Ship</title>
+  <meta name="description" content="AI & analytics engineer. Senior BI at Hancock Whitney, graduate student at Georgia Tech. Churn models, Salesforce segments, 340+ dashboards.">
+
+  <!-- Google Fonts: Newsreader, DM Mono, Figtree -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div id="progress" class="progress"></div>
+
+<!-- Custom cursor -->
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MASTHEAD
+     ═══════════════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+  </div>
+  <div class="masthead-name">
+    <span class="serif">Jake <span class="serif-italic">Cuth.</span></span>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="#work">Work</a>
+    <a href="#projects">Projects</a>
+    <a href="#stack">Stack</a>
+    <a href="#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3D SCENE STAGE (fixed right side)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="scene-stage">
+  <div class="scene-stage-inner">
+    <div id="scene-canvas" style="width:100%;height:100%;"></div>
+    <div class="scene-corner tl"></div>
+    <div class="scene-corner tr"></div>
+    <div class="scene-corner bl"></div>
+    <div class="scene-corner br"></div>
+    <div class="mono scene-caption">
+      <span id="scene-fig">FIG.00</span>
+      <span id="scene-title" style="color:var(--ink)">Icosahedron / identity</span>
+      <span id="scene-coord">+0.000, +0.000</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<main>
+<section id="hero" class="hero" data-shape="ico">
+  <div class="hero-inner">
+    <div class="mono section-label">
+      <span class="idx">§ 00</span>
+      <span>The Index, a Working Portfolio</span>
+    </div>
+    <h1 class="serif">
+      I build <span class="serif-italic" style="color:var(--accent)">data systems</span> that <span class="serif-italic">ship.</span>
+    </h1>
+    <p class="hero-sub">
+      AI &amp; analytics engineer. Senior BI at <em>Hancock Whitney</em>,
+      graduate student at <em>Georgia Tech</em>.
+      Churn models in production, thirty-plus segments in Salesforce,
+      three-hundred-plus dashboards, and more than one generative-AI pilot
+      that actually made it past the demo.
+    </p>
+    <div class="hero-ctas">
+      <a href="#work" class="btn-primary">
+        <span>Read the work</span>
+        <span class="mono">→</span>
+      </a>
+      <a href="mailto:Jacob_Cuthbertson@outlook.com" class="mono btn-link">Jacob_Cuthbertson@outlook.com</a>
+    </div>
+    <div class="mono hero-dateline">
+      <div>
+        <div class="label">Filed</div>
+        <div class="value" id="dateline-time"></div>
+      </div>
+      <div>
+        <div class="label">From</div>
+        <div class="value">39.9526° N, 75.1652° W</div>
+      </div>
+      <div>
+        <div class="label">Length</div>
+        <div class="value">8 min read</div>
+      </div>
+    </div>
+
+    <!-- Logo carousel -->
+    <div class="hero-logos">
+      <div class="mono" style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-dim); opacity:0.6; margin-bottom:14px;">Previously at</div>
+      <div class="logo-marquee">
+        <div class="logo-track">
+          <img src="assets/images/logos/hancock-whitney.png" alt="Hancock Whitney">
+          <img src="assets/images/logos/nissan.png" alt="Nissan">
+          <img src="assets/images/logos/remindermedia.png" alt="ReminderMedia">
+          <img src="assets/images/logos/comcast-nbcuniversal.png" alt="Comcast NBCUniversal">
+          <img src="assets/images/logos/warner-bros.png" alt="Warner Bros.">
+          <img src="assets/images/logos/georgia-tech.png" alt="Georgia Tech">
+          <img src="assets/images/logos/temple.png" alt="Temple University">
+          <!-- duplicate for seamless loop -->
+          <img src="assets/images/logos/hancock-whitney.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/nissan.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/remindermedia.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/comcast-nbcuniversal.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/warner-bros.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/georgia-tech.png" alt="" aria-hidden="true">
+          <img src="assets/images/logos/temple.png" alt="" aria-hidden="true">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CAPABILITIES
+     ═══════════════════════════════════════════════════════════ -->
+<section id="capabilities" class="capabilities" data-shape="ico">
+  <div class="capabilities-intro">
+    <div class="mono section-label">
+      <span class="idx">§ I</span>
+      <span>Dispatches — What I Do</span>
+    </div>
+    <h2 class="serif big-display">
+      From raw tables to<br>
+      <span class="serif-italic">production decisions.</span>
+    </h2>
+    <p>
+      Six practices I reach for on almost every engagement. The boring ones
+      (data modeling, executive comms) tend to move the needle most.
+    </p>
+  </div>
+
+  <div class="capability-grid">
+    <hr class="rule">
+
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. A</div>
+      <div class="serif capability-title">Predictive Modeling</div>
+      <div class="capability-desc">Churn, propensity, lifetime value. Random Forest, logistic regression, time-series.</div>
+    </div>
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. B</div>
+      <div class="serif capability-title">Data Modeling &amp; Segmentation</div>
+      <div class="capability-desc">Salesforce Data Cloud. 3rd-party enrichment (Epsilon, Equifax). 30+ dynamic segments.</div>
+    </div>
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. C</div>
+      <div class="serif capability-title">BI Platform Ownership</div>
+      <div class="capability-desc">340+ dashboards shipped across Tableau, Power BI, Datorama, Looker.</div>
+    </div>
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. D</div>
+      <div class="serif capability-title">Pipelines at Scale</div>
+      <div class="capability-desc">Python, R, SQL. Warehousing on AWS. Automation with Alteryx, WinAutomation.</div>
+    </div>
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. E</div>
+      <div class="serif capability-title">AI in Production</div>
+      <div class="capability-desc">Enterprise Copilot / Einstein pilots. Guardrails, access control, ROI prioritization.</div>
+    </div>
+    <div class="capability-row">
+      <div class="mono capability-fig">Fig. F</div>
+      <div class="serif capability-title">Executive Communication</div>
+      <div class="capability-desc">Briefings for bank leadership and Nissan Japan executives. Dashboards that decide things.</div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="mono section-label"><span>Receipts, as of today</span></div>
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="serif metric-value">25M</div>
+        <div class="mono metric-label">rows modeled</div>
+      </div>
+      <div class="metric">
+        <div class="serif metric-value">94%</div>
+        <div class="mono metric-label">churn accuracy</div>
+      </div>
+      <div class="metric">
+        <div class="serif metric-value">340+</div>
+        <div class="mono metric-label">dashboards shipped</div>
+      </div>
+      <div class="metric">
+        <div class="serif metric-value">~30%</div>
+        <div class="mono metric-label">ROI lift</div>
+      </div>
+      <div class="metric">
+        <div class="serif metric-value">23</div>
+        <div class="mono metric-label">global markets</div>
+      </div>
+      <div class="metric">
+        <div class="serif metric-value">Top 3%</div>
+        <div class="mono metric-label">Codewars</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WORK — Experience entries
+     ═══════════════════════════════════════════════════════════ -->
+<section id="work" class="work-section">
+  <div class="work-header">
+    <div class="mono section-label">
+      <span class="idx">§ II</span>
+      <span>Work That Shipped</span>
+    </div>
+    <h2 class="serif big-display">
+      Where the <span class="serif-italic">work</span><br>
+      lives.
+    </h2>
+  </div>
+
+  <div class="work-entries">
+
+    <!-- 01 — Hancock Whitney -->
+    <article class="experience-entry" data-shape="knot">
+      <div class="mono exp-idx">— 01 —<img class="exp-logo" src="assets/images/logos/hancock-whitney.png" alt=""></div>
+      <div>
+        <div class="mono exp-meta">Jan 2022 — Present · New Orleans, LA · Remote</div>
+        <h3 class="serif exp-company">Hancock Whitney Bank</h3>
+        <div class="serif-italic exp-role">Senior Business Intelligence Analyst, Marketing</div>
+        <div class="exp-tags">
+          <span class="mono exp-tag">Random Forest</span>
+          <span class="mono exp-tag">Salesforce Data Cloud</span>
+          <span class="mono exp-tag">Power BI</span>
+          <span class="mono exp-tag">Datorama</span>
+          <span class="mono exp-tag">Copilot</span>
+          <span class="mono exp-tag">Einstein</span>
+        </div>
+      </div>
+      <div class="exp-body">
+        <p><span class="serif-italic exp-drop-cap">B</span>uilt the bank's enterprise customer churn prediction model (Random Forest), deployed with a 10+ person cross-functional team across Marketing, IT, Retail, and Data Governance.</p>
+        <p>Led the customer data enrichment &amp; segmentation program in Salesforce Data Cloud using Epsilon and Equifax — 30+ dynamic segments driving ~30% lift in campaign ROI and +20% model accuracy.</p>
+        <p>Designed &amp; maintained 60+ executive dashboards (Power BI, Datorama, Google Analytics) tracking campaigns, engagement, retention and call-center outcomes.</p>
+        <p>Led evaluation of the bank's Generative AI pilot (Microsoft Copilot, Salesforce Einstein) — authored usage guardrails and prioritized high-ROI use cases.</p>
+      </div>
+    </article>
+
+    <!-- 02 — Nissan -->
+    <article class="experience-entry" data-shape="lattice">
+      <div class="mono exp-idx">— 02 —<img class="exp-logo" src="assets/images/logos/nissan.png" alt=""></div>
+      <div>
+        <div class="mono exp-meta">Jan 2021 — Dec 2021 · New York, NY · Remote</div>
+        <h3 class="serif exp-company">Nissan United</h3>
+        <div class="serif-italic exp-role">Global Data Analyst</div>
+        <div class="exp-tags">
+          <span class="mono exp-tag">R</span>
+          <span class="mono exp-tag">SQL Server</span>
+          <span class="mono exp-tag">AWS</span>
+          <span class="mono exp-tag">Forex data</span>
+          <span class="mono exp-tag">Executive reporting</span>
+        </div>
+      </div>
+      <div class="exp-body">
+        <p><span class="serif-italic exp-drop-cap">L</span>ed the Share of Voice project across 23 international markets — built an R script for forex data processing.</p>
+        <p>Stood up a SQL server on AWS, consolidating Excel files from 23 markets into a searchable warehouse — cut 8–10 hours/month of manual work.</p>
+        <p>Worked directly with Nissan executives in Japan to identify high-priority international markets.</p>
+      </div>
+    </article>
+
+    <!-- 03 — ReminderMedia -->
+    <article class="experience-entry" data-shape="helix">
+      <div class="mono exp-idx">— 03 —<img class="exp-logo" src="assets/images/logos/remindermedia.png" alt=""></div>
+      <div>
+        <div class="mono exp-meta">Aug 2019 — May 2020 · King of Prussia, PA</div>
+        <h3 class="serif exp-company">ReminderMedia</h3>
+        <div class="serif-italic exp-role">Reporting Analyst</div>
+        <div class="exp-tags">
+          <span class="mono exp-tag">Tableau</span>
+          <span class="mono exp-tag">SQL Server</span>
+          <span class="mono exp-tag">Python</span>
+          <span class="mono exp-tag">GeoPy</span>
+          <span class="mono exp-tag">Training</span>
+        </div>
+      </div>
+      <div class="exp-body">
+        <p><span class="serif-italic exp-drop-cap">S</span>hipped call-center gamification dashboards — leaderboards and personalized CRM views that lifted agent engagement, accountability, and retention.</p>
+        <p>Fulfilled 93 Jira requests; built 68 custom reports in SQL Server and Tableau for marketing, sales, and service.</p>
+        <p>Maintained 260+ Tableau reports across departments; trained staff in Tableau, SQL Server, and Excel.</p>
+        <p>Built a geolocation model for market-entry strategy (Python, GeoPy, Google Maps APIs).</p>
+      </div>
+    </article>
+
+    <!-- 04 — Comcast / NBCUniversal -->
+    <article class="experience-entry" data-shape="stack">
+      <div class="mono exp-idx">— 04 —<img class="exp-logo" src="assets/images/logos/comcast-nbcuniversal.png" alt=""></div>
+      <div>
+        <div class="mono exp-meta">Jan 2019 — Jun 2019 · Philadelphia, PA</div>
+        <h3 class="serif exp-company">Comcast / NBCUniversal</h3>
+        <div class="serif-italic exp-role">Tax Business Intelligence Analyst, Intern</div>
+        <div class="exp-tags">
+          <span class="mono exp-tag">WinAutomation</span>
+          <span class="mono exp-tag">Alteryx</span>
+          <span class="mono exp-tag">IRS workflows</span>
+        </div>
+      </div>
+      <div class="exp-body">
+        <p><span class="serif-italic exp-drop-cap">A</span>utomated tax document processing with 8 WinAutomation bots.</p>
+        <p>Integrated NBCUniversal datasets for tax strategy; presented findings to NBCU executives.</p>
+        <p>Used Alteryx to automate 7 IRS submission processes handling thousands of documents.</p>
+      </div>
+    </article>
+
+    <!-- 05 — Warner Bros. -->
+    <article class="experience-entry" data-shape="particle">
+      <div class="mono exp-idx">— 05 —<img class="exp-logo" src="assets/images/logos/warner-bros.png" alt=""></div>
+      <div>
+        <div class="mono exp-meta">Jun 2018 — Aug 2018 · Burbank, CA</div>
+        <h3 class="serif exp-company">Warner Bros.</h3>
+        <div class="serif-italic exp-role">Television Marketing Analyst, Intern</div>
+        <div class="exp-tags">
+          <span class="mono exp-tag">Tableau</span>
+          <span class="mono exp-tag">Campaign analytics</span>
+        </div>
+      </div>
+      <div class="exp-body">
+        <p><span class="serif-italic exp-drop-cap">B</span>uilt 22 Tableau dashboards analyzing campaign performance, audience engagement and marketing event outcomes.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PROJECTS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="projects" class="projects-section">
+  <div class="projects-intro">
+    <div class="mono section-label">
+      <span class="idx">§ III</span>
+      <span>Built After Hours</span>
+    </div>
+    <h2 class="serif big-display">
+      Dirty data,<br><span class="serif-italic">clean production.</span>
+    </h2>
+    <p>
+      End-to-end builds. Each one is a complete object: frontend,
+      backend, data plumbing, deploy. No half-measures, no "coming soon."
+    </p>
+  </div>
+
+  <!-- Featured: RiskScore -->
+  <div class="project-featured layout-a" style="margin-top:80px;" data-shape="lattice">
+    <div>
+      <div class="mono project-kicker">Security · API</div>
+      <h3 class="serif project-title">RiskScore</h3>
+      <p class="project-body">A vulnerability scoring service that ingests CVE feeds, weights them against deployment context, and emits a single explainable risk score per asset.</p>
+      <div class="mono project-meta-line">FastAPI · PostgreSQL · CVE/NVD</div>
+    </div>
+    <div class="video-frame">
+      <div class="mono frame-label">Fig. — product demo</div>
+      <video data-autoplay loop muted playsinline>
+        <source src="assets/videos/risk-score.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- Featured: Glass Cipher -->
+  <div class="project-featured layout-b" data-shape="particle">
+    <div class="video-frame" style="order:1;">
+      <div class="mono frame-label">Fig. — live globe</div>
+      <video data-autoplay loop muted playsinline>
+        <source src="assets/videos/glass-cipher.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="order:2;">
+      <div class="mono project-kicker">OSINT · Globe</div>
+      <h3 class="serif project-title">Glass Cipher</h3>
+      <p class="project-body">An intelligence globe that plots open-source signals in real time. Sources are re-weighted by a small language model so clusters resolve into narratives, not noise.</p>
+      <div class="mono project-meta-line">Three.js · Python · LLM routing</div>
+    </div>
+  </div>
+
+  <!-- Medium cards: Claude Second Brain + Open Claw -->
+  <div class="projects-medium-grid">
+    <div class="project-medium-card" data-shape="knot">
+      <video data-autoplay loop muted playsinline style="aspect-ratio:16/10; object-fit:cover;">
+        <source src="assets/videos/obsidian-x-claude.mp4" type="video/mp4">
+      </video>
+      <div class="mono project-kicker">Personal · Agentic</div>
+      <h4 class="serif project-medium-title">Claude Second Brain</h4>
+      <p class="project-medium-body">A note graph where Claude backfills links, summaries and open questions. Runs locally against a vault.</p>
+      <div class="mono project-medium-meta">Claude Code · Markdown</div>
+    </div>
+    <div class="project-medium-card" data-shape="stack">
+      <video data-autoplay loop muted playsinline style="aspect-ratio:16/10; object-fit:cover;">
+        <source src="assets/videos/open-claw.mp4" type="video/mp4">
+      </video>
+      <div class="mono project-kicker">Hardware · Dashboard</div>
+      <h4 class="serif project-medium-title">Open Claw Mission Control</h4>
+      <p class="project-medium-body">A control surface for a DIY claw machine. Live camera, queueing, telemetry and a leaderboard.</p>
+      <div class="mono project-medium-meta">Linux · VPS · Python · JavaScript</div>
+    </div>
+  </div>
+
+  <!-- iOS apps -->
+  <div class="ios-section">
+    <div class="mono section-label"><span>iOS · three small apps</span></div>
+    <div class="ios-grid">
+
+      <div class="ios-card" data-shape="helix">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-frame-inner">
+            <img src="assets/images/Delegator 2.png" alt="Delegator screenshot">
+          </div>
+        </div>
+        <div class="serif card-title">Delegator</div>
+        <div class="mono card-kicker">iOS · Tasks</div>
+        <p class="card-body">Assign work to your future self. Re-asks you at the right times instead of at the wrong ones.</p>
+      </div>
+
+      <div class="ios-card" data-shape="ico">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-frame-inner">
+            <img src="assets/images/Stillhue 2.png" alt="Stillhue screenshot">
+          </div>
+        </div>
+        <div class="serif card-title">Stillhue</div>
+        <div class="mono card-kicker">iOS · Photography</div>
+        <p class="card-body">Extracts a 5-color palette from any photo with a deliberately slow, gestural picker.</p>
+      </div>
+
+      <div class="ios-card" data-shape="particle">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-frame-inner">
+            <img src="assets/images/Second Order.png" alt="Second Order screenshot">
+          </div>
+        </div>
+        <div class="serif card-title">Second Order</div>
+        <div class="mono card-kicker">iOS · Decisions</div>
+        <p class="card-body">A journaling tool for second-order consequences. Prompts derived from the user's own past entries.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STACK
+     ═══════════════════════════════════════════════════════════ -->
+<section id="stack" class="stack-section" data-shape="ico">
+  <div class="mono section-label">
+    <span class="idx">§ IV</span>
+    <span>Stack — Tools I Reach For</span>
+  </div>
+  <h2 class="serif big-display">
+    What&rsquo;s on the <span class="serif-italic">bench.</span>
+  </h2>
+
+  <div class="stack-grid">
+    <div>
+      <div class="mono stack-category-header">Programming</div>
+      <ul class="stack-list serif">
+        <li><span class="mono num">01</span>Python</li>
+        <li><span class="mono num">02</span>R</li>
+        <li><span class="mono num">03</span>SQL</li>
+        <li><span class="mono num">04</span>Pandas</li>
+        <li><span class="mono num">05</span>NumPy</li>
+        <li><span class="mono num">06</span>Scikit-learn</li>
+        <li><span class="mono num">07</span>Statsmodels</li>
+        <li><span class="mono num">08</span>OpenCV</li>
+        <li><span class="mono num">09</span>GeoPy</li>
+        <li><span class="mono num">10</span>Scala</li>
+        <li><span class="mono num">11</span>NetLogo</li>
+      </ul>
+    </div>
+    <div>
+      <div class="mono stack-category-header">Analysis &amp; Viz</div>
+      <ul class="stack-list serif">
+        <li><span class="mono num">01</span>Tableau</li>
+        <li><span class="mono num">02</span>Power BI</li>
+        <li><span class="mono num">03</span>Looker</li>
+        <li><span class="mono num">04</span>Salesforce Datorama</li>
+        <li><span class="mono num">05</span>Salesforce CRMA</li>
+        <li><span class="mono num">06</span>Google Analytics</li>
+      </ul>
+    </div>
+    <div>
+      <div class="mono stack-category-header">Machine Learning</div>
+      <ul class="stack-list serif">
+        <li><span class="mono num">01</span>Random Forest</li>
+        <li><span class="mono num">02</span>SVM</li>
+        <li><span class="mono num">03</span>KNN</li>
+        <li><span class="mono num">04</span>K-Means</li>
+        <li><span class="mono num">05</span>CNN</li>
+        <li><span class="mono num">06</span>ARIMA</li>
+        <li><span class="mono num">07</span>Exp. Smoothing</li>
+        <li><span class="mono num">08</span>PCA</li>
+        <li><span class="mono num">09</span>Linear Reg.</li>
+        <li><span class="mono num">10</span>Logistic Reg.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="mono stack-category-header">Platform &amp; Ops</div>
+      <ul class="stack-list serif">
+        <li><span class="mono num">01</span>Salesforce Data Cloud</li>
+        <li><span class="mono num">02</span>GCP</li>
+        <li><span class="mono num">03</span>Apache Spark</li>
+        <li><span class="mono num">04</span>Alteryx</li>
+        <li><span class="mono num">05</span>Claude Code</li>
+        <li><span class="mono num">06</span>Gemini CLI</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EDUCATION
+     ═══════════════════════════════════════════════════════════ -->
+<section id="education" class="education-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Education</span>
+  </div>
+  <div class="education-grid">
+    <div>
+      <div class="mono edu-dates">Sep 2023 — May 2026 (expected)</div>
+      <h3 class="serif edu-school">Georgia Institute of Technology</h3>
+      <div class="serif-italic edu-degree">M.S. in Analytics</div>
+      <img class="edu-logo" src="assets/images/logos/georgia-tech.png" alt="">
+    </div>
+    <div>
+      <div class="mono edu-dates">Sep 2014 — May 2019</div>
+      <h3 class="serif edu-school">Temple University</h3>
+      <div class="serif-italic edu-degree">B.B.A. in Economics · Fox School of Business</div>
+      <img class="edu-logo" src="assets/images/logos/temple.png" alt="">
+    </div>
+  </div>
+  <p class="mono edu-certs">
+    Plus 25+ certifications — machine learning (U. Washington), data science
+    (CU Boulder, Duke), people management (Google). <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener" style="border-bottom:1px solid">full list on linkedin ↗</a>
+  </p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONTACT
+     ═══════════════════════════════════════════════════════════ -->
+<section id="contact" class="contact-section" data-shape="knot">
+  <div class="mono section-label" style="justify-content:center;">
+    <span>Currently open · full-time &amp; contract</span>
+  </div>
+  <h2 class="serif contact-heading">
+    Let&rsquo;s build<br>
+    <span class="serif-italic" style="color:var(--accent)">something.</span>
+  </h2>
+  <div class="contact-ctas">
+    <a href="mailto:Jacob_Cuthbertson@outlook.com" class="btn-dark">
+      Jacob_Cuthbertson@outlook.com →
+    </a>
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener" class="btn-outline">
+      LinkedIn →
+    </a>
+  </div>
+  <div class="mono contact-meta">
+    215 · 834 · 2151 &nbsp;·&nbsp; Philadelphia, PA &nbsp;·&nbsp; 39.9526° N, 75.1652° W
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COLOPHON
+     ═══════════════════════════════════════════════════════════ -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<!-- JS (after DOM) -->
+<script src="assets/js/main.js"></script>
+</body>
+</html>
