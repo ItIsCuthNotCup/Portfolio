@@ -96,6 +96,15 @@
     return '$' + Math.round(n).toLocaleString();
   };
   const integer = v => Math.round(v).toLocaleString();
+  const integerShort = v => {
+    const n = Math.round(Number(v));
+    if (Math.abs(n) >= 1_000_000) {
+      const m = n / 1_000_000;
+      return (m >= 10 ? m.toFixed(1) : m.toFixed(2)) + 'M';
+    }
+    if (Math.abs(n) >= 100_000) return Math.round(n / 1_000) + 'K';
+    return n.toLocaleString();
+  };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
   // ── § I meta headline numbers ───────────────────────────────
@@ -119,12 +128,12 @@
     };
     const r = p.raw_distributions;
     const metrics = [
-      { v: integer(p.raw_rows),        l: 'raw transactions' },
-      { v: integer(p.cleaned_rows),    l: 'after cleaning' },
-      { v: integer(p.unique_customers),l: 'unique customers' },
-      { v: r.recency.median + 'd',     l: 'median recency' },
-      { v: r.frequency.median,         l: 'median frequency' },
-      { v: usdShort(r.monetary.median),l: 'median monetary' },
+      { v: integerShort(p.raw_rows),     l: 'raw transactions' },
+      { v: integerShort(p.cleaned_rows), l: 'after cleaning' },
+      { v: integer(p.unique_customers),  l: 'unique customers' },
+      { v: r.recency.median + 'd',       l: 'median recency' },
+      { v: r.frequency.median,           l: 'median frequency' },
+      { v: usdShort(r.monetary.median),  l: 'median monetary' },
     ];
     const grid = document.getElementById('profile-grid');
     grid.innerHTML = metrics.map(m =>

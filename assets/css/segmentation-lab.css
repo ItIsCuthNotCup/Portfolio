@@ -45,6 +45,12 @@
 .seg-section + .seg-section { padding-top: 56px; }
 .seg-section > .section-label { margin-bottom: 28px; }
 
+/* Rhythm variants — prose sections breathe, dense data sections compress. */
+.seg-section--airy  { padding-top: 104px; padding-bottom: 96px; }
+.seg-section--airy + .seg-section { padding-top: 72px; }
+.seg-section--dense { padding-top: 44px; padding-bottom: 48px; }
+.seg-section--dense > .section-label { margin-bottom: 18px; }
+
 /* Prose */
 .seg-prose p {
   max-width: 720px;
@@ -93,6 +99,17 @@
 .profile-sub {
   margin-top: 24px; font-size: 11px; letter-spacing: 0.12em;
   color: var(--ink-dim); text-transform: uppercase;
+}
+
+/* Profile grid — six stats in one row. Clamp font size so long integers
+   can't overflow their 1/6 columns and collide with neighbors. */
+#profile-grid { gap: 18px; }
+#profile-grid .metric { min-width: 0; overflow: hidden; }
+#profile-grid .metric-value {
+  font-size: clamp(26px, 2.6vw, 42px);
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* ── Model comparison table ───────────────────────────────── */
@@ -388,27 +405,33 @@ select:focus { outline: 1px solid var(--accent); outline-offset: 1px; }
   color: var(--accent);
   margin: 6px 0 20px;
 }
-.classify-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  padding: 16px 0;
+/* Editorial fact line — label-above-number laid out as a newspaper dateline
+   rather than a card grid. Breaks the repeated stat-grid pattern. */
+.classify-facts {
+  margin: 0;
+  padding: 14px 0;
   border-top: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  align-items: baseline;
 }
-.classify-stat-val {
-  font-size: 28px;
+.classify-facts > div {
+  display: flex; align-items: baseline; gap: 10px;
+  white-space: nowrap;
+}
+.classify-facts dt {
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-dim);
+}
+.classify-facts dd {
+  margin: 0;
+  font-size: 22px;
   font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
-}
-.classify-stat-lbl {
-  margin-top: 6px;
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
 }
 .classify-median {
   margin-top: 18px;
