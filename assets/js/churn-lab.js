@@ -429,6 +429,21 @@
     }
     bestT = Math.round(bestT * 100) / 100;
 
+    // Business headline — populate the § I spans from the same cost model.
+    // "Do nothing" baseline = every real churner is a missed churner.
+    const nChurners = yTrue.reduce((a, v) => a + v, 0);
+    const baselinePerK = (nChurners * cFn) / N * 1000;
+    const bestPerK = costPerK(cmAt(bestT));
+    const savingsPerK = baselinePerK - bestPerK;
+    const reductionPct = savingsPerK / baselinePerK;
+    const round1k = x => '$' + (Math.round(x / 1000) * 1000).toLocaleString();
+    const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    setTxt('biz-baseline',       round1k(baselinePerK));
+    setTxt('biz-baseline-2',     round1k(baselinePerK));
+    setTxt('biz-best',           round1k(bestPerK));
+    setTxt('biz-reduction',      Math.round(reductionPct * 100) + '%');
+    setTxt('biz-total-savings',  round1k(savingsPerK * 10));  // per 10,000 customers
+
     // Dot position on the track — same scale as the slider min/max
     const SL_MIN = 0.05, SL_MAX = 0.95;
     const frac = (bestT - SL_MIN) / (SL_MAX - SL_MIN);

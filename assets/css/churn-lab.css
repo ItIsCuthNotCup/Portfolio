@@ -47,9 +47,45 @@
 .churn-prose p {
   max-width: 720px;
   font-size: 17px; line-height: 1.65; color: var(--ink-soft);
-  margin: 0 0 18px 0;
+  margin: 0 0 22px 0;
 }
 .churn-prose em { font-style: italic; color: var(--ink); }
+
+/* Business lede — first paragraph of § I, sized up for scannability */
+.churn-prose .churn-lede {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 26px; line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  max-width: 780px;
+  margin-bottom: 28px;
+  text-wrap: balance;
+}
+.churn-prose .churn-footnote {
+  font-size: 14px; line-height: 1.6;
+  color: var(--ink-dim);
+  max-width: 720px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+}
+.churn-prose .churn-footnote em { color: var(--ink-soft); }
+
+/* Dollar figures and percentages inside prose */
+.headline-num {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.churn-lede .headline-num {
+  font-weight: 400;
+}
+.section-link {
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 35%, transparent);
+  color: var(--ink);
+  transition: border-color 160ms;
+}
+.section-link:hover { border-bottom-color: var(--accent); color: var(--accent); }
 
 .churn-note {
   max-width: 720px;
