@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Churn Lab — Jake Cuth.</title>
+  <meta name="description" content="A public, reproducible churn-model pipeline. Feature engineering, model comparison, SHAP, fairness audit, live scoring — run against the Kaggle Churn Modelling dataset.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Churn Lab — a production pipeline, run in public">
+  <meta property="og:description" content="Feature engineering, three-model comparison, SHAP, fairness audit, live scoring. Every number is reproducible.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/churn-lab/">
+
+  <!-- Fonts: Newsreader, DM Mono, Figtree -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Shared styles + page styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/churn-lab.css">
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress" class="progress"></div>
+
+<!-- Custom cursor -->
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MASTHEAD
+     ═══════════════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#work">Work</a>
+    <a href="/#projects">Projects</a>
+    <a href="/work/churn-lab/" class="active" aria-current="page">Churn Lab</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="churn-main">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § 00 — TITLE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-hero">
+  <div class="mono section-label">
+    <span class="idx">§ VI · FIG. G</span>
+    <span>The Churn Model, In the Open</span>
+  </div>
+  <h1 class="serif big-display churn-title">
+    A production pipeline,<br>
+    <span class="serif-italic" style="color:var(--accent)">run in public.</span>
+  </h1>
+  <p class="churn-kicker">
+    Every chart on this page is computed live in your browser from the same
+    JSON files the Python script writes to <span class="mono">/assets/data/churn/</span>.
+    No hosted inference, no screenshots, no hand-picked numbers.
+  </p>
+  <div class="mono churn-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Dataset</div><div class="value">Kaggle · Churn Modelling · 10,000 rows</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/churn_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — FRAMING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why this page exists</span>
+  </div>
+  <div class="churn-prose">
+    <p>
+      The churn model I built at <em>Hancock Whitney</em> is under NDA — the
+      dataset, the feature library, the exact thresholds, the lift numbers. None
+      of that can live on a portfolio. So this page runs the same pipeline against
+      a <em>public</em> dataset, step for step: drop IDs, encode categoricals,
+      stratified split, three models side by side, tree SHAP for explainability,
+      a group-wise fairness audit, and a cost-weighted threshold.
+    </p>
+    <p>
+      The Kaggle <span class="serif-italic">Churn Modelling</span> set is
+      smaller and softer than real bank data, so the ceiling here is around
+      <span class="mono">85–87%</span> test accuracy — not the number the production
+      model hits. Expect a plain dashboard, not a magic trick. What this page
+      is really showing you is the <span class="serif-italic">shape of a
+      responsible modeling workflow</span>: measure three models, explain the
+      winner, check it for disparate impact, then tune the threshold against
+      real dollars.
+    </p>
+    <p>
+      Everything below is reproducible. Clone the repo, run the script,
+      regenerate the JSON, and these charts redraw themselves.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — DATA PROFILE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ II</span>
+    <span>Data Profile</span>
+  </div>
+  <div class="metrics-grid" id="profile-grid">
+    <!-- filled by JS -->
+  </div>
+  <div class="profile-sub mono" id="profile-sub"></div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — MODEL COMPARISON
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>Three models, one test set</span>
+  </div>
+  <p class="churn-note">
+    Class imbalance is handled on every model (<span class="mono">class_weight='balanced'</span>
+    for LR and RF, <span class="mono">scale_pos_weight</span> for XGB). Winner
+    per column highlighted.
+  </p>
+  <div class="table-wrap">
+    <table class="model-table" id="model-table">
+      <thead>
+        <tr>
+          <th class="mono">Model</th>
+          <th class="mono">Accuracy</th>
+          <th class="mono">Precision</th>
+          <th class="mono">Recall</th>
+          <th class="mono">F1</th>
+          <th class="mono">ROC&nbsp;AUC</th>
+          <th class="mono">PR&nbsp;AUC</th>
+        </tr>
+      </thead>
+      <tbody><!-- filled by JS --></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — Fig. G.1 · ROC CURVES
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. G.1</span>
+    <span>ROC curves — all three models overlaid</span>
+  </div>
+  <div class="chart-frame" id="roc-frame">
+    <div class="chart-corners">
+      <span class="cc tl"></span><span class="cc tr"></span>
+      <span class="cc bl"></span><span class="cc br"></span>
+    </div>
+    <svg id="roc-chart" class="chart-svg" viewBox="0 0 900 560" role="img" aria-label="ROC curves for LR, RF, XGB"></svg>
+    <div class="chart-readout mono" id="roc-readout">
+      <span class="label">HOVER</span> <span class="value">— for threshold / TPR / FPR</span>
+    </div>
+    <div class="chart-legend mono" id="roc-legend"></div>
+  </div>
+  <p class="fig-caption mono">
+    Fig. G.1 — Higher = better. Diagonal would be a coin flip. Each curve traces
+    the trade-off between catching churners (TPR) and wrongly flagging loyal
+    customers (FPR) as the decision threshold sweeps from 1 to 0.
+  </p>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — Fig. G.2 · LIVE SCORING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ V · FIG. G.2</span>
+    <span>Score a customer, live</span>
+  </div>
+  <p class="churn-note">
+    Inputs are standardized with the same means and standard deviations the
+    training scaler fit. The logit, probability, and feature contributions are
+    all computed in your browser with the model's actual coefficients.
+  </p>
+
+  <div class="scoring-grid" id="scoring-grid">
+    <div class="scoring-inputs" id="scoring-inputs">
+      <!-- inputs injected by JS -->
+    </div>
+
+    <div class="scoring-output">
+      <div class="mono score-label">P(churn)</div>
+      <div class="score-number serif" id="score-number">—</div>
+      <div class="score-bar">
+        <div class="score-bar-fill" id="score-bar-fill"></div>
+        <div class="score-bar-ticks" aria-hidden="true">
+          <span style="left:25%"></span>
+          <span style="left:50%"></span>
+          <span style="left:75%"></span>
+        </div>
+      </div>
+      <div class="mono score-verdict" id="score-verdict"></div>
+
+      <div class="score-contrib">
+        <div class="mono score-contrib-head">Top drivers, this customer</div>
+        <div class="score-contrib-cols">
+          <div>
+            <div class="mono score-dir up">pushing&nbsp;toward&nbsp;churn</div>
+            <ul id="score-up"></ul>
+          </div>
+          <div>
+            <div class="mono score-dir down">pushing&nbsp;toward&nbsp;staying</div>
+            <ul id="score-down"></ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="score-footnote mono">
+        Live scoring uses the <span style="color:var(--accent)">logistic regression</span>
+        model for interpretability. XGBoost performs better on aggregate metrics
+        (see § III) but its prediction is a sum over 300 trees — not something a
+        slider explains.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — Fig. G.3 · THRESHOLD TUNING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI · FIG. G.3</span>
+    <span>Threshold tuning against dollars</span>
+  </div>
+  <p class="churn-note">
+    Real models ship with a <em>decision threshold</em>, not just a score. Move
+    the slider to see how precision, recall, and per-thousand-customer cost
+    shift. The accent dot marks the cost-minimizing threshold.
+  </p>
+
+  <div class="threshold-box">
+    <div class="threshold-slider-wrap">
+      <input type="range" id="thr-slider" min="0.05" max="0.95" step="0.01" value="0.5" aria-label="Decision threshold">
+      <div class="threshold-track-overlay" id="thr-track"></div>
+      <div class="threshold-readout mono">
+        <span>threshold = </span><span id="thr-value">0.50</span>
+      </div>
+    </div>
+
+    <div class="cm-grid" id="cm-grid" aria-label="Confusion matrix">
+      <div class="cm-axis cm-axis-top mono">Predicted</div>
+      <div class="cm-axis cm-axis-left mono"><span>Actual</span></div>
+      <div class="cm-header mono">stayed</div>
+      <div class="cm-header mono">churned</div>
+      <div class="cm-row-label mono">stayed</div>
+      <div class="cm-cell" data-cell="tn">
+        <div class="cm-val serif" id="cm-tn">0</div>
+        <div class="cm-lbl mono">true&nbsp;neg.</div>
+      </div>
+      <div class="cm-cell" data-cell="fp">
+        <div class="cm-val serif" id="cm-fp">0</div>
+        <div class="cm-lbl mono">false&nbsp;pos.</div>
+      </div>
+      <div class="cm-row-label mono">churned</div>
+      <div class="cm-cell" data-cell="fn">
+        <div class="cm-val serif" id="cm-fn">0</div>
+        <div class="cm-lbl mono">false&nbsp;neg.</div>
+      </div>
+      <div class="cm-cell" data-cell="tp">
+        <div class="cm-val serif" id="cm-tp">0</div>
+        <div class="cm-lbl mono">true&nbsp;pos.</div>
+      </div>
+    </div>
+
+    <div class="threshold-stats">
+      <div class="metric"><div class="serif metric-value" id="thr-prec">—</div><div class="mono metric-label">precision</div></div>
+      <div class="metric"><div class="serif metric-value" id="thr-rec">—</div><div class="mono metric-label">recall</div></div>
+      <div class="metric"><div class="serif metric-value" id="thr-cost">—</div><div class="mono metric-label">net cost / 1k cust.</div></div>
+      <div class="metric"><div class="serif metric-value" id="thr-flag">—</div><div class="mono metric-label">flag rate</div></div>
+    </div>
+    <div class="mono threshold-caption" id="thr-caption"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VII — Fig. G.4 · FEATURE IMPORTANCE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ VII · FIG. G.4</span>
+    <span>Feature importance — mean |SHAP|, XGBoost</span>
+  </div>
+  <p class="churn-note">
+    Tree SHAP decomposes each XGBoost prediction into per-feature contributions
+    and averages their absolute values across a 500-row test sample. Read it as:
+    which features move the score the most, regardless of direction.
+  </p>
+  <div class="chart-frame">
+    <div class="chart-corners">
+      <span class="cc tl"></span><span class="cc tr"></span>
+      <span class="cc bl"></span><span class="cc br"></span>
+    </div>
+    <svg id="shap-bars" class="chart-svg" viewBox="0 0 900 520" role="img" aria-label="SHAP bar chart"></svg>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VIII — Fig. G.5 · SHAP DEPENDENCE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ VIII · FIG. G.5</span>
+    <span>SHAP dependence — top two features</span>
+  </div>
+  <p class="churn-note">
+    X-axis: the raw feature value for one customer. Y-axis: how much that
+    feature moved their churn score, positive or negative. Non-linearity shows
+    up as curves — something a linear model can't see.
+  </p>
+  <div class="dep-grid">
+    <div class="chart-frame">
+      <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
+      <div class="mono frame-label" id="dep-label-1"></div>
+      <svg id="dep-chart-1" class="chart-svg" viewBox="0 0 600 400" role="img"></svg>
+    </div>
+    <div class="chart-frame">
+      <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
+      <div class="mono frame-label" id="dep-label-2"></div>
+      <svg id="dep-chart-2" class="chart-svg" viewBox="0 0 600 400" role="img"></svg>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IX — Fig. G.6 · FAIRNESS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section">
+  <div class="mono section-label">
+    <span class="idx">§ IX · FIG. G.6</span>
+    <span>Fairness audit — by Geography &amp; Gender</span>
+  </div>
+  <p class="churn-note">
+    Disparate impact is a live concern in regulated banking — the OCC and FDIC
+    examine retention models for fair-lending proxies. This panel shows the
+    same model sliced by protected-attribute-adjacent fields. Even on a public
+    dataset, gaps show up.
+  </p>
+  <div class="fairness-wrap" id="fairness-wrap"><!-- filled by JS --></div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § X — COLOPHON / METHODOLOGY
+     ═══════════════════════════════════════════════════════════ -->
+<section class="churn-section churn-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ X</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Dataset</div>
+      <p>
+        <a href="https://www.kaggle.com/datasets/shrutimechlearn/churn-modelling" target="_blank" rel="noopener" style="border-bottom:1px solid">Kaggle · shrutimechlearn/churn-modelling ↗</a>
+        — 10,000 synthetic bank customers across France, Germany, Spain.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Pipeline script</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/churn_model.py ↗</a>
+        — drop IDs, label-encode Gender, one-hot Geography, stratified 80/20 split,
+        StandardScaler on numeric features, three models, SHAP on XGB, fairness
+        slice on the best model, threshold sweep 0.05 → 0.95.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Production model</div>
+      <p>
+        The Hancock Whitney churn model — its feature library, decision
+        thresholds, and lift numbers — is under NDA. This page mirrors the
+        <em>workflow</em>, not the proprietary model.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reproducibility</div>
+      <p>
+        <span class="mono">random_state=42</span> everywhere. Last regenerated
+        <span id="regenerated-at" class="mono">—</span>. Clone the repo, run
+        <span class="mono">python notebooks/churn_model.py</span>, regenerate
+        all nine JSON files.
+      </p>
+    </div>
+  </div>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COLOPHON
+     ═══════════════════════════════════════════════════════════ -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<!-- Shared behaviors (dateline, cursor, theme, progress bar, smooth scroll) -->
+<script src="/assets/js/main.js"></script>
+<!-- Page logic -->
+<script src="/assets/js/churn-lab.js"></script>
+</body>
+</html>
