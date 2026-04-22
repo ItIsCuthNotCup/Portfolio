@@ -138,61 +138,75 @@ main { position: relative; z-index: 1; }
   background: var(--ink); color: var(--paper);
 }
 
-/* ── Nav dropdown (Model Examples) ──────────────────────────── */
+/* ── Nav dropdown (Model Examples) ────────────────────────────
+   Editorial masthead vibe: flat DM Mono uppercase, hairline card,
+   no pill / no blur / no native button chrome. Every value is
+   explicit rather than inherited, because Safari leaks user-agent
+   button styles through `inherit` and produces a pill-looking box. */
 .nav-dropdown { position: relative; display: inline-block; }
+
 .nav-dropdown-toggle {
-  appearance: none; -webkit-appearance: none;
-  background: none; border: 0; padding: 0;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background: transparent;
+  border: 0;
   margin: 0;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
+  padding: 0;
+  /* match adjacent <a> nav links EXACTLY — do not rely on inherit */
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: inherit;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   line-height: inherit;
   color: var(--ink);
   cursor: pointer;
-  display: inline-flex; align-items: baseline; gap: 5px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   white-space: nowrap;
   transition: opacity 200ms, color 200ms;
 }
 .nav-dropdown-toggle:hover { opacity: 0.7; }
+.nav-dropdown-toggle:focus { outline: none; }
 .nav-dropdown-toggle:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 3px;
+  outline: 1px dashed var(--accent);
+  outline-offset: 4px;
 }
-.nav-dropdown-toggle.has-active {
-  color: var(--accent);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 2px;
-}
+.nav-dropdown-toggle.has-active { color: var(--accent); }
+
 .nav-caret {
-  font-size: 9px;
+  font-size: 8px;
+  display: inline-block;
+  transform: translateY(-1px);
   transition: transform 200ms;
-  transform-origin: center 55%;
 }
 .nav-dropdown:hover .nav-caret,
 .nav-dropdown:focus-within .nav-caret {
-  transform: rotate(180deg);
+  transform: translateY(-1px) rotate(180deg);
 }
+
 .nav-dropdown-menu {
   position: absolute;
   top: 100%; right: 0;
-  margin: 0; padding: 10px 0 0 0;   /* top gap is padding so hover bridge works */
-  min-width: 200px;
+  /* padding-top is the hover bridge — mouse can travel from button to
+     card without losing hover on .nav-dropdown */
+  margin: 0;
+  padding: 14px 0 0 0;
+  min-width: 240px;
+  list-style: none;
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
-  transition: opacity 160ms, transform 160ms;
+  transition: opacity 180ms ease, transform 180ms ease;
   z-index: 60;
 }
 .nav-dropdown-menu::before {
-  /* visual card sits inside the padded bounding box */
+  /* the visible card — starts below the hover-bridge padding */
   content: '';
   position: absolute;
-  top: 10px; left: 0; right: 0; bottom: 0;
-  background: color-mix(in oklab, var(--paper) 94%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid color-mix(in oklab, var(--ink) 28%, transparent);
+  top: 14px; left: 0; right: 0; bottom: 0;
+  background: var(--paper);
+  border: 1px solid var(--ink);
   z-index: -1;
 }
 .nav-dropdown:hover .nav-dropdown-menu,
@@ -203,16 +217,21 @@ main { position: relative; z-index: 1; }
 }
 .nav-dropdown-menu a {
   display: block;
-  padding: 10px 18px;
-  font-size: 11px;
+  padding: 13px 20px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
-  transition: background 150ms, color 150ms;
   white-space: nowrap;
+  text-align: left;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  transition: background 160ms, color 160ms;
 }
+.nav-dropdown-menu a:first-of-type { border-top: 0; }
 .nav-dropdown-menu a:hover {
-  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
   color: var(--accent);
 }
 .nav-dropdown-menu a.active,
@@ -221,7 +240,9 @@ main { position: relative; z-index: 1; }
 }
 .nav-dropdown-menu a.active::before,
 .nav-dropdown-menu a[aria-current="page"]::before {
-  content: '· '; color: var(--accent);
+  content: '▸ ';
+  color: var(--accent);
+  margin-right: 2px;
 }
 
 /* ── 3D Scene Stage ─────────────────────────────────────────── */
