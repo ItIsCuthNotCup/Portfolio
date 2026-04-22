@@ -147,10 +147,11 @@ main { position: relative; z-index: 1; }
   font: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
+  line-height: inherit;
   color: var(--ink);
   cursor: pointer;
-  display: inline-flex; align-items: center; gap: 5px;
-  line-height: 1.2;
+  display: inline-flex; align-items: baseline; gap: 5px;
+  white-space: nowrap;
   transition: opacity 200ms, color 200ms;
 }
 .nav-dropdown-toggle:hover { opacity: 0.7; }
@@ -399,7 +400,7 @@ main { position: relative; z-index: 1; }
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1fr);
   gap: 32px; position: relative;
-  align-items: start;
+  align-items: baseline;
 }
 .exp-idx {
   font-size: 12px; color: var(--ink-dim); letter-spacing: 0.14em;
@@ -693,6 +694,7 @@ main { position: relative; z-index: 1; }
 @media (max-width: 1100px) {
   .scene-stage { display: none; }
   .hero { padding-right: 48px; }
+  .hero-inner { max-width: 100%; }
 }
 @media (max-width: 900px) {
   .hero h1 { font-size: clamp(40px, 8vw, 72px); }
@@ -716,15 +718,22 @@ main { position: relative; z-index: 1; }
 }
 @media (max-width: 600px) {
   .hero { padding: 120px 24px 40px; }
+  .hero h1 { font-size: clamp(32px, 9vw, 56px); line-height: 1.02; }
   .capabilities, .projects-section, .stack-section,
   .education-section, .contact-section { padding-left: 24px; padding-right: 24px; }
   .experience-entry { padding: 48px 24px; }
   .work-header { padding: 0 24px; }
   .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-label { font-size: 9.5px; letter-spacing: 0.06em; }
   .hero-dateline { flex-wrap: wrap; gap: 20px; }
   .logo-track { gap: 32px; }
   .logo-track img { height: 18px; }
+  .logo-marquee {
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 75%, transparent 100%);
+    mask-image: linear-gradient(to right, black 0%, black 75%, transparent 100%);
+  }
   .exp-company { font-size: 36px; }
   .project-title { font-size: 42px; }
   .contact-heading { font-size: clamp(48px, 10vw, 120px); }
+  .nav-dropdown-menu { min-width: 160px; max-width: calc(100vw - 32px); }
 }

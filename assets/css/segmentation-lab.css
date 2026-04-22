@@ -463,7 +463,7 @@ select:focus { outline: 1px solid var(--accent); outline-offset: 1px; }
 /* ── § VII — Segment cards ────────────────────────────────── */
 .segment-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
   margin-top: 4px;
 }
