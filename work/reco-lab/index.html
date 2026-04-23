@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flixer — Jake Cuth.</title>
+  <meta name="description" content="A live, client-side movie recommendation engine. Click posters you like and watch three different algorithms — content-based, collaborative, hybrid — reinterpret your taste in real time. Runs on MovieLens + TMDB.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Flixer — a recommendation engine, in the open">
+  <meta property="og:description" content="Click a poster, three algorithms reinterpret your taste. Content-based, collaborative, hybrid — all precomputed from MovieLens, all running in your browser.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/reco-lab/">
+
+  <!-- Fonts: Newsreader, DM Mono, Figtree -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Preconnect to TMDB image CDN -->
+  <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+
+  <!-- Shared styles + page styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/reco-lab.css">
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress" class="progress"></div>
+
+<!-- Custom cursor -->
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MASTHEAD
+     ═══════════════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Model Examples <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" class="active" aria-current="page" role="menuitem">Recommendation Engine</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="reco-main">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VIII · FIG. I — TITLE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-hero">
+  <div class="mono section-label">
+    <span class="idx">§ VIII · FIG. I</span>
+    <span>A recommender, click by click</span>
+  </div>
+  <h1 class="serif big-display reco-title">
+    Three ways to<br>
+    <span class="serif-italic" style="color:var(--accent)">read a taste.</span>
+  </h1>
+  <p class="reco-kicker">
+    A live, client-side recommendation engine. Click posters you like,
+    watch the shelves re-sort. Toggle between three algorithms and
+    see the <em>same</em> taste interpreted differently — that gap is
+    where every streaming service quietly spends its product budget.
+  </p>
+  <div class="mono reco-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Dataset</div><div class="value">MovieLens · <span id="stat-ratings">—</span> ratings · <span id="stat-users">—</span> users</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/reco_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/reco_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — WHY THIS MATTERS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why a recommender matters</span>
+  </div>
+  <div class="reco-prose">
+    <p class="reco-lede">
+      A well-tuned recommender is, quietly, one of the most expensive
+      pieces of software in a retail-adjacent business.
+      <span class="headline-num">~75%</span> of what people watch on Netflix
+      originates from its recommendations, and every 0.1% of engagement
+      lift translates into measurable revenue.
+    </p>
+    <p>
+      The interesting question is never <em>whether</em> to build one.
+      It's <em>which signal</em> to trust: the content itself, the
+      behaviour of similar users, or some blend of both — and how
+      honest you are with the user about which of those the system
+      leaned on for any given suggestion. This page exposes all three,
+      side by side, and lets you feel the difference.
+    </p>
+    <p class="reco-footnote">
+      Every poster you click runs real cosine math on precomputed
+      similarity matrices in your browser. No API, no backend, no
+      login, no tracking. Source of everything: the linked notebook.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II · FIG. I.1 — THE MARQUEE (interactive surface)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section reco-section-marquee">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. I.1</span>
+    <span>The Marquee — a working recommender</span>
+  </div>
+  <p class="reco-note">
+    Click any poster to mark it as something you liked. The
+    <span class="mono" style="color:var(--accent)">Because you liked</span> row
+    at the top re-sorts instantly. Toggle the algorithm to watch the same
+    taste interpreted differently.
+  </p>
+</section>
+
+<!-- Dark Flixer surface — breaks out of the editorial chrome -->
+<section class="flixer-surface" aria-label="Flixer interactive recommender">
+  <div class="flixer-inner">
+
+    <!-- Flixer top bar (wordmark + algorithm toggle + status) -->
+    <header class="flixer-top">
+      <div class="flixer-wordmark">
+        <span>FLIXER</span>
+        <span class="flixer-wordmark-sub mono">a recommendation-engine demo · not a real service</span>
+      </div>
+      <div class="flixer-controls">
+        <div class="algo-toggle mono" role="tablist" aria-label="Recommendation algorithm">
+          <button type="button" role="tab" aria-selected="true" data-alg="content">Content-based</button>
+          <button type="button" role="tab" aria-selected="false" data-alg="collab">Collaborative</button>
+          <button type="button" role="tab" aria-selected="false" data-alg="hybrid">Hybrid</button>
+        </div>
+        <div class="flixer-status mono">
+          <span id="likes-count">0</span> liked
+          <button type="button" id="reset-btn" class="flixer-reset" aria-label="Reset likes">reset</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Rows container — populated by JS -->
+    <div class="flixer-rows" id="flixer-rows"></div>
+
+    <!-- Empty-state caption when no likes yet -->
+    <p class="flixer-caption mono" id="flixer-caption">
+      Seeded with globally top-rated titles. Start clicking — the top row will become yours.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — HOW IT WORKS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>Three lenses on the same taste</span>
+  </div>
+
+  <div class="algo-explainers">
+    <div class="algo-card" data-alg="content">
+      <div class="mono algo-card-fig">Fig. A</div>
+      <h3 class="serif algo-card-title">Content-based</h3>
+      <p>
+        Each movie becomes a TF-IDF vector over its genres and the most
+        common user tags. Cosine similarity in that space tells us
+        "this movie looks like that one on paper." Good at new
+        releases, blind to taste — it'll happily recommend a 30-year-old
+        film you've never heard of if the tags match.
+      </p>
+    </div>
+    <div class="algo-card" data-alg="collab">
+      <div class="mono algo-card-fig">Fig. B</div>
+      <h3 class="serif algo-card-title">Collaborative</h3>
+      <p>
+        We build a user-by-movie matrix of mean-centred ratings, then
+        cosine on the <em>columns</em> — so movies are similar when the
+        same users rated them the same way. Learns taste patterns
+        humans don't articulate, but can't say anything about a movie
+        nobody's rated yet (cold-start).
+      </p>
+    </div>
+    <div class="algo-card" data-alg="hybrid">
+      <div class="mono algo-card-fig">Fig. C</div>
+      <h3 class="serif algo-card-title">Hybrid</h3>
+      <p>
+        A simple weighted blend: <span class="mono">α · content + (1−α) · collab</span>,
+        at <span class="mono" id="hybrid-alpha-val">α = 0.5</span>. Nothing clever — and
+        often, that's the production answer. Content gives cold-start
+        coverage; collab gives taste depth; the blend smooths both.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV · FIG. I.2 — LIVE TASTE VECTOR
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. I.2</span>
+    <span>Your taste, decomposed</span>
+  </div>
+  <p class="reco-note">
+    The model doesn't see a list of movies — it sees a vector. Every
+    click updates the implicit genre weights below. Watch for the
+    weights you didn't think you'd emit.
+  </p>
+  <div class="chart-frame taste-frame">
+    <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
+    <div class="mono frame-label">Fig. I.2 — genre weights from your likes</div>
+    <svg id="taste-chart" class="chart-svg" viewBox="0 0 900 420" role="img" aria-label="Live taste vector"></svg>
+    <p class="taste-empty mono" id="taste-empty">— click some posters above —</p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V · FIG. I.3 — ALGORITHM DIVERGENCE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section">
+  <div class="mono section-label">
+    <span class="idx">§ V · FIG. I.3</span>
+    <span>Where the algorithms disagree</span>
+  </div>
+  <p class="reco-note">
+    The same likes, fed to three different models, yield three
+    top-10 lists. Overlap is expected; the interesting signal is the
+    <em>gap</em> — where one algorithm sees something the others don't.
+    That gap is a real product question: do you ensemble the three,
+    pick one, or show all three for transparency?
+  </p>
+  <div class="divergence-wrap" id="divergence-wrap">
+    <p class="divergence-empty mono" id="divergence-empty">— click some posters above —</p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — RECEIPTS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Receipts</span>
+  </div>
+  <div class="metrics-grid" id="receipts-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VII — METHODOLOGY & COLOPHON
+     ═══════════════════════════════════════════════════════════ -->
+<section class="reco-section reco-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Dataset</div>
+      <p>
+        <a href="https://grouplens.org/datasets/movielens/latest/" target="_blank" rel="noopener" style="border-bottom:1px solid">MovieLens ml-latest-small ↗</a>
+        — 100k ratings from 600 users across 9,700 films. Free, public,
+        and the standard benchmark for academic recommenders. Filtered
+        to titles with ≥50 ratings and ≥3.3 average before indexing.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Posters</div>
+      <p>
+        Poster art fetched at build time from
+        <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="border-bottom:1px solid">The Movie Database (TMDB) ↗</a>.
+        Image URLs are stored in <span class="mono">movies.json</span>
+        and lazy-loaded per row by the browser. TMDB is the source
+        and does not endorse this project.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Pipeline script</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/reco_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/reco_model.py ↗</a>
+        — downloads MovieLens, fits TF-IDF and item-item CF, precomputes
+        top-20 neighbours under each algorithm, writes six JSON files to
+        <span class="mono">/assets/data/reco/</span>. Re-run any time with
+        <span class="mono">python notebooks/reco_model.py</span>.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reproducibility</div>
+      <p>
+        <span class="mono">random_state=42</span> everywhere it matters.
+        Last regenerated <span id="regenerated-at" class="mono">—</span>.
+        All similarity scores and recommendations computed in your
+        browser; no server involved.
+      </p>
+    </div>
+  </div>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COLOPHON
+     ═══════════════════════════════════════════════════════════ -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>Poster data courtesy of <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a> · Ratings from <a href="https://grouplens.org" target="_blank" rel="noopener">GroupLens</a></div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<!-- Tooltip (single instance, positioned on hover) -->
+<div id="reco-tooltip" class="reco-tooltip" role="tooltip" aria-hidden="true"></div>
+
+<!-- Shared behaviors (dateline, cursor, theme, progress bar, smooth scroll) -->
+<script src="/assets/js/main.js"></script>
+<!-- Page logic -->
+<script src="/assets/js/reco-lab.js"></script>
+</body>
+</html>
