@@ -280,6 +280,53 @@ main { position: relative; z-index: 1; }
 }
 .section-label .idx { color: var(--accent); }
 
+/* ── Role Cycle (AI / ML / Analytics Engineer) ──────────────── */
+/* Small editorial line under the §-label. Rotates AI → ML →     */
+/* Analytics so recruiters scanning the first 10s see role fit    */
+/* without turning the hero into a resume header.                 */
+.role-cycle {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+}
+.role-cycle-words {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  /* width of the longest word, "Analytics", in DM Mono at 11px/.18em */
+  min-width: 7.2em;
+  overflow: hidden;
+  color: var(--accent);
+}
+.role-cycle-words > span {
+  position: absolute;
+  left: 0; top: 0;
+  opacity: 0;
+  animation: role-cycle 9s infinite cubic-bezier(.5,.05,.2,1);
+}
+.role-cycle-words > span:nth-child(1) { animation-delay: 0s; }
+.role-cycle-words > span:nth-child(2) { animation-delay: 3s; }
+.role-cycle-words > span:nth-child(3) { animation-delay: 6s; }
+@keyframes role-cycle {
+  0%   { opacity: 0; transform: translateY(-30%); }
+  4%   { opacity: 1; transform: translateY(0); }
+  30%  { opacity: 1; transform: translateY(0); }
+  34%  { opacity: 0; transform: translateY(30%); }
+  100% { opacity: 0; transform: translateY(30%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role-cycle-words > span { animation: role-cycle-fade 9s infinite steps(1,end); transform: none !important; }
+  @keyframes role-cycle-fade {
+    0%, 33%  { opacity: 1; }
+    34%, 100% { opacity: 0; }
+  }
+}
+
 /* ── Big Display Text ───────────────────────────────────────── */
 .big-display {
   font-size: 84px; line-height: 0.95; letter-spacing: -0.02em;
