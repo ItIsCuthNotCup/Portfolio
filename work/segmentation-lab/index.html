@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=3">
+  <link rel="stylesheet" href="/assets/css/main.css?v=6">
   <link rel="stylesheet" href="/assets/css/segmentation-lab.css">
 </head>
 <body>
@@ -42,7 +42,7 @@
     <a href="/#projects">Projects</a>
     <div class="nav-dropdown">
       <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
-        Model Examples <span class="nav-caret" aria-hidden="true">▾</span>
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
       </button>
       <div class="nav-dropdown-menu" role="menu">
         <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
@@ -77,9 +77,11 @@
     79% stop draining the budget.
   </p>
   <p class="seg-kicker">
-    Every chart on this page is computed live in your browser from the JSON
-    files the Python script writes to <span class="mono">/assets/data/segmentation/</span>.
-    No hosted inference, no screenshots, no hand-picked numbers.
+    Below: a live classifier, segment profiles, and a campaign ROI
+    simulator. Try the ROI simulator first. Every chart is computed in
+    your browser from the JSON the Python script writes to
+    <span class="mono">/assets/data/segmentation/</span>. No hosted
+    inference, no screenshots, no hand-picked numbers.
   </p>
   <div class="mono seg-dateline">
     <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
@@ -436,9 +438,14 @@
     </div>
   </div>
 
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/churn-lab/">← Prev: Churn (FIG. G)</a>
+    <span>Lab 02 of 05</span>
+    <a href="/work/reco-lab/">Next: Recommendation (FIG. I) →</a>
+  </nav>
+
   <div class="method-ctas">
     <a href="/" class="btn-outline">← Back to the portfolio</a>
-    <a href="/work/churn-lab/" class="btn-outline">The Churn Model →</a>
     <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
   </div>
 </section>

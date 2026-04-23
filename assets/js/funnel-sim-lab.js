@@ -69,6 +69,7 @@
     revenue: 0,
     acquisitions: 0,         // total customers who reached purchase
     totalAdSpend: 0,
+    debug: typeof location !== 'undefined' && /[?&]debug=1\b/.test(location.search),
   };
 
   // ══════════════════════════════════════════════════════════
@@ -413,17 +414,20 @@
       const band = stageBandY(s);
       ctx.fillText(stageCounts[s] + ' in stage', W - 14, band.top + 14);
     }
-    // Build stamp + per-band diagnostic. Per-band counts shown so a
-    // stale cache or a simulation stall is instantly visible on sight.
-    ctx.font = '9px "DM Mono", monospace';
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.textAlign = 'left';
-    ctx.fillText(
-      'build v6 · ' + state.nActive + ' active · A:' + stageCounts[0] +
-      ' C:' + stageCounts[1] + ' T:' + stageCounts[2] +
-      ' P:' + stageCounts[3] + ' R:' + stageCounts[4],
-      10, H - 8
-    );
+    // Build stamp + per-band diagnostic. Only shown in debug mode so
+    // the default experience looks clean; append ?debug=1 to the URL
+    // to reveal it for cache-bust or simulation-stall diagnosis.
+    if (state.debug) {
+      ctx.font = '9px "DM Mono", monospace';
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        'build v6 · ' + state.nActive + ' active · A:' + stageCounts[0] +
+        ' C:' + stageCounts[1] + ' T:' + stageCounts[2] +
+        ' P:' + stageCounts[3] + ' R:' + stageCounts[4],
+        10, H - 8
+      );
+    }
   }
 
   // ══════════════════════════════════════════════════════════

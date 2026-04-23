@@ -540,6 +540,28 @@ main { position: relative; z-index: 1; }
   filter: grayscale(1) invert(1);
 }
 
+/* ── Lab-to-lab navigation (Prev / Next at bottom of each lab) ── */
+.lab-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin: 0 0 40px;
+  padding: 18px 0;
+  border-top: 1px solid var(--ink-dim);
+  border-bottom: 1px solid var(--ink-dim);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-nav a {
+  color: var(--ink-soft);
+  transition: color 180ms;
+}
+.lab-nav a:hover { color: var(--ink); }
+.lab-nav span { display: inline-block; }
+
 /* ── Labs Section (five model labs as cards) ─────────────────── */
 .labs-section {
   padding: 80px 48px 100px;
