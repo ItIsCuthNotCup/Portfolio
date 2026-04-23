@@ -242,9 +242,13 @@
 
       a.ticksInStage[i]++;
 
-      // Each "tick" in sim-time advances probability scaled by speed
-      const adv = probs.adv[stage] * 0.08 * state.speed;
-      const drp = probs.drop[stage] * 0.08 * state.speed;
+      // Each "tick" in sim-time advances probability scaled by speed.
+      // Later stages (especially Retention) use a slower scaling so the
+      // on-canvas residence time is long enough that those bands stay
+      // visibly populated rather than collapsing to sub-unit equilibria.
+      const STAGE_RATE = [0.08, 0.08, 0.08, 0.05, 0.02];
+      const adv = probs.adv[stage] * STAGE_RATE[stage] * state.speed;
+      const drp = probs.drop[stage] * STAGE_RATE[stage] * state.speed;
       const u = Math.random();
       if (u < adv) {
         // Advance
@@ -520,16 +524,35 @@
 
   // Seed a plausible starting population so the canvas isn't empty on
   // load / reset. Called by init() and by the Reset button.
+  //
+  // Distribution is weighted to match what a running funnel actually
+  // looks like at steady state — most agents top-of-funnel, a fat tail
+  // of retained customers at the bottom. Without seeding into stages 4
+  // and 5 the late bands stayed empty for ~20 s after reset because
+  // the spawn rate isn't high enough to fill them quickly.
+  const SEED_DISTRIBUTION = [
+    { stage: 0, count: 140 },  // Awareness
+    { stage: 1, count: 100 },  // Consideration
+    { stage: 2, count:  60 },  // Trial
+    { stage: 3, count:  30 },  // Purchase (short residence, small pop)
+    { stage: 4, count:  70 },  // Retention (long residence, visible cohort)
+  ];
   function seedInitialPopulation() {
-    for (let i = 0; i < 200; i++) {
-      spawnAgent(pickSegmentIndex(state.levers.targeting));
-      const idx = findLastActive();
-      if (idx < 0) continue;
-      const s = Math.floor(Math.random() * 4);  // stages 0..3
-      state.agents.stage[idx] = s;
-      const band = stageBandY(s);
-      state.agents.y[idx] = band.top + Math.random() * (band.bottom - band.top);
-      state.agents.targetY[idx] = state.agents.y[idx];
+    for (const { stage, count } of SEED_DISTRIBUTION) {
+      for (let k = 0; k < count; k++) {
+        spawnAgent(pickSegmentIndex(state.levers.targeting));
+        const idx = findLastActive();
+        if (idx < 0) continue;
+        state.agents.stage[idx] = stage;
+        const band = stageBandY(stage);
+        state.agents.y[idx] = band.top + Math.random() * (band.bottom - band.top);
+        state.agents.targetY[idx] = state.agents.y[idx];
+        // Retained agents start with a random retention history so they
+        // don't all churn in the same wave.
+        if (stage === 4) {
+          state.agents.retMonths[idx] = Math.floor(Math.random() * 18);
+        }
+      }
     }
   }
 
