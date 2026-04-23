@@ -128,11 +128,10 @@
     <p class="churn-footnote">
       Everything below is computed live in your browser from the linked
       <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">Python script</a>.
-      The production model I built at <em>Hancock Whitney</em> is under NDA and
-      performs better than this public demo — so the point here isn't the
-      absolute accuracy. It's the <em>shape of a responsible workflow:</em>
-      compare several models, explain the winner, audit it for disparate impact,
-      and tune the threshold against the dollars that actually matter.
+      The point here isn't absolute accuracy — it's the
+      <em>shape of a responsible workflow:</em>
+      compare several models, explain the winner, audit it for disparate
+      impact, and tune the threshold against the dollars that actually matter.
     </p>
   </div>
 </section>
@@ -430,14 +429,6 @@
         — drop IDs, label-encode Gender, one-hot Geography, stratified 80/20 split,
         StandardScaler on numeric features, three models, SHAP on XGB, fairness
         slice on the best model, threshold sweep 0.05 → 0.95.
-      </p>
-    </div>
-    <div>
-      <div class="mono method-head">Production model</div>
-      <p>
-        The Hancock Whitney churn model — its feature library, decision
-        thresholds, and lift numbers — is under NDA. This page mirrors the
-        <em>workflow</em>, not the proprietary model.
       </p>
     </div>
     <div>

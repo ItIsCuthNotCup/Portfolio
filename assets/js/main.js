@@ -60,12 +60,12 @@
 
   // ── Shape metadata for captions ──
   var SHAPE_META = {
-    ico:     { fig: '00', title: 'Icosahedron / identity',     coord: '+0.000, +0.000' },
-    knot:    { fig: '01', title: 'Torus Knot / Hancock',       coord: '+0.942, \u20130.314' },
-    lattice: { fig: '02', title: 'Lattice / Nissan warehouse', coord: '\u20130.707, +0.707' },
-    helix:   { fig: '03', title: 'Helix / ReminderMedia',      coord: '+0.500, \u20130.866' },
-    stack:   { fig: '04', title: 'Stack / NBCU automation',    coord: '\u20130.866, +0.500' },
-    particle:{ fig: '05', title: 'Particle Field / Projects',  coord: '+0.000, +1.000' },
+    ico:     { fig: '00', title: 'Icosahedron / identity',  coord: '+0.000, +0.000' },
+    knot:    { fig: '01', title: 'Torus Knot / connection', coord: '+0.942, \u20130.314' },
+    lattice: { fig: '02', title: 'Lattice / network',       coord: '\u20130.707, +0.707' },
+    helix:   { fig: '03', title: 'Helix / sequence',        coord: '+0.500, \u20130.866' },
+    stack:   { fig: '04', title: 'Stack / system',          coord: '\u20130.866, +0.500' },
+    particle:{ fig: '05', title: 'Particle Field / projects', coord: '+0.000, +1.000' },
   };
 
   function updateCaption(shape) {
