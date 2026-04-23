@@ -252,12 +252,13 @@
           a.stage[i]++;
           const band = stageBandY(a.stage[i]);
           a.targetY[i] = band.top + Math.random() * (band.bottom - band.top);
-          // Jump the visible position 60 % of the way into the new band
-          // immediately. Remaining distance smooths via the motion step
-          // below. Without this, agents logically advanced through
-          // Purchase + Retention faster than their y could catch up,
-          // leaving the bottom bands visually empty.
-          a.y[i] = a.y[i] + (a.targetY[i] - a.y[i]) * 0.6;
+          // Snap the visible position directly into the new band. Earlier
+          // we tried a 60 % partial snap + smooth motion, but the motion
+          // step couldn't keep up when multiple advances landed in the
+          // same second — agents logically reached Retention while still
+          // drawn in Trial. Full snap is visually abrupt but honest to
+          // the underlying state.
+          a.y[i] = a.targetY[i];
           a.ticksInStage[i] = 0;
           state.entered[a.stage[i]]++;
           if (a.stage[i] === 3) {
@@ -371,12 +372,15 @@
     }
     ctx.setLineDash([]);
 
-    // Draw agents — batched by segment colour for fill performance
+    // Draw agents — batched by segment colour for fill performance.
+    // Also tally per-stage active counts for the diagnostic overlay.
+    const stageCounts = [0, 0, 0, 0, 0];
     for (let seg = 0; seg < SEGMENTS.length; seg++) {
       ctx.fillStyle = state.segColors[seg];
       ctx.beginPath();
       for (let i = 0; i < MAX_AGENTS; i++) {
         if (!a.active[i] || a.segment[i] !== seg) continue;
+        if (!a.fading[i]) stageCounts[a.stage[i]]++;
         const alpha = a.fading[i] ? a.fadeT[i] : 1;
         if (alpha < 1) {
           ctx.fill();
@@ -392,6 +396,15 @@
         ctx.arc(a.x[i], a.y[i], 3, 0, Math.PI * 2);
       }
       ctx.fill();
+    }
+
+    // Per-band live count overlay (right-aligned, near top of each band)
+    ctx.font = '10px "DM Mono", monospace';
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.textAlign = 'right';
+    for (let s = 0; s < N_STAGES; s++) {
+      const band = stageBandY(s);
+      ctx.fillText(stageCounts[s] + ' in stage', W - 14, band.top + 14);
     }
   }
 
