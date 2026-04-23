@@ -291,21 +291,31 @@ main { position: relative; z-index: 1; }
   text-transform: uppercase;
   color: var(--ink-dim);
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.35em;
+  /* Vertical room for the flipping word. The overflow-hidden viewport  */
+  /* needs enough height to NOT clip glyph descenders during the        */
+  /* translateY slide — previously 1em with translateY(±40%) trimmed    */
+  /* the bottom stroke of letters, making "AI" look like "AT".          */
+  line-height: 1.8;
 }
 .role-cycle-words {
   position: relative;
   display: inline-block;
-  height: 1em;
+  /* Tall enough to fully show cap-height + descender + slide distance. */
+  height: 1.8em;
   /* width of the longest word, "Analytics", in DM Mono at 11px/.18em */
   min-width: 7.2em;
   overflow: hidden;
   color: var(--accent);
+  vertical-align: middle;
 }
 .role-cycle-words > span {
   position: absolute;
-  left: 0; top: 0;
+  left: 0;
+  /* Vertically centered within the tall viewport. */
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0;
   animation: role-cycle 6s infinite cubic-bezier(.5,.05,.2,1);
 }
@@ -313,11 +323,12 @@ main { position: relative; z-index: 1; }
 .role-cycle-words > span:nth-child(2) { animation-delay: 2s; }
 .role-cycle-words > span:nth-child(3) { animation-delay: 4s; }
 @keyframes role-cycle {
-  0%   { opacity: 0; transform: translateY(-40%); }
-  6%   { opacity: 1; transform: translateY(0); }
-  28%  { opacity: 1; transform: translateY(0); }
-  34%  { opacity: 0; transform: translateY(40%); }
-  100% { opacity: 0; transform: translateY(40%); }
+  /* Slides kept inside the viewport so no stroke gets clipped mid-animation. */
+  0%   { opacity: 0; transform: translate(0, calc(-50% - 8px)); }
+  8%   { opacity: 1; transform: translate(0, -50%); }
+  28%  { opacity: 1; transform: translate(0, -50%); }
+  36%  { opacity: 0; transform: translate(0, calc(-50% + 8px)); }
+  100% { opacity: 0; transform: translate(0, calc(-50% + 8px)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .role-cycle-words > span { animation: role-cycle-fade 6s infinite steps(1,end); transform: none !important; }
@@ -512,6 +523,75 @@ main { position: relative; z-index: 1; }
 }
 [data-theme="graphite"] .exp-logo {
   filter: grayscale(1) invert(1);
+}
+
+/* ── Labs Section (five model labs as cards) ─────────────────── */
+.labs-section {
+  padding: 80px 48px 100px;
+  border-top: 1px solid var(--ink);
+}
+.labs-intro { max-width: 900px; }
+.labs-intro p {
+  margin-top: 24px; max-width: 560px;
+  color: var(--ink-soft); font-size: 17px;
+}
+.labs-grid {
+  margin-top: 64px;
+  display: grid;
+  /* 5 cards wide on desktop — no orphan row. Wraps to 2/3 on tablet,   */
+  /* single column on phone via the media queries below.                */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+}
+.lab-card {
+  background: var(--paper);
+  padding: 24px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--ink);
+  transition: background 220ms ease, color 220ms ease;
+}
+.lab-card:last-child { border-right: none; }
+.lab-card:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.lab-card:hover .lab-fig,
+.lab-card:hover .lab-arrow { color: var(--paper); opacity: 0.8; }
+.lab-fig {
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+}
+.lab-name {
+  margin: 14px 0 10px;
+  font-size: 28px; line-height: 1.05; letter-spacing: -0.015em;
+  font-weight: 400;
+}
+.lab-line {
+  font-size: 15px; line-height: 1.45;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.lab-card:hover .lab-line { color: var(--paper); opacity: 0.85; }
+.lab-arrow {
+  margin-top: 16px;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+@media (max-width: 1100px) {
+  .labs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lab-card { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .lab-card:nth-child(2n) { border-right: none; }
+  .lab-card:nth-last-child(-n+2) { border-bottom: none; }
+}
+@media (max-width: 560px) {
+  .labs-grid { grid-template-columns: 1fr; }
+  .lab-card { border-right: none; border-bottom: 1px solid var(--ink); }
+  .lab-card:last-child { border-bottom: none; }
 }
 
 /* ── Projects Section ───────────────────────────────────────── */
