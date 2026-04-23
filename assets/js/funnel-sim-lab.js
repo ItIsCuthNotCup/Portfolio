@@ -243,13 +243,11 @@
       a.ticksInStage[i]++;
 
       // STAGE_RATE governs how much of a per-stage adv/drop probability
-      // fires per tick. Tuned so the equilibrium population at each band
-      // is visible on canvas (node sim: ~100 / 60 / 50 / 50 / 260 at the
-      // healthy preset). Previous tuning (0.08,0.08,0.08,0.05,0.02) was
-      // back-heavy: it concentrated ~350 agents in Retention and starved
-      // Trial/Purchase, and at speed>1 the agent pool saturated and
-      // left Purchase/Retention visually empty when inflow bottlenecked.
-      const STAGE_RATE = [0.05, 0.045, 0.025, 0.018, 0.028];
+      // fires per tick. v6 tune: faster upstream flow so Trial doesn't
+      // bottleneck, slow Purchase residence so that band stays populated,
+      // Retention rate sized so churn matches inflow.
+      // Node-sim equilibrium (healthy preset, speed=1, 10s): 62/47/28/42/217.
+      const STAGE_RATE = [0.08, 0.07, 0.05, 0.025, 0.03];
       const adv = probs.adv[stage] * STAGE_RATE[stage] * state.speed;
       const drp = probs.drop[stage] * STAGE_RATE[stage] * state.speed;
       const u = Math.random();
@@ -415,11 +413,17 @@
       const band = stageBandY(s);
       ctx.fillText(stageCounts[s] + ' in stage', W - 14, band.top + 14);
     }
-    // Build stamp so a stale browser cache is instantly obvious on sight.
+    // Build stamp + per-band diagnostic. Per-band counts shown so a
+    // stale cache or a simulation stall is instantly visible on sight.
     ctx.font = '9px "DM Mono", monospace';
-    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.textAlign = 'left';
-    ctx.fillText('build v5 · ' + state.nActive + ' active', 10, H - 8);
+    ctx.fillText(
+      'build v6 · ' + state.nActive + ' active · A:' + stageCounts[0] +
+      ' C:' + stageCounts[1] + ' T:' + stageCounts[2] +
+      ' P:' + stageCounts[3] + ' R:' + stageCounts[4],
+      10, H - 8
+    );
   }
 
   // ══════════════════════════════════════════════════════════
@@ -544,10 +548,10 @@
   // bands immediately on reset (rather than watching agents trickle
   // through for 30 s).
   const SEED_DISTRIBUTION = [
-    { stage: 0, count: 100 },  // Awareness
+    { stage: 0, count:  80 },  // Awareness
     { stage: 1, count:  60 },  // Consideration
     { stage: 2, count:  60 },  // Trial
-    { stage: 3, count:  60 },  // Purchase
+    { stage: 3, count:  70 },  // Purchase (explicit seed so it never starts empty)
     { stage: 4, count: 120 },  // Retention
   ];
   function seedInitialPopulation() {
