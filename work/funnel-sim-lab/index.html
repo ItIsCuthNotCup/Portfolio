@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funnel Simulation — Jake Cuth.</title>
+  <meta name="description" content="An agent-based simulation of a marketing funnel. Hundreds of dots flow through five stages with per-segment transition probabilities. Move the levers, watch the system respond.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Funnel Simulation — agent-based marketing model">
+  <meta property="og:description" content="A thousand animated customers, four segments that respond differently to every lever, and a live feedback loop between parameters and outcomes.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/funnel-sim-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/funnel-sim-lab.css">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Model Examples <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" class="active" aria-current="page" role="menuitem">Funnel Simulation</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="fs-main">
+
+<!-- HERO -->
+<section class="fs-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. K</span>
+    <span>A funnel, but watch it move</span>
+  </div>
+  <h1 class="serif big-display fs-title">
+    The average is<br>
+    <span class="serif-italic" style="color:var(--accent)">the lie.</span>
+  </h1>
+  <p class="fs-kicker">
+    An agent-based simulation of a marketing funnel. Hundreds of
+    customers, four segments with different price sensitivities and
+    fatigue tolerances, five stages from awareness to retention. Pull
+    a lever — watch which segments respond, which don't, and where
+    your "healthy" 3% conversion is actually hiding three dead funnels
+    behind one great one.
+  </p>
+  <div class="mono fs-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Canvas ABM · <span id="stat-agents">1,200</span> agents · 60 fps</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/funnel_sim_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/funnel_sim_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="fs-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why funnel averages lie</span>
+  </div>
+  <div class="fs-prose">
+    <p class="fs-lede">
+      Every marketing deck has the same chart: a tidy vertical funnel,
+      awareness at the top, purchase at the bottom, a single conversion
+      number stamped across it. The number is usually <em>true</em>.
+      It's also usually <em>useless.</em>
+    </p>
+    <p>
+      A 3% conversion rate at the bottom might come from one segment
+      converting at 20% and three others below 1%. A discount that
+      looks like a win in aggregate might be silently training your
+      loyalists to wait for the next promotion. A retention campaign
+      that appears to be working might just be capturing agents who
+      were going to stay anyway.
+    </p>
+    <p>
+      Static dashboards show <em>outcomes</em>. This page simulates the
+      <em>mechanism:</em> a thousand dots, four different kinds of
+      customer, moving stage by stage with per-segment transition
+      probabilities. Every lever you touch modifies those
+      probabilities. Every metric you see emerges from the agents
+      themselves. No averages hiding anything.
+    </p>
+    <p class="fs-footnote">
+      The model math is derived and validated in the linked
+      <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/funnel_sim_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">Python script</a>:
+      closed-form per-segment conversion matches a 50,000-agent
+      simulation within 1%.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. K.1 — THE SIMULATOR -->
+<section class="fs-section fs-section-sim">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. K.1</span>
+    <span>The simulator — run a funnel</span>
+  </div>
+  <p class="fs-note">
+    Agents enter at awareness, advance probabilistically, and exit when
+    they drop off or retain. Colors mark segment. Move the levers on
+    the right; the system responds in real time.
+  </p>
+
+  <div class="sim-layout">
+    <!-- Canvas + stage labels -->
+    <div class="sim-canvas-wrap">
+      <div class="stage-labels mono">
+        <div class="stage-lbl"><span class="stage-idx">I</span><span class="stage-name">Awareness</span><span class="stage-drop" id="drop-0">—</span></div>
+        <div class="stage-lbl"><span class="stage-idx">II</span><span class="stage-name">Consideration</span><span class="stage-drop" id="drop-1">—</span></div>
+        <div class="stage-lbl"><span class="stage-idx">III</span><span class="stage-name">Trial</span><span class="stage-drop" id="drop-2">—</span></div>
+        <div class="stage-lbl"><span class="stage-idx">IV</span><span class="stage-name">Purchase</span><span class="stage-drop" id="drop-3">—</span></div>
+        <div class="stage-lbl"><span class="stage-idx">V</span><span class="stage-name">Retention</span><span class="stage-drop" id="drop-4">—</span></div>
+      </div>
+      <canvas id="fs-canvas" width="900" height="600"></canvas>
+
+      <!-- Legend: segment colors -->
+      <div class="segment-legend mono">
+        <div class="seg-dot" data-seg="bargain"><span class="dot"></span>Bargain</div>
+        <div class="seg-dot" data-seg="loyalist"><span class="dot"></span>Loyalist</div>
+        <div class="seg-dot" data-seg="skeptic"><span class="dot"></span>Skeptic</div>
+        <div class="seg-dot" data-seg="impulse"><span class="dot"></span>Impulse</div>
+      </div>
+    </div>
+
+    <!-- Controls column -->
+    <aside class="sim-controls">
+      <div class="control-head mono">Levers</div>
+      <label class="ctl-field">
+        <div class="mono ctl-label">Ad spend · $/day · <span id="ad-val">400</span></div>
+        <input type="range" id="ad-spend" min="100" max="1000" step="50" value="400">
+      </label>
+      <label class="ctl-field">
+        <div class="mono ctl-label">Email frequency · <span id="email-val">0.55</span></div>
+        <input type="range" id="email-freq" min="0" max="1" step="0.05" value="0.55">
+      </label>
+      <label class="ctl-field">
+        <div class="mono ctl-label">Discount depth · <span id="disc-val">0.10</span></div>
+        <input type="range" id="discount" min="0" max="1" step="0.05" value="0.10">
+      </label>
+      <label class="ctl-field">
+        <div class="mono ctl-label">Targeting precision · <span id="targ-val">0.65</span></div>
+        <input type="range" id="targeting" min="0" max="1" step="0.05" value="0.65">
+      </label>
+      <label class="ctl-field">
+        <div class="mono ctl-label">Retention effort · <span id="ret-val">0.70</span></div>
+        <input type="range" id="retention-effort" min="0" max="1" step="0.05" value="0.70">
+      </label>
+
+      <div class="control-head mono" style="margin-top:12px;">Run</div>
+      <div class="run-buttons">
+        <button type="button" class="ctl-btn primary" id="fs-run">Pause</button>
+        <button type="button" class="ctl-btn" id="fs-reset">Reset</button>
+      </div>
+      <div class="run-buttons" style="margin-top:8px;">
+        <div class="mono ctl-label" style="margin-right:auto;">Speed</div>
+        <div class="speed-dial" role="tablist">
+          <button type="button" role="tab" aria-selected="false" data-speed="0.5">½×</button>
+          <button type="button" role="tab" aria-selected="true" data-speed="1">1×</button>
+          <button type="button" role="tab" aria-selected="false" data-speed="3">3×</button>
+        </div>
+      </div>
+
+      <div class="control-head mono" style="margin-top:12px;">Preset</div>
+      <select id="fs-preset" class="mono preset-select">
+        <option value="healthy" selected>healthy funnel</option>
+        <option value="leaky">leaky bucket</option>
+        <option value="saturated">saturated market</option>
+        <option value="niche_premium">niche premium</option>
+        <option value="custom">custom (current sliders)</option>
+      </select>
+    </aside>
+  </div>
+
+  <!-- Live metrics + per-segment breakdown -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="mono mc-head">Overall</div>
+      <div class="mc-grid">
+        <div><div class="serif mc-val" id="m-conv">—</div><div class="mono mc-lbl">conversion</div></div>
+        <div><div class="serif mc-val" id="m-cac">—</div><div class="mono mc-lbl">CAC</div></div>
+        <div><div class="serif mc-val" id="m-ltv">—</div><div class="mono mc-lbl">LTV</div></div>
+        <div><div class="serif mc-val" id="m-ratio">—</div><div class="mono mc-lbl">LTV : CAC</div></div>
+        <div><div class="serif mc-val" id="m-revenue">—</div><div class="mono mc-lbl">revenue</div></div>
+        <div><div class="serif mc-val" id="m-payback">—</div><div class="mono mc-lbl">payback (mo)</div></div>
+      </div>
+    </div>
+    <div class="metric-card segbreak">
+      <div class="mono mc-head">By segment · conversion rate</div>
+      <div class="segbreak-grid" id="seg-breakdown"><!-- filled by JS --></div>
+      <div class="mono segbreak-note">
+        Same levers, four different responses. This is why aggregate
+        conversion lies.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — HOW IT WORKS -->
+<section class="fs-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>How it works</span>
+  </div>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="mono how-fig">Fig. A</div>
+      <h3 class="serif how-title">Agents, not averages</h3>
+      <p>
+        Every dot is an agent with a segment, a stage, and a fatigue
+        counter. Each tick, each agent rolls for advance, drop, or
+        stay — probabilities pulled from a 4 × 5 matrix (segment by
+        stage), modulated by the lever settings. No equations of
+        motion, no ML: just explicit transition probabilities you can
+        derive on paper.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. B</div>
+      <h3 class="serif how-title">Heterogeneous response</h3>
+      <p>
+        Each segment has its own <em>responsiveness</em> vector to
+        every lever. Bargain hunters double their trial rate when
+        discount goes up; loyalists don't move. Skeptics need more ad
+        exposure than anyone; impulse buyers fatigue faster than
+        anyone. This is where the "average is the lie" effect lives.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. C</div>
+      <h3 class="serif how-title">Metrics as emergence</h3>
+      <p>
+        Conversion, CAC, LTV, and payback aren't computed from formulas
+        after the fact — they emerge from the population as it moves.
+        The closed-form math in the
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/funnel_sim_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebook</a>
+        confirms the live numbers are internally consistent to within
+        1%.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. K.2 — SCENARIO FINGERPRINTS -->
+<section class="fs-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. K.2</span>
+    <span>Four funnels, four fingerprints</span>
+  </div>
+  <p class="fs-note">
+    The same model under four preset lever configurations. Each scenario
+    has a characteristic metric signature — learn the shape once and
+    you'll spot it in a real dashboard the week after.
+  </p>
+  <div class="fingerprint-grid" id="fingerprint-grid"><!-- built by JS --></div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS -->
+<section class="fs-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="metrics-grid" id="receipts-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY -->
+<section class="fs-section fs-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript, HTML5 Canvas 2D, single preallocated agent pool
+        of 1,500. All drawing in batched paths per segment color; no
+        DOM nodes per agent, no SVG, no WebGL. 60fps on any device
+        since ~2017.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Model spec</div>
+      <p>
+        Four segments, five stages, a 4 × 5 matrix of per-(segment, stage)
+        advance and drop probabilities. Levers modify those probabilities
+        through per-segment responsiveness vectors. Exact definitions in
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/funnel_sim_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/funnel_sim_model.py ↗</a>
+        and mirrored verbatim in
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/funnel-sim-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">assets/js/funnel-sim-lab.js ↗</a>.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.amazon.com/Growing-Artificial-Societies-Social-Bottom/dp/0262550253" target="_blank" rel="noopener" style="border-bottom:1px solid">Epstein &amp; Axtell · Growing Artificial Societies ↗</a><br>
+        <a href="https://journals.sagepub.com/doi/10.1509/jmkr.48.3.589" target="_blank" rel="noopener" style="border-bottom:1px solid">Rand &amp; Rust · Agent-based modelling in marketing ↗</a><br>
+        <a href="https://ccl.northwestern.edu/netlogo/" target="_blank" rel="noopener" style="border-bottom:1px solid">NetLogo · the canonical ABM sandbox ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Segment membership is fixed at entry — no crossover. No network
+        effects or word-of-mouth (a natural extension). No competitor
+        dynamics; inflow rate is a function of ad spend only. Time is
+        compressed (one sim-tick ≈ one customer-day), so payback
+        figures are order-of-magnitude indicators, not forecasts.
+      </p>
+    </div>
+  </div>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/funnel-sim-lab.js"></script>
+</body>
+</html>

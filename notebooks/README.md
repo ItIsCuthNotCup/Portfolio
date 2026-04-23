@@ -59,6 +59,23 @@ Writes `assets/data/ab-test/methodology.json` in ~2 seconds. The expected
 punchline: nominal α = 0.05, empirical false-positive rate from peeking ≈
 30–40%, an ~6–8× inflation.
 
+## Funnel simulator — `/work/funnel-sim-lab/`
+
+The live page runs an agent-based marketing funnel simulation in the
+browser (Canvas 2D, 1,500-agent pool). This script is the reference
+model: closed-form per-segment conversion derived from the same
+transition-probability matrix the JS uses, plus a 50,000-agent Monte
+Carlo that confirms the analytical math to within 1 %.
+
+```bash
+python notebooks/funnel_sim_model.py
+```
+
+Writes `assets/data/funnel-sim/methodology.json` in ~1 second. Contains
+per-segment closed-form conversion, four preset scenario fingerprints
+(healthy / leaky / saturated / niche-premium), and a discount-sweep
+sensitivity table the frontend pulls to render its scenario cards.
+
 ## Reproducibility
 
 `random_state=42` wherever randomness matters. No floats depend on hardware. All datasets are either included in the repo or publicly downloadable by the script, and the scripts are fully deterministic.
