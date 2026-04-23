@@ -33,7 +33,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <header class="masthead">
   <div class="mono masthead-dateline">
-    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
   </div>
   <div class="masthead-name">
     <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
@@ -62,7 +62,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-hero">
   <div class="mono section-label">
-    <span class="idx">§ VII · FIG. H</span>
+    <span class="idx">FIG. H</span>
     <span>Customer Segmentation, Unsupervised</span>
   </div>
   <h1 class="serif big-display seg-title">
@@ -414,6 +414,17 @@
         <span id="regenerated-at" class="mono">—</span>. Running
         <span class="mono">python notebooks/segmentation_model.py</span>
         twice on the same CSV produces byte-identical JSON.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Static snapshot — no drift between training and today. RFM captures
+        transaction pattern but misses product affinity and channel mix.
+        The live classifier snaps a new customer to the nearest frozen
+        centroid; a production program would retrain on a schedule. Four
+        segments is deliberately few for readability — real programs
+        usually run a dozen or more.
       </p>
     </div>
   </div>

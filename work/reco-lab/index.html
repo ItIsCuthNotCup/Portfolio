@@ -41,7 +41,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <header class="masthead">
   <div class="mono masthead-dateline">
-    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
   </div>
   <div class="masthead-name">
     <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
@@ -70,7 +70,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <section class="reco-hero">
   <div class="mono section-label">
-    <span class="idx">§ VIII · FIG. I</span>
+    <span class="idx">FIG. I</span>
     <span>A recommender, click by click</span>
   </div>
   <h1 class="serif big-display reco-title">
@@ -293,22 +293,15 @@
 
   <div class="method-grid">
     <div>
-      <div class="mono method-head">Dataset</div>
+      <div class="mono method-head">Dataset &amp; posters</div>
       <p>
+        Ratings and tags:
         <a href="https://grouplens.org/datasets/movielens/latest/" target="_blank" rel="noopener" style="border-bottom:1px solid">MovieLens ml-latest-small ↗</a>
-        — 100k ratings from 600 users across 9,700 films. Free, public,
-        and the standard benchmark for academic recommenders. Filtered
-        to titles with ≥50 ratings and ≥3.3 average before indexing.
-      </p>
-    </div>
-    <div>
-      <div class="mono method-head">Posters</div>
-      <p>
-        Poster art fetched at build time from
-        <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="border-bottom:1px solid">The Movie Database (TMDB) ↗</a>.
-        Image URLs are stored in <span class="mono">movies.json</span>
-        and lazy-loaded per row by the browser. TMDB is the source
-        and does not endorse this project.
+        — 100k ratings, 600 users, 9,700 films. Filtered to titles with
+        ≥50 ratings and ≥3.3 average. Poster art from
+        <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="border-bottom:1px solid">TMDB ↗</a>,
+        fetched at build time and lazy-loaded at runtime. TMDB does not
+        endorse this project.
       </p>
     </div>
     <div>
@@ -328,6 +321,17 @@
         Last regenerated <span id="regenerated-at" class="mono">—</span>.
         All similarity scores and recommendations computed in your
         browser; no server involved.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Cold-start for new users — the page seeds with global top-rated,
+        but until a visitor clicks there is no personalization. Cold-start
+        for new movies is worse: a brand-new film has no ratings, and if
+        its tags are sparse the content model has nothing to grab. No
+        dislike signal, no temporal decay, no contextual features — all
+        standard pieces of a production recommender, all out of scope here.
       </p>
     </div>
   </div>

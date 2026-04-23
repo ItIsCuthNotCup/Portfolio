@@ -38,7 +38,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <header class="masthead">
   <div class="mono masthead-dateline">
-    Vol. <span style="color:var(--accent)">XII</span> · No. 04 · Apr 2026
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
   </div>
   <div class="masthead-name">
     <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
@@ -67,7 +67,7 @@
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-hero">
   <div class="mono section-label">
-    <span class="idx">§ VI · FIG. G</span>
+    <span class="idx">FIG. G</span>
     <span>The Churn Model, In the Open</span>
   </div>
   <h1 class="serif big-display churn-title">
@@ -438,6 +438,16 @@
         <span id="regenerated-at" class="mono">—</span>. Clone the repo, run
         <span class="mono">python notebooks/churn_model.py</span>, regenerate
         all nine JSON files.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Synthetic Kaggle dataset — small by production standards. Live
+        scoring uses logistic regression for interpretability, which misses
+        non-linear interactions the tree models catch (see § III for the
+        gap). No retraining schedule or drift detection — both essential in
+        anything that actually runs.
       </p>
     </div>
   </div>

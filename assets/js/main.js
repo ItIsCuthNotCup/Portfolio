@@ -19,6 +19,18 @@
   updateDateline();
   setInterval(updateDateline, 30000);
 
+  // ── Masthead issue / date (auto-updates per month) ──
+  // Falls through silently if the static fallback spans aren't present.
+  try {
+    const now = new Date();
+    const issueEl = document.getElementById('masthead-issue');
+    const dateEl = document.getElementById('masthead-date');
+    if (issueEl) issueEl.textContent = String(now.getMonth() + 1).padStart(2, '0');
+    if (dateEl) {
+      dateEl.textContent = now.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+    }
+  } catch (_) { /* keep static fallback */ }
+
   // ── Scroll progress bar ──
   const progressBar = document.getElementById('progress');
   let lastScroll = 0;
