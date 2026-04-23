@@ -44,6 +44,21 @@ Writes six JSON files to `assets/data/reco/` in ~30 seconds (longer on first run
 
 If `TMDB_API_KEY` is unset, the pipeline still runs end-to-end and writes null poster URLs — useful for schema checks, not useful for a live page.
 
+## A/B test simulator — `/work/ab-test-lab/`
+
+The live page runs its own simulation in JavaScript. This script exists as an
+independent Python + scipy cross-check: same sample-size formula, same
+two-proportion z-test, same peeking-bias Monte Carlo. Outputs reference
+numbers the frontend fetches and prints alongside the live numbers.
+
+```bash
+python notebooks/ab_test_model.py
+```
+
+Writes `assets/data/ab-test/methodology.json` in ~2 seconds. The expected
+punchline: nominal α = 0.05, empirical false-positive rate from peeking ≈
+30–40%, an ~6–8× inflation.
+
 ## Reproducibility
 
 `random_state=42` wherever randomness matters. No floats depend on hardware. All datasets are either included in the repo or publicly downloadable by the script, and the scripts are fully deterministic.

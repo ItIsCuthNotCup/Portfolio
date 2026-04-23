@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A/B Test Simulator — Jake Cuth.</title>
+  <meta name="description" content="A live, client-side A/B test simulator. Design an experiment, watch two Beta posteriors update as users flow in, see exactly how often peeking inflates your false positive rate.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A/B Test Simulator — run the math, not the hype">
+  <meta property="og:description" content="Live Beta posteriors, frequentist and Bayesian decisions side by side, and a peeking-bias Monte Carlo that proves why stopping early is a lie.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/ab-test-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/ab-test-lab.css">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Model Examples <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" class="active" aria-current="page" role="menuitem">A/B Test Simulator</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="ab-main">
+
+<!-- HERO -->
+<section class="ab-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. J</span>
+    <span>Experiments, run honestly</span>
+  </div>
+  <h1 class="serif big-display ab-title">
+    The math is the<br>
+    <span class="serif-italic" style="color:var(--accent)">aesthetic.</span>
+  </h1>
+  <p class="ab-kicker">
+    A live A/B test simulator. Design an experiment, watch two Beta
+    posteriors update frame-by-frame as users flow in, and see exactly
+    how often peeking early turns noise into a "winner." All math
+    runs in your browser — nothing phoned home, no preloaded answers.
+  </p>
+  <div class="mono ab-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Beta-Bernoulli · 2-prop z-test · Monte Carlo</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/ab_test_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/ab_test_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="ab-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why most A/B tests are run wrong</span>
+  </div>
+  <div class="ab-prose">
+    <p class="ab-lede">
+      Most failed experiments aren't failed by the data — they're failed
+      by the decision. Tests get peeked at every morning, winners called
+      the first time <span class="mono">p &lt; 0.05</span> flickers on the
+      dashboard, and null results quietly buried because "we didn't get
+      enough traffic."
+    </p>
+    <p>
+      The page below runs an honest test against itself. Set a baseline
+      rate, set the true lift (or zero, if you're curious), and let the
+      users flow. Two Beta posteriors update in real time. A pair of
+      decision panels — frequentist and Bayesian — tell you what each
+      framework would do right now. And a separate panel further down
+      proves, in a thousand synthetic tests, what peeking actually costs.
+    </p>
+    <p class="ab-footnote">
+      All simulations are reproducible from a seed. The companion
+      <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/ab_test_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">Python script</a>
+      runs the same peeking Monte Carlo in Python + scipy; the
+      reference number is shown alongside the live number for sanity.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. J.1 — THE SIMULATOR -->
+<section class="ab-section ab-section-sim">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. J.1</span>
+    <span>The simulator — run an experiment</span>
+  </div>
+
+  <!-- Decision banner at top -->
+  <div class="ab-banner mono" id="ab-banner" data-state="idle">
+    <span class="banner-state" id="banner-state">Collecting data…</span>
+    <span class="banner-detail" id="banner-detail">press <em>run</em> to start</span>
+  </div>
+
+  <!-- Designer panel -->
+  <div class="ab-designer">
+    <div class="designer-col">
+      <label class="designer-field">
+        <div class="mono field-label">Baseline rate (A)</div>
+        <div class="field-row">
+          <input type="range" id="p-a" min="0.01" max="0.50" step="0.005" value="0.10">
+          <span class="mono field-val" id="p-a-val">10.0%</span>
+        </div>
+      </label>
+      <label class="designer-field">
+        <div class="mono field-label">True variant rate (B)</div>
+        <div class="field-row">
+          <input type="range" id="p-b" min="0.01" max="0.50" step="0.005" value="0.12">
+          <span class="mono field-val" id="p-b-val">12.0%</span>
+        </div>
+      </label>
+      <label class="designer-field">
+        <div class="mono field-label">Split (A / B)</div>
+        <div class="field-row">
+          <input type="range" id="split" min="10" max="90" step="5" value="50">
+          <span class="mono field-val" id="split-val">50 / 50</span>
+        </div>
+      </label>
+    </div>
+    <div class="designer-col">
+      <label class="designer-field">
+        <div class="mono field-label">Significance α</div>
+        <div class="field-row">
+          <input type="range" id="alpha" min="0.01" max="0.20" step="0.01" value="0.05">
+          <span class="mono field-val" id="alpha-val">0.05</span>
+        </div>
+      </label>
+      <label class="designer-field">
+        <div class="mono field-label">Power (1 − β)</div>
+        <div class="field-row">
+          <input type="range" id="power" min="0.50" max="0.99" step="0.01" value="0.80">
+          <span class="mono field-val" id="power-val">0.80</span>
+        </div>
+      </label>
+      <div class="designer-field">
+        <div class="mono field-label">Required sample / arm</div>
+        <div class="serif field-readout" id="required-n">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="ab-controls">
+    <div class="control-group">
+      <button type="button" class="ctl-btn primary" id="ctl-run">Run</button>
+      <button type="button" class="ctl-btn" id="ctl-pause" disabled>Pause</button>
+      <button type="button" class="ctl-btn" id="ctl-reset">Reset</button>
+      <button type="button" class="ctl-btn" id="ctl-call" disabled>Call it</button>
+    </div>
+    <div class="control-group">
+      <div class="mono control-label">Speed</div>
+      <div class="speed-dial" role="tablist">
+        <button type="button" role="tab" aria-selected="false" data-speed="1">1×</button>
+        <button type="button" role="tab" aria-selected="false" data-speed="10">10×</button>
+        <button type="button" role="tab" aria-selected="true" data-speed="100">100×</button>
+        <button type="button" role="tab" aria-selected="false" data-speed="1000">max</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="mono control-label">Preset</div>
+      <select id="preset" class="mono preset-select">
+        <option value="custom">custom</option>
+        <option value="subtle">subtle lift (+1pp)</option>
+        <option value="null" selected>null — no true lift</option>
+        <option value="huge">huge lift (+5pp)</option>
+        <option value="reversal">reversal (early B lead, decays)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Main viz: two Beta curves -->
+  <div class="chart-frame beta-frame">
+    <div class="chart-corners">
+      <span class="cc tl"></span><span class="cc tr"></span>
+      <span class="cc bl"></span><span class="cc br"></span>
+    </div>
+    <div class="mono frame-label">Fig. J.1 — Beta posteriors · shaded = P(B &gt; A)</div>
+    <svg id="beta-chart" class="chart-svg" viewBox="0 0 900 420" role="img" aria-label="Two Beta posterior distributions"></svg>
+  </div>
+
+  <!-- Running counters -->
+  <div class="ab-counters">
+    <div class="counter counter-a">
+      <div class="mono counter-head">Variant A · control</div>
+      <div class="counter-row"><div class="serif counter-val" id="a-users">0</div><div class="mono counter-lbl">users</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="a-conv">0</div><div class="mono counter-lbl">conversions</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="a-rate">—</div><div class="mono counter-lbl">observed rate</div></div>
+    </div>
+    <div class="counter counter-b">
+      <div class="mono counter-head">Variant B · test</div>
+      <div class="counter-row"><div class="serif counter-val" id="b-users">0</div><div class="mono counter-lbl">users</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="b-conv">0</div><div class="mono counter-lbl">conversions</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="b-rate">—</div><div class="mono counter-lbl">observed rate</div></div>
+    </div>
+    <div class="counter counter-metrics">
+      <div class="mono counter-head">Live metrics</div>
+      <div class="counter-row"><div class="serif counter-val" id="m-lift">—</div><div class="mono counter-lbl">observed lift</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="m-pval">—</div><div class="mono counter-lbl">p-value · freq</div></div>
+      <div class="counter-row"><div class="serif counter-val" id="m-pba">—</div><div class="mono counter-lbl">P(B &gt; A) · bayes</div></div>
+    </div>
+  </div>
+
+  <!-- Seismograph: running metrics over time -->
+  <div class="chart-frame strip-frame">
+    <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
+    <div class="mono frame-label">Fig. J.1b — running decision metrics (P(B&gt;A), observed lift)</div>
+    <svg id="strip-chart" class="chart-svg" viewBox="0 0 900 200" role="img" aria-label="Running decision metrics over time"></svg>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — HOW IT WORKS -->
+<section class="ab-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>How it works</span>
+  </div>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="mono how-fig">Fig. A</div>
+      <h3 class="serif how-title">Beta-Bernoulli conjugacy</h3>
+      <p>
+        Start with a uniform <span class="mono">Beta(1, 1)</span> prior on each
+        variant's conversion rate. Each user is a Bernoulli trial:
+        converted (<span class="mono">+1</span> to α) or didn't
+        (<span class="mono">+1</span> to β). The posterior stays Beta at every
+        step — closed-form, no numerical integration. That's why the
+        distributions update smoothly at sixty frames per second.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. B</div>
+      <h3 class="serif how-title">Sample size, solved</h3>
+      <p>
+        The <em>required-sample</em> readout in the designer panel uses the
+        two-proportion z-test formula. It's what a traditional power
+        calculator would hand you, given baseline, minimum detectable
+        effect, α, and 1 − β. Change any slider; the number updates
+        instantly. Run fewer trials than that and your "null result" is
+        almost certainly under-powered noise.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. C</div>
+      <h3 class="serif how-title">P(B > A), honestly</h3>
+      <p>
+        For the Bayesian side, we draw 5,000 samples from each Beta
+        posterior every frame and count the fraction where B's draw
+        exceeds A's. Takes ~2ms. Gives a probability that doesn't
+        require a p-hacked threshold to interpret — "the test has
+        <span class="mono">P(B &gt; A) = 0.91</span>" is a statement a
+        product manager can actually act on.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. J.2 — PEEKING BIAS MONTE CARLO -->
+<section class="ab-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. J.2</span>
+    <span>The peeking-bias Monte Carlo</span>
+  </div>
+  <p class="ab-note">
+    Set the true variant rate equal to the baseline (<em>no real lift</em>).
+    Then peek at the test every few dozen users and stop the moment
+    <span class="mono">p &lt; 0.05</span> flickers. Do that a thousand
+    times. Count how often you declared a winner.
+  </p>
+  <p class="ab-note">
+    Nominal false-positive rate is 5%. What you'll actually get is
+    closer to 30–40% — the inflation comes entirely from the decision
+    process, not the data.
+  </p>
+
+  <div class="peek-controls">
+    <button type="button" class="ctl-btn primary" id="peek-run">Run 1,000 peek-stopped simulations</button>
+    <div class="peek-status mono" id="peek-status">— idle —</div>
+  </div>
+
+  <div class="peek-results" id="peek-results" hidden>
+    <div class="peek-hero">
+      <div class="peek-stat peek-stat-primary">
+        <div class="serif peek-val" id="peek-fpr">—</div>
+        <div class="mono peek-lbl">empirical false-positive rate</div>
+      </div>
+      <div class="peek-stat">
+        <div class="serif peek-val" id="peek-nominal">5%</div>
+        <div class="mono peek-lbl">nominal α</div>
+      </div>
+      <div class="peek-stat">
+        <div class="serif peek-val" id="peek-inflation">—</div>
+        <div class="mono peek-lbl">inflation factor</div>
+      </div>
+      <div class="peek-stat">
+        <div class="serif peek-val" id="peek-median">—</div>
+        <div class="mono peek-lbl">median stop-time</div>
+      </div>
+    </div>
+
+    <div class="chart-frame peek-frame">
+      <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
+      <div class="mono frame-label">Fig. J.2 — where false positives happen · each dot is one sim</div>
+      <svg id="peek-chart" class="chart-svg" viewBox="0 0 900 320" role="img" aria-label="Peeking stop-time scatter"></svg>
+    </div>
+
+    <p class="peek-reference mono" id="peek-reference">
+      — reference —
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · FIG. J.3 — FREQUENTIST vs BAYESIAN -->
+<section class="ab-section">
+  <div class="mono section-label">
+    <span class="idx">§ V · FIG. J.3</span>
+    <span>Frequentist vs. Bayesian — two verdicts, one test</span>
+  </div>
+  <p class="ab-note">
+    Same simulation, two decision frameworks. The frequentist stops when
+    <span class="mono">p &lt; α</span> <em>at the pre-registered sample size</em>.
+    The Bayesian stops when <span class="mono">P(B &gt; A)</span> crosses
+    a fixed threshold (default 95%). In small-effect tests they usually
+    agree. In ambiguous regions they don't — which is where the page
+    earns its keep.
+  </p>
+
+  <div class="verdict-grid">
+    <div class="verdict-card verdict-freq">
+      <div class="mono verdict-head">Frequentist</div>
+      <div class="verdict-detail mono">
+        <div>rule · <span id="freq-rule">stop at required N, reject H₀ if p &lt; α</span></div>
+        <div>p-value · <span class="serif" id="freq-p">—</span></div>
+        <div>CI 95% · <span class="serif" id="freq-ci">—</span></div>
+      </div>
+      <div class="verdict-call serif" id="freq-call">awaiting data</div>
+    </div>
+    <div class="verdict-card verdict-bayes">
+      <div class="mono verdict-head">Bayesian</div>
+      <div class="verdict-detail mono">
+        <div>rule · <span id="bayes-rule">stop when P(B &gt; A) &gt; 0.95 or &lt; 0.05</span></div>
+        <div>P(B &gt; A) · <span class="serif" id="bayes-pba">—</span></div>
+        <div>expected loss · <span class="serif" id="bayes-eloss">—</span></div>
+      </div>
+      <div class="verdict-call serif" id="bayes-call">awaiting data</div>
+    </div>
+  </div>
+  <div class="divergence-log mono" id="divergence-log" hidden></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — RECEIPTS -->
+<section class="ab-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Receipts</span>
+  </div>
+  <div class="metrics-grid" id="receipts-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — METHODOLOGY & COLOPHON -->
+<section class="ab-section ab-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript. Each frame generates a batch of Bernoulli trials
+        (rate scaled by the Speed dial), updates the two Beta posteriors,
+        recomputes the running z-test p-value and a Monte Carlo estimate
+        of <span class="mono">P(B &gt; A)</span>. Sixty frames per second
+        on any device since the iPhone 8.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Validation script</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/ab_test_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/ab_test_model.py ↗</a>
+        runs the same peeking Monte Carlo in Python + scipy, writes the
+        reference numbers to <span class="mono">methodology.json</span>.
+        The live page fetches them and prints both side by side.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.evanmiller.org/how-not-to-run-an-ab-test.html" target="_blank" rel="noopener" style="border-bottom:1px solid">Evan Miller · How Not to Run an A/B Test ↗</a><br>
+        <a href="https://www.exp-platform.com/Documents/2013%20controlledExperimentsAtLargeScale.pdf" target="_blank" rel="noopener" style="border-bottom:1px solid">Kohavi et al. · Online Controlled Experiments at Large Scale ↗</a><br>
+        <a href="https://www.chrisstucchio.com/pubs/VWO_SmartStats_technical_whitepaper.pdf" target="_blank" rel="noopener" style="border-bottom:1px solid">Stucchio · Bayesian A/B Testing at VWO ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        One metric, two variants — no multi-arm or multi-metric tests. No
+        sequential-testing adjustments (SPRT, α-spending); they'd be the
+        honest answer to peeking, but the point of the Monte Carlo panel
+        is to <em>show</em> the problem, not paper over it. Fixed uniform
+        prior; real programs use empirical priors fit to historical tests.
+      </p>
+    </div>
+  </div>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/ab-test-lab.js"></script>
+</body>
+</html>
