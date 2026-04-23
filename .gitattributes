@@ -1,3 +1,2 @@
-*.mov filter=lfs diff=lfs merge=lfs -text
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.webm filter=lfs diff=lfs merge=lfs -text
+# Project demo videos and clips are committed as regular blobs (no LFS).
+# Keep individual files under ~10 MB (Cloudflare Pages has a 25 MB per-file cap).
