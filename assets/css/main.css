@@ -702,8 +702,29 @@ main { position: relative; z-index: 1; }
   line-height: 0.9; letter-spacing: -0.035em;
   font-weight: 300; margin: 32px 0 0;
 }
+/* ── Lab business kicker (under each lab H1) ─────────────────── */
+/* One-line business translation sitting between the H1 and the     */
+/* existing methodological kicker. Larger and heavier than the      */
+/* kicker so a warm recruiter can read it in one pass.              */
+.lab-biz-line {
+  margin: 22px 0 0;
+  max-width: 640px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(20px, 2.1vw, 26px);
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.contact-kicker {
+  margin: 36px auto 0;
+  max-width: 560px;
+  font-size: 17px; line-height: 1.55;
+  color: var(--ink-soft);
+}
 .contact-ctas {
-  margin-top: 56px;
+  margin-top: 40px;
   display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
 }
 .contact-ctas .btn-dark {
