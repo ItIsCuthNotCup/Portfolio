@@ -280,62 +280,70 @@ main { position: relative; z-index: 1; }
 }
 .section-label .idx { color: var(--accent); }
 
-/* ── Role Cycle (AI / ML / Analytics Engineer) ──────────────── */
-/* Small editorial line under the §-label. Rotates AI → ML →     */
-/* Analytics so recruiters scanning the first 10s see role fit    */
-/* without turning the hero into a resume header.                 */
-.role-cycle {
-  margin-top: 10px;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-  /* Vertical room for the flipping word. The overflow-hidden viewport  */
-  /* needs enough height to NOT clip glyph descenders during the        */
-  /* translateY slide — previously 1em with translateY(±40%) trimmed    */
-  /* the bottom stroke of letters, making "AI" look like "AT".          */
-  line-height: 1.8;
+/* ── Hero Role Cycle (large, layered over the 3D scene) ─────── */
+/* Lives inside the hero section so it scrolls off with the hero   */
+/* instead of tracking the fixed 3D scene. The cycling word is     */
+/* stacked directly above "Engineer" so the two read as one phrase.*/
+.hero-role {
+  position: absolute;
+  /* Align roughly to the middle of the right-side 3D object.       */
+  top: 50%;
+  right: clamp(40px, 10vw, 140px);
+  transform: translateY(-50%);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  text-align: center;
+  pointer-events: none;
+  z-index: 2;
+  color: var(--ink);
+  font-size: clamp(48px, 6.5vw, 92px);
 }
-.role-cycle-words {
+.hero-role-words {
   position: relative;
-  display: inline-block;
-  /* Tall enough to fully show cap-height + descender + slide distance. */
-  height: 1.8em;
-  /* width of the longest word, "Analytics", in DM Mono at 11px/.18em */
-  min-width: 7.2em;
+  display: block;
+  /* Tall enough to avoid clipping glyph descenders during the slide.   */
+  height: 1.15em;
+  /* Wide enough to fully show "Analytics" italic (~5.5em at this font).*/
+  min-width: 5.5em;
   overflow: hidden;
   color: var(--accent);
-  vertical-align: middle;
+  font-style: italic;
+  margin: 0 auto;
 }
-.role-cycle-words > span {
+.hero-role-words > span {
   position: absolute;
-  left: 0;
-  /* Vertically centered within the tall viewport. */
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
   opacity: 0;
-  animation: role-cycle 6s infinite cubic-bezier(.5,.05,.2,1);
+  animation: hero-role-cycle 6s infinite cubic-bezier(.5,.05,.2,1);
+  white-space: nowrap;
 }
-.role-cycle-words > span:nth-child(1) { animation-delay: 0s; }
-.role-cycle-words > span:nth-child(2) { animation-delay: 2s; }
-.role-cycle-words > span:nth-child(3) { animation-delay: 4s; }
-@keyframes role-cycle {
-  /* Slides kept inside the viewport so no stroke gets clipped mid-animation. */
-  0%   { opacity: 0; transform: translate(0, calc(-50% - 8px)); }
-  8%   { opacity: 1; transform: translate(0, -50%); }
-  28%  { opacity: 1; transform: translate(0, -50%); }
-  36%  { opacity: 0; transform: translate(0, calc(-50% + 8px)); }
-  100% { opacity: 0; transform: translate(0, calc(-50% + 8px)); }
+.hero-role-words > span:nth-child(1) { animation-delay: 0s; }
+.hero-role-words > span:nth-child(2) { animation-delay: 2s; }
+.hero-role-words > span:nth-child(3) { animation-delay: 4s; }
+@keyframes hero-role-cycle {
+  0%   { opacity: 0; transform: translate(-50%, calc(-50% - 18px)); }
+  8%   { opacity: 1; transform: translate(-50%, -50%); }
+  28%  { opacity: 1; transform: translate(-50%, -50%); }
+  36%  { opacity: 0; transform: translate(-50%, calc(-50% + 18px)); }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% + 18px)); }
+}
+.hero-role-suffix {
+  display: block;
+  margin-top: 0.05em;
 }
 @media (prefers-reduced-motion: reduce) {
-  .role-cycle-words > span { animation: role-cycle-fade 6s infinite steps(1,end); transform: none !important; }
-  @keyframes role-cycle-fade {
+  .hero-role-words > span { animation: hero-role-fade 6s infinite steps(1,end); transform: translate(-50%, -50%) !important; }
+  @keyframes hero-role-fade {
     0%, 33%  { opacity: 1; }
     34%, 100% { opacity: 0; }
   }
+}
+@media (max-width: 900px) {
+  /* On narrow screens the 3D scene is hidden, so hide the role too.   */
+  .hero-role { display: none; }
 }
 
 /* ── Big Display Text ───────────────────────────────────────── */
