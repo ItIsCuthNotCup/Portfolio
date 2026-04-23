@@ -225,11 +225,14 @@
     for (let i = 0; i < MAX_AGENTS; i++) {
       if (!a.active[i]) continue;
 
-      // Fade-out handling
+      // Fade-out handling — agents drift RIGHT toward the drop-off
+      // arrow as they fade, not down (downward drift caused fading
+      // agents from one band to pile up as a horizontal line at the
+      // band boundary).
       if (a.fading[i]) {
-        a.fadeT[i] -= 0.04 * state.speed;
+        a.fadeT[i] -= 0.05 * state.speed;
         if (a.fadeT[i] <= 0) { a.active[i] = 0; state.nActive--; continue; }
-        a.y[i] += 1.2 * state.speed;
+        a.x[i] += 4.5 * state.speed;
         continue;
       }
 
@@ -249,6 +252,12 @@
           a.stage[i]++;
           const band = stageBandY(a.stage[i]);
           a.targetY[i] = band.top + Math.random() * (band.bottom - band.top);
+          // Jump the visible position 60 % of the way into the new band
+          // immediately. Remaining distance smooths via the motion step
+          // below. Without this, agents logically advanced through
+          // Purchase + Retention faster than their y could catch up,
+          // leaving the bottom bands visually empty.
+          a.y[i] = a.y[i] + (a.targetY[i] - a.y[i]) * 0.6;
           a.ticksInStage[i] = 0;
           state.entered[a.stage[i]]++;
           if (a.stage[i] === 3) {
@@ -278,9 +287,11 @@
         startFade(i, 1);
       }
 
-      // Smooth vertical motion toward target band
+      // Smooth vertical motion toward target band. Rate tuned so a
+      // single transition settles in ~10 ticks, comfortably faster
+      // than the per-tick advance probability can fire again.
       const dy = a.targetY[i] - a.y[i];
-      a.y[i] += dy * 0.08;
+      a.y[i] += dy * 0.22;
       // Horizontal jitter with walls
       a.x[i] += a.vx[i] * state.speed;
       if (a.x[i] < 20) { a.x[i] = 20; a.vx[i] = Math.abs(a.vx[i]); }
