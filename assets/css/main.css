@@ -469,7 +469,7 @@ main { position: relative; z-index: 1; }
 
 /* ── Projects Section ───────────────────────────────────────── */
 .projects-section {
-  padding: 160px 48px 100px;
+  padding: 80px 48px 100px;
   border-top: 1px solid var(--ink);
 }
 .projects-intro { max-width: 900px; }
