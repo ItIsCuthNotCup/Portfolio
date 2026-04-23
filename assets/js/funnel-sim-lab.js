@@ -225,14 +225,14 @@
     for (let i = 0; i < MAX_AGENTS; i++) {
       if (!a.active[i]) continue;
 
-      // Fade-out handling — agents drift RIGHT toward the drop-off
-      // arrow as they fade, not down (downward drift caused fading
-      // agents from one band to pile up as a horizontal line at the
-      // band boundary).
+      // Fade-out handling — disappear fast. Earlier versions drifted
+      // fading agents rightward over 20 ticks, which produced a
+      // visible vertical "shadow" column of dying dots. Now they fade
+      // in ~6 ticks with minimal drift — quick deaths, no pileup.
       if (a.fading[i]) {
-        a.fadeT[i] -= 0.05 * state.speed;
+        a.fadeT[i] -= 0.17 * state.speed;
         if (a.fadeT[i] <= 0) { a.active[i] = 0; state.nActive--; continue; }
-        a.x[i] += 4.5 * state.speed;
+        a.x[i] += 1.5 * state.speed;
         continue;
       }
 
@@ -410,6 +410,11 @@
       const band = stageBandY(s);
       ctx.fillText(stageCounts[s] + ' in stage', W - 14, band.top + 14);
     }
+    // Build stamp so a stale browser cache is instantly obvious on sight.
+    ctx.font = '9px "DM Mono", monospace';
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.textAlign = 'left';
+    ctx.fillText('build v4 · ' + state.nActive + ' active', 10, H - 8);
   }
 
   // ══════════════════════════════════════════════════════════
