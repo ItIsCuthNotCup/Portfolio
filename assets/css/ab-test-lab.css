@@ -82,7 +82,9 @@
   font-size: 13px;
 }
 .ab-banner .banner-detail em { font-style: italic; color: var(--ink); }
-.ab-banner[data-state="running"] { border-color: var(--ink); }
+.ab-banner[data-state="idle"]     { border-color: var(--rule); }
+.ab-banner[data-state="running"]  { border-color: var(--ink); }
+.ab-banner[data-state="paused"]   { border-color: var(--ink-dim); }
 .ab-banner[data-state="sig-up"]   { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, var(--paper-2)); }
 .ab-banner[data-state="sig-down"] { border-color: var(--ink); }
 .ab-banner[data-state="nosig"]    { border-color: var(--rule); }

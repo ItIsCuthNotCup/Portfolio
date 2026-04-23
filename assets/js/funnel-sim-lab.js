@@ -394,31 +394,45 @@
     if (now - lastMetricsUpdate < 200) return;
     lastMetricsUpdate = now;
 
-    // Per-stage drop rates
+    // Per-stage drop rates — use the analytical drop probability so the
+    // readouts respond instantly when the user moves a slider, rather
+    // than waiting for a hundred agents to flow through empirically.
     for (let s = 0; s < 5; s++) {
-      const entered = Math.max(1, state.entered[s]);
-      const rate = state.dropped[s] / entered;
       const el = document.getElementById('drop-' + s);
-      if (el) el.textContent = (rate * 100).toFixed(0) + '% drop';
+      if (!el) continue;
+      // Blended analytical drop-on-exit probability across segments.
+      let weighted = 0;
+      for (const seg of SEGMENTS) {
+        const pr = probCache[SEG_KEY_TO_IDX[seg.key]];
+        const exit = pr.adv[s] + pr.drop[s];
+        const dropGivenExit = exit > 0 ? pr.drop[s] / exit : 0;
+        weighted += seg.entry * dropGivenExit;
+      }
+      el.textContent = (weighted * 100).toFixed(0) + '% drop';
     }
 
-    // Conversion — analytical (smoothed) is more interesting than the
-    // noisy running empirical rate
+    // Conversion / LTV / CAC — analytical (smoothed) is more honest than
+    // the noisy running empirical rate, and responds to slider changes
+    // immediately.
     const conv = blendedConversion(state.levers);
     const ltv = blendedLtv(state.levers);
     const cac = cacEstimate(state.levers);
     const ratio = isFinite(cac) ? ltv / cac : 0;
-    const payback = isFinite(cac) && ltv > 0 ? cac / (ltv / Math.max(1, (ltv / 50))) : Infinity;
 
     setText('m-conv', (conv * 100).toFixed(1) + '%');
     setText('m-cac', isFinite(cac) ? '$' + cac.toFixed(0) : '∞');
     setText('m-ltv', '$' + ltv.toFixed(0));
     setText('m-ratio', ratio ? ratio.toFixed(1) + '×' : '—');
     setText('m-revenue', '$' + Math.round(state.revenue).toLocaleString());
-    // Rough payback = months to recoup CAC at LTV/lifetime revenue per month
-    const monthlyContribution = SEGMENTS.reduce((s, seg) =>
-      s + seg.entry * seg.ticket * (1 - 0.5 * state.levers.discount), 0);
-    const paybackMo = isFinite(cac) ? cac / monthlyContribution : Infinity;
+
+    // Payback = CAC × retention_months / LTV.
+    //   Equivalent to CAC ÷ average monthly revenue per customer.
+    //   For a short retention tail, payback approaches CAC/ticket.
+    const retentionMonths = SEGMENTS.reduce((s, seg) =>
+      s + seg.entry * analyticalRetentionMonths(seg, state.levers), 0);
+    const paybackMo = (isFinite(cac) && ltv > 0)
+      ? (cac * retentionMonths) / ltv
+      : Infinity;
     setText('m-payback', isFinite(paybackMo) ? paybackMo.toFixed(1) : '∞');
 
     // Per-segment breakdown (analytical conversion)
@@ -453,20 +467,7 @@
     state.ctx = state.canvas.getContext('2d');
     resolveColors();
     initAgentPool();
-
-    // Seed a starting population
-    for (let i = 0; i < 200; i++) {
-      spawnAgent(pickSegmentIndex(state.levers.targeting));
-      // advance some to mid stages so the canvas isn't empty on load
-      const idx = findLastActive();
-      if (idx >= 0) {
-        const s = Math.floor(Math.random() * 4);
-        state.agents.stage[idx] = s;
-        const band = stageBandY(s);
-        state.agents.y[idx] = band.top + Math.random() * (band.bottom - band.top);
-        state.agents.targetY[idx] = state.agents.y[idx];
-      }
-    }
+    seedInitialPopulation();
 
     wireControls();
     wirePreset();
@@ -477,6 +478,11 @@
     refreshProbCache();
     updateMetrics();
 
+    // Hero stat line — keep in sync with MAX_AGENTS so the text never
+    // drifts from what the engine is actually running.
+    const statEl = document.getElementById('stat-agents');
+    if (statEl) statEl.textContent = 'up to ' + MAX_AGENTS.toLocaleString();
+
     window.addEventListener('resize', () => { resizeCanvas(); resolveColors(); });
 
     loop();
@@ -486,6 +492,21 @@
     const a = state.agents;
     for (let i = MAX_AGENTS - 1; i >= 0; i--) if (a.active[i]) return i;
     return -1;
+  }
+
+  // Seed a plausible starting population so the canvas isn't empty on
+  // load / reset. Called by init() and by the Reset button.
+  function seedInitialPopulation() {
+    for (let i = 0; i < 200; i++) {
+      spawnAgent(pickSegmentIndex(state.levers.targeting));
+      const idx = findLastActive();
+      if (idx < 0) continue;
+      const s = Math.floor(Math.random() * 4);  // stages 0..3
+      state.agents.stage[idx] = s;
+      const band = stageBandY(s);
+      state.agents.y[idx] = band.top + Math.random() * (band.bottom - band.top);
+      state.agents.targetY[idx] = state.agents.y[idx];
+    }
   }
 
   function resizeCanvas() {
@@ -536,6 +557,7 @@
       state.revenue = 0;
       state.acquisitions = 0;
       state.totalAdSpend = 0;
+      seedInitialPopulation();
     });
   }
   function markCustomPreset() {
