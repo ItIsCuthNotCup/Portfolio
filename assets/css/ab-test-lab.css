@@ -414,9 +414,17 @@
    ═══════════════════════════════════════════════════════════ */
 .ab-section .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  /* Fixed 3-column so the 6 receipt cards read as a clean 3 × 2 grid,
+     not a 5 + 1 with a lonely orphan on the bottom row. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin-top: 24px;
+}
+@media (max-width: 720px) {
+  .ab-section .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+  .ab-section .metrics-grid { grid-template-columns: 1fr; }
 }
 .ab-section .metric {
   padding: 20px 22px;

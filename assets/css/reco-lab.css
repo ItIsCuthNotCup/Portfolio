@@ -511,9 +511,16 @@
    ═══════════════════════════════════════════════════════════ */
 .reco-section .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  /* 3 × 2 for the six receipt cards; no 5 + 1 orphan. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin-top: 24px;
+}
+@media (max-width: 720px) {
+  .reco-section .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+  .reco-section .metrics-grid { grid-template-columns: 1fr; }
 }
 .reco-section .metric {
   padding: 20px 22px;
