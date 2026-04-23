@@ -293,23 +293,28 @@ main { position: relative; z-index: 1; }
   font-weight: 300;
   letter-spacing: -0.025em;
   line-height: 0.95;
-  text-align: center;
   pointer-events: none;
   z-index: 2;
   color: var(--ink);
   font-size: clamp(48px, 6.5vw, 92px);
+  /* Flex column so the flipping word and "Engineer" share a common   */
+  /* vertical axis and center on each other regardless of glyph       */
+  /* widths (ML vs. Analytics vs. Engineer).                          */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .hero-role-words {
   position: relative;
-  display: block;
-  /* Tall enough to avoid clipping glyph descenders during the slide.   */
-  height: 1.15em;
-  /* Wide enough to fully show "Analytics" italic (~5.5em at this font).*/
-  min-width: 5.5em;
+  /* Fixed viewport width keeps "Analytics" fully visible and keeps    */
+  /* the cycling word perfectly centered over "Engineer" at all sizes. */
+  width: 5.5em;
+  /* Tall enough to avoid clipping glyph descenders during the slide.  */
+  height: 1.1em;
   overflow: hidden;
   color: var(--accent);
   font-style: italic;
-  margin: 0 auto;
+  text-align: center;
 }
 .hero-role-words > span {
   position: absolute;
@@ -332,7 +337,9 @@ main { position: relative; z-index: 1; }
 }
 .hero-role-suffix {
   display: block;
-  margin-top: 0.05em;
+  margin-top: -0.05em;
+  /* Kerning the leading "E" optically back to center under the cycling word. */
+  text-indent: -0.02em;
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-role-words > span { animation: hero-role-fade 6s infinite steps(1,end); transform: translate(-50%, -50%) !important; }
