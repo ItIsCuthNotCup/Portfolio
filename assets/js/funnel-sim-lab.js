@@ -43,7 +43,7 @@
     niche_premium:  { ad_spend: 250, email_freq: 0.40, discount: 0.00, targeting: 0.85, retention_effort: 0.90 },
   };
 
-  const MAX_AGENTS = 1500;
+  const MAX_AGENTS = 2000;
 
   // ── State ───────────────────────────────────────────────────
   const state = {
@@ -242,11 +242,14 @@
 
       a.ticksInStage[i]++;
 
-      // Each "tick" in sim-time advances probability scaled by speed.
-      // Later stages (especially Retention) use a slower scaling so the
-      // on-canvas residence time is long enough that those bands stay
-      // visibly populated rather than collapsing to sub-unit equilibria.
-      const STAGE_RATE = [0.08, 0.08, 0.08, 0.05, 0.02];
+      // STAGE_RATE governs how much of a per-stage adv/drop probability
+      // fires per tick. Tuned so the equilibrium population at each band
+      // is visible on canvas (node sim: ~100 / 60 / 50 / 50 / 260 at the
+      // healthy preset). Previous tuning (0.08,0.08,0.08,0.05,0.02) was
+      // back-heavy: it concentrated ~350 agents in Retention and starved
+      // Trial/Purchase, and at speed>1 the agent pool saturated and
+      // left Purchase/Retention visually empty when inflow bottlenecked.
+      const STAGE_RATE = [0.05, 0.045, 0.025, 0.018, 0.028];
       const adv = probs.adv[stage] * STAGE_RATE[stage] * state.speed;
       const drp = probs.drop[stage] * STAGE_RATE[stage] * state.speed;
       const u = Math.random();
@@ -276,8 +279,10 @@
           a.retMonths[i]++;
           const ticket = seg.ticket * (1 - 0.5 * levers.discount);
           state.revenue += ticket;
-          // After some retention, eventually graceful exit (cap lifetime)
-          if (a.retMonths[i] > 24) {
+          // After some retention, eventually graceful exit (cap lifetime).
+          // 18-month cap keeps the Retention band from slowly overfilling
+          // at the expense of upstream spawning capacity.
+          if (a.retMonths[i] > 18) {
             startFade(i, 1);
           }
         }
@@ -414,7 +419,7 @@
     ctx.font = '9px "DM Mono", monospace';
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.textAlign = 'left';
-    ctx.fillText('build v4 · ' + state.nActive + ' active', 10, H - 8);
+    ctx.fillText('build v5 · ' + state.nActive + ' active', 10, H - 8);
   }
 
   // ══════════════════════════════════════════════════════════
@@ -535,12 +540,15 @@
   // of retained customers at the bottom. Without seeding into stages 4
   // and 5 the late bands stayed empty for ~20 s after reset because
   // the spawn rate isn't high enough to fill them quickly.
+  // Seed at/near the expected equilibrium so the user sees populated
+  // bands immediately on reset (rather than watching agents trickle
+  // through for 30 s).
   const SEED_DISTRIBUTION = [
-    { stage: 0, count: 140 },  // Awareness
-    { stage: 1, count: 100 },  // Consideration
+    { stage: 0, count: 100 },  // Awareness
+    { stage: 1, count:  60 },  // Consideration
     { stage: 2, count:  60 },  // Trial
-    { stage: 3, count:  30 },  // Purchase (short residence, small pop)
-    { stage: 4, count:  70 },  // Retention (long residence, visible cohort)
+    { stage: 3, count:  60 },  // Purchase
+    { stage: 4, count: 120 },  // Retention
   ];
   function seedInitialPopulation() {
     for (const { stage, count } of SEED_DISTRIBUTION) {
