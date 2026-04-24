@@ -465,8 +465,27 @@
         body: JSON.stringify(data),
       })
         .then(function (res) {
+          var ct = res.headers.get('content-type') || '';
+          // If the response isn't JSON, an intermediary (redirect, DNS
+          // fallback, CDN error page) intercepted us. Surface that as
+          // a diagnosable error instead of a cryptic parse failure.
+          if (!ct.toLowerCase().includes('application/json')) {
+            return res.text().then(function (t) {
+              return {
+                ok: false,
+                error:
+                  'Got a non-JSON response (status ' +
+                  res.status +
+                  '). Usually DNS or a proxy issue. First 60 chars: ' +
+                  (t || '').slice(0, 60).replace(/\s+/g, ' '),
+              };
+            });
+          }
           return res.json().then(function (body) {
-            return { ok: res.ok && body && body.ok, error: body && body.error };
+            return {
+              ok: res.ok && body && body.ok,
+              error: body && body.error,
+            };
           });
         })
         .then(function (result) {

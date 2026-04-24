@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "description": "Route /api/* to Pages Functions; serve everything else as static assets.",
   "include": ["/api/*"],
   "exclude": []
 }

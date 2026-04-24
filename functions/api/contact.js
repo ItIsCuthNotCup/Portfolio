@@ -1,21 +1,21 @@
 // POST /api/contact
-// Accepts a JSON body from the site's contact form, validates it,
-// and sends the message via Resend to Jacob_Cuthbertson@outlook.com.
+// Accepts a JSON body from the site's contact form, validates it, and
+// sends the message via Resend to Jacob_Cuthbertson@outlook.com.
 //
 // Environment variables required (set in Cloudflare Pages -> Settings
-// -> Environment Variables, encrypted/"secret"):
+// -> Variables and Secrets, type=Secret, Production env):
 //   RESEND_API_KEY   : an API key from https://resend.com (re_xxx)
 //
-// Security notes:
-// - API key never touches the client.
-// - HTML escape all user input before rendering into the email body.
-// - Honeypot field silently swallows obvious bots.
-// - Length caps on every field so a bad actor can't blow up the payload.
-// - Basic email-shape check; full validity isn't necessary because the
-//   address is only used as Reply-To and the real sender address comes
-//   from the authenticated Resend sender.
-// - Reply-To set to the form submitter's email so replies from Outlook
-//   go directly back to them, not to the Resend relay address.
+// Implementation notes:
+// - Single onRequest handler dispatches by method. Having both
+//   onRequestPost AND onRequest caused issues where Pages' fallback
+//   asset-serving behavior returned index.html on POST in some
+//   deployments. Folding all methods into one function avoids that.
+// - Every response goes through json() which sets Content-Type, so
+//   the frontend never sees HTML regardless of which branch runs.
+// - Entire handler wrapped in try/catch so an unexpected exception
+//   still returns JSON 500 rather than bubbling to Cloudflare's
+//   default HTML error page.
 
 const TO_EMAIL = 'Jacob_Cuthbertson@outlook.com';
 const FROM_EMAIL = 'Portfolio Contact <onboarding@resend.dev>';
@@ -34,20 +34,53 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-function json(body, status = 200) {
+function json(body, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      ...extraHeaders,
+    },
   });
 }
 
-export async function onRequestPost({ request, env }) {
-  // Parse JSON body
+async function handleGet({ env }) {
+  return json({
+    ok: true,
+    service: 'contact',
+    method: 'GET',
+    configured: Boolean(env.RESEND_API_KEY),
+  });
+}
+
+async function handlePost({ request, env }) {
+  // Parse JSON body. We accept a wider range of content types to be
+  // forgiving; some clients send application/json; charset=utf-8.
   let data;
   try {
-    data = await request.json();
-  } catch {
-    return json({ error: 'Invalid request body.' }, 400);
+    const ct = (request.headers.get('content-type') || '').toLowerCase();
+    if (ct.includes('application/json')) {
+      data = await request.json();
+    } else {
+      // Fall back to parsing the raw body as JSON in case CT is missing.
+      const text = await request.text();
+      data = text ? JSON.parse(text) : {};
+    }
+  } catch (err) {
+    return json({ error: 'Invalid JSON body.' }, 400);
+  }
+
+  // Diagnostic shortcut: POST {"diag": true} returns a live health
+  // check, no email sent. Useful from the browser devtools console.
+  if (data && data.diag === true) {
+    return json({
+      ok: true,
+      service: 'contact',
+      method: 'POST',
+      configured: Boolean(env.RESEND_API_KEY),
+      ts: Date.now(),
+    });
   }
 
   const name = (data.name || '').toString().trim();
@@ -56,8 +89,7 @@ export async function onRequestPost({ request, env }) {
   const message = (data.message || '').toString().trim();
   const hp = (data.hp || '').toString();
 
-  // Honeypot: bots fill this hidden field. Return OK silently so they
-  // don't know they were caught.
+  // Honeypot: bots fill this hidden field.
   if (hp) return json({ ok: true });
 
   // Required fields
@@ -85,7 +117,6 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Server misconfigured: RESEND_API_KEY missing.' }, 500);
   }
 
-  // Compose the email. HTML-escape every field we interpolate into the body.
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeCompany = escapeHtml(company);
@@ -118,7 +149,6 @@ export async function onRequestPost({ request, env }) {
 
   const subject = `Portfolio inquiry · ${name}${company ? ` · ${company}` : ''}`;
 
-  // Fire to Resend
   let resendRes;
   try {
     resendRes = await fetch('https://api.resend.com/emails', {
@@ -137,35 +167,41 @@ export async function onRequestPost({ request, env }) {
       }),
     });
   } catch (err) {
-    console.error('Resend network error:', err);
     return json({ error: 'Network error reaching email service.' }, 502);
   }
 
   if (!resendRes.ok) {
-    const body = await resendRes.text().catch(() => '');
-    console.error('Resend API error:', resendRes.status, body);
-    return json({ error: 'Email service rejected the request.' }, 502);
+    // Bubble Resend's status up for easier debugging, but don't leak
+    // Resend response bodies to the client.
+    const status = resendRes.status;
+    return json(
+      { error: 'Email service rejected the request.', upstream: status },
+      502,
+    );
   }
 
   return json({ ok: true });
 }
 
-// GET /api/contact — diagnostic ping. Safe to expose: it only reveals
-// whether the function is running and whether the env var is bound.
-// Used by the site owner to verify a deploy picked up the Resend key;
-// returns nothing a visitor couldn't learn by trying the form.
-export async function onRequestGet({ env }) {
-  return json({
-    ok: true,
-    service: 'contact',
-    configured: Boolean(env.RESEND_API_KEY),
-  });
-}
-
-// Any other method -> 405
-export async function onRequest() {
-  return new Response(null, {
-    status: 405,
-    headers: { Allow: 'GET, POST' },
-  });
+// Single entry point. Dispatches by method. Wraps the entire body in
+// try/catch so any unexpected exception returns JSON, never HTML.
+export async function onRequest(ctx) {
+  try {
+    const method = ctx.request.method.toUpperCase();
+    if (method === 'GET') return await handleGet(ctx);
+    if (method === 'POST') return await handlePost(ctx);
+    if (method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Allow: 'GET, POST, OPTIONS',
+        },
+      });
+    }
+    return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST, OPTIONS' });
+  } catch (err) {
+    // Any uncaught error still yields JSON, not HTML.
+    return json({ error: 'Internal error.', detail: String(err && err.message || err) }, 500);
+  }
 }
