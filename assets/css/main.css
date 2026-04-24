@@ -258,19 +258,6 @@ main { position: relative; z-index: 1; }
   pointer-events: none;
 }
 .scene-stage canvas { display: block; }
-.scene-corner {
-  position: absolute; width: 12px; height: 12px; opacity: 0.5;
-}
-.scene-corner.tl { top: 0; left: 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
-.scene-corner.tr { top: 0; right: 0; border-top: 1px solid var(--ink); border-right: 1px solid var(--ink); }
-.scene-corner.bl { bottom: 0; left: 0; border-bottom: 1px solid var(--ink); border-left: 1px solid var(--ink); }
-.scene-corner.br { bottom: 0; right: 0; border-bottom: 1px solid var(--ink); border-right: 1px solid var(--ink); }
-.scene-caption {
-  position: absolute; bottom: -32px; left: 0; right: 0;
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-dim);
-}
 
 /* ── Section Label ──────────────────────────────────────────── */
 .section-label {
