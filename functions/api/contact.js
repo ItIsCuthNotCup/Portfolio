@@ -150,10 +150,22 @@ export async function onRequestPost({ request, env }) {
   return json({ ok: true });
 }
 
-// Reject anything that isn't POST with a 405 + Allow header
-export async function onRequest({ request }) {
+// GET /api/contact — diagnostic ping. Safe to expose: it only reveals
+// whether the function is running and whether the env var is bound.
+// Used by the site owner to verify a deploy picked up the Resend key;
+// returns nothing a visitor couldn't learn by trying the form.
+export async function onRequestGet({ env }) {
+  return json({
+    ok: true,
+    service: 'contact',
+    configured: Boolean(env.RESEND_API_KEY),
+  });
+}
+
+// Any other method -> 405
+export async function onRequest() {
   return new Response(null, {
     status: 405,
-    headers: { Allow: 'POST' },
+    headers: { Allow: 'GET, POST' },
   });
 }
