@@ -23,7 +23,7 @@
 // CONTACT_FROM at an address on that verified domain and you can
 // send to any recipient. Until then, CONTACT_TO must be the email
 // you signed up for Resend with (Resend sandbox rule).
-const DEFAULT_TO = 'Jacob_Cuthbertson@outlook.com';
+const DEFAULT_TO = 'commandercuth@gmail.com';
 const DEFAULT_FROM = 'Portfolio Contact <onboarding@resend.dev>';
 
 const MAX_NAME = 200;
