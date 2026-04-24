@@ -68,12 +68,18 @@ async function handlePost({ request, env }) {
       data = text ? JSON.parse(text) : {};
     }
   } catch (err) {
-    return json({ error: 'Invalid JSON body.' }, 400);
+    return json({ ok: false, error: 'Invalid JSON body.' }, 400);
+  }
+
+  // Null-safety: "null" or an array body would pass JSON parse but
+  // then crash on data.name. Treat non-objects as bad input.
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return json({ ok: false, error: 'Invalid request body.' }, 400);
   }
 
   // Diagnostic shortcut: POST {"diag": true} returns a live health
   // check, no email sent. Useful from the browser devtools console.
-  if (data && data.diag === true) {
+  if (data.diag === true) {
     return json({
       ok: true,
       service: 'contact',
@@ -94,7 +100,7 @@ async function handlePost({ request, env }) {
 
   // Required fields
   if (!name || !email || !message) {
-    return json({ error: 'Name, email, and message are required.' }, 400);
+    return json({ ok: false, error: 'Name, email, and message are required.' }, 400);
   }
 
   // Length caps
@@ -104,17 +110,19 @@ async function handlePost({ request, env }) {
     company.length > MAX_COMPANY ||
     message.length > MAX_MESSAGE
   ) {
-    return json({ error: 'One of the fields is too long.' }, 400);
+    return json({ ok: false, error: 'One of the fields is too long.' }, 400);
   }
 
   // Basic email shape
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return json({ error: 'That email address looks off.' }, 400);
+    return json({ ok: false, error: 'That email address looks off.' }, 400);
   }
 
   const apiKey = env.RESEND_API_KEY;
   if (!apiKey) {
-    return json({ error: 'Server misconfigured: RESEND_API_KEY missing.' }, 500);
+    // Return 200 with ok:false so Cloudflare's edge doesn't intercept
+    // a 5xx status and replace our JSON with an HTML error page.
+    return json({ ok: false, error: 'Server misconfigured: RESEND_API_KEY missing.' });
   }
 
   const safeName = escapeHtml(name);
@@ -149,7 +157,13 @@ async function handlePost({ request, env }) {
 
   const subject = `Portfolio inquiry · ${name}${company ? ` · ${company}` : ''}`;
 
+  // Timeout so a hanging Resend call can't pin the Worker and trigger
+  // Cloudflare's own 502 edge error.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
   let resendRes;
+  let networkErr = null;
   try {
     resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -165,19 +179,30 @@ async function handlePost({ request, env }) {
         html,
         text,
       }),
+      signal: controller.signal,
     });
   } catch (err) {
-    return json({ error: 'Network error reaching email service.' }, 502);
+    networkErr = (err && (err.name === 'AbortError' ? 'timeout' : err.message)) || String(err);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
+  if (networkErr) {
+    // 200 + ok:false so Cloudflare can't swap in its HTML error page.
+    return json({ ok: false, error: 'Network error reaching email service.', detail: networkErr });
   }
 
   if (!resendRes.ok) {
-    // Bubble Resend's status up for easier debugging, but don't leak
-    // Resend response bodies to the client.
     const status = resendRes.status;
-    return json(
-      { error: 'Email service rejected the request.', upstream: status },
-      502,
-    );
+    let upstreamBody = '';
+    try { upstreamBody = (await resendRes.text()).slice(0, 400); } catch {}
+    // 200 + ok:false so Cloudflare can't swap in its HTML error page.
+    return json({
+      ok: false,
+      error: 'Email service rejected the request.',
+      upstream: status,
+      upstreamBody,
+    });
   }
 
   return json({ ok: true });
@@ -199,9 +224,15 @@ export async function onRequest(ctx) {
         },
       });
     }
-    return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST, OPTIONS' });
+    return json({ ok: false, error: 'Method not allowed.' }, 405, { Allow: 'GET, POST, OPTIONS' });
   } catch (err) {
-    // Any uncaught error still yields JSON, not HTML.
-    return json({ error: 'Internal error.', detail: String(err && err.message || err) }, 500);
+    // Any uncaught error still yields JSON, not HTML. Status 200 so
+    // Cloudflare's edge doesn't replace our body with its own
+    // branded 5xx error page.
+    return json({
+      ok: false,
+      error: 'Internal error.',
+      detail: String((err && err.message) || err),
+    });
   }
 }

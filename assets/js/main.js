@@ -482,9 +482,14 @@
             });
           }
           return res.json().then(function (body) {
+            // Compose a readable error even when Resend gave us
+            // upstream detail. Helps spot the cause at a glance.
+            var err = body && body.error;
+            if (body && body.upstream) err += ' (upstream ' + body.upstream + ')';
+            if (body && body.detail) err += ' — ' + body.detail;
             return {
               ok: res.ok && body && body.ok,
-              error: body && body.error,
+              error: err,
             };
           });
         })
