@@ -486,6 +486,7 @@
             // upstream detail. Helps spot the cause at a glance.
             var err = body && body.error;
             if (body && body.upstream) err += ' (upstream ' + body.upstream + ')';
+            if (body && body.hint) err += ' ' + body.hint;
             if (body && body.detail) err += ' — ' + body.detail;
             return {
               ok: res.ok && body && body.ok,

@@ -17,8 +17,14 @@
 //   still returns JSON 500 rather than bubbling to Cloudflare's
 //   default HTML error page.
 
-const TO_EMAIL = 'Jacob_Cuthbertson@outlook.com';
-const FROM_EMAIL = 'Portfolio Contact <onboarding@resend.dev>';
+// Defaults; can be overridden per-environment via Cloudflare env vars
+// (Pages project -> Settings -> Variables and Secrets, as plain vars,
+// not Secrets). Once you verify jakecuth.com in Resend, point
+// CONTACT_FROM at an address on that verified domain and you can
+// send to any recipient. Until then, CONTACT_TO must be the email
+// you signed up for Resend with (Resend sandbox rule).
+const DEFAULT_TO = 'Jacob_Cuthbertson@outlook.com';
+const DEFAULT_FROM = 'Portfolio Contact <onboarding@resend.dev>';
 
 const MAX_NAME = 200;
 const MAX_EMAIL = 200;
@@ -157,6 +163,12 @@ async function handlePost({ request, env }) {
 
   const subject = `Portfolio inquiry · ${name}${company ? ` · ${company}` : ''}`;
 
+  // Resolve the to/from at request time so env var changes take
+  // effect immediately on deploy (no code change needed once the user
+  // verifies a domain in Resend).
+  const toEmail = (env.CONTACT_TO && String(env.CONTACT_TO).trim()) || DEFAULT_TO;
+  const fromEmail = (env.CONTACT_FROM && String(env.CONTACT_FROM).trim()) || DEFAULT_FROM;
+
   // Timeout so a hanging Resend call can't pin the Worker and trigger
   // Cloudflare's own 502 edge error.
   const controller = new AbortController();
@@ -172,8 +184,8 @@ async function handlePost({ request, env }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: [TO_EMAIL],
+        from: fromEmail,
+        to: [toEmail],
         reply_to: email,
         subject,
         html,
@@ -196,12 +208,25 @@ async function handlePost({ request, env }) {
     const status = resendRes.status;
     let upstreamBody = '';
     try { upstreamBody = (await resendRes.text()).slice(0, 400); } catch {}
+    // Translate common Resend status codes into actionable hints.
+    let hint = '';
+    if (status === 401) {
+      hint = 'RESEND_API_KEY is invalid or revoked. Create a new key at resend.com/api-keys.';
+    } else if (status === 403) {
+      hint =
+        'Resend sandbox policy. Either (a) verify jakecuth.com as a sending domain in Resend ' +
+        'and set CONTACT_FROM to an address on it, or (b) set CONTACT_TO to the email you ' +
+        'signed up for Resend with.';
+    } else if (status === 422) {
+      hint = 'Resend rejected the email payload. See upstreamBody for the specific field complaint.';
+    }
     // 200 + ok:false so Cloudflare can't swap in its HTML error page.
     return json({
       ok: false,
       error: 'Email service rejected the request.',
       upstream: status,
       upstreamBody,
+      hint,
     });
   }
 
