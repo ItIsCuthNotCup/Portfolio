@@ -29,7 +29,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="assets/css/main.css?v=7">
+  <link rel="stylesheet" href="assets/css/main.css?v=8">
 </head>
 <body>
 
@@ -383,14 +383,38 @@
     Best first move: send the job and the numbers it needs to hit.
     I reply within two business days with relevant examples and code.
   </p>
-  <div class="contact-ctas">
-    <a href="mailto:Jacob_Cuthbertson@outlook.com" class="btn-dark">
-      Jacob_Cuthbertson@outlook.com →
-    </a>
-    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener" class="btn-outline">
-      LinkedIn →
-    </a>
-  </div>
+  <form id="contact-form" class="contact-form" novalidate>
+    <div class="field-row">
+      <label class="field">
+        <span class="field-label">Name</span>
+        <input type="text" name="name" required autocomplete="name" maxlength="200">
+      </label>
+      <label class="field">
+        <span class="field-label">Email</span>
+        <input type="email" name="email" required autocomplete="email" maxlength="200">
+      </label>
+    </div>
+    <label class="field">
+      <span class="field-label">Company or context <span class="field-hint">(optional)</span></span>
+      <input type="text" name="company" autocomplete="organization" maxlength="200">
+    </label>
+    <label class="field">
+      <span class="field-label">The job, and the numbers it needs to hit</span>
+      <textarea name="message" rows="5" required maxlength="5000"></textarea>
+    </label>
+    <!-- Honeypot: hidden from users, bots fill it -->
+    <label class="hp-field" aria-hidden="true">
+      <span>Leave this field empty</span>
+      <input type="text" name="hp" tabindex="-1" autocomplete="off">
+    </label>
+    <div class="contact-form-footer">
+      <button type="submit" class="btn-dark contact-submit">
+        <span class="btn-label">Send →</span>
+      </button>
+      <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener" class="mono contact-alt">Or reach me on LinkedIn ↗</a>
+    </div>
+    <div class="contact-form-status mono" id="contact-status" role="status" aria-live="polite"></div>
+  </form>
   <div class="mono contact-meta">
     215 · 834 · 2151 &nbsp;·&nbsp; Philadelphia, PA &nbsp;·&nbsp; 39.9526° N, 75.1652° W
   </div>
@@ -418,6 +442,6 @@
 </div>
 
 <!-- JS (after DOM) -->
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js?v=2"></script>
 </body>
 </html>

@@ -434,4 +434,57 @@
 
   // Fire initial scroll
   onScroll();
+
+  // ═══════════════════════════════════════════════════════════
+  //  CONTACT FORM — POSTs to /api/contact (Cloudflare Pages Function)
+  // ═══════════════════════════════════════════════════════════
+  (function initContactForm() {
+    var form = document.getElementById('contact-form');
+    if (!form) return;
+    var status = document.getElementById('contact-status');
+    var submitBtn = form.querySelector('.contact-submit');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (form.classList.contains('sending')) return;
+
+      // Gather fields
+      var data = {};
+      Array.prototype.forEach.call(form.elements, function (el) {
+        if (el.name) data[el.name] = el.value;
+      });
+
+      form.classList.remove('sent', 'failed');
+      form.classList.add('sending');
+      if (submitBtn) submitBtn.disabled = true;
+      status.textContent = 'Sending…';
+
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { ok: res.ok && body && body.ok, error: body && body.error };
+          });
+        })
+        .then(function (result) {
+          if (!result.ok) throw new Error(result.error || 'Send failed.');
+          form.classList.add('sent');
+          status.textContent = 'Sent. I reply within two business days.';
+          form.reset();
+        })
+        .catch(function (err) {
+          form.classList.add('failed');
+          status.textContent =
+            (err && err.message ? err.message : 'Send failed.') +
+            ' You can also email Jacob_Cuthbertson@outlook.com directly.';
+        })
+        .then(function () {
+          form.classList.remove('sending');
+          if (submitBtn) submitBtn.disabled = false;
+        });
+    });
+  })();
 })();
