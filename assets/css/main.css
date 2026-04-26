@@ -827,6 +827,17 @@ main { position: relative; z-index: 1; }
   font-size: 17px; line-height: 1.55;
   color: var(--ink-soft);
 }
+.contact-ctas {
+  /* 56px clears the multi-line .contact-kicker on narrow viewports */
+  /* without leaving a wasted gap on wide ones. Was lost in the form */
+  /* revert; restoring causes the kicker text to no longer overlap   */
+  /* the email button.                                                */
+  margin-top: 56px;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 .contact-ctas .btn-dark {
   padding: 16px 28px;
   background: var(--ink); color: var(--paper);
