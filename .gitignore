@@ -2,3 +2,13 @@
 magick-*
 *.mov
 data/ml-latest-small/
+
+# Sandbox / tooling cruft (do not ship to the repo)
+node_modules/
+.wrangler/
+.claude/
+
+# Local working files that aren't part of the published site
+*.xlsx
+PORTFOLIO-REWRITE-PLAN.md
+.impeccable.md
