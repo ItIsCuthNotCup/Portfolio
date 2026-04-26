@@ -1,0 +1,137 @@
+# Cross-cutting updates — wiring a new lab into the site
+
+Adding a lab is not done when the lab files exist. Six other
+files must also change. This file is the exact list. Run
+`scripts/cross_cutting_update.py <slug> <fig> <name>` to do it
+mechanically; this document explains what that script does so you
+can verify the output.
+
+Throughout this document:
+- `<slug>` = kebab-case lab name, e.g. `markov-chain`
+- `<fig>` = two-digit figure number, e.g. `07`
+- `<name>` = display name, e.g. `Markov Chain`
+- `<prev_slug>` = slug of the previously-last lab (e.g. `sketch`)
+- `<prev_fig>` = its FIG number (e.g. `06`)
+- `<prev_name>` = its display name (e.g. `Sketch Recognition`)
+- `<lab_count>` = total labs after this one is added (e.g. `07`)
+
+## File 1: `index.html` (homepage)
+
+Three edits.
+
+### 1A. Nav dropdown
+
+Add a new `<a>` inside the dropdown menu, BEFORE the closing
+`</div>`. Order matters: append at the end, never insert in the
+middle.
+
+```html
+<!-- Before -->
+        <a href="/work/<prev_slug>-lab/" role="menuitem"><prev_name></a>
+      </div>
+
+<!-- After -->
+        <a href="/work/<prev_slug>-lab/" role="menuitem"><prev_name></a>
+        <a href="/work/<slug>-lab/" role="menuitem"><name></a>
+      </div>
+```
+
+### 1B. Labs grid (add 7th, 8th, etc. card)
+
+Add a new card to `.labs-grid` after the previous-last card:
+
+```html
+<a class="lab-card" href="/work/<slug>-lab/">
+  <div class="mono lab-fig">FIG. <fig></div>
+  <h3 class="serif lab-name"><name></h3>
+  <p class="lab-line">{{1-sentence business outcome — same energy as the biz-line}}</p>
+  <div class="mono lab-arrow">Open the lab →</div>
+</a>
+```
+
+### 1C. Labs grid layout (CSS, only when needed)
+
+The grid in `assets/css/main.css` is set up as `repeat(3, minmax(0, 1fr))`
+which works for 6 cards (3×2). When the lab count crosses these
+thresholds, update the grid:
+
+| Lab count | Layout         | grid-template-columns                |
+|-----------|----------------|--------------------------------------|
+| ≤4        | single row     | `repeat(N, minmax(0, 1fr))`          |
+| 5-6       | 3 cols × 2 rows| `repeat(3, minmax(0, 1fr))`          |
+| 7-9       | 3 cols × 3 rows| `repeat(3, minmax(0, 1fr))` (no change) |
+| 10-12     | 4 cols × 3 rows| `repeat(4, minmax(0, 1fr))`          |
+
+Also update the border rules to draw the right edges:
+
+```css
+.lab-card:nth-child(<cols>n) { border-right: none; }
+.lab-card:nth-last-child(-n+<cols>) { border-bottom: none; }
+```
+
+When changing `<cols>`, also update the responsive rules at
+`@media (max-width: 1100px)`.
+
+If the layout changed, BUMP MAIN.CSS CACHE-BUST (see step 6).
+
+## File 2-N: Each existing lab in `work/*-lab/index.html`
+
+For each existing lab page, two edits:
+
+### 2A. Nav dropdown
+
+Same as 1A — append the new lab entry to the dropdown menu.
+
+### 2B. Lab-nav prev/next bumper
+
+Two changes:
+
+1. **Update the "Lab N of M" counter** to reflect the new total:
+
+```html
+<!-- Before -->
+<span>Lab 03 of 06</span>
+<!-- After -->
+<span>Lab 03 of <lab_count></span>
+```
+
+2. **Only on the previously-last lab**: change its "next" link
+from "back to lab 01" to point at the new lab.
+
+```html
+<!-- Before -->
+<a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+<!-- After -->
+<a href="/work/<slug>-lab/">Next: <name> (FIG. <fig>) →</a>
+```
+
+The new lab's own `lab-nav` should have:
+- prev: previously-last lab
+- counter: `Lab <fig> of <lab_count>`
+- next: `Back to Lab 01: Churn →` (it becomes the new last)
+
+## File N+1: `assets/css/main.css` (if grid layout changed)
+
+If the lab count crossed a threshold per 1C, update `.labs-grid`
++ responsive rules. Otherwise leave alone.
+
+## Cache-bust step
+
+After all edits, increment cache-bust versions:
+
+- If `assets/css/main.css` was modified: bump `?v=N` to `?v=N+1`
+  on EVERY HTML page that links it. Use grep to find them all.
+- If `assets/js/main.js` was modified: same.
+- The new `<slug>-lab.js` reference can start at `?v=1`.
+
+## Verification
+
+`scripts/verify_lab.py <slug>` checks:
+
+- New lab is in every nav dropdown across the site
+- "Lab N of M" is consistent across all labs (M is the same
+  everywhere)
+- Previously-last lab's lab-nav next link points at new lab
+- Homepage labs grid card count = lab count
+- Cache-bust versions for `main.css` and `main.js` are identical
+  across every page that references them

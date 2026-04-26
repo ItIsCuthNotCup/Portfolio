@@ -1,0 +1,19 @@
+# Lab topic queue. The scheduled portfolio-lab-creator job reads
+# the first non-blank, non-comment line and uses it as the topic.
+# Remove a line after a successful build (or the job will retry it).
+# Add new topics at the bottom.
+#
+# Each line: <topic name> [ | optional one-line note]
+#
+# Examples to seed the queue. Replace with topics you actually want.
+
+logistic regression
+markov chain
+k-means clustering | live demo on user-uploaded points
+random forest feature importance
+PCA projection
+gradient descent visualizer
+naive Bayes spam filter
+n-gram language model
+softmax temperature explorer
+bias-variance tradeoff

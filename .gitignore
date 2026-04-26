@@ -6,7 +6,12 @@ data/ml-latest-small/
 # Sandbox / tooling cruft (do not ship to the repo)
 node_modules/
 .wrangler/
-.claude/
+# Ignore everything in .claude/ EXCEPT the skills directory (we DO
+# ship custom skills so future sessions and scheduled jobs can use
+# them). Note: pattern must be .claude/* not .claude/ — git won't
+# recurse into a directory that's been fully ignored.
+.claude/*
+!.claude/skills/
 
 # Quick Draw raw bitmap downloads — re-fetched on training run
 .cache/

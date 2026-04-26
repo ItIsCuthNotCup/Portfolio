@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE — copy to work/<slug>-lab/index.html and substitute every
+  {{placeholder}}. After substitution, run verify_lab.py before
+  committing.
+
+  Required placeholders (every one must be replaced; verify_lab.py
+  will catch leftovers via the SEO check):
+    {{slug}}              — kebab-case lab name (matches dir + class names)
+    {{prefix}}            — 2-3 letter CSS/JS class prefix (e.g. "fs", "sk")
+    {{name}}              — display name, e.g. "Markov Chain"
+    {{fig_number}}        — two-digit figure number, e.g. "07"
+    {{title_main}}        — H1 main text (no italic)
+    {{title_accent}}      — H1 italic accent word/phrase (red)
+    {{hero_label}}        — short subhead in section-label, ~5 words
+    {{biz_line}}          — italic business-outcome translation
+    {{kicker}}            — methodology kicker, ~3 sentences
+    {{engine_desc}}       — one-line tech in dateline (e.g. "Pure JS · Canvas 2D")
+    {{problem_label}}     — § I label, e.g. "Why funnel averages lie"
+    {{problem_lede}}      — italic lede sentence
+    {{problem_para_2}}    — 2nd paragraph
+    {{problem_para_3}}    — 3rd paragraph
+    {{demo_label}}        — § II label
+    {{demo_note}}         — 1-line orientation under § II
+    {{how_a_title}}, {{how_a_body}}
+    {{how_b_title}}, {{how_b_body}}
+    {{how_c_title}}, {{how_c_body}}
+    {{methodology_engine}}, {{methodology_inference}}
+    {{reading_link_1_url}}, {{reading_link_1_text}} (similar for 2, 3)
+    {{methodology_limitations}}
+    {{prev_slug}}, {{prev_fig}}, {{prev_name}}
+    {{lab_count}}         — total labs after add (e.g. "07")
+    {{main_css_version}}  — current main.css cache-bust integer
+    {{main_js_version}}   — current main.js cache-bust integer
+-->
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{name}} — Jake Cuth.</title>
+  <meta name="description" content="{{biz_line}}">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{name}} — {{hero_label}}">
+  <meta property="og:description" content="{{biz_line}}">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/{{slug}}-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v={{main_css_version}}">
+  <link rel="stylesheet" href="/assets/css/{{slug}}-lab.css">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD — note: dropdown menu must list every lab in order. -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/{{slug}}-lab/" class="active" aria-current="page" role="menuitem">{{name}}</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="{{prefix}}-main">
+
+<!-- HERO -->
+<section class="{{prefix}}-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. {{fig_number}}</span>
+    <span>{{hero_label}}</span>
+  </div>
+  <h1 class="serif big-display {{prefix}}-title">
+    {{title_main}}<br>
+    <span class="serif-italic" style="color:var(--accent)">{{title_accent}}</span>
+  </h1>
+  <p class="lab-biz-line">
+    {{biz_line}}
+  </p>
+  <p class="{{prefix}}-kicker">
+    {{kicker}}
+  </p>
+  <div class="mono {{prefix}}-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">{{engine_desc}}</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/{{slug}}_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/{{slug}}_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="{{prefix}}-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>{{problem_label}}</span>
+  </div>
+  <div class="{{prefix}}-prose">
+    <p class="{{prefix}}-lede">{{problem_lede}}</p>
+    <p>{{problem_para_2}}</p>
+    <p>{{problem_para_3}}</p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. {{fig_number}}.1 — INTERACTIVE DEMO -->
+<section class="{{prefix}}-section {{prefix}}-section-demo">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. {{fig_number}}.1</span>
+    <span>{{demo_label}}</span>
+  </div>
+  <p class="{{prefix}}-note">{{demo_note}}</p>
+
+  <!-- TODO: lab-specific interactive UI goes here -->
+  <div id="{{prefix}}-demo">
+    <!-- canvas, controls, charts, whatever the lab needs -->
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — HOW IT WORKS -->
+<section class="{{prefix}}-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>How it works</span>
+  </div>
+  <div class="{{prefix}}-how-grid">
+    <div class="{{prefix}}-how-card">
+      <div class="mono {{prefix}}-how-fig">A · {{how_a_title_short}}</div>
+      <h3 class="serif {{prefix}}-how-title">{{how_a_title}}</h3>
+      <p>{{how_a_body}}</p>
+    </div>
+    <div class="{{prefix}}-how-card">
+      <div class="mono {{prefix}}-how-fig">B · {{how_b_title_short}}</div>
+      <h3 class="serif {{prefix}}-how-title">{{how_b_title}}</h3>
+      <p>{{how_b_body}}</p>
+    </div>
+    <div class="{{prefix}}-how-card">
+      <div class="mono {{prefix}}-how-fig">C · {{how_c_title_short}}</div>
+      <h3 class="serif {{prefix}}-how-title">{{how_c_title}}</h3>
+      <p>{{how_c_body}}</p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS (populated from methodology.json if model-backed,
+     or hardcoded for pure-JS labs) -->
+<section class="{{prefix}}-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="{{prefix}}-receipts" id="{{prefix}}-receipts">
+    <!-- TODO: populate or let JS populate from methodology.json -->
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY + LAB-NAV -->
+<section class="{{prefix}}-section {{prefix}}-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>{{methodology_engine}}</p>
+    </div>
+    <div>
+      <div class="mono method-head">Inference</div>
+      <p>{{methodology_inference}}</p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="{{reading_link_1_url}}" target="_blank" rel="noopener" style="border-bottom:1px solid">{{reading_link_1_text}} ↗</a><br>
+        <a href="{{reading_link_2_url}}" target="_blank" rel="noopener" style="border-bottom:1px solid">{{reading_link_2_text}} ↗</a><br>
+        <a href="{{reading_link_3_url}}" target="_blank" rel="noopener" style="border-bottom:1px solid">{{reading_link_3_text}} ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>{{methodology_limitations}}</p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/{{prev_slug}}-lab/">← Prev: {{prev_name}} (FIG. {{prev_fig}})</a>
+    <span>Lab {{fig_number}} of {{lab_count}}</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/{{slug}}_model.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v={{main_js_version}}"></script>
+<script src="/assets/js/{{slug}}-lab.js?v=1"></script>
+</body>
+</html>

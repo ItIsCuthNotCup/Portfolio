@@ -1,0 +1,166 @@
+/* TEMPLATE — copy to assets/css/{{slug}}-lab.css and substitute
+   {{prefix}} with your 2-3 letter class prefix.
+
+   This template covers the page chrome that EVERY lab needs (hero,
+   sections, prose, how-grid, receipts grid, mobile breakpoints).
+   Add lab-specific styles below the marker.
+*/
+
+.{{prefix}}-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.{{prefix}}-hero {
+  padding: 120px 48px 60px;
+  max-width: 1200px;
+}
+.{{prefix}}-title {
+  margin-top: 22px;
+}
+.{{prefix}}-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.{{prefix}}-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.{{prefix}}-dateline .label { color: var(--ink-dim); }
+.{{prefix}}-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ──────────────────────────────────────── */
+.{{prefix}}-section {
+  padding: 80px 48px;
+  max-width: 1200px;
+}
+.{{prefix}}-section .section-label {
+  margin-bottom: 28px;
+}
+.{{prefix}}-prose {
+  max-width: 720px;
+}
+.{{prefix}}-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.{{prefix}}-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.{{prefix}}-note {
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+}
+
+/* ── How-it-works 3-card grid ─────────────────────────────── */
+.{{prefix}}-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 12px;
+}
+.{{prefix}}-how-card {
+  border-top: 1px solid var(--ink);
+  padding-top: 18px;
+}
+.{{prefix}}-how-fig {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.{{prefix}}-how-title {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+.{{prefix}}-how-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ── Receipts grid ────────────────────────────────────────── */
+.{{prefix}}-receipts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.{{prefix}}-receipt {
+  padding: 22px 20px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.{{prefix}}-receipt:nth-child(4n) { border-right: none; }
+.{{prefix}}-receipt:nth-last-child(-n+4) { border-bottom: none; }
+.{{prefix}}-receipt-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.{{prefix}}-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+}
+.{{prefix}}-receipt-value .small {
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+
+.{{prefix}}-colophon-section {
+  padding-bottom: 80px;
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .{{prefix}}-hero, .{{prefix}}-section { padding-left: 24px; padding-right: 24px; }
+  .{{prefix}}-how-grid { grid-template-columns: 1fr; gap: 24px; }
+  .{{prefix}}-receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .{{prefix}}-receipt:nth-child(4n) { border-right: 1px solid var(--ink); }
+  .{{prefix}}-receipt:nth-child(2n) { border-right: none; }
+  .{{prefix}}-dateline { grid-template-columns: 1fr; gap: 14px; }
+}
+@media (max-width: 540px) {
+  .{{prefix}}-receipts { grid-template-columns: 1fr; }
+  .{{prefix}}-receipt { border-right: none; }
+}
+
+/* ──────────────────────────────────────────────────────────── */
+/* LAB-SPECIFIC STYLES BELOW THIS MARKER                       */
+/* ──────────────────────────────────────────────────────────── */
