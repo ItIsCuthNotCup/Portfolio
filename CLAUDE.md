@@ -55,6 +55,22 @@ dashboard, write the code, push it, and have the USER paste the
 secret into Cloudflare. Never request_access to Chrome to do it
 yourself — the user can do it faster and safer.
 
+### 6. For shipped ML models: preprocessing parity matters more than model quality.
+If the training pipeline preprocessed inputs in a specific way
+(centered, cropped, normalized, color-channel-ordered), the
+inference path in the browser MUST replicate that exactly. The
+sketch lab shipped initially with a 480-canvas-direct-downsample-
+to-28x28 path; training data was centered and tightly fit. Result:
+the model defaulted to its no-signal prior (sun/lightning/mountain)
+on every prediction. The model was fine. The preprocessing was
+destroying the input.
+
+Before declaring an ML demo working: synthesize 3-4 trivial
+inputs (centered circle, line, etc.), run them through the SAME
+pipeline the browser uses, and verify the predictions are sane.
+If "centered circle" doesn't return what you'd expect, the bug
+is in preprocessing.
+
 ## Site structure
 
 ```
