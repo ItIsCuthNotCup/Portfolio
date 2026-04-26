@@ -562,9 +562,10 @@ main { position: relative; z-index: 1; }
 .labs-grid {
   margin-top: 64px;
   display: grid;
-  /* 5 cards wide on desktop — no orphan row. Wraps to 2/3 on tablet,   */
-  /* single column on phone via the media queries below.                */
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  /* 6 cards in 3 cols x 2 rows on desktop. Each card has more room   */
+  /* than the prior 5-wide single row. Wraps to 2 cols on tablet,     */
+  /* single column on phone via the media queries below.              */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   border: 1px solid var(--ink);
 }
@@ -577,9 +578,13 @@ main { position: relative; z-index: 1; }
   text-decoration: none;
   color: inherit;
   border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   transition: background 220ms ease, color 220ms ease;
 }
-.lab-card:last-child { border-right: none; }
+/* Right edge of every row has no right border */
+.lab-card:nth-child(3n) { border-right: none; }
+/* Bottom row (last 3) has no bottom border */
+.lab-card:nth-last-child(-n+3) { border-bottom: none; }
 .lab-card:hover {
   background: var(--ink);
   color: var(--paper);
@@ -608,8 +613,11 @@ main { position: relative; z-index: 1; }
 }
 @media (max-width: 1100px) {
   .labs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Reset the desktop nth-child rules so 2-col layout draws its own */
   .lab-card { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .lab-card:nth-child(3n) { border-right: 1px solid var(--ink); }
   .lab-card:nth-child(2n) { border-right: none; }
+  .lab-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ink); }
   .lab-card:nth-last-child(-n+2) { border-bottom: none; }
 }
 @media (max-width: 560px) {

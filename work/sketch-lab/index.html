@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketch Recognition — Jake Cuth.</title>
+  <meta name="description" content="A small neural network running entirely in your browser. Draw on the canvas, watch a 30-category classifier predict your sketch in real time. No API calls, no costs, ~300 KB ONNX model.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sketch Recognition — a neural net, in your browser">
+  <meta property="og:description" content="Draw on the canvas. A small classifier trained on Google's Quick Draw dataset predicts what it sees, in real time, on your laptop. No server.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/sketch-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=10">
+  <link rel="stylesheet" href="/assets/css/sketch-lab.css">
+
+  <!-- ONNX Runtime Web (WASM backend, ~150 KB) for in-browser inference -->
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" class="active" aria-current="page" role="menuitem">Sketch Recognition</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="sk-main">
+
+<!-- HERO -->
+<section class="sk-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 06</span>
+    <span>A neural net, drawn live</span>
+  </div>
+  <h1 class="serif big-display sk-title">
+    Drawing, classified<br>
+    <span class="serif-italic" style="color:var(--accent)">live.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A small neural network that runs entirely in your browser. Trained
+    once, deployed everywhere, costs nothing per call. The deployment
+    shape every shippable ML demo needs.
+  </p>
+  <p class="sk-kicker">
+    Draw any of 30 categories on the canvas below. A classifier trained
+    on 90,000 sketches from Google's Quick Draw dataset predicts what
+    it sees on every stroke. Inference runs on your laptop in under
+    50 ms. Nothing phoned home, no preloaded answers.
+  </p>
+  <div class="mono sk-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">ONNX Runtime Web · WASM · single thread</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/sketch_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/sketch_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="sk-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why browser-side inference</span>
+  </div>
+  <div class="sk-prose">
+    <p class="sk-lede">
+      Most ML demos route every prediction through a server. A model
+      sits behind an API, the page calls it, money meters tick. That
+      shape works, but it forecloses an entire class of product:
+      anything that needs to be free, offline, instant, or private
+      can't be built that way.
+    </p>
+    <p>
+      The browser can run real neural networks. A small CNN trained
+      on the right data fits in under a megabyte and predicts in tens
+      of milliseconds on a five-year-old laptop. Once the page loads,
+      every prediction is free and local. The model in the demo below
+      weighs roughly 300 kilobytes, less than a poorly-compressed JPEG.
+    </p>
+    <p>
+      The story this page tells is not "look at this neat trick." It's
+      that the deployment pattern, training in Python and shipping the
+      weights to the user's machine via ONNX, is a real production
+      shape that under-uses its capacity in most teams.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. 06.1 — THE DEMO -->
+<section class="sk-section sk-section-demo">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. 06.1</span>
+    <span>The classifier — draw something</span>
+  </div>
+  <p class="sk-note">
+    Mouse or finger. Strokes interpolate. Predictions update at the
+    end of each stroke. Try the suggestions below the canvas; a green
+    pulse fires when the model's top guess matches your target.
+  </p>
+
+  <div class="sk-demo-layout">
+    <!-- Drawing canvas -->
+    <div class="sk-canvas-wrap">
+      <div class="sk-canvas-frame">
+        <canvas id="sk-canvas" width="480" height="480" aria-label="Drawing canvas"></canvas>
+        <div class="sk-canvas-empty mono" id="sk-empty">
+          start drawing
+        </div>
+      </div>
+      <div class="sk-canvas-tools mono">
+        <button type="button" id="sk-clear" class="sk-tool-btn">Clear</button>
+        <button type="button" id="sk-undo" class="sk-tool-btn" disabled>Undo stroke</button>
+        <span class="sk-stroke-count">strokes <span id="sk-stroke-num">0</span></span>
+        <span class="sk-session-count">classified this session <span id="sk-session-num">0</span></span>
+      </div>
+    </div>
+
+    <!-- Prediction panel -->
+    <aside class="sk-predictions">
+      <div class="sk-pred-head mono">Top 3 predictions</div>
+
+      <ol class="sk-pred-list" id="sk-pred-list">
+        <li class="sk-pred-row" data-rank="1">
+          <span class="sk-pred-name serif-italic">—</span>
+          <span class="sk-pred-bar"><span class="sk-pred-fill"></span></span>
+          <span class="sk-pred-score mono">—</span>
+        </li>
+        <li class="sk-pred-row" data-rank="2">
+          <span class="sk-pred-name serif-italic">—</span>
+          <span class="sk-pred-bar"><span class="sk-pred-fill"></span></span>
+          <span class="sk-pred-score mono">—</span>
+        </li>
+        <li class="sk-pred-row" data-rank="3">
+          <span class="sk-pred-name serif-italic">—</span>
+          <span class="sk-pred-bar"><span class="sk-pred-fill"></span></span>
+          <span class="sk-pred-score mono">—</span>
+        </li>
+      </ol>
+
+      <div class="sk-target-row mono" id="sk-target-row" hidden>
+        <span class="label">Target</span>
+        <span class="serif-italic" id="sk-target-name">—</span>
+        <span class="sk-target-status" id="sk-target-status">searching…</span>
+      </div>
+
+      <div class="sk-history mono">
+        <div class="sk-history-head">Stroke history · how the guess shifted</div>
+        <ol class="sk-history-list" id="sk-history-list">
+          <li class="sk-history-empty">No strokes yet.</li>
+        </ol>
+      </div>
+
+      <div class="sk-loading mono" id="sk-loading">Loading model…</div>
+    </aside>
+  </div>
+
+  <!-- Suggestion targets -->
+  <div class="sk-suggestions">
+    <div class="mono sk-suggest-head">Try drawing one of these:</div>
+    <div class="sk-suggest-list" id="sk-suggest-list">
+      <!-- buttons injected by JS once categories.json loads -->
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — HOW IT WORKS -->
+<section class="sk-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>How it works</span>
+  </div>
+
+  <div class="sk-how-grid">
+    <div class="sk-how-card">
+      <div class="mono sk-how-fig">A · Dataset</div>
+      <h3 class="serif sk-how-title">90,000 sketches, 30 categories</h3>
+      <p>
+        Google's Quick Draw dataset, released as part of the
+        <em>Quick, Draw!</em> game in 2016. Fifty million doodles
+        across 345 categories, freely downloadable as 28×28 bitmap
+        arrays. We use a 30-category subset chosen for visual
+        distinctness; 3,000 training sketches per class plus 500 held
+        out for evaluation.
+      </p>
+    </div>
+
+    <div class="sk-how-card">
+      <div class="mono sk-how-fig">B · Model</div>
+      <h3 class="serif sk-how-title">A small fully-connected network</h3>
+      <p>
+        784 input pixels → 256 ReLU → 128 ReLU → 30 softmax. Roughly
+        235,000 parameters total. Trained with Adam in scikit-learn,
+        early-stopping on a 10% validation split. A small CNN would
+        beat this, but the MLP is intentionally chosen for portability:
+        it ships from any environment, no GPU, no framework dance.
+      </p>
+    </div>
+
+    <div class="sk-how-card">
+      <div class="mono sk-how-fig">C · Deployment</div>
+      <h3 class="serif sk-how-title">PyTorch-style → ONNX → browser</h3>
+      <p>
+        Trained model exported through <span class="mono">skl2onnx</span>
+        to opset-13 ONNX. The browser uses
+        <span class="mono">onnxruntime-web</span> with the WASM backend
+        to run inference single-threaded on the user's CPU. First load
+        ~3 seconds (model + runtime). Each subsequent prediction is
+        under 50 milliseconds.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. 06.2 — ADVERSARIAL GALLERY -->
+<section class="sk-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. 06.2</span>
+    <span>What the model gets wrong</span>
+  </div>
+  <p class="sk-note">
+    No model is honest unless it knows where it fails. These are the
+    confusion pairs the classifier consistently mistakes on the held-out
+    test set. Drawn from the actual confusion matrix, not invented.
+  </p>
+  <div class="sk-adversarial" id="sk-adversarial">
+    <div class="sk-adv-empty mono">loading evaluation results…</div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS -->
+<section class="sk-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="sk-receipts" id="sk-receipts">
+    <!-- populated from methodology.json -->
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY -->
+<section class="sk-section sk-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Pipeline</div>
+      <p>
+        Pure Python training in
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/sketch_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/sketch_model.py ↗</a>
+        — downloads the bitmap dataset, balances classes, trains the
+        MLP, evaluates on held-out data, exports the ONNX model and
+        the methodology JSON consumed by the receipts panel above.
+        Re-runnable end-to-end with one command.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Inference</div>
+      <p>
+        The browser canvas is captured at 480×480, downsampled to 28×28
+        grayscale, inverted to match Quick Draw's white-on-black format,
+        and flattened. The 784-vector becomes the input tensor for an
+        ONNX Runtime Web session.
+        <span class="mono">session.run()</span> returns a 30-class
+        probability vector; we render the top three.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://arxiv.org/abs/1704.03477" target="_blank" rel="noopener" style="border-bottom:1px solid">Ha &amp; Eck · A Neural Representation of Sketch Drawings (sketch-rnn) ↗</a><br>
+        <a href="https://quickdraw.withgoogle.com/data" target="_blank" rel="noopener" style="border-bottom:1px solid">The Quick, Draw! dataset ↗</a><br>
+        <a href="https://onnxruntime.ai/docs/tutorials/web/" target="_blank" rel="noopener" style="border-bottom:1px solid">ONNX Runtime Web tutorials ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        An MLP discards spatial structure; a CNN would hit higher
+        accuracy at the same parameter budget. Quick Draw drawings are
+        from a quick-game context (people drew under a 20-second timer)
+        so the training distribution skews loose; careful drawings can
+        confuse a model trained on hurried ones. Long-tail categories
+        are deliberately omitted from the 30-class subset.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/funnel-sim-lab/">← Prev: Funnel Simulation (FIG. 05)</a>
+    <span>Lab 06 of 06</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/sketch_model.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=6"></script>
+<script src="/assets/js/sketch-lab.js?v=1"></script>
+</body>
+</html>

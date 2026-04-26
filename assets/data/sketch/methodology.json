@@ -1,0 +1,81 @@
+{
+  "model": "MLP (256-128-30) ReLU, sklearn 1.7.2",
+  "training_samples": 90000,
+  "test_samples": 15000,
+  "categories": 30,
+  "params": 237726,
+  "top1_accuracy": 0.7863333333333333,
+  "top3_accuracy": 0.9029333333333334,
+  "model_size_kb": 929.9,
+  "training_time_seconds": null,
+  "worst_confusions": [
+    {
+      "true": "donut",
+      "predicted": "smiley face",
+      "count": 41,
+      "rate": 0.082
+    },
+    {
+      "true": "bird",
+      "predicted": "airplane",
+      "count": 40,
+      "rate": 0.08
+    },
+    {
+      "true": "donut",
+      "predicted": "clock",
+      "count": 32,
+      "rate": 0.064
+    },
+    {
+      "true": "key",
+      "predicted": "guitar",
+      "count": 30,
+      "rate": 0.06
+    },
+    {
+      "true": "bird",
+      "predicted": "cat",
+      "count": 30,
+      "rate": 0.06
+    },
+    {
+      "true": "cloud",
+      "predicted": "fish",
+      "count": 29,
+      "rate": 0.058
+    }
+  ],
+  "per_class_accuracy": {
+    "airplane": 0.782,
+    "apple": 0.898,
+    "bicycle": 0.852,
+    "bird": 0.512,
+    "book": 0.77,
+    "butterfly": 0.786,
+    "cat": 0.736,
+    "clock": 0.83,
+    "cloud": 0.756,
+    "coffee cup": 0.73,
+    "donut": 0.726,
+    "envelope": 0.9,
+    "eye": 0.804,
+    "fish": 0.862,
+    "flower": 0.75,
+    "guitar": 0.872,
+    "hand": 0.756,
+    "hat": 0.788,
+    "house": 0.89,
+    "ice cream": 0.824,
+    "key": 0.758,
+    "ladder": 0.858,
+    "lightning": 0.634,
+    "moon": 0.688,
+    "mountain": 0.862,
+    "mushroom": 0.888,
+    "pizza": 0.744,
+    "smiley face": 0.79,
+    "star": 0.742,
+    "sun": 0.802
+  }
+}

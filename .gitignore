@@ -8,6 +8,10 @@ node_modules/
 .wrangler/
 .claude/
 
+# Quick Draw raw bitmap downloads — re-fetched on training run
+.cache/
+notebooks/.cache/
+
 # Local working files that aren't part of the published site
 *.xlsx
 PORTFOLIO-REWRITE-PLAN.md
