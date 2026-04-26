@@ -306,6 +306,12 @@
     if (!state.session || state.strokes.length === 0) return;
 
     const tensor = canvasToInputTensor();
+    if (!tensor) {
+      // Not enough ink for a meaningful prediction — leave UI blank
+      // rather than show the model's stale "default" guess.
+      clearPredictions();
+      return;
+    }
     const t0 = performance.now();
     let result;
     try {
@@ -338,27 +344,85 @@
     appendHistory(top3[0]);
   }
 
+  // Returns null if the canvas has too little ink for a meaningful
+  // prediction, or a Float32 tensor (1, 784) otherwise.
+  // Critical: Quick Draw training data is centered and fitted to 28x28.
+  // We compute the drawing's bounding box on the full canvas, crop to
+  // it with small padding, and only THEN downsample to 28x28. Without
+  // this, drawing in a corner of the 480-canvas produces a tiny pixel
+  // cluster at 28x28 that doesn't match the training distribution and
+  // the model collapses to its prior (sun / lightning / mountain).
   function canvasToInputTensor() {
-    // Downsample 480x480 (or whatever) to 28x28 grayscale.
-    // Quick Draw training data is white-on-black bitmaps, so we invert
-    // (canvas is black-on-white -> grayscale -> invert -> normalize).
+    const cw = state.canvas.width;
+    const ch = state.canvas.height;
+
+    // Read the full canvas at native resolution. We need pixel data
+    // anyway to find the ink bounding box.
+    const full = state.ctx.getImageData(0, 0, cw, ch).data;
+
+    // Find bounding box of dark (drawn) pixels. Canvas is black ink
+    // on white background; "ink" = pixel darker than threshold.
+    const INK_THRESHOLD = 200;  // 0..255; lower = stricter "is ink"
+    let minX = cw, minY = ch, maxX = -1, maxY = -1;
+    let inkPixels = 0;
+    for (let y = 0; y < ch; y++) {
+      const rowOffset = y * cw * 4;
+      for (let x = 0; x < cw; x++) {
+        const j = rowOffset + x * 4;
+        const gray = (full[j] + full[j + 1] + full[j + 2]) / 3;
+        if (gray < INK_THRESHOLD) {
+          inkPixels++;
+          if (x < minX) minX = x;
+          if (y < minY) minY = y;
+          if (x > maxX) maxX = x;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+
+    // Guard: if the user has barely drawn anything, refuse to predict.
+    // The model's prior for empty/sparse input is sun/lightning/mountain
+    // and that prediction is meaningless.
+    const MIN_INK_PIXELS = Math.max(80, (cw * ch) * 0.0005);
+    if (inkPixels < MIN_INK_PIXELS || maxX < 0) {
+      return null;
+    }
+
+    // Pad the bounding box by ~10% on each side, square it up so the
+    // aspect ratio doesn't distort during the resize.
+    const bbW = maxX - minX + 1;
+    const bbH = maxY - minY + 1;
+    const sideRaw = Math.max(bbW, bbH);
+    const pad = Math.max(8, Math.round(sideRaw * 0.1));
+    const side = sideRaw + pad * 2;
+    // Center the square crop on the bbox center
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const cropX = Math.max(0, Math.round(cx - side / 2));
+    const cropY = Math.max(0, Math.round(cy - side / 2));
+    const cropW = Math.min(cw - cropX, side);
+    const cropH = Math.min(ch - cropY, side);
+
+    // Downsample the cropped square to 28x28 via an offscreen canvas.
     const tmp = document.createElement('canvas');
     tmp.width = PREDICT_INPUT;
     tmp.height = PREDICT_INPUT;
     const tctx = tmp.getContext('2d');
     tctx.fillStyle = '#fff';
     tctx.fillRect(0, 0, PREDICT_INPUT, PREDICT_INPUT);
-    // drawImage will smoothly downsample
     tctx.imageSmoothingEnabled = true;
-    tctx.drawImage(state.canvas, 0, 0, PREDICT_INPUT, PREDICT_INPUT);
+    tctx.drawImage(
+      state.canvas,
+      cropX, cropY, cropW, cropH,    // source rect: bbox crop
+      0, 0, PREDICT_INPUT, PREDICT_INPUT,  // dest: full 28x28
+    );
     const img = tctx.getImageData(0, 0, PREDICT_INPUT, PREDICT_INPUT).data;
 
     const arr = new Float32Array(PREDICT_INPUT * PREDICT_INPUT);
     for (let i = 0; i < arr.length; i++) {
-      // Average RGB → grayscale → invert → normalize 0..1
       const j = i * 4;
       const gray = (img[j] + img[j + 1] + img[j + 2]) / 3;
-      arr[i] = (255 - gray) / 255;
+      arr[i] = (255 - gray) / 255;  // invert: white-on-black to match training
     }
     return new ort.Tensor('float32', arr, [1, PREDICT_INPUT * PREDICT_INPUT]);
   }
