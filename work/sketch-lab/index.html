@@ -131,8 +131,10 @@
   </div>
   <p class="sk-note">
     Mouse or finger. Strokes interpolate. Predictions update at the
-    end of each stroke. Try the suggestions below the canvas; a green
-    pulse fires when the model's top guess matches your target.
+    end of each stroke. The model knows 30 categories total but handles
+    structured shapes (house, bicycle, guitar) much better than
+    free-form ones (bird, cat) — see § IV for what it gets wrong.
+    Pick a suggestion below for the best demo.
   </p>
 
   <div class="sk-demo-layout">
@@ -365,6 +367,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/sketch-lab.js?v=2"></script>
+<script src="/assets/js/sketch-lab.js?v=3"></script>
 </body>
 </html>
