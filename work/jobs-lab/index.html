@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Two-Axis Future — Jake Cuth.</title>
+  <meta name="description" content="An interactive dashboard on US occupational exposure to AI and robotics through 2030. Three peer-reviewed exposure measures, BLS projections, and the seven head-to-head comparisons that explain the inversion.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Two-Axis Future — AI and robotics job exposure">
+  <meta property="og:description" content="AI exposure and robotics exposure are nearly inverse stories. Most reporting collapses them into one panic. This dashboard puts the structure back.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/jobs-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=13">
+  <link rel="stylesheet" href="/assets/css/jobs-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" class="active" aria-current="page" role="menuitem">AI &amp; Jobs</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="aj-main">
+
+<!-- HERO -->
+<section class="aj-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 08</span>
+    <span>The two-axis future</span>
+  </div>
+  <h1 class="serif big-display aj-title">
+    AI and robotics<br>
+    are <span class="serif-italic" style="color:var(--accent)">opposite</span> stories.
+  </h1>
+  <p class="lab-biz-line">
+    Most reporting on automation and jobs collapses two distinct
+    pressures into one panic. This dashboard separates them. AI hits
+    knowledge work in coastal metros. Robotics hits physical work in
+    Heartland manufacturing zones. The middle, in-person services and
+    skilled trades, is the most insulated category in the US economy.
+  </p>
+  <p class="aj-kicker">
+    Three peer-reviewed exposure measures (Eloundou, Felten, Yale Budget Lab),
+    BLS 2024–34 projections, and the seven head-to-head occupation
+    pairs that show the structure. Search any job, plot the catalog,
+    or compare two sides of the inversion.
+  </p>
+  <div class="mono aj-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Sources</div><div class="value">BLS · OEWS · Eloundou · Felten · Yale Budget Lab</div></div>
+    <div><div class="label">Coverage</div><div class="value"><span id="aj-coverage-stat">888 occupations</span></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — THE FRAME -->
+<section class="aj-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Three questions, three answers, none equal</span>
+  </div>
+  <div class="aj-prose">
+    <p class="aj-lede">
+      Most public reporting on AI and jobs collapses three different
+      questions into one number.
+    </p>
+    <p>
+      <em>Exposure</em> asks what fraction of an occupation's tasks an
+      AI system <em>could</em> perform. A ceiling.
+      <em>Displacement</em> asks how many of those tasks an employer
+      will actually substitute capital for labor on, after weighing
+      cost, regulation, and adoption frictions.
+      <em>Augmentation</em> asks whether the technology makes remaining
+      workers faster or enables new tasks.
+    </p>
+    <p>
+      Goldman's "300 million jobs exposed globally" is exposure.
+      Acemoglu's "0.06 percent TFP growth per year over a decade" is a
+      macro outcome. PwC's "56 percent wage premium for AI skills" is
+      augmentation. None of them is wrong. All of them describe
+      different layers. This dashboard keeps them separate.
+    </p>
+    <p>
+      The single most under-reported finding in the US labor data
+      through April 2026 is an inversion. Every prior wave of automation
+      hollowed out the middle of the wage and education distribution.
+      Generative AI inverts that. Felten's AIOE, Eloundou's β scores,
+      and the Yale Budget Lab harmonization all show exposure rising
+      with credential, with bachelor's-and-above the most exposed.
+      Robotics has not gone away. It is still the dominant pressure on
+      warehouse, manufacturing, food prep, and material moving. Two
+      automation pressures, opposite ends of the education distribution,
+      same country.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. 08.1 — FIND YOUR JOB -->
+<section class="aj-section aj-section-demo">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. 08.1</span>
+    <span>Find your job</span>
+  </div>
+  <p class="aj-note">
+    Type a job title or SOC code. The card shows what BLS projects, what
+    each exposure measure says, and where the measures disagree. The
+    horizontal bars are the editorial signature: you see the
+    disagreement on your own job in the first ten seconds.
+  </p>
+
+  <div class="aj-search-wrap">
+    <label class="aj-search-label mono" for="aj-search">Search occupations</label>
+    <input
+      id="aj-search"
+      class="aj-search"
+      type="text"
+      autocomplete="off"
+      placeholder="e.g. paralegal, software developer, truck driver"
+      aria-label="Search occupations"
+    >
+    <div class="aj-search-results mono" id="aj-search-results" hidden></div>
+  </div>
+
+  <div class="aj-card-wrap" id="aj-card-wrap" hidden>
+    <article class="aj-card" id="aj-card"></article>
+  </div>
+
+  <div class="mono aj-suggested">
+    <span class="aj-suggested-head">Try one of these:</span>
+    <button type="button" class="aj-chip" data-soc="23-2011">Paralegals</button>
+    <button type="button" class="aj-chip" data-soc="15-1252">Software Developers</button>
+    <button type="button" class="aj-chip" data-soc="29-1171">Nurse Practitioners</button>
+    <button type="button" class="aj-chip" data-soc="53-3032">Truck Drivers</button>
+    <button type="button" class="aj-chip" data-soc="43-4051">Customer Service Reps</button>
+    <button type="button" class="aj-chip" data-soc="27-1024">Graphic Designers</button>
+    <button type="button" class="aj-chip" data-soc="47-2111">Electricians</button>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · FIG. 08.2 — THE TWO-AXIS SCATTER -->
+<section class="aj-section">
+  <div class="mono section-label">
+    <span class="idx">§ III · FIG. 08.2</span>
+    <span>The two-axis future, plotted</span>
+  </div>
+  <p class="aj-note">
+    AI exposure on the x-axis, robotics exposure on the y. Bubble size
+    is 2024 employment. Color is BLS 2024–34 projected change in
+    employment. The chart that answers the headline question. Click any
+    bubble to drill into its card.
+  </p>
+
+  <div class="aj-scatter-controls mono">
+    <div class="aj-control">
+      <label>Filter by major group</label>
+      <select id="aj-filter-group">
+        <option value="">all</option>
+      </select>
+    </div>
+    <div class="aj-control">
+      <label>Education tier</label>
+      <select id="aj-filter-edu">
+        <option value="">all</option>
+      </select>
+    </div>
+    <div class="aj-control">
+      <label>Show</label>
+      <select id="aj-filter-coverage">
+        <option value="bls">with BLS data (recommended)</option>
+        <option value="all">all 888 occupations</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="aj-scatter-frame">
+    <svg id="aj-scatter" viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" aria-label="Two-axis scatter of AI vs robotics exposure"></svg>
+    <div class="aj-scatter-quadrants mono">
+      <div class="q tr"><span class="q-label">Double-exposed</span> <span class="q-hint">high AI · high robotics</span></div>
+      <div class="q tl"><span class="q-label">Physical-work automation</span> <span class="q-hint">low AI · high robotics</span></div>
+      <div class="q br"><span class="q-label">Knowledge-work disruption</span> <span class="q-hint">high AI · low robotics</span></div>
+      <div class="q bl"><span class="q-label">Resilient</span> <span class="q-hint">low AI · low robotics</span></div>
+    </div>
+  </div>
+  <div class="mono aj-scatter-legend" id="aj-scatter-legend">
+    <div class="leg-item"><span class="leg-swatch leg-bubble small"></span> &lt; 100k jobs</div>
+    <div class="leg-item"><span class="leg-swatch leg-bubble medium"></span> ~500k</div>
+    <div class="leg-item"><span class="leg-swatch leg-bubble big"></span> 1M+</div>
+    <div class="leg-spacer"></div>
+    <div class="leg-item"><span class="leg-swatch leg-grad-decline"></span> declining</div>
+    <div class="leg-item"><span class="leg-swatch leg-grad-flat"></span> flat</div>
+    <div class="leg-item"><span class="leg-swatch leg-grad-grow"></span> growing</div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. 08.3 — DISAGREEMENTS -->
+<section class="aj-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. 08.3</span>
+    <span>Why the sources disagree</span>
+  </div>
+  <p class="aj-note">
+    Three peer-reviewed exposure measures rank the same occupations
+    significantly differently. Eloundou-vs-Felten correlate r ≈ 0.79.
+    Eloundou-vs-Webb (excluded as an outlier in Yale's PCA) correlates
+    only ~0.3–0.5. The disagreement is largest precisely for the
+    high-exposure occupations the dashboard most cares about.
+  </p>
+
+  <div class="aj-bump-frame">
+    <svg id="aj-bump" viewBox="0 0 900 700" preserveAspectRatio="xMidYMid meet" aria-label="Rank-shift comparison across three AI exposure measures"></svg>
+  </div>
+
+  <div class="aj-disagreement-prose">
+    <p>
+      <strong>Eloundou et al. (2023, OpenAI)</strong> rates each O*NET task
+      on whether a GPT-4-class model could perform it faster with a 50%
+      reduction. Beta scores include software complements. Tends to
+      rate cognitive analysis highly.
+    </p>
+    <p>
+      <strong>Felten, Raj &amp; Seamans AIOE (2023 update)</strong> maps
+      ten machine-learning capability dimensions onto O*NET ability
+      requirements. Captures perception and language modeling. Less
+      sensitive to reasoning chains.
+    </p>
+    <p>
+      <strong>Yale Budget Lab (Feb 2026)</strong> harmonizes seven leading
+      measures via PCA. Surfaces the latent "AI exposure" axis when
+      researchers disagree on weights. Excludes Webb as an outlier.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · FIG. 08.4 — EMPIRICAL REALITY -->
+<section class="aj-section">
+  <div class="mono section-label">
+    <span class="idx">§ V · FIG. 08.4</span>
+    <span>What's actually happened</span>
+  </div>
+  <p class="aj-note">
+    What we have <em>measured</em>, as distinct from what we have
+    <em>modeled</em>. Productivity studies show large gains in
+    controlled settings. Aggregate displacement has not yet appeared in
+    US labor statistics. The strongest measured signal is in
+    entry-level employment for the most exposed occupations.
+  </p>
+
+  <div class="aj-empirical-grid">
+    <!-- Card 1: BLS revisions -->
+    <div class="aj-empirical-card">
+      <div class="mono aj-emp-fig">A · BLS revisions</div>
+      <h3 class="serif aj-emp-title">BLS quietly revised exposed occupations down</h3>
+      <svg viewBox="0 0 320 180" class="aj-emp-svg" id="aj-emp-bls" aria-hidden="true"></svg>
+      <p class="aj-emp-cap mono">
+        Same occupations, two projection vintages. Paralegals, customer
+        service reps, programmers, translators, bookkeeping. BLS Aug 2025.
+      </p>
+    </div>
+
+    <!-- Card 2: Stanford ADP youth -->
+    <div class="aj-empirical-card">
+      <div class="mono aj-emp-fig">B · Stanford / ADP</div>
+      <h3 class="serif aj-emp-title">Entry-level cognitive work down 13%</h3>
+      <svg viewBox="0 0 320 180" class="aj-emp-svg" id="aj-emp-adp" aria-hidden="true"></svg>
+      <p class="aj-emp-cap mono">
+        Workers 22–25 in highest-AI-exposure occupations vs older
+        workers in same occupations. Brynjolfsson, Chandar &amp; Chen.
+        ADP payroll, late 2022 – mid 2025.
+      </p>
+    </div>
+
+    <!-- Card 3: BTOS adoption -->
+    <div class="aj-empirical-card">
+      <div class="mono aj-emp-fig">C · BTOS adoption</div>
+      <h3 class="serif aj-emp-title">Firm AI adoption climbing, not a cliff</h3>
+      <svg viewBox="0 0 320 180" class="aj-emp-svg" id="aj-emp-btos" aria-hidden="true"></svg>
+      <p class="aj-emp-cap mono">
+        Census Business Trends and Outlook Survey. Production-use
+        wording: 3.7% (Sep 2023) → 10% (Sep 2025). Broadened wording:
+        17.3% (Nov 2025).
+      </p>
+    </div>
+
+    <!-- Card 4: Productivity studies table -->
+    <div class="aj-empirical-card">
+      <div class="mono aj-emp-fig">D · Productivity in controlled studies</div>
+      <h3 class="serif aj-emp-title">Real, large, but in lab conditions</h3>
+      <table class="aj-prod-table mono">
+        <thead><tr><th>Study</th><th>Domain</th><th class="num">Effect</th></tr></thead>
+        <tbody>
+          <tr><td>Brynjolfsson · Li · Raymond</td><td>Customer support</td><td class="num">+14%</td></tr>
+          <tr><td>Peng et al.</td><td>Coding (controlled)</td><td class="num">+56%</td></tr>
+          <tr><td>Noy &amp; Zhang (Science)</td><td>Writing</td><td class="num">+40%</td></tr>
+          <tr><td>Cui et al. (MgmtSci)</td><td>Field experiments</td><td class="num">+26%</td></tr>
+          <tr><td>Dell'Acqua et al. (BCG)</td><td>Consulting tasks</td><td class="num">+25%</td></tr>
+        </tbody>
+      </table>
+      <p class="aj-emp-cap mono">
+        Treatment vs. control. The controlled-setting result has not
+        translated into aggregate displacement at population scale.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · COMPARE TWO JOBS -->
+<section class="aj-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI · FIG. 08.5</span>
+    <span>Compare two jobs</span>
+  </div>
+  <p class="aj-note">
+    Pick any two occupations. The seven featured pairs each illustrate
+    a different mechanism. The first one is the cleanest illustration
+    of the inversion.
+  </p>
+
+  <div class="aj-pair-chips" id="aj-pair-chips"></div>
+
+  <div class="aj-compare-grid">
+    <div class="aj-compare-side" data-side="a">
+      <label class="mono aj-compare-label">Job A</label>
+      <select class="aj-compare-select" id="aj-cmp-a"></select>
+      <div class="aj-compare-card" id="aj-cmp-card-a"></div>
+    </div>
+    <div class="aj-compare-side" data-side="b">
+      <label class="mono aj-compare-label">Job B</label>
+      <select class="aj-compare-select" id="aj-cmp-b"></select>
+      <div class="aj-compare-card" id="aj-cmp-card-b"></div>
+    </div>
+  </div>
+
+  <p class="aj-compare-blurb mono" id="aj-cmp-blurb"></p>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — METHODOLOGY -->
+<section class="aj-section aj-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Pipeline</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/jobs_lab.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/jobs_lab.py ↗</a>
+        joins three peer-reviewed exposure datasets on six-digit SOC,
+        applies a hand-curated BLS layer (2024 employment, May 2024
+        median wage, 2024–34 projected change, education tier) for the
+        ~85 occupations covering most of US employment, and writes
+        <span class="mono">occupations.json</span>. The robotics
+        score in v1 is a heuristic by SOC major group. Webb's
+        <span class="mono">pct_robots</span> requires direct BLS access
+        we cannot complete in this build session.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">What's measured</div>
+      <p>
+        AI exposure is a composite z-score of three peer-reviewed
+        measures: Eloundou et al. β (with software complements), Felten
+        AIOE (capability mapping), and Yale Budget Lab PCA (harmonized
+        across seven measures). Robotics exposure is a major-group
+        heuristic, not a measured per-occupation score. BLS employment,
+        wage, and projected change are the published values from the
+        August 2025 release.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://arxiv.org/abs/2303.10130" target="_blank" rel="noopener" style="border-bottom:1px solid">Eloundou et al. · GPTs are GPTs ↗</a><br>
+        <a href="https://github.com/AIOE-Data/AIOE" target="_blank" rel="noopener" style="border-bottom:1px solid">Felten · AIOE data appendix ↗</a><br>
+        <a href="https://budgetlab.yale.edu/research/ai-exposure-what-do-we-know" target="_blank" rel="noopener" style="border-bottom:1px solid">Yale Budget Lab · AI Exposure: What do we know ↗</a><br>
+        <a href="https://digitaleconomy.stanford.edu/publications/canaries-in-the-coal-mine/" target="_blank" rel="noopener" style="border-bottom:1px solid">Brynjolfsson, Chandar &amp; Chen · Canaries in the Coal Mine ↗</a><br>
+        <a href="https://www.bls.gov/emp/" target="_blank" rel="noopener" style="border-bottom:1px solid">BLS Employment Projections 2024-34 ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Honest caveats</div>
+      <p>
+        Exposure is not displacement. Tasks are not jobs. Most exposure
+        scores predate frontier multimodal and agentic capabilities.
+        Robotics adoption is slower than software adoption. Augmentation
+        may dominate displacement for incumbents while juniors face
+        compressed hiring. New BLS data lands annually; this lab uses
+        the August 2025 release.
+      </p>
+    </div>
+  </div>
+
+  <details class="aj-howto">
+    <summary class="mono">How to read these scores ↓</summary>
+    <div class="aj-howto-body">
+      <p><strong>Exposure.</strong> A ceiling on what fraction of an occupation's tasks an AI system <em>could</em> perform with current capability. Says nothing about whether employers will substitute capital for labor.</p>
+      <p><strong>Displacement.</strong> The post-adoption employer decision. Mediated by cost, regulation, organizational inertia, and customer acceptance. Often much smaller than exposure.</p>
+      <p><strong>Augmentation.</strong> Productivity gains for remaining workers. Brynjolfsson et al. found +14% on customer support. The largest empirical effect is on novices closing the gap with top performers.</p>
+      <p><strong>The current empirical state (April 2026).</strong> Productivity studies show large gains in controlled settings. Aggregate employment in exposed occupations has not collapsed. The strongest measured signal is a ~13% relative employment decline for ages 22–25 in highest-exposure occupations since late 2022 (Stanford / ADP).</p>
+    </div>
+  </details>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/model-picker-lab/">← Prev: Model Picker (FIG. 07)</a>
+    <span>Lab 08 of 08</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/jobs_lab.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=6"></script>
+<script src="/assets/js/jobs-lab.js?v=1"></script>
+</body>
+</html>

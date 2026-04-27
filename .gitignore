@@ -21,3 +21,11 @@ notebooks/.cache/
 *.xlsx
 PORTFOLIO-REWRITE-PLAN.md
 .impeccable.md
+
+# macOS iCloud sync ghost files (FUSE artifacts when files are open elsewhere)
+.fuse_hidden*
+
+# Python compile artifacts
+__pycache__/
+*.pyc
+*.pyo

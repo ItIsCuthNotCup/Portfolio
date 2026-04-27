@@ -13,6 +13,7 @@
   --ink-dim: #6B6359;
   --rule:    #14120F;
   --accent:  oklch(0.58 0.19 28);
+  --accent-2: oklch(0.42 0.10 240);  /* Deep editorial blue. Used only in jobs-lab for robotics axis. */
   --grain:   0.035;
 }
 [data-theme="blueprint"] {
@@ -22,6 +23,7 @@
   --ink-soft:#1E2A30;
   --ink-dim: #5B6670;
   --accent:  oklch(0.48 0.12 230);
+  --accent-2: oklch(0.55 0.14 25);
 }
 [data-theme="graphite"] {
   --paper:   #141311;
@@ -31,6 +33,7 @@
   --ink-dim: #8B8374;
   --rule:    #EEE8D8;
   --accent:  oklch(0.88 0.18 100);
+  --accent-2: oklch(0.72 0.15 220);
 }
 
 /* ── Reset & Base ───────────────────────────────────────────── */
