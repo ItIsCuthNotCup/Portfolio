@@ -26,6 +26,23 @@ const DAILY_SPEND_CAP_USD = 2.00;
 // pricing (~$0.10/$0.40 per M).
 const ESTIMATED_COST_PER_CALL_USD = 0.0003;
 
+// Browser origin allowlist. Server-side calls (no Origin header) are
+// allowed through — the per-IP rate limit and daily spend cap defend
+// against those. Browser-based abuse from foreign origins is blocked
+// here; browsers cannot forge the Origin header from JS.
+const ALLOWED_ORIGINS = new Set([
+  'https://jakecuth.com',
+  'https://www.jakecuth.com',
+]);
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  // Cloudflare Pages preview deployments (covers both
+  // <hash>.pages.dev and <hash>.<project>.pages.dev forms).
+  if (/^https:\/\/[a-z0-9.-]+\.pages\.dev$/.test(origin)) return true;
+  return false;
+}
+
 // On-topic keyword guard. Cheap; intentionally permissive — we only
 // reject queries that have NO model-related signal at all.
 const ONTOPIC_PATTERNS = [
@@ -50,6 +67,12 @@ export async function onRequest(context) {
   }
   if (request.method !== 'POST') {
     return jsonResponse({ ok: false, error: 'POST only' }, 405);
+  }
+
+  // Origin gate. Reject browser calls from foreign origins.
+  const reqOrigin = request.headers.get('Origin');
+  if (!isAllowedOrigin(reqOrigin)) {
+    return jsonResponse({ ok: false, error: 'Origin not allowed.' }, 403);
   }
 
   try {

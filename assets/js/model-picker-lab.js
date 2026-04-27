@@ -135,7 +135,7 @@
       seen.add(name);
       const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const re = new RegExp(`(?<![\\w-])${escaped}(?![\\w-])`, 'g');
-      html = html.replace(re, `<span class="mp-model-ref">${name}</span>`);
+      html = html.replace(re, `<span class="mp-model-ref">${escapeHtml(name)}</span>`);
     });
     $answer.innerHTML = html;
   }
