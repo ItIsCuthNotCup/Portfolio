@@ -19,6 +19,7 @@
 .aj-hero {
   padding: 120px 48px 60px;
   max-width: 1200px;
+  margin: 0 auto;
 }
 .aj-title { margin-top: 22px; }
 .aj-kicker {
@@ -48,7 +49,7 @@
 }
 
 /* ── Section wrapper ───────────────────────────────────────── */
-.aj-section { padding: 80px 48px; max-width: 1200px; }
+.aj-section { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
 .aj-section .section-label { margin-bottom: 28px; }
 .aj-prose { max-width: 720px; }
 .aj-prose p {
@@ -575,6 +576,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 0;
   border: 1px solid var(--ink);
+  /* Prevent the grid from expanding past its container when long
+     <option> text would otherwise force columns wider than 1fr. */
+  width: 100%;
+  min-width: 0;
 }
 .aj-compare-side {
   padding: 22px 22px 26px;
@@ -582,6 +587,11 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* Default for grid items is min-width: auto, which equals
+     min-content. That lets a wide <select> blow out the column.
+     Force min-width:0 so the 1fr split is honored. */
+  min-width: 0;
+  overflow: hidden;
 }
 .aj-compare-side:last-child { border-right: none; }
 .aj-compare-label {
@@ -599,6 +609,10 @@
   color: var(--ink);
   border-radius: 0;
   cursor: pointer;
+  /* Don't let long <option> text size the element to fit. */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .aj-compare-card { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .aj-cmp-title {
@@ -628,6 +642,9 @@
   font-family: "Newsreader", Georgia, serif;
   font-size: 18px;
   font-variant-numeric: tabular-nums;
+  /* Hug the right edge of the cell, FT/Bloomberg style. Otherwise
+     wide cells leave a sea of whitespace to the right of small values. */
+  text-align: right;
 }
 .aj-cmp-stat .val.delta-pos { color: var(--accent-2); }
 .aj-cmp-stat .val.delta-neg { color: var(--accent); }
