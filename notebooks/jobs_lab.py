@@ -7,36 +7,52 @@ What it does:
        - Felten, Raj & Seamans AIOE (2023)      — github.com/AIOE-Data/AIOE
        - Yale Budget Lab (Feb 2026, harmonized) — budgetlab.yale.edu
   2. Joins them on six-digit SOC 2018.
-  3. Applies a hand-curated BLS layer (2024 employment, May 2024 median
-     wage, 2024-34 projected % change, typical-entry education tier)
-     for the ~85 occupations covering most of US employment plus the
-     seven head-to-head featured pairs from the design brief.
+  3. Applies a BLS layer with employment + median wage from BLS OEWS via
+     the public BLS API (api.bls.gov), keyed by BLS_API_KEY env var when
+     present (500 queries/day) or no-key (25/day, fine for top ~600 SOCs).
+     Hand-curated 2024-34 projection figures cover the seven featured
+     comparison pairs and top-employment occupations.
   4. Adds a robotics exposure score by SOC major group (heuristic; not
      a measured per-occupation value — Webb's pct_robots requires direct
-     BLS access we cannot complete here).
+     BLS .xlsx access which the bot-blocker still gates).
   5. Z-scores each AI measure and computes a composite.
   6. Writes assets/data/jobs/occupations.json and methodology.json.
 
 Usage:
+    BLS_API_KEY=your-key python notebooks/jobs_lab.py
+    # or, no-key tier (limited to 25 queries/day per IP):
     python notebooks/jobs_lab.py
 
 Re-run if any of the upstream files change. Eloundou's repo is stable;
 Felten's appendix updates rarely; Yale Budget Lab refreshes
-periodically. BLS releases new projections every August.
+periodically. BLS OEWS publishes annually each spring.
 
 Schema warning from the design brief: BLS Employment Projections
 occasionally aggregate occupation codes (e.g., 13-1020 collapses three
 SOCs). Always join on the EP "occupation code," not stripped SOC.
+
+OEWS series ID format (25 chars):
+    OEU + N + 0000000(area) + 000000(industry) + {SOC6} + 0 + {dtype}
+where dtype 01 = employment, 04 = mean annual wage. SOCs ending in
+multiple zeros (15-1299, 13-1020, etc.) are aggregate codes that OEWS
+generally does not publish — the build skips them automatically when
+the API returns no data.
 """
 
 import io
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 import requests
 import pandas as pd
+
+BLS_API_KEY = os.environ.get("BLS_API_KEY")
+BLS_API_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+BLS_BATCH   = 50  # max series per request
+BLS_PAUSE_S = 0.4 # be polite
 
 # ─────────────────────────────────────────────────────────────
 # Config
@@ -213,6 +229,72 @@ def robotics_score(soc):
 # ─────────────────────────────────────────────────────────────
 # Pipeline
 # ─────────────────────────────────────────────────────────────
+def fetch_bls_oews(socs):
+    """Pull employment (datatype 01) + mean annual wage (datatype 04) for
+    every SOC via the BLS API. Returns dict of soc -> {'employment': X,
+    'mean_wage': Y}. Skips SOCs the API returns no data for (aggregates).
+    """
+    def build_id(soc6, dtype):
+        return f"OEUN000000000000{soc6}{dtype:02d}"
+
+    sid_to_meta = {}
+    for s in socs:
+        s6 = s.replace('-', '')
+        for dt in (1, 4):
+            sid_to_meta[build_id(s6, dt)] = (s, dt)
+
+    all_ids = list(sid_to_meta.keys())
+    print(f"→ BLS OEWS: requesting {len(all_ids)} series for {len(socs)} SOCs")
+    if BLS_API_KEY:
+        print(f"  using BLS_API_KEY (500 queries/day)")
+    else:
+        print(f"  no key set — limited to 25 queries/day per IP")
+
+    results = {}
+    for i in range(0, len(all_ids), BLS_BATCH):
+        batch = all_ids[i:i+BLS_BATCH]
+        body = {
+            "seriesid": batch,
+            "startyear": "2024",
+            "endyear":   "2024",
+        }
+        if BLS_API_KEY:
+            body["registrationkey"] = BLS_API_KEY
+        try:
+            r = requests.post(BLS_API_URL, json=body, timeout=30)
+            r.raise_for_status()
+            payload = r.json()
+            if payload.get("status") != "REQUEST_SUCCEEDED":
+                print(f"  WARN batch {i//BLS_BATCH}: {payload.get('message')}")
+                if any("threshold" in m for m in (payload.get("message") or [])):
+                    print("  rate limit hit — stopping")
+                    break
+            for s in payload.get("Results", {}).get("series", []):
+                sid = s["seriesID"]
+                if not s["data"]:
+                    continue
+                try:
+                    v = float(s["data"][0]["value"])
+                except (ValueError, KeyError, TypeError):
+                    continue
+                results[sid] = v
+            if (i // BLS_BATCH + 1) % 5 == 0:
+                print(f"  batch {i//BLS_BATCH + 1}: {len(results)} series resolved")
+            time.sleep(BLS_PAUSE_S)
+        except Exception as e:
+            print(f"  batch {i//BLS_BATCH} error: {e}")
+            break
+
+    # Reshape to per-SOC dict
+    by_soc = {}
+    for sid, v in results.items():
+        soc, dt = sid_to_meta[sid]
+        by_soc.setdefault(soc, {})
+        by_soc[soc]["employment" if dt == 1 else "mean_wage"] = v
+
+    print(f"  resolved BLS data for {len(by_soc)} of {len(socs)} SOCs")
+    return by_soc
+
 def fetch_eloundou():
     print(f"→ Fetching Eloundou {ELOUNDOU_URL}")
     df = pd.read_csv(ELOUNDOU_URL)
@@ -270,10 +352,53 @@ def build():
     m['ai_composite'] = m[['z_eloundou', 'z_felten', 'z_ybl']].mean(axis=1, skipna=True)
     m['robotics_score'] = m['soc'].apply(robotics_score)
 
+    # Pull live BLS OEWS for every SOC the API will return.
+    socs = [s for s in m['soc'].dropna().tolist() if s]
+    bls_api = fetch_bls_oews(socs)
+
     occupations = []
     for _, row in m.iterrows():
         soc = row['soc']
-        bls = BLS.get(soc)
+        curated = BLS.get(soc)
+        api     = bls_api.get(soc)
+
+        # Merge: curated wins on projection + education + OJT (those need the
+        # EP .xlsx which is bot-blocked); API wins on employment + wage when
+        # we got fresher numbers from it.
+        if curated:
+            employment_k = curated[0]
+            wage         = curated[1]
+            projected    = curated[2]
+            edu          = curated[3]
+            ojt          = curated[4]
+            # If API has fresher numbers, swap them in (employment in
+            # thousands, wage in USD). API employment is raw count, divide
+            # by 1000 to match curated units.
+            if api and 'employment' in api:
+                employment_k = round(api['employment'] / 1000, 1)
+            if api and 'mean_wage' in api:
+                wage = int(api['mean_wage'])
+            bls_block = {
+                'employment_thousands': employment_k,
+                'median_wage_usd':      wage,
+                'projected_pct_change': projected,
+                'education_tier':       edu,
+                'on_the_job_training':  ojt,
+                'source': 'curated+api' if api else 'curated',
+            }
+        elif api and 'employment' in api and 'mean_wage' in api:
+            # API-only path — every SOC we don't hand-curate but BLS publishes.
+            bls_block = {
+                'employment_thousands': round(api['employment'] / 1000, 1),
+                'median_wage_usd':      int(api['mean_wage']),
+                'projected_pct_change': None,
+                'education_tier':       None,
+                'on_the_job_training':  None,
+                'source': 'api',
+            }
+        else:
+            bls_block = None
+
         rec = {
             'soc': soc,
             'title': row['title'],
@@ -286,13 +411,7 @@ def build():
             },
             'ai_composite_z': _round(row['ai_composite']),
             'robotics_score': round(float(row['robotics_score']), 3),
-            'bls': None if bls is None else {
-                'employment_thousands': bls[0],
-                'median_wage_usd':      bls[1],
-                'projected_pct_change': bls[2],
-                'education_tier':       bls[3],
-                'on_the_job_training':  bls[4],
-            },
+            'bls': bls_block,
             'narrative': NARRATIVES.get(soc),
         }
         occupations.append(rec)
