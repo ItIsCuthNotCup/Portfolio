@@ -1,0 +1,42 @@
+# Cloudflare Pages cache-control rules.
+#
+# Strategy:
+#   - HTML at the root pages: short cache, must-revalidate. Deploys
+#     propagate within ~5 minutes.
+#   - Static assets with cache-bust query strings (?v=N on CSS/JS):
+#     1-year browser cache, immutable. Bumping ?v=N forces a refetch.
+#   - Images, videos, models: 1-year browser cache. Filenames are
+#     stable; if an image is replaced under the same filename, append
+#     a ?v= query.
+#   - /assets/data/*: short cache. The model-picker index refreshes
+#     weekly via cron.
+#   - /api/*: never cached (handled by the Function itself).
+
+/assets/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/images/*
+  Cache-Control: public, max-age=31536000
+
+/assets/videos/*
+  Cache-Control: public, max-age=31536000
+
+/assets/models/*
+  Cache-Control: public, max-age=31536000
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/data/*
+  Cache-Control: public, max-age=3600
+
+/api/*
+  Cache-Control: no-store
+
+/*
+  Cache-Control: public, max-age=300, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
