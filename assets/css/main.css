@@ -562,9 +562,8 @@ main { position: relative; z-index: 1; }
 .labs-grid {
   margin-top: 64px;
   display: grid;
-  /* 6 cards in 3 cols x 2 rows on desktop. Each card has more room   */
-  /* than the prior 5-wide single row. Wraps to 2 cols on tablet,     */
-  /* single column on phone via the media queries below.              */
+  /* 7 cards: 3 cols × 2 rows of normal cards + 1 wide card on row 3. */
+  /* Wraps to 2 cols on tablet, single column on phone.               */
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   border: 1px solid var(--ink);
@@ -583,8 +582,10 @@ main { position: relative; z-index: 1; }
 }
 /* Right edge of every row has no right border */
 .lab-card:nth-child(3n) { border-right: none; }
-/* Bottom row (last 3) has no bottom border */
-.lab-card:nth-last-child(-n+3) { border-bottom: none; }
+/* Last card has no bottom border or right border (container provides them) */
+.lab-card:last-child { border-bottom: none; border-right: none; }
+/* The wide orphan card spans the full row (used when count is 3n+1) */
+.lab-card[data-wide] { grid-column: 1 / -1; border-right: none; }
 .lab-card:hover {
   background: var(--ink);
   color: var(--paper);
@@ -613,17 +614,19 @@ main { position: relative; z-index: 1; }
 }
 @media (max-width: 1100px) {
   .labs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Reset the desktop nth-child rules so 2-col layout draws its own */
+  /* Reset desktop rules; redraw for 2-col layout */
   .lab-card { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
   .lab-card:nth-child(3n) { border-right: 1px solid var(--ink); }
   .lab-card:nth-child(2n) { border-right: none; }
-  .lab-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ink); }
-  .lab-card:nth-last-child(-n+2) { border-bottom: none; }
+  .lab-card:last-child { border-bottom: none; }
+  /* Wide orphan keeps full-row span at 2-col too */
+  .lab-card[data-wide] { grid-column: 1 / -1; border-right: none; }
 }
 @media (max-width: 560px) {
   .labs-grid { grid-template-columns: 1fr; }
   .lab-card { border-right: none; border-bottom: 1px solid var(--ink); }
   .lab-card:last-child { border-bottom: none; }
+  .lab-card[data-wide] { grid-column: 1 / -1; }
 }
 
 /* ── Projects Section ───────────────────────────────────────── */

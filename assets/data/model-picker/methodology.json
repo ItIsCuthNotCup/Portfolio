@@ -1,0 +1,11 @@
+{
+  "model_count": "12 (stub)",
+  "last_refresh": "2026-04-26T00:00:00+00:00",
+  "last_refresh_human": "Stub data — not yet refreshed",
+  "embedding_model": "google/gemini-embedding-2-preview",
+  "generation_model": "google/gemini-2.0-flash-001",
+  "avg_cost_per_query": "0.02",
+  "ttft_target_ms": "1800",
+  "daily_spend_cap": "2.00",
+  "cache_ttl_hours": "24"
+}
