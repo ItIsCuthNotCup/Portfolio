@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Americans Spend Their Day — Jake Cuth.</title>
+  <meta name="description" content="An interactive Time-Use Atlas of how Americans actually spend 24 hours, by age, employment, and parenting status. Built on BLS American Time Use Survey data.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="How Americans Spend Their Day">
+  <meta property="og:description" content="A radial-clock view of the average American day, by age, employment, and parenting status. Built on BLS ATUS.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/time-use-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=14">
+  <link rel="stylesheet" href="/assets/css/time-use-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" class="active" aria-current="page" role="menuitem">Time-Use Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="tu-main">
+
+<section class="tu-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 09</span>
+    <span>How Americans spend their day</span>
+  </div>
+  <h1 class="serif big-display tu-title">
+    The average day,<br>
+    <span class="serif-italic" style="color:var(--accent)">drawn round.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Pick a cohort. See how the average member spends 1,440 minutes.
+    Sleep, work, screens, kids, and the spaces in between, rendered
+    as a 24-hour clock. Built on the same BLS American Time Use Survey
+    you've seen quoted but never seen mapped.
+  </p>
+  <p class="tu-kicker">
+    Thirteen activity categories. Twenty-three published cohorts. Click
+    a different cohort, the clock redraws. Click "compare" and the
+    second cohort overlays. Below, six findings that surprised me when
+    I pulled the data.
+  </p>
+  <div class="mono tu-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Source</div><div class="value">BLS American Time Use Survey · Table A-1</div></div>
+    <div><div class="label">Pooled</div><div class="value" id="tu-coverage">2019–2023 (when refreshed)</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="tu-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>1,440 minutes, every day</span>
+  </div>
+  <div class="tu-prose">
+    <p class="tu-lede">
+      Everyone gets the same 24 hours. What people do with them is the
+      most under-examined statistic in American life.
+    </p>
+    <p>
+      Since 2003, the BLS has run a continuous time-diary study called
+      the American Time Use Survey. Tens of thousands of randomly
+      sampled Americans walk a trained interviewer through their
+      previous day, minute by minute. The result is a public dataset
+      that maps how 24 hours actually break down, by age, by employment
+      status, by whether you have kids at home.
+    </p>
+    <p>
+      It is the closest thing we have to a national mirror. Most people
+      have never looked into it. This page is a tool for doing so.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="tu-section tu-section-demo">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. 09.1</span>
+    <span>The clock — pick a cohort</span>
+  </div>
+  <p class="tu-note">
+    Each segment of the ring is one of 13 activity categories, sized by
+    how many minutes the average member of the selected cohort spends
+    on it per day. Hover any segment to see exact minutes.
+  </p>
+
+  <div class="tu-picker mono">
+    <div class="tu-picker-row">
+      <span class="tu-picker-label">Age</span>
+      <div class="tu-picker-options" id="tu-axis-age"></div>
+    </div>
+    <div class="tu-picker-row">
+      <span class="tu-picker-label">Employment</span>
+      <div class="tu-picker-options" id="tu-axis-employment"></div>
+    </div>
+    <div class="tu-picker-row">
+      <span class="tu-picker-label">Kids at home</span>
+      <div class="tu-picker-options" id="tu-axis-parent"></div>
+    </div>
+    <div class="tu-picker-row">
+      <button type="button" id="tu-reset" class="tu-reset-btn">Reset to "Total"</button>
+    </div>
+  </div>
+
+  <div class="tu-clock-wrap">
+    <div class="tu-clock-side">
+      <div class="mono tu-clock-head" id="tu-clock-head">Total population</div>
+      <svg id="tu-clock" viewBox="-220 -220 440 440" preserveAspectRatio="xMidYMid meet" aria-label="24-hour activity clock"></svg>
+    </div>
+    <aside class="tu-legend mono" id="tu-legend">
+      <div class="tu-legend-head">Activity, minutes per day</div>
+      <ul class="tu-legend-list" id="tu-legend-list"></ul>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="tu-section">
+  <div class="mono section-label">
+    <span class="idx">§ III · FIG. 09.2</span>
+    <span>Compare two days</span>
+  </div>
+  <p class="tu-note">
+    Pick a second cohort. Differences of 15 minutes or more are
+    highlighted.
+  </p>
+
+  <div class="tu-compare-controls mono">
+    <div class="tu-compare-side">
+      <label>Cohort A</label>
+      <select id="tu-cmp-a"></select>
+    </div>
+    <div class="tu-compare-side">
+      <label>Cohort B</label>
+      <select id="tu-cmp-b"></select>
+    </div>
+  </div>
+
+  <div class="tu-compare-bars" id="tu-compare-bars"></div>
+</section>
+
+<hr class="hair">
+
+<section class="tu-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. 09.3</span>
+    <span>Six things the data shows</span>
+  </div>
+  <p class="tu-note">
+    Each finding is a single comparison. The numbers come from BLS ATUS
+    published averages.
+  </p>
+  <div class="tu-surprises" id="tu-surprises"></div>
+</section>
+
+<hr class="hair">
+
+<section class="tu-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="tu-receipts" id="tu-receipts"></div>
+</section>
+
+<hr class="hair">
+
+<section class="tu-section tu-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Pipeline</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/time_use_lab.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/time_use_lab.py ↗</a>
+        reads the BLS-published series-ID list (a1-seriesid.xlsx) and
+        queries the BLS public API for ~7,600 series spanning 23
+        cohorts × 13 activity buckets × 3 sex breakouts. Pools
+        2019–2023 averages. Writes <span class="mono">cohorts.json</span>.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">What's measured</div>
+      <p>
+        The 116 ATUS activity codes are consolidated into 13 readable
+        buckets (sleep, work, housework, etc.). The 24-hour clock
+        renders activity totals as proportional ring segments. Compare
+        view shows minute-deltas between any two cohorts.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.bls.gov/tus/" target="_blank" rel="noopener" style="border-bottom:1px solid">BLS American Time Use Survey ↗</a><br>
+        <a href="https://www.bls.gov/news.release/atus.htm" target="_blank" rel="noopener" style="border-bottom:1px solid">ATUS news release ↗</a><br>
+        <a href="https://www.atusdata.org/atus/" target="_blank" rel="noopener" style="border-bottom:1px solid">ATUS-X (IPUMS) ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Honest caveats</div>
+      <p>
+        Self-reported diaries underestimate phone and screen time.
+        Childcare counts only when caregiving is the primary activity.
+        ATUS doesn't include nonbinary gender. Pooled years smooth over
+        COVID's durable shifts. Cells with under 50 respondents are
+        suppressed by BLS, not by us.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/jobs-lab/">← Prev: AI &amp; Jobs (FIG. 08)</a>
+    <span>Lab 09 of 09</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/time_use_lab.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=6"></script>
+<script src="/assets/js/time-use-lab.js?v=1"></script>
+</body>
+</html>

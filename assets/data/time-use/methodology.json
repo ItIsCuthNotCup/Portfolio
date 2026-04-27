@@ -1,0 +1,12 @@
+{
+  "cohort_count": "13 (stub)",
+  "activity_buckets": 13,
+  "years_pooled": "2023 (stub)",
+  "last_refresh": "2026-04-26T00:00:00Z",
+  "source": "BLS ATUS Table A-1 — published averages",
+  "notes": [
+    "Stub data — run notebooks/time_use_lab.py with BLS_API_KEY to replace with the live 2019-2023 pooled pull (~7,659 series).",
+    "Activity buckets consolidate the 116 ATUS activities into 13 readable categories.",
+    "Self-reported diaries underestimate phone/screen time."
+  ]
+}
