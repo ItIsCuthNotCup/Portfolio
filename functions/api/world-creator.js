@@ -13,7 +13,7 @@
 // 200 with { ok: false, error }.
 // ═══════════════════════════════════════════════════════════
 
-const GEN_MODEL  = 'anthropic/claude-sonnet-4.5';   // Strong code-gen, long output, reasonable cost
+const GEN_MODEL  = 'deepseek/deepseek-v4-pro';   // Code-gen tier model on OpenRouter
 const OPENROUTER = 'https://openrouter.ai/api/v1';
 
 // Hard caps. World generation is genuinely expensive — these are tight.

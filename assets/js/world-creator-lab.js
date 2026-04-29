@@ -61,7 +61,10 @@
       const q = btn.dataset.q || btn.textContent.trim();
       $input.value = q;
       updateChar();
-      submitPrompt();
+      $input.focus();
+      // Don't auto-submit; let the user explicitly press Build the world.
+      // (Auto-submit would fire a generation on every chip click, costing
+      //  $0.15+ each. Better to make the request intentional.)
     });
   }
 
@@ -112,11 +115,17 @@
     clearError();
     setTrace('starting…');
 
+    // 90s hard timeout so the button never gets stuck if the
+    // Function is undeployed, slow, or the connection drops.
+    const ctrl = new AbortController();
+    const timeoutId = setTimeout(() => ctrl.abort(), 90_000);
+
     try {
       const resp = await fetch('/api/world-creator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: q }),
+        signal: ctrl.signal,
       });
 
       if (!resp.ok && resp.status !== 200) {
@@ -196,9 +205,13 @@
         setTrace('failed', true);
       }
     } catch (err) {
-      showError(err && err.message ? err.message : 'Network error.');
+      const msg = (err && err.name === 'AbortError')
+        ? 'Generation took longer than 90 seconds and was aborted. Try a shorter or simpler prompt.'
+        : (err && err.message ? err.message : 'Network error.');
+      showError(msg);
       setTrace('failed', true);
     } finally {
+      clearTimeout(timeoutId);
       inFlight = false;
       $submit.disabled = false;
     }

@@ -71,9 +71,9 @@
     Get a <span class="serif-italic" style="color:var(--accent)">world.</span>
   </h1>
   <p class="lab-biz-line">
-    A prompt becomes a self-contained 3D scene, generated live by Claude
-    and rendered in your browser. No game engine, no asset library, no
-    download. The model writes the geometry, the lighting, and the
+    A prompt becomes a self-contained 3D scene, generated live by an AI
+    model and rendered in your browser. No game engine, no asset library,
+    no download. The model writes the geometry, the lighting, and the
     camera, all in one HTML file.
   </p>
   <p class="wc-kicker">
@@ -84,7 +84,7 @@
   </p>
   <div class="mono wc-dateline">
     <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
-    <div><div class="label">Engine</div><div class="value">Claude Sonnet 4.5 · Three.js · Cloudflare Pages Functions</div></div>
+    <div><div class="label">Engine</div><div class="value">DeepSeek V4 Pro · Three.js · Cloudflare Pages Functions</div></div>
     <div><div class="label">Inspired by</div><div class="value"><a href="https://github.com/petergpt/claude-opus-47-context-worlds" target="_blank" rel="noopener" style="border-bottom:1px solid">petergpt/claude-opus-47-context-worlds ↗</a></div></div>
   </div>
 </section>
@@ -209,7 +209,7 @@
       <h3 class="serif wc-how-title">Streamed from Claude on OpenRouter</h3>
       <p>
         A Cloudflare Pages Function streams the response from
-        <span class="mono">anthropic/claude-sonnet-4.5</span>. About 50 KB
+        <span class="mono">deepseek/deepseek-v4-pro</span>. About 50 KB
         of HTML and JavaScript over 30 seconds. The Function caches the
         result by prompt hash for a week so repeat queries are free.
       </p>
@@ -290,7 +290,7 @@
         <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/functions/api/world-creator.js" target="_blank" rel="noopener" style="border-bottom:1px solid">functions/api/world-creator.js ↗</a>
         is the Cloudflare Pages Function that streams the generation.
         It reads the user prompt, applies the safety layer, and calls
-        <span class="mono">anthropic/claude-sonnet-4.5</span> via
+        <span class="mono">deepseek/deepseek-v4-pro</span> via
         OpenRouter. The response is streamed as Server-Sent Events
         and rendered in the iframe on this page.
       </p>
@@ -359,6 +359,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/world-creator-lab.js?v=2"></script>
+<script src="/assets/js/world-creator-lab.js?v=3"></script>
 </body>
 </html>
