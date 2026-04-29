@@ -32,8 +32,18 @@
   $input.addEventListener('input', updateChar);
   updateChar();
 
-  // ── Seed scene loads via src= so iframe URL stays neat ─────
-  $frame.src = '/assets/data/worlds/machu-picchu.html';
+  // ── Seed scene: fetch as text, render via srcdoc ───────────
+  // (We never use src= because the site's _headers sets
+  //  X-Frame-Options: DENY for hardening. srcdoc HTML is treated
+  //  as inline content by the browser and isn't subject to that
+  //  header, so same-origin framing works without weakening security.)
+  fetch('/assets/data/worlds/machu-picchu.html')
+    .then(r => r.ok ? r.text() : Promise.reject(new Error('seed missing')))
+    .then(html => { $frame.srcdoc = html; })
+    .catch(err => {
+      // Fallback: minimal inline scene so the page never looks broken
+      $frame.srcdoc = `<!DOCTYPE html><html><body style="margin:0;background:#1a1410;color:#a89576;font-family:monospace;padding:24px;">Seed scene failed to load: ${(err && err.message) || 'unknown'}</body></html>`;
+    });
 
   // ── Submit on button or Enter ──────────────────────────────
   $input.addEventListener('keydown', (e) => {
