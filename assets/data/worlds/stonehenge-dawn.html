@@ -16,15 +16,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-<div class="lbl">Stonehenge · solstice dawn</div>
+<div class="lbl">Stonehenge · Salisbury Plain · solstice dawn</div>
 <script>
 'use strict';
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0xc4a886, 0.018);
+scene.fog = new THREE.FogExp2(0xc4a886, 0.015);
 scene.background = new THREE.Color(0x9a7b5a);
 
-const camera = new THREE.PerspectiveCamera(56, innerWidth/innerHeight, 0.5, 600);
+const camera = new THREE.PerspectiveCamera(56, innerWidth/innerHeight, 0.5, 800);
 camera.position.set(0, 18, 50);
 camera.lookAt(0, 6, 0);
 
@@ -38,36 +38,71 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
-// Pre-dawn light: low warm sun + cool ambient
-scene.add(new THREE.AmbientLight(0x6a5a48, 0.6));
-const sun = new THREE.DirectionalLight(0xffc880, 1.6);
-sun.position.set(0, 6, -50); // sun rising on horizon, behind the ring
+// Pre-dawn light
+scene.add(new THREE.AmbientLight(0x6a5a48, 0.55));
+const sun = new THREE.DirectionalLight(0xffc880, 1.7);
+sun.position.set(0, 6, -50);
 scene.add(sun);
 
-// Sun disc — large, soft, low on horizon
+// Cool fill from west (still partially blue sky there)
+const westFill = new THREE.HemisphereLight(0x9a8a78, 0x4a3828, 0.35);
+scene.add(westFill);
+
+// ─────────────────────────────────────────────────────────────
+// Sun disc rising on horizon (visible through the trilithon arch)
+// ─────────────────────────────────────────────────────────────
 const sunDisc = new THREE.Mesh(
-  new THREE.CircleGeometry(7, 48),
-  new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0.9 })
+  new THREE.CircleGeometry(8, 64),
+  new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0.95 })
 );
 sunDisc.position.set(0, 5, -100);
 scene.add(sunDisc);
+
 const halo = new THREE.Mesh(
-  new THREE.CircleGeometry(14, 48),
-  new THREE.MeshBasicMaterial({ color: 0xff9c5a, transparent: true, opacity: 0.18 })
+  new THREE.CircleGeometry(18, 48),
+  new THREE.MeshBasicMaterial({ color: 0xff9c5a, transparent: true, opacity: 0.22 })
 );
 halo.position.copy(sunDisc.position);
 halo.position.z -= 1;
 scene.add(halo);
 
-// Salisbury plain — flat grass
+// Sun rays, faint radial shafts
+const raysGroup = new THREE.Group();
+for (let i = 0; i < 10; i++) {
+  const ray = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 50),
+    new THREE.MeshBasicMaterial({ color: 0xffc880, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
+  );
+  ray.rotation.z = (i / 10) * Math.PI * 2;
+  raysGroup.add(ray);
+}
+raysGroup.position.copy(sunDisc.position);
+raysGroup.position.z -= 2;
+scene.add(raysGroup);
+
+// ─────────────────────────────────────────────────────────────
+// Salisbury plain — undulating grass plane
+// ─────────────────────────────────────────────────────────────
+const plainGeo = new THREE.PlaneGeometry(800, 800, 30, 30);
+const ppos = plainGeo.attributes.position;
+for (let i = 0; i < ppos.count; i++) {
+  const x = ppos.getX(i), y = ppos.getY(i);
+  const dist = Math.sqrt(x*x + y*y);
+  if (dist > 30) {
+    ppos.setZ(i, Math.sin(x*0.05) * 0.6 + Math.cos(y*0.04) * 0.4);
+  }
+}
+plainGeo.computeVertexNormals();
 const plain = new THREE.Mesh(
-  new THREE.PlaneGeometry(800, 800),
+  plainGeo,
   new THREE.MeshStandardMaterial({ color: 0x6a6a3f, roughness: 0.95, flatShading: true })
 );
 plain.rotation.x = -Math.PI/2;
 scene.add(plain);
 
-// Stones — bluestone texture (cool gray-blue, slightly rough)
+// ─────────────────────────────────────────────────────────────
+// Stones
+// ─────────────────────────────────────────────────────────────
 function stoneMat() {
   return new THREE.MeshStandardMaterial({
     color: 0x6e6a62, roughness: 0.95, metalness: 0.05, flatShading: true,
@@ -76,36 +111,50 @@ function stoneMat() {
 
 function makeStanding(w, h, d) {
   const geo = new THREE.BoxGeometry(w, h, d);
-  // Wobble vertices for hand-cut look
   const pos = geo.attributes.position;
   for (let i = 0; i < pos.count; i++) {
-    pos.setX(i, pos.getX(i) + (Math.sin(i*1.3)+Math.cos(i*2.1))*0.08);
-    pos.setZ(i, pos.getZ(i) + (Math.sin(i*2.7))*0.06);
+    pos.setX(i, pos.getX(i) + (Math.sin(i*1.3)+Math.cos(i*2.1))*0.1);
+    pos.setZ(i, pos.getZ(i) + (Math.sin(i*2.7))*0.08);
   }
   geo.computeVertexNormals();
   return new THREE.Mesh(geo, stoneMat());
 }
 
-// Outer sarsen circle — 30 standing stones in a 17m radius ring
+// ─────────────────────────────────────────────────────────────
+// Outer sarsen circle — 30 standing stones in 17m radius ring
+// (some are missing/fallen as in modern reality)
+// ─────────────────────────────────────────────────────────────
 const ringR = 17;
 const sarsens = new THREE.Group();
-const N = 22; // visible (some collapsed in modern reality)
+const N = 30; // canonical count
+const fallen = [3, 7, 11, 15, 19, 23, 27]; // indices of "missing/fallen" stones
 for (let i = 0; i < N; i++) {
   const a = (i / N) * Math.PI * 2;
-  if (Math.random() < 0.18) continue; // a few "missing" / fallen
-  const standing = makeStanding(2.4, 9, 1.6);
-  standing.position.set(Math.cos(a)*ringR, 4.5, Math.sin(a)*ringR);
-  standing.rotation.y = -a;
-  sarsens.add(standing);
+  if (fallen.includes(i)) {
+    // Fallen stone — lying on its side
+    const lying = makeStanding(2.4, 9, 1.6);
+    lying.position.set(Math.cos(a) * (ringR - 0.5), 0.8, Math.sin(a) * (ringR - 0.5));
+    lying.rotation.y = -a + 0.3;
+    lying.rotation.x = Math.PI/2;
+    sarsens.add(lying);
+  } else {
+    const standing = makeStanding(2.4, 9, 1.6);
+    standing.position.set(Math.cos(a) * ringR, 4.5, Math.sin(a) * ringR);
+    standing.rotation.y = -a;
+    standing.rotation.x = (Math.random() - 0.5) * 0.05; // slight tilt
+    sarsens.add(standing);
+  }
 }
 scene.add(sarsens);
 
-// Lintels — horizontal stones on top of pairs
+// Lintels on top of consecutive standing stones
 const lintels = new THREE.Group();
 for (let i = 0; i < N; i++) {
-  if (Math.random() < 0.55) continue; // partial reconstruction
+  const i2 = (i + 1) % N;
+  if (fallen.includes(i) || fallen.includes(i2)) continue;
+  if (Math.random() < 0.35) continue; // partial reconstruction
   const a1 = (i / N) * Math.PI * 2;
-  const a2 = ((i+1) % N / N) * Math.PI * 2;
+  const a2 = (i2 / N) * Math.PI * 2;
   const aMid = (a1 + a2) / 2;
   const lintel = makeStanding(3.4, 0.9, 1.4);
   lintel.position.set(Math.cos(aMid)*ringR, 9.4, Math.sin(aMid)*ringR);
@@ -114,40 +163,169 @@ for (let i = 0; i < N; i++) {
 }
 scene.add(lintels);
 
-// Inner trilithon horseshoe — 5 taller stones, opening toward sunrise
+// ─────────────────────────────────────────────────────────────
+// Inner trilithon horseshoe — 5 pairs (paired uprights + lintel)
+// Opening faces NE toward sunrise
+// ─────────────────────────────────────────────────────────────
 const trilithons = new THREE.Group();
-const innerR = 7;
-for (let i = -2; i <= 2; i++) {
-  const a = -Math.PI/2 + (i / 5) * Math.PI;
-  const tall = makeStanding(2.6, 11, 1.8);
-  tall.position.set(Math.cos(a)*innerR, 5.5, Math.sin(a)*innerR);
-  tall.rotation.y = -a;
-  trilithons.add(tall);
+const innerR = 7.5;
+const trilithonAngles = [-2, -1, 0, 1, 2];
+for (const idx of trilithonAngles) {
+  const baseA = -Math.PI/2 + idx * (Math.PI / 6);
+  const offsetA = 0.13;
+  const a1 = baseA - offsetA;
+  const a2 = baseA + offsetA;
+  // Two uprights
+  const up1 = makeStanding(2.4, 11, 1.7);
+  up1.position.set(Math.cos(a1)*innerR, 5.5, Math.sin(a1)*innerR);
+  up1.rotation.y = -a1;
+  trilithons.add(up1);
+  const up2 = makeStanding(2.4, 11, 1.7);
+  up2.position.set(Math.cos(a2)*innerR, 5.5, Math.sin(a2)*innerR);
+  up2.rotation.y = -a2;
+  trilithons.add(up2);
+  // Lintel across
+  if (idx !== -2 && idx !== 2 && Math.random() < 0.7) {
+    const aMid = (a1 + a2) / 2;
+    const lintel = makeStanding(3.4, 0.9, 1.5);
+    lintel.position.set(Math.cos(aMid)*innerR, 11.4, Math.sin(aMid)*innerR);
+    lintel.rotation.y = -aMid;
+    trilithons.add(lintel);
+  }
 }
 scene.add(trilithons);
 
-// Heel stone — outside the circle, marks the solstice direction
-const heel = makeStanding(2.4, 7, 1.8);
+// Bluestones — smaller stones inside the trilithon ring
+const bluestones = new THREE.Group();
+for (let i = 0; i < 14; i++) {
+  const a = (i / 14) * Math.PI * 2;
+  if (Math.random() < 0.3) continue;
+  const stone = makeStanding(0.9, 4, 0.7);
+  stone.material = new THREE.MeshStandardMaterial({
+    color: 0x556068, roughness: 0.9, flatShading: true,
+  });
+  stone.position.set(Math.cos(a)*5, 2, Math.sin(a)*5);
+  stone.rotation.y = -a + (Math.random()-0.5) * 0.2;
+  bluestones.add(stone);
+}
+scene.add(bluestones);
+
+// Heel stone (outside circle, marking solstice direction)
+const heel = makeStanding(2.6, 7, 1.8);
 heel.position.set(0, 3.5, -32);
 heel.rotation.y = 0.18;
+heel.rotation.x = -0.12; // famous lean
 scene.add(heel);
 
-// Mist on the plain — thin horizontal cloud layer
+// Slaughter Stone (fallen by entrance)
+const slaughter = makeStanding(2.4, 7, 1.6);
+slaughter.position.set(-3, 0.8, -25);
+slaughter.rotation.x = Math.PI/2;
+slaughter.rotation.z = 0.1;
+scene.add(slaughter);
+
+// Altar Stone (lying flat at center)
+const altar = makeStanding(3.2, 0.5, 1.4);
+altar.position.set(0, 0.25, -1);
+altar.rotation.y = 0.1;
+scene.add(altar);
+
+// ─────────────────────────────────────────────────────────────
+// Surrounding burial barrows (round mounds in distance)
+// ─────────────────────────────────────────────────────────────
+function makeBarrow(x, z, r, h) {
+  const geo = new THREE.SphereGeometry(r, 12, 8, 0, Math.PI*2, 0, Math.PI/2);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x787240, roughness: 0.95, flatShading: true });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, 0, z);
+  m.scale.y = h / r;
+  return m;
+}
+// Several barrows scattered around
+scene.add(makeBarrow(-45, -15, 3.5, 1.8));
+scene.add(makeBarrow(-55, 10, 3.0, 1.5));
+scene.add(makeBarrow(40, -20, 4.0, 2.0));
+scene.add(makeBarrow(50, 8, 3.2, 1.6));
+scene.add(makeBarrow(-30, -55, 4.5, 2.2));
+scene.add(makeBarrow(35, -50, 3.8, 1.9));
+
+// Distant horizon hills (low silhouettes)
+function makeHill(x, z, w, h) {
+  const geo = new THREE.SphereGeometry(w, 16, 8, 0, Math.PI*2, 0, Math.PI/2);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x4a4530, roughness: 0.95, flatShading: true });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, 0, z);
+  m.scale.y = h / w;
+  return m;
+}
+scene.add(makeHill(-80, -110, 30, 8));
+scene.add(makeHill(0, -150, 50, 12));
+scene.add(makeHill(90, -120, 35, 9));
+scene.add(makeHill(-130, -90, 25, 7));
+scene.add(makeHill(140, -100, 28, 8));
+
+// ─────────────────────────────────────────────────────────────
+// Mist on the plain — multi-layer drifting fog
+// ─────────────────────────────────────────────────────────────
 const mistLayers = [];
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 8; i++) {
   const m = new THREE.Mesh(
-    new THREE.PlaneGeometry(120, 20, 1, 1),
+    new THREE.PlaneGeometry(160, 22, 1, 1),
     new THREE.MeshBasicMaterial({
-      color: 0xd8c4a6, transparent: true, opacity: 0.18, side: THREE.DoubleSide,
+      color: 0xd8c4a6, transparent: true, opacity: 0.16, side: THREE.DoubleSide,
     })
   );
-  m.position.set((Math.random()-0.5)*40, 1 + i * 0.6, -10 - Math.random()*30);
-  m.rotation.y = (Math.random()-0.5) * 0.3;
-  mistLayers.push({ obj: m, drift: 0.02 + Math.random()*0.02 });
+  m.position.set((Math.random()-0.5)*60, 0.6 + i * 0.5, -10 - Math.random()*40);
+  m.rotation.y = (Math.random()-0.5) * 0.4;
+  mistLayers.push({ obj: m, drift: 0.018 + Math.random()*0.022 });
   scene.add(m);
 }
 
-// Animate — slow orbit, mist drift, sun gentle rise
+// ─────────────────────────────────────────────────────────────
+// Birds — silhouettes flying across the dawn sky
+// ─────────────────────────────────────────────────────────────
+function makeBird() {
+  const grp = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({ color: 0x1a0f08 });
+  const wL = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.05, 0.25), mat);
+  wL.rotation.z = 0.18; wL.position.x = -1.0;
+  grp.add(wL);
+  const wR = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.05, 0.25), mat);
+  wR.rotation.z = -0.18; wR.position.x = 1.0;
+  grp.add(wR);
+  return grp;
+}
+const birds = [];
+for (let i = 0; i < 5; i++) {
+  const b = makeBird();
+  birds.push({
+    obj: b, radius: 30 + Math.random() * 25,
+    speed: 0.005 + Math.random() * 0.005,
+    phase: Math.random() * 6.28,
+    height: 22 + Math.random() * 8,
+  });
+  scene.add(b);
+}
+
+// Atmospheric particles
+const particleGeo = new THREE.BufferGeometry();
+const particleCount = 200;
+const positions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  positions[i*3]   = (Math.random() - 0.5) * 60;
+  positions[i*3+1] = Math.random() * 20;
+  positions[i*3+2] = (Math.random() - 0.5) * 60;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const particleMat = new THREE.PointsMaterial({
+  color: 0xffd6a0, size: 0.15, transparent: true, opacity: 0.4,
+});
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// ─────────────────────────────────────────────────────────────
+// Animation
+// ─────────────────────────────────────────────────────────────
 let t = 0;
 function animate() {
   t += 0.003;
@@ -161,8 +339,29 @@ function animate() {
     if (m.obj.position.x > 60) m.obj.position.x = -60;
   }
 
+  for (const b of birds) {
+    const a = t * b.speed * 50 + b.phase;
+    b.obj.position.x = Math.cos(a) * b.radius;
+    b.obj.position.z = Math.sin(a) * b.radius - 30;
+    b.obj.position.y = b.height + Math.sin(a * 2) * 1.5;
+    b.obj.rotation.y = -a + Math.PI/2;
+    b.obj.children[0].rotation.z = 0.18 + Math.sin(t * 7 + b.phase) * 0.07;
+    b.obj.children[1].rotation.z = -0.18 - Math.sin(t * 7 + b.phase) * 0.07;
+  }
+
+  // Particles drift
+  const pos = particles.geometry.attributes.position;
+  for (let i = 0; i < particleCount; i++) {
+    pos.array[i*3 + 1] += 0.004;
+    pos.array[i*3] += Math.sin(t + i) * 0.003;
+    if (pos.array[i*3 + 1] > 18) pos.array[i*3 + 1] = 0;
+  }
+  pos.needsUpdate = true;
+
   sunDisc.lookAt(camera.position);
   halo.lookAt(camera.position);
+  raysGroup.lookAt(camera.position);
+  raysGroup.rotation.z = t * 0.04;
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
