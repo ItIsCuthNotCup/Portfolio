@@ -1,0 +1,327 @@
+/* ═══════════════════════════════════════════════════════════
+   WORLD CREATOR LAB — page-specific styles. Editorial chrome
+   inherits from main.css; this file adds the input, the iframe
+   viewport, the safety grid, and the streaming trace line.
+   ═══════════════════════════════════════════════════════════ */
+
+.wc-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.wc-hero {
+  padding: 120px 48px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.wc-title { margin-top: 22px; }
+.wc-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.wc-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 980px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.wc-dateline .label { color: var(--ink-dim); }
+.wc-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ────────────────────────────────────────── */
+.wc-section { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+.wc-section .section-label { margin-bottom: 28px; }
+.wc-prose { max-width: 720px; }
+.wc-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.wc-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.wc-note {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+}
+
+/* ── Input ──────────────────────────────────────────────────── */
+.wc-input-wrap {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 18px 20px 14px;
+  max-width: 900px;
+}
+.wc-input-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+.wc-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  background: transparent;
+  color: var(--ink);
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 22px;
+  line-height: 1.4;
+  padding: 0;
+  min-height: 64px;
+}
+.wc-input::placeholder { color: var(--ink-dim); font-style: italic; }
+.wc-input-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink-dim);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.wc-charcount { font-variant-numeric: tabular-nums; }
+.wc-submit-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 10px 18px;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms, color 180ms, opacity 180ms;
+}
+.wc-submit-btn:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.wc-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Suggestions ────────────────────────────────────────────── */
+.wc-suggestions {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink-dim);
+  max-width: 900px;
+}
+.wc-suggest-head {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.wc-suggest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.wc-suggest-btn {
+  background: transparent;
+  border: 1px solid var(--ink-dim);
+  color: var(--ink-soft);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 180ms, color 180ms, border-color 180ms;
+}
+.wc-suggest-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ── Trace + error ──────────────────────────────────────────── */
+.wc-trace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  margin-top: 30px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink-dim);
+  max-width: 900px;
+  font-variant-numeric: tabular-nums;
+}
+.wc-trace-pulse {
+  color: var(--accent);
+  animation: wc-pulse 1.2s ease-in-out infinite;
+}
+.wc-trace.done .wc-trace-pulse { animation: none; opacity: 0.4; }
+@keyframes wc-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.wc-error {
+  margin-top: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  max-width: 760px;
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+}
+.wc-error .label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+/* ── Iframe viewport ────────────────────────────────────────── */
+.wc-frame-wrap {
+  margin-top: 28px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.wc-frame-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--ink);
+}
+.wc-frame-head #wc-frame-title {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+.wc-frame-meta { font-variant-numeric: tabular-nums; }
+.wc-frame {
+  width: 100%;
+  height: 600px;
+  border: 0;
+  display: block;
+  background: #1a1410;
+}
+
+/* ── How-it-works grid ──────────────────────────────────────── */
+.wc-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 12px;
+}
+.wc-how-card {
+  border-top: 1px solid var(--ink);
+  padding-top: 18px;
+}
+.wc-how-fig {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.wc-how-title {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+.wc-how-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ── Safety grid ────────────────────────────────────────────── */
+.wc-safety {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.wc-safety-card {
+  padding: 22px 20px 24px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.wc-safety-card:nth-child(3n) { border-right: none; }
+.wc-safety-card:nth-last-child(-n+3) { border-bottom: none; }
+.wc-safety-fig {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.wc-safety-title {
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+.wc-safety-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.wc-colophon-section { padding-bottom: 80px; }
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .wc-hero, .wc-section { padding-left: 24px; padding-right: 24px; }
+  .wc-how-grid { grid-template-columns: 1fr; gap: 24px; }
+  .wc-safety { grid-template-columns: 1fr; }
+  .wc-safety-card { border-right: none; }
+  .wc-safety-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ink); }
+  .wc-safety-card:last-child { border-bottom: none; }
+  .wc-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .wc-input { font-size: 18px; }
+  .wc-frame { height: 420px; }
+}
+@media (max-width: 540px) {
+  .wc-input-foot { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .wc-submit-btn { width: 100%; }
+  .wc-frame { height: 320px; }
+}
