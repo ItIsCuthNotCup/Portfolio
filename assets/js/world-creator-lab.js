@@ -25,11 +25,11 @@
 
   // Pre-baked world catalog
   const WORLDS = {
-    'machu-picchu':    { title: 'Machu Picchu · Inca citadel at sunset', meta: 'hand-curated · 22 KB · llamas, condors, mist' },
-    'voxel-tokyo':     { title: 'Voxel Tokyo · Shibuya at 2 AM',          meta: 'hand-curated · 14 KB · cars, signs, helicopter' },
-    'stonehenge-dawn': { title: 'Stonehenge · solstice dawn',             meta: 'hand-curated · 15 KB · barrows, mist, birds' },
-    'coral-reef':      { title: 'Coral reef · shallow tropical water',    meta: 'hand-curated · 7 KB · drifting fish, sun shafts' },
-    'santorini':       { title: 'Santorini · cliffside village',          meta: 'hand-curated · 7 KB · domes, bell tower' },
+    'machu-picchu':    { title: 'Machu Picchu · Inca citadel at sunset', meta: '28 KB · drag to orbit · sun & mist sliders' },
+    'voxel-tokyo':     { title: 'Voxel Tokyo · Shibuya at 2 AM',          meta: '14 KB · cars driving · neon signs · helicopter' },
+    'stonehenge-dawn': { title: 'Stonehenge · solstice dawn',             meta: '26 KB · drag to orbit · sun, wind, pilgrims' },
+    'coral-reef':      { title: 'Coral reef · shallow tropical water',    meta: '7 KB · drifting fish · sun shafts' },
+    'santorini':       { title: 'Santorini · cliffside village',          meta: '7 KB · domes · bell tower' },
   };
 
   let inFlight = false;

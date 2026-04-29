@@ -2,40 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Machu Picchu at Sunset</title>
+<title>Machu Picchu — Inca Citadel at Sunset</title>
 <style>
-  html, body { margin:0; padding:0; overflow:hidden; background:#1a1410; height:100%; }
+  html, body { margin:0; padding:0; overflow:hidden; background:#1a1410; height:100%; font-family: ui-monospace, "DM Mono", monospace; color:#e8dcc4; }
   canvas { display:block; }
   .lbl {
-    position:fixed; left:14px; bottom:12px;
-    font-family: ui-monospace, "DM Mono", monospace; font-size:10px;
-    letter-spacing:0.16em; text-transform:uppercase;
-    color:rgba(245,235,210,0.55); pointer-events:none;
+    position:fixed; left:14px; bottom:14px;
+    font-size:10px; letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(232,220,196,0.6); pointer-events:none;
+  }
+  .controls {
+    position:fixed; top:14px; right:14px;
+    background:rgba(20,16,10,0.78); backdrop-filter:blur(6px);
+    border:1px solid rgba(232,220,196,0.18);
+    padding:14px 16px; min-width:220px;
+    font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+    color:#e8dcc4;
+  }
+  .controls h3 { margin:0 0 10px; font-size:9px; opacity:0.6; letter-spacing:0.18em; font-weight:400; }
+  .ctrl { display:flex; flex-direction:column; gap:4px; margin-bottom:10px; }
+  .ctrl label { display:flex; justify-content:space-between; font-size:9px; opacity:0.7; }
+  .ctrl label .v { opacity:1; font-variant-numeric:tabular-nums; }
+  .ctrl input[type=range] { width:100%; accent-color:#e8a060; height:14px; }
+  .toggle { display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 0; }
+  .toggle input { accent-color:#e8a060; }
+  .reset { display:block; width:100%; margin-top:6px; padding:6px 10px;
+    background:transparent; color:#e8dcc4; border:1px solid rgba(232,220,196,0.3);
+    font-family:inherit; font-size:9px; letter-spacing:0.16em; cursor:pointer;
+    text-transform:uppercase;
+  }
+  .reset:hover { background:rgba(232,220,196,0.1); }
+  .hint {
+    position:fixed; left:14px; top:14px;
+    font-size:9px; opacity:0.45; letter-spacing:0.14em; text-transform:uppercase;
+    pointer-events:none;
   }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 <div class="lbl">Machu Picchu · Inca citadel at sunset</div>
+<div class="hint">Drag to orbit · Scroll to zoom · [R] reset · [F] flyover</div>
+<div class="controls">
+  <h3>Controls</h3>
+  <div class="ctrl">
+    <label>Sun azimuth <span class="v" id="vAz">280°</span></label>
+    <input type="range" id="sunAz" min="180" max="320" value="280" step="1">
+  </div>
+  <div class="ctrl">
+    <label>Sun elevation <span class="v" id="vEl">12°</span></label>
+    <input type="range" id="sunEl" min="0" max="60" value="12" step="1">
+  </div>
+  <div class="ctrl">
+    <label>Mist <span class="v" id="vMist">0.6</span></label>
+    <input type="range" id="mist" min="0" max="1.5" step="0.05" value="0.6">
+  </div>
+  <label class="toggle"><input type="checkbox" id="cond" checked> Condors aloft</label>
+  <label class="toggle"><input type="checkbox" id="lla" checked> Llamas grazing</label>
+  <button class="reset" id="reset">Reset to overlook</button>
+</div>
 <script>
 'use strict';
 
 // ─────────────────────────────────────────────────────────────
-// Scene setup
+// Renderer + scene
 // ─────────────────────────────────────────────────────────────
-const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0xb87a4f, 0.011);
-scene.background = new THREE.Color(0x2a1a14);
-
-const camera = new THREE.PerspectiveCamera(54, innerWidth/innerHeight, 0.3, 1000);
-camera.position.set(0, 28, 70);
-camera.lookAt(0, 8, 0);
-
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
-renderer.setClearColor(0x2a1a14, 1);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
 document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x6a3018);
+scene.fog = new THREE.FogExp2(0xb87a4f, 0.0095);
+
+const camera = new THREE.PerspectiveCamera(54, innerWidth/innerHeight, 0.5, 2000);
+
+// ─────────────────────────────────────────────────────────────
+// Camera orbit (no OrbitControls)
+// ─────────────────────────────────────────────────────────────
+const TARGET = new THREE.Vector3(0, 4, 0);
+let radius = 56, theta = -Math.PI * 0.55, phi = Math.PI * 0.42;
+let flyover = false;
+
+function applyCamera() {
+  const x = TARGET.x + radius * Math.sin(phi) * Math.cos(theta);
+  const z = TARGET.z + radius * Math.sin(phi) * Math.sin(theta);
+  const y = TARGET.y + radius * Math.cos(phi);
+  camera.position.set(x, y, z);
+  camera.lookAt(TARGET);
+}
+applyCamera();
+
+let dragging = false, lastX = 0, lastY = 0;
+addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; flyover = false; });
+addEventListener('mouseup',   () => { dragging = false; });
+addEventListener('mouseleave',() => { dragging = false; });
+addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  lastX = e.clientX; lastY = e.clientY;
+  theta -= dx * 0.005;
+  phi   -= dy * 0.004;
+  phi = Math.max(0.18, Math.min(Math.PI * 0.49, phi));
+  applyCamera();
+});
+addEventListener('wheel', e => {
+  e.preventDefault();
+  radius *= (1 + e.deltaY * 0.0015);
+  radius = Math.max(15, Math.min(180, radius));
+  applyCamera();
+}, { passive: false });
+addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') resetView();
+  if (e.key === 'f' || e.key === 'F') flyover = !flyover;
+});
+function resetView() {
+  radius = 56; theta = -Math.PI * 0.55; phi = Math.PI * 0.42;
+  flyover = false; applyCamera();
+}
+document.getElementById('reset').onclick = resetView;
 addEventListener('resize', () => {
   camera.aspect = innerWidth/innerHeight;
   camera.updateProjectionMatrix();
@@ -43,74 +134,74 @@ addEventListener('resize', () => {
 });
 
 // ─────────────────────────────────────────────────────────────
-// Lighting: warm low sunset key + cool ambient + rim
+// Lighting — sunset key + cool valley fill + warm bounce
 // ─────────────────────────────────────────────────────────────
-const sunDir = new THREE.DirectionalLight(0xffaa68, 1.6);
-sunDir.position.set(-50, 22, 25);
-scene.add(sunDir);
+const sun = new THREE.DirectionalLight(0xffaa68, 1.7);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near = 1;
+sun.shadow.camera.far = 280;
+sun.shadow.camera.left   = -60;
+sun.shadow.camera.right  = 60;
+sun.shadow.camera.top    = 60;
+sun.shadow.camera.bottom = -60;
+sun.shadow.bias = -0.0005;
+sun.shadow.normalBias = 0.05;
+scene.add(sun);
+scene.add(sun.target);
 
-const ambient = new THREE.AmbientLight(0x6b5848, 0.55);
+const hemi = new THREE.HemisphereLight(0xffe3b8, 0x2a1a14, 0.55);
+scene.add(hemi);
+
+const ambient = new THREE.AmbientLight(0x4a3022, 0.25);
 scene.add(ambient);
 
-const rim = new THREE.DirectionalLight(0xffe0a8, 0.35);
-rim.position.set(15, 12, -40);
-scene.add(rim);
-
-// Cool valley fill from below
-const valleyFill = new THREE.HemisphereLight(0x4a3a2a, 0x1a1208, 0.4);
-scene.add(valleyFill);
-
-// ─────────────────────────────────────────────────────────────
-// Sun disc + halo (always faces camera)
-// ─────────────────────────────────────────────────────────────
+// Sun visual + halo + rays
 const sunDisc = new THREE.Mesh(
   new THREE.CircleGeometry(8, 64),
-  new THREE.MeshBasicMaterial({ color: 0xffd6a0, transparent: true, opacity: 0.92 })
+  new THREE.MeshBasicMaterial({ color: 0xffd6a0, transparent: true, opacity: 0.95 })
 );
-sunDisc.position.set(-90, 30, -120);
 scene.add(sunDisc);
-
 const halo = new THREE.Mesh(
-  new THREE.CircleGeometry(18, 48),
+  new THREE.CircleGeometry(20, 48),
   new THREE.MeshBasicMaterial({ color: 0xff9c5a, transparent: true, opacity: 0.22 })
 );
-halo.position.copy(sunDisc.position);
-halo.position.z -= 1;
 scene.add(halo);
-
-// Sun rays — radial spokes, faint
 const raysGroup = new THREE.Group();
 for (let i = 0; i < 12; i++) {
   const ray = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 60),
+    new THREE.PlaneGeometry(2.2, 70),
     new THREE.MeshBasicMaterial({ color: 0xffc880, transparent: true, opacity: 0.06, side: THREE.DoubleSide })
   );
   ray.rotation.z = (i / 12) * Math.PI * 2;
   raysGroup.add(ray);
 }
-raysGroup.position.copy(sunDisc.position);
-raysGroup.position.z -= 2;
 scene.add(raysGroup);
 
-// ─────────────────────────────────────────────────────────────
-// Sky dome — warm to cool gradient via two hemispheres
-// ─────────────────────────────────────────────────────────────
-const skyGeo = new THREE.SphereGeometry(450, 24, 16);
-const skyMat = new THREE.ShaderMaterial({
-  side: THREE.BackSide,
-  uniforms: {
-    topColor:    { value: new THREE.Color(0x4a2818) },
-    bottomColor: { value: new THREE.Color(0xc8754a) },
-    midColor:    { value: new THREE.Color(0x7a3818) },
-  },
-  vertexShader: `varying vec3 vWorldPos; void main() { vWorldPos = (modelMatrix * vec4(position,1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-  fragmentShader: `uniform vec3 topColor; uniform vec3 midColor; uniform vec3 bottomColor; varying vec3 vWorldPos; void main(){ float h = normalize(vWorldPos).y; vec3 c = mix(bottomColor, midColor, smoothstep(-0.1, 0.3, h)); c = mix(c, topColor, smoothstep(0.3, 0.9, h)); gl_FragColor = vec4(c, 1.0); }`,
-});
-const sky = new THREE.Mesh(skyGeo, skyMat);
-scene.add(sky);
+let sunAzDeg = 280, sunElDeg = 12;
+function updateSun() {
+  const az = sunAzDeg * Math.PI / 180;
+  const el = sunElDeg * Math.PI / 180;
+  const dist = 110;
+  const x = Math.sin(az) * Math.cos(el) * dist;
+  const z = -Math.cos(az) * Math.cos(el) * dist;
+  const y = Math.sin(el) * dist;
+  sun.position.set(x, y, z);
+  sunDisc.position.set(x, y, z);
+  halo.position.set(x, y, z);
+  raysGroup.position.set(x, y, z);
+  // Color shift: redder near horizon
+  const warmth = Math.max(0, 1 - sunElDeg / 30);
+  sun.color.setHSL(0.07, 0.7, 0.55 + 0.1 * (1 - warmth));
+  sunDisc.material.color.setHSL(0.08, 0.85, 0.5 + 0.15 * (1 - warmth));
+  // Sky shifts too
+  scene.background.setHSL(0.06 + warmth * 0.02, 0.55, 0.32 - warmth * 0.05);
+  scene.fog.color.copy(scene.background);
+}
+updateSun();
 
 // ─────────────────────────────────────────────────────────────
-// Material factory
+// Mountain peaks — vertex-displaced cones
 // ─────────────────────────────────────────────────────────────
 function stoneMat(tint, roughness = 0.95) {
   return new THREE.MeshStandardMaterial({
@@ -118,61 +209,53 @@ function stoneMat(tint, roughness = 0.95) {
   });
 }
 
-const matPeak    = stoneMat(0x5a3f2e);
-const matGrass   = stoneMat(0x6e7547);
-const matStone   = stoneMat(0xa89576);
-const matMossy   = stoneMat(0x5a6849);
-const matStoneL  = stoneMat(0xb59f7c);
-const matStoneD  = stoneMat(0x9a8463);
-const matThatch  = stoneMat(0x6b4a2a);
-const matLlama   = stoneMat(0xe8d8b0);
-
-// ─────────────────────────────────────────────────────────────
-// Mountain peaks — craggy cones with vertex displacement
-// ─────────────────────────────────────────────────────────────
-function makePeak(x, y, z, height, baseR, color, segments = 6) {
-  const peakGeo = new THREE.ConeGeometry(baseR, height, segments, 3);
+function makePeak(x, y, z, height, baseR, color, segments = 7) {
+  const peakGeo = new THREE.ConeGeometry(baseR, height, segments, 4);
   const pos = peakGeo.attributes.position;
   for (let i = 0; i < pos.count; i++) {
     const px = pos.getX(i), py = pos.getY(i), pz = pos.getZ(i);
     if (Math.abs(py) < height * 0.45) {
-      const wobble = (Math.sin(i * 1.7) + Math.cos(i * 2.3)) * 0.6;
+      const wobble = (Math.sin(i * 1.7) + Math.cos(i * 2.3)) * 0.8;
       pos.setX(i, px + wobble);
       pos.setZ(i, pz + wobble * 0.7);
     }
   }
   peakGeo.computeVertexNormals();
-  const mesh = new THREE.Mesh(peakGeo, stoneMat(color));
-  mesh.position.set(x, y, z);
-  return mesh;
+  const m = new THREE.Mesh(peakGeo, stoneMat(color));
+  m.position.set(x, y, z);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
 }
 
-// Huayna Picchu — the iconic background peak
-const huayna = makePeak(-2, 16, -32, 48, 18, 0x4a3326, 7);
-scene.add(huayna);
+// Huayna Picchu — the dramatic background peak
+scene.add(makePeak(-2, 17, -34, 50, 19, 0x4a3326, 8));
+// Putucusi mountain (E)
+scene.add(makePeak(36, 12, -16, 42, 17, 0x5a3a2a, 7));
 
-// Peak ridge (15 supporting peaks fading into fog)
+// Surrounding ridge — 18 peaks fading into fog
 const peakConfigs = [
-  [-44, 8, -55, 32, 16, 0x5b3f2e], [40, 4, -60, 28, 14, 0x553a2a],
+  [-44, 8, -55, 32, 16, 0x5b3f2e], [50, 4, -60, 28, 14, 0x553a2a],
   [-66, 0, -95, 38, 20, 0x4f3527], [62, -2, -105, 32, 18, 0x4a3122],
   [-22, 4, -78, 26, 12, 0x533824], [22, 8, -80, 30, 14, 0x583a28],
   [-90, -6, -130, 42, 22, 0x442e1f], [85, -4, -125, 36, 18, 0x402c1d],
   [-55, -8, -160, 44, 24, 0x3a261a], [50, -6, -150, 38, 20, 0x352318],
   [0, -10, -180, 48, 28, 0x301f15], [-110, -10, -110, 30, 16, 0x442f20],
   [105, -8, -115, 28, 14, 0x402d1e], [-35, -6, -120, 26, 12, 0x4a341f],
-  [30, -4, -108, 24, 11, 0x523a25],
+  [30, -4, -108, 24, 11, 0x523a25], [-150, -12, -80, 36, 19, 0x382518],
+  [140, -10, -90, 32, 17, 0x3a2718], [-70, -14, -200, 50, 26, 0x2a1c12],
 ];
 peakConfigs.forEach(c => scene.add(makePeak(...c)));
 
 // ─────────────────────────────────────────────────────────────
-// The terraced citadel — irregular concentric stepped rings
+// Citadel — concentric stepped terraces (irregular polygons)
 // ─────────────────────────────────────────────────────────────
 const citadel = new THREE.Group();
 scene.add(citadel);
 
 function makeTerrace(innerR, outerR, height, yOffset, mat) {
   const shape = new THREE.Shape();
-  const N = 24;
+  const N = 28;
   for (let i = 0; i < N; i++) {
     const a = (i / N) * Math.PI * 2;
     const r = outerR + Math.sin(i * 1.3) * 0.7 + Math.cos(i * 2.1) * 0.3;
@@ -194,42 +277,43 @@ function makeTerrace(innerR, outerR, height, yOffset, mat) {
   const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false, curveSegments: 1 });
   geo.rotateX(-Math.PI / 2);
   const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   mesh.position.y = yOffset;
   return mesh;
 }
 
-// 9 stacked terraces with subtle palette shift (lower = greener, upper = drier)
-const terrYStart = -2;
+const terrYStart = -2.5;
 const terraceColors = [
   0x6e7547, 0x6c7344, 0x687041, 0x636a3a, 0x5d6235,
-  0x575c30, 0x52582c, 0x4d5328, 0x484e24,
+  0x575c30, 0x52582c, 0x4d5328, 0x484e24, 0x444a22, 0x404622,
 ];
-for (let i = 0; i < 9; i++) {
-  const inner = 9 - i * 0.5;
+for (let i = 0; i < 11; i++) {
+  const inner = 9.5 - i * 0.45;
   const outer = inner + 4;
-  const y = terrYStart + i * 1.6;
-  citadel.add(makeTerrace(inner, outer, 1.3, y, stoneMat(terraceColors[i])));
+  const y = terrYStart + i * 1.45;
+  citadel.add(makeTerrace(inner, outer, 1.2, y, stoneMat(terraceColors[i])));
 }
 
-// Top plateau (wider, where buildings sit)
-const topY = terrYStart + 9 * 1.6;
+// Top plateau (where buildings sit)
+const topY = terrYStart + 11 * 1.45;
 const topPlat = new THREE.Mesh(
-  new THREE.CylinderGeometry(8.5, 8.5, 2.2, 18),
+  new THREE.CylinderGeometry(8.5, 8.5, 2.0, 22),
   stoneMat(0x7e6d52)
 );
 topPlat.scale.x = 1.25;
-topPlat.position.y = topY + 1.1;
+topPlat.position.y = topY + 1.0;
+topPlat.castShadow = true;
+topPlat.receiveShadow = true;
 citadel.add(topPlat);
 
 // ─────────────────────────────────────────────────────────────
-// Inca buildings on the plateau
+// Inca buildings — irregular stone houses with thatched roofs
 // ─────────────────────────────────────────────────────────────
 function makeStoneHouse(w, d, h, color, hasRoof = false) {
   const grp = new THREE.Group();
   const wallMat = stoneMat(color);
   const t = 0.32;
-
-  // Four walls
   const wallShapes = [
     [w, h, t, 0, h/2, -d/2],
     [w, h, t, 0, h/2,  d/2],
@@ -239,39 +323,30 @@ function makeStoneHouse(w, d, h, color, hasRoof = false) {
   for (const [ww, hh, dd, px, py, pz] of wallShapes) {
     const wall = new THREE.Mesh(new THREE.BoxGeometry(ww, hh, dd), wallMat);
     wall.position.set(px, py, pz);
+    wall.castShadow = true;
+    wall.receiveShadow = true;
     grp.add(wall);
   }
-
-  // Doorway opening — small dark plane on front
   const door = new THREE.Mesh(
     new THREE.PlaneGeometry(0.45, 0.85),
     new THREE.MeshBasicMaterial({ color: 0x1a0e08 })
   );
-  door.position.set(0, 0.45, d/2 + 0.01);
+  door.position.set(0, 0.45, d/2 + 0.005);
   grp.add(door);
-
-  // Optional thatched roof (some Inca buildings had ichu grass roofs)
   if (hasRoof) {
-    const roofGeo = new THREE.ConeGeometry(Math.max(w, d) * 0.78, 0.8, 4);
-    const roof = new THREE.Mesh(roofGeo, stoneMat(0x6b4a2a));
+    const roof = new THREE.Mesh(
+      new THREE.ConeGeometry(Math.max(w, d) * 0.78, 0.85, 4),
+      stoneMat(0x6b4a2a)
+    );
     roof.rotation.y = Math.PI / 4;
-    roof.position.y = h + 0.4;
+    roof.position.y = h + 0.42;
+    roof.castShadow = true;
     grp.add(roof);
   }
-
   return grp;
 }
 
-function placeStructure(g, x, z, rot, scale = 1) {
-  g.position.set(x, topY + 2.2, z);
-  g.rotation.y = rot;
-  g.scale.setScalar(scale);
-  citadel.add(g);
-}
-
-// ~15 buildings clustered as a small Inca settlement
 const houseConfigs = [
-  // [w, d, h, color, hasRoof, x, z, rot, scale]
   [2.6, 1.8, 1.5, 0xb09a78, false, -3.2, -1.4,  0.15, 1.0],
   [2.2, 2.2, 1.6, 0xa89377, true,  -1.0, -2.6, -0.05, 1.0],
   [3.0, 1.6, 1.4, 0xb59f7c, false,  1.4, -2.2,  0.22, 1.0],
@@ -290,80 +365,73 @@ const houseConfigs = [
 ];
 for (const c of houseConfigs) {
   const [w, d, h, color, roof, x, z, rot, scale] = c;
-  placeStructure(makeStoneHouse(w, d, h, color, roof), x, z, rot, scale);
+  const g = makeStoneHouse(w, d, h, color, roof);
+  g.position.set(x, topY + 2.0, z);
+  g.rotation.y = rot;
+  g.scale.setScalar(scale);
+  citadel.add(g);
 }
 
-// Intihuatana — the ceremonial sun stone at the center
+// Intihuatana — ceremonial sun stone
 const inti = new THREE.Group();
-const intiBase = new THREE.Mesh(
-  new THREE.BoxGeometry(1.0, 0.5, 1.0), stoneMat(0x5a4633)
-);
+const intiBase = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.5, 1.0), stoneMat(0x5a4633));
 intiBase.position.y = 0.25;
+intiBase.castShadow = true;
 inti.add(intiBase);
-const intiMid = new THREE.Mesh(
-  new THREE.BoxGeometry(0.6, 0.4, 0.6), stoneMat(0x6b5440)
-);
+const intiMid = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4, 0.6), stoneMat(0x6b5440));
 intiMid.position.y = 0.7;
+intiMid.castShadow = true;
 inti.add(intiMid);
-const intiTop = new THREE.Mesh(
-  new THREE.BoxGeometry(0.4, 0.6, 0.4), stoneMat(0x7d6248)
-);
+const intiTop = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.6, 0.4), stoneMat(0x7d6248));
 intiTop.position.y = 1.2;
+intiTop.castShadow = true;
 inti.add(intiTop);
-inti.position.set(0, topY + 2.2, 0);
+inti.position.set(0, topY + 2.0, 0);
 citadel.add(inti);
 
-// Stairs leading up the side (single set, decorative)
+// Stairs up the side
 function makeStairs(x, z, dir = 1) {
   const grp = new THREE.Group();
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 9; i++) {
     const step = new THREE.Mesh(
       new THREE.BoxGeometry(2.0, 0.3, 0.7),
       stoneMat(0xa89576)
     );
-    step.position.set(0, i * 0.45, i * 0.7 * dir);
+    step.position.set(0, i * 0.4, i * 0.7 * dir);
+    step.castShadow = true;
+    step.receiveShadow = true;
     grp.add(step);
   }
-  grp.position.set(x, topY - 1.2, z);
+  grp.position.set(x, topY - 1.6, z);
   return grp;
 }
 citadel.add(makeStairs(-7, 0, 1));
 citadel.add(makeStairs(7, 0, -1));
 
 // ─────────────────────────────────────────────────────────────
-// Llamas — small low-poly animals grazing on the terraces
+// Llamas — instanced (more efficient than 5 separate groups)
 // ─────────────────────────────────────────────────────────────
+const llamaGroup = new THREE.Group();
 function makeLlama() {
   const grp = new THREE.Group();
-  // body
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(0.9, 0.5, 0.4),
-    matLlama
-  );
+  const matLlama = stoneMat(0xe8d8b0);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.5, 0.4), matLlama);
   body.position.y = 0.55;
+  body.castShadow = true;
   grp.add(body);
-  // neck
-  const neck = new THREE.Mesh(
-    new THREE.BoxGeometry(0.18, 0.55, 0.22),
-    matLlama
-  );
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.55, 0.22), matLlama);
   neck.position.set(0.42, 0.85, 0);
   neck.rotation.z = -0.5;
+  neck.castShadow = true;
   grp.add(neck);
-  // head
-  const head = new THREE.Mesh(
-    new THREE.BoxGeometry(0.28, 0.22, 0.22),
-    matLlama
-  );
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.22), matLlama);
   head.position.set(0.7, 1.05, 0);
+  head.castShadow = true;
   grp.add(head);
-  // 4 legs
   for (const [px, pz] of [[0.3, 0.15], [0.3, -0.15], [-0.3, 0.15], [-0.3, -0.15]]) {
-    const leg = new THREE.Mesh(
-      new THREE.BoxGeometry(0.12, 0.55, 0.12),
-      matLlama
-    );
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.55, 0.12), matLlama);
     leg.position.set(px, 0.27, pz);
+    leg.castShadow = true;
     grp.add(leg);
   }
   return grp;
@@ -371,50 +439,141 @@ function makeLlama() {
 
 const llamas = [];
 const llamaSpots = [
-  [-12, terrYStart + 4 * 1.6 + 1.3, 4, 0.3],
-  [10, terrYStart + 3 * 1.6 + 1.3, 6, -0.6],
-  [-8, terrYStart + 6 * 1.6 + 1.3, -3, 1.2],
-  [6, terrYStart + 5 * 1.6 + 1.3, -7, 2.4],
-  [14, terrYStart + 2 * 1.6 + 1.3, 0, -0.4],
+  [-12, terrYStart + 5 * 1.45 + 1.2, 4, 0.3],
+  [10, terrYStart + 4 * 1.45 + 1.2, 6, -0.6],
+  [-8, terrYStart + 7 * 1.45 + 1.2, -3, 1.2],
+  [6, terrYStart + 6 * 1.45 + 1.2, -7, 2.4],
+  [14, terrYStart + 3 * 1.45 + 1.2, 0, -0.4],
+  [-15, terrYStart + 2 * 1.45 + 1.2, -2, 1.8],
+  [12, terrYStart + 8 * 1.45 + 1.2, 8, 0.7],
 ];
 for (const [x, y, z, rot] of llamaSpots) {
   const l = makeLlama();
   l.position.set(x, y, z);
   l.rotation.y = rot;
   llamas.push({ obj: l, baseY: y, sway: Math.random() * 6.28 });
-  scene.add(l);
+  llamaGroup.add(l);
+}
+scene.add(llamaGroup);
+
+// ─────────────────────────────────────────────────────────────
+// Eucalyptus trees on the lower slopes
+// ─────────────────────────────────────────────────────────────
+function makeTree() {
+  const grp = new THREE.Group();
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.15, 0.22, 2.5, 5),
+    stoneMat(0x4a3826)
+  );
+  trunk.position.y = 1.25;
+  trunk.castShadow = true;
+  grp.add(trunk);
+  // Foliage clusters (3 spheres of varying size)
+  const folMat = stoneMat(0x4a5a3a);
+  const cluster = new THREE.Mesh(
+    new THREE.SphereGeometry(1.0, 6, 5),
+    folMat
+  );
+  cluster.position.y = 3.0;
+  cluster.castShadow = true;
+  grp.add(cluster);
+  const c2 = new THREE.Mesh(new THREE.SphereGeometry(0.7, 6, 4), folMat);
+  c2.position.set(0.4, 2.8, 0.2);
+  c2.castShadow = true;
+  grp.add(c2);
+  const c3 = new THREE.Mesh(new THREE.SphereGeometry(0.6, 6, 4), folMat);
+  c3.position.set(-0.4, 2.6, -0.3);
+  c3.castShadow = true;
+  grp.add(c3);
+  return grp;
+}
+const treeSpots = [
+  [-25, -8, 18], [-30, -10, 0], [-22, -6, -10], [25, -8, 14], [28, -10, -8],
+  [22, -6, 24], [-18, -4, 22], [18, -4, -22], [-32, -12, -22], [30, -12, 22],
+  [-12, -2, 22], [12, -2, 22], [-20, -3, 12], [20, -3, 12],
+];
+for (const [x, y, z] of treeSpots) {
+  const tree = makeTree();
+  tree.position.set(x, y, z);
+  tree.scale.setScalar(0.8 + Math.random() * 0.5);
+  tree.rotation.y = Math.random() * 6.28;
+  scene.add(tree);
 }
 
 // ─────────────────────────────────────────────────────────────
-// Distant valley + Urubamba river suggestion (dark plane)
+// Andean condors — silhouettes circling overhead
+// ─────────────────────────────────────────────────────────────
+const condorGroup = new THREE.Group();
+function makeCondor() {
+  const grp = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({ color: 0x1a0f08 });
+  const wL = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.06, 0.32), mat);
+  wL.rotation.z = 0.2; wL.position.x = -1.3;
+  grp.add(wL);
+  const wR = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.06, 0.32), mat);
+  wR.rotation.z = -0.2; wR.position.x = 1.3;
+  grp.add(wR);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.15, 0.6), mat);
+  grp.add(body);
+  return grp;
+}
+const condors = [];
+for (let i = 0; i < 5; i++) {
+  const c = makeCondor();
+  condors.push({
+    obj: c, radius: 28 + Math.random() * 28,
+    speed: 0.005 + Math.random() * 0.005,
+    phase: Math.random() * 6.28,
+    height: 30 + Math.random() * 12,
+  });
+  condorGroup.add(c);
+}
+scene.add(condorGroup);
+
+// ─────────────────────────────────────────────────────────────
+// Valley floor + Urubamba river (reflective)
 // ─────────────────────────────────────────────────────────────
 const valley = new THREE.Mesh(
   new THREE.PlaneGeometry(900, 900, 1, 1),
-  stoneMat(0x382819)
+  stoneMat(0x382819, 0.95)
 );
 valley.rotation.x = -Math.PI / 2;
 valley.position.y = -22;
+valley.receiveShadow = true;
 scene.add(valley);
 
-// River (thin meandering plane, slightly reflective)
 const river = new THREE.Mesh(
-  new THREE.PlaneGeometry(120, 4, 1, 1),
-  new THREE.MeshStandardMaterial({ color: 0x3a4a5a, roughness: 0.4, metalness: 0.5 })
+  new THREE.PlaneGeometry(160, 5, 1, 1),
+  new THREE.MeshStandardMaterial({ color: 0x3a4a5a, roughness: 0.3, metalness: 0.6 })
 );
 river.rotation.x = -Math.PI / 2;
 river.rotation.z = 0.3;
 river.position.set(-10, -21.9, -85);
 scene.add(river);
 
+// Second river bend
+const river2 = new THREE.Mesh(
+  new THREE.PlaneGeometry(120, 4.5, 1, 1),
+  new THREE.MeshStandardMaterial({ color: 0x3a4a5a, roughness: 0.3, metalness: 0.6 })
+);
+river2.rotation.x = -Math.PI / 2;
+river2.rotation.z = -0.5;
+river2.position.set(35, -21.9, -100);
+scene.add(river2);
+
 // ─────────────────────────────────────────────────────────────
-// Cloud bands drifting through the valley
+// Cloud bands — multi-layer, drifting, wraps around
 // ─────────────────────────────────────────────────────────────
 const clouds = [];
-function makeCloud(x, y, z, size) {
+function makeCloud(x, y, z, size, opacityMul = 1) {
   const grp = new THREE.Group();
-  const mat = new THREE.MeshBasicMaterial({ color: 0xead4b8, transparent: true, opacity: 0.36 });
-  const matInner = new THREE.MeshBasicMaterial({ color: 0xfff0d8, transparent: true, opacity: 0.5 });
-  for (let i = 0; i < 7; i++) {
+  const mat = new THREE.MeshBasicMaterial({
+    color: 0xead4b8, transparent: true, opacity: 0.36 * opacityMul,
+  });
+  const matInner = new THREE.MeshBasicMaterial({
+    color: 0xfff0d8, transparent: true, opacity: 0.5 * opacityMul,
+  });
+  for (let i = 0; i < 8; i++) {
     const r = size * (0.6 + Math.random() * 0.9);
     const m = new THREE.Mesh(
       new THREE.SphereGeometry(r, 7, 5),
@@ -431,127 +590,123 @@ function makeCloud(x, y, z, size) {
   return grp;
 }
 
-for (let i = 0; i < 14; i++) {
+// Valley mist (low altitude, between camera and citadel)
+for (let i = 0; i < 16; i++) {
   const c = makeCloud(
-    (Math.random() - 0.5) * 160,
-    -6 + Math.random() * 8,
-    -25 - Math.random() * 110,
-    3 + Math.random() * 4,
+    (Math.random() - 0.5) * 180,
+    -8 + Math.random() * 10,
+    -25 - Math.random() * 130,
+    3.5 + Math.random() * 5,
+    1.0,
   );
-  clouds.push({ obj: c, drift: 0.04 + Math.random() * 0.05 });
+  clouds.push({ obj: c, drift: 0.05 + Math.random() * 0.05, kind: 'valley' });
   scene.add(c);
 }
-
-// Higher altitude cirrus wisps (slower)
-for (let i = 0; i < 6; i++) {
+// Higher cirrus wisps
+for (let i = 0; i < 8; i++) {
   const c = makeCloud(
-    (Math.random() - 0.5) * 200,
-    32 + Math.random() * 12,
-    -40 - Math.random() * 80,
+    (Math.random() - 0.5) * 220,
+    34 + Math.random() * 14,
+    -40 - Math.random() * 100,
     4 + Math.random() * 3,
+    0.7,
   );
-  clouds.push({ obj: c, drift: 0.01 + Math.random() * 0.02 });
+  clouds.push({ obj: c, drift: 0.012 + Math.random() * 0.02, kind: 'cirrus' });
   scene.add(c);
 }
 
 // ─────────────────────────────────────────────────────────────
-// Andean condors — silhouettes circling overhead
-// ─────────────────────────────────────────────────────────────
-function makeBird() {
-  const grp = new THREE.Group();
-  const mat = new THREE.MeshBasicMaterial({ color: 0x1a0f08 });
-  // V-shape for soaring bird silhouette
-  const wL = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.06, 0.3), mat);
-  wL.rotation.z = 0.18;
-  wL.position.x = -1.2;
-  grp.add(wL);
-  const wR = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.06, 0.3), mat);
-  wR.rotation.z = -0.18;
-  wR.position.x = 1.2;
-  grp.add(wR);
-  return grp;
-}
-const birds = [];
-for (let i = 0; i < 4; i++) {
-  const b = makeBird();
-  birds.push({
-    obj: b,
-    radius: 25 + Math.random() * 30,
-    speed: 0.005 + Math.random() * 0.005,
-    phase: Math.random() * 6.28,
-    height: 28 + Math.random() * 10,
-  });
-  scene.add(b);
-}
-
-// ─────────────────────────────────────────────────────────────
-// Atmospheric particles — dust motes in the warm light
+// Atmospheric particles — dust motes in light shafts
 // ─────────────────────────────────────────────────────────────
 const particleGeo = new THREE.BufferGeometry();
-const particleCount = 300;
+const particleCount = 500;
 const positions = new Float32Array(particleCount * 3);
 for (let i = 0; i < particleCount; i++) {
-  positions[i*3]   = (Math.random() - 0.5) * 80;
-  positions[i*3+1] = Math.random() * 40 - 5;
-  positions[i*3+2] = (Math.random() - 0.5) * 80;
+  positions[i*3]   = (Math.random() - 0.5) * 100;
+  positions[i*3+1] = Math.random() * 50 - 8;
+  positions[i*3+2] = (Math.random() - 0.5) * 100;
 }
 particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-const particleMat = new THREE.PointsMaterial({
-  color: 0xffd6a0, size: 0.18, transparent: true, opacity: 0.45,
-  sizeAttenuation: true,
-});
-const particles = new THREE.Points(particleGeo, particleMat);
+const particles = new THREE.Points(
+  particleGeo,
+  new THREE.PointsMaterial({
+    color: 0xffd6a0, size: 0.18, transparent: true, opacity: 0.5,
+    sizeAttenuation: true,
+  })
+);
 scene.add(particles);
 
 // ─────────────────────────────────────────────────────────────
-// Animation loop
+// UI hookup
+// ─────────────────────────────────────────────────────────────
+const elAz = document.getElementById('sunAz');
+const elEl = document.getElementById('sunEl');
+const elMist = document.getElementById('mist');
+const elCond = document.getElementById('cond');
+const elLla  = document.getElementById('lla');
+const vAz = document.getElementById('vAz');
+const vEl = document.getElementById('vEl');
+const vMist = document.getElementById('vMist');
+let mistAmt = 0.6;
+elAz.oninput  = () => { sunAzDeg = parseFloat(elAz.value); vAz.textContent = sunAzDeg + '°'; updateSun(); };
+elEl.oninput  = () => { sunElDeg = parseFloat(elEl.value); vEl.textContent = sunElDeg + '°'; updateSun(); };
+elMist.oninput = () => { mistAmt = parseFloat(elMist.value); vMist.textContent = mistAmt.toFixed(2); scene.fog.density = 0.005 + mistAmt * 0.008; };
+elCond.onchange = () => { condorGroup.visible = elCond.checked; };
+elLla.onchange  = () => { llamaGroup.visible = elLla.checked; };
+
+// ─────────────────────────────────────────────────────────────
+// Animation
 // ─────────────────────────────────────────────────────────────
 let t = 0;
 function animate() {
   t += 0.0035;
 
-  // Slow camera orbit — wider, more cinematic
-  camera.position.x = Math.sin(t) * 48;
-  camera.position.z = Math.cos(t) * 48 + 22;
-  camera.position.y = 24 + Math.sin(t * 0.6) * 5;
-  camera.lookAt(0, 8, 0);
-
-  // Drift clouds
-  for (const c of clouds) {
-    c.obj.position.x += c.drift;
-    if (c.obj.position.x > 100) c.obj.position.x = -100;
+  // Flyover mode: auto-orbit
+  if (flyover) {
+    theta += 0.003;
+    applyCamera();
   }
 
-  // Llamas: subtle bob + occasional head turn
-  for (const l of llamas) {
-    l.obj.position.y = l.baseY + Math.sin(t * 1.5 + l.sway) * 0.03;
-  }
-
-  // Birds: circular soaring paths
-  for (const b of birds) {
-    const a = t * b.speed * 50 + b.phase;
-    b.obj.position.x = Math.cos(a) * b.radius;
-    b.obj.position.z = Math.sin(a) * b.radius - 20;
-    b.obj.position.y = b.height + Math.sin(a * 2) * 1.5;
-    b.obj.rotation.y = -a + Math.PI/2;
-    // gentle wing flap
-    b.obj.children[0].rotation.z = 0.18 + Math.sin(t * 6 + b.phase) * 0.06;
-    b.obj.children[1].rotation.z = -0.18 - Math.sin(t * 6 + b.phase) * 0.06;
-  }
-
-  // Particles drift slowly upward and reset
-  const pos = particles.geometry.attributes.position;
-  for (let i = 0; i < particleCount; i++) {
-    pos.array[i*3 + 1] += 0.005;
-    if (pos.array[i*3 + 1] > 35) pos.array[i*3 + 1] = -5;
-  }
-  pos.needsUpdate = true;
-
-  // Sun + halo + rays always face camera
+  // Sun + halo + rays face camera
   sunDisc.lookAt(camera.position);
   halo.lookAt(camera.position);
   raysGroup.lookAt(camera.position);
-  raysGroup.rotation.z = t * 0.05; // slow rotation of rays around sun
+  raysGroup.rotation.z = t * 0.06;
+
+  // Cloud drift
+  for (const c of clouds) {
+    c.obj.position.x += c.drift;
+    if (c.obj.position.x > 110) c.obj.position.x = -110;
+  }
+
+  // Llama bob
+  if (llamaGroup.visible) {
+    for (const l of llamas) {
+      l.obj.position.y = l.baseY + Math.sin(t * 1.5 + l.sway) * 0.04;
+    }
+  }
+
+  // Condor circling
+  if (condorGroup.visible) {
+    for (const b of condors) {
+      const a = t * b.speed * 50 + b.phase;
+      b.obj.position.x = Math.cos(a) * b.radius;
+      b.obj.position.z = Math.sin(a) * b.radius - 18;
+      b.obj.position.y = b.height + Math.sin(a * 2) * 1.5;
+      b.obj.rotation.y = -a + Math.PI/2;
+      b.obj.children[0].rotation.z = 0.2 + Math.sin(t * 6 + b.phase) * 0.07;
+      b.obj.children[1].rotation.z = -0.2 - Math.sin(t * 6 + b.phase) * 0.07;
+    }
+  }
+
+  // Particles drift up
+  const pos = particles.geometry.attributes.position;
+  for (let i = 0; i < particleCount; i++) {
+    pos.array[i*3 + 1] += 0.005;
+    pos.array[i*3]    += Math.sin(t + i * 0.1) * 0.002;
+    if (pos.array[i*3 + 1] > 42) pos.array[i*3 + 1] = -8;
+  }
+  pos.needsUpdate = true;
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
