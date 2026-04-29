@@ -130,38 +130,75 @@
   cursor: not-allowed;
 }
 
-/* ── Suggestions ────────────────────────────────────────────── */
-.wc-suggestions {
-  margin-top: 22px;
-  padding-top: 18px;
-  border-top: 1px solid var(--ink-dim);
-  max-width: 900px;
+/* ── Gallery (atlas of pre-baked worlds) ────────────────────── */
+.wc-gallery {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-bottom: 18px;
 }
-.wc-suggest-head {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 12px;
-}
-.wc-suggest-list {
+.wc-gallery-card {
+  background: var(--paper);
+  border: 0;
+  border-right: 1px solid var(--ink);
+  padding: 16px 14px 18px;
+  text-align: left;
+  cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+  transition: background 180ms, color 180ms;
+  font-family: inherit;
+  color: var(--ink);
 }
-.wc-suggest-btn {
-  background: transparent;
-  border: 1px solid var(--ink-dim);
-  color: var(--ink-soft);
-  padding: 6px 14px;
-  border-radius: 999px;
+.wc-gallery-card:last-child { border-right: 0; }
+.wc-gallery-card:hover { background: color-mix(in oklab, var(--ink) 6%, transparent); }
+.wc-gallery-card.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.wc-gallery-fig {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.wc-gallery-card.active .wc-gallery-fig { color: var(--accent); opacity: 0.9; }
+.wc-gallery-name {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+}
+.wc-gallery-tag {
   font-family: "Newsreader", Georgia, serif;
   font-style: italic;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 180ms, color 180ms, border-color 180ms;
+  font-size: 12px;
+  color: var(--ink-soft);
 }
-.wc-suggest-btn:hover { border-color: var(--ink); color: var(--ink); }
+.wc-gallery-card.active .wc-gallery-tag { color: rgba(245,235,210,0.7); }
+
+/* ── Custom-prompt accordion ───────────────────────────────── */
+.wc-custom {
+  margin-top: 28px;
+  border-top: 1px solid var(--ink-dim);
+  padding-top: 16px;
+}
+.wc-custom-summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.wc-custom-summary::-webkit-details-marker { display: none; }
+.wc-custom[open] > .wc-custom-summary { color: var(--ink); }
+.wc-custom-body {
+  margin-top: 8px;
+}
 
 /* ── Trace + error ──────────────────────────────────────────── */
 .wc-trace {
@@ -319,6 +356,11 @@
   .wc-dateline { grid-template-columns: 1fr; gap: 14px; }
   .wc-input { font-size: 18px; }
   .wc-frame { height: 420px; }
+  /* Gallery wraps to 2 cols then 1 col on small screens */
+  .wc-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wc-gallery-card { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .wc-gallery-card:nth-child(2n) { border-right: 0; }
+  .wc-gallery-card:nth-last-child(-n+1) { border-bottom: 0; }
 }
 @media (max-width: 540px) {
   .wc-input-foot { flex-direction: column; align-items: flex-start; gap: 10px; }

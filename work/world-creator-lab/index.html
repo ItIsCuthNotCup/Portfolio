@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=15">
-  <link rel="stylesheet" href="/assets/css/world-creator-lab.css?v=1">
+  <link rel="stylesheet" href="/assets/css/world-creator-lab.css?v=2">
 </head>
 <body>
 
@@ -77,10 +77,10 @@
     camera, all in one HTML file.
   </p>
   <p class="wc-kicker">
-    Pre-baked Machu Picchu loads first. Ask for your own (a city, a
-    landscape, a mood) and watch the next one stream in. Each
-    generation is one query to an AI that's never seen the scene before
-    and writes the whole rendering pipeline from scratch.
+    Five worlds load instantly. Click a card and the scene swaps in
+    place. Below that, a custom prompt input — type your own and the
+    AI writes a brand-new world for you. Live generation takes about
+    a minute and costs a fraction of a dollar.
   </p>
   <div class="mono wc-dateline">
     <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
@@ -127,62 +127,89 @@
 <section class="wc-section wc-section-demo">
   <div class="mono section-label">
     <span class="idx">§ II · FIG. 10.1</span>
-    <span>The creator — name a place</span>
+    <span>The atlas — pick a world</span>
   </div>
   <p class="wc-note">
-    Type a scene. Anywhere from a real landmark to a mood
-    ("low-poly Venice canals at dawn"). Generation runs ~30 seconds.
-    Rate-limited to keep it from running up a bill.
+    Five hand-curated worlds, each a self-contained Three.js scene
+    (~7 KB). Click a card to swap the viewer below. All run at 60 fps
+    on a five-year-old laptop.
   </p>
 
-  <div class="wc-input-wrap">
-    <label class="wc-input-label mono" for="wc-input">Your scene</label>
-    <textarea
-      id="wc-input"
-      class="wc-input"
-      rows="2"
-      maxlength="800"
-      placeholder="e.g. Machu Picchu at sunset, low-poly"
-      aria-label="Scene to generate"></textarea>
-    <div class="wc-input-foot mono">
-      <span class="wc-charcount"><span id="wc-charnum">0</span> / 800</span>
-      <button type="button" id="wc-submit" class="wc-submit-btn">Build the world →</button>
-    </div>
+  <div class="wc-gallery" id="wc-gallery">
+    <button type="button" class="wc-gallery-card active" data-world="machu-picchu">
+      <div class="mono wc-gallery-fig">No. 01</div>
+      <div class="wc-gallery-name">Machu Picchu</div>
+      <div class="wc-gallery-tag">Sunset, terraced citadel</div>
+    </button>
+    <button type="button" class="wc-gallery-card" data-world="voxel-tokyo">
+      <div class="mono wc-gallery-fig">No. 02</div>
+      <div class="wc-gallery-name">Voxel Tokyo</div>
+      <div class="wc-gallery-tag">Neon skyline, after midnight</div>
+    </button>
+    <button type="button" class="wc-gallery-card" data-world="stonehenge-dawn">
+      <div class="mono wc-gallery-fig">No. 03</div>
+      <div class="wc-gallery-name">Stonehenge</div>
+      <div class="wc-gallery-tag">Solstice dawn, mist on the plain</div>
+    </button>
+    <button type="button" class="wc-gallery-card" data-world="coral-reef">
+      <div class="mono wc-gallery-fig">No. 04</div>
+      <div class="wc-gallery-name">Coral Reef</div>
+      <div class="wc-gallery-tag">Tropical shallows, drifting fish</div>
+    </button>
+    <button type="button" class="wc-gallery-card" data-world="santorini">
+      <div class="mono wc-gallery-fig">No. 05</div>
+      <div class="wc-gallery-name">Santorini</div>
+      <div class="wc-gallery-tag">Cliffside village, afternoon</div>
+    </button>
   </div>
-
-  <div class="wc-suggestions">
-    <div class="mono wc-suggest-head">Or pick a starter:</div>
-    <div class="wc-suggest-list" id="wc-suggest-list">
-      <button type="button" class="wc-suggest-btn" data-q="Machu Picchu at sunset, low-poly stone terraces with stratus clouds drifting through the valley">Machu Picchu</button>
-      <button type="button" class="wc-suggest-btn" data-q="Voxel Tokyo skyline at night, neon signs reflecting on wet streets">Voxel Tokyo at night</button>
-      <button type="button" class="wc-suggest-btn" data-q="Santorini cliffside village in afternoon light, white cubic houses with blue domes">Santorini cliffside</button>
-      <button type="button" class="wc-suggest-btn" data-q="Library tower spiraling upward, stacks of books, warm lamp light, slow rotation">Infinite library</button>
-      <button type="button" class="wc-suggest-btn" data-q="Underwater coral reef in shallow tropical water, low-poly fish drifting through">Coral reef</button>
-      <button type="button" class="wc-suggest-btn" data-q="Stonehenge at solstice dawn, mist on the plain, sun rising between the stones">Stonehenge at dawn</button>
-    </div>
-  </div>
-
-  <div class="wc-trace mono" id="wc-trace" hidden>
-    <span class="wc-trace-pulse">●</span>
-    <span id="wc-trace-text">starting…</span>
-  </div>
-
-  <div class="wc-error mono" id="wc-error" hidden></div>
 
   <div class="wc-frame-wrap">
     <div class="mono wc-frame-head">
-      <span id="wc-frame-title">Machu Picchu at sunset (seed)</span>
-      <span class="wc-frame-meta" id="wc-frame-meta"></span>
+      <span id="wc-frame-title">Machu Picchu · sunset</span>
+      <span class="wc-frame-meta" id="wc-frame-meta">hand-curated · ~7 KB</span>
     </div>
     <iframe
       id="wc-frame"
       class="wc-frame"
       sandbox="allow-scripts"
       referrerpolicy="no-referrer"
-      loading="lazy"
-      title="Generated 3D world"
+      title="3D world viewer"
       src=""></iframe>
   </div>
+
+  <details class="wc-custom">
+    <summary class="mono wc-custom-summary">Or generate a custom world ↓</summary>
+    <div class="wc-custom-body">
+      <p class="wc-note" style="margin-top: 16px;">
+        Type any scene. Anywhere from a real landmark to a mood
+        ("low-poly Venice canals at dawn"). Live generation runs about
+        a minute via DeepSeek on OpenRouter. Rate-limited to keep it
+        from running up a bill.
+      </p>
+
+      <div class="wc-input-wrap">
+        <label class="wc-input-label mono" for="wc-input">Your scene</label>
+        <textarea
+          id="wc-input"
+          class="wc-input"
+          rows="2"
+          maxlength="800"
+          placeholder="e.g. low-poly Venice canals at dawn"
+          aria-label="Scene to generate"></textarea>
+        <div class="wc-input-foot mono">
+          <span class="wc-charcount"><span id="wc-charnum">0</span> / 800</span>
+          <button type="button" id="wc-submit" class="wc-submit-btn">Build the world →</button>
+        </div>
+      </div>
+
+      <div class="wc-trace mono" id="wc-trace" hidden>
+        <span class="wc-trace-pulse">●</span>
+        <span id="wc-trace-text">starting…</span>
+      </div>
+
+      <div class="wc-error mono" id="wc-error" hidden></div>
+    </div>
+  </details>
 </section>
 
 <hr class="hair">
@@ -359,6 +386,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/world-creator-lab.js?v=3"></script>
+<script src="/assets/js/world-creator-lab.js?v=4"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@
   const $input    = document.getElementById('wc-input');
   const $charnum  = document.getElementById('wc-charnum');
   const $submit   = document.getElementById('wc-submit');
-  const $suggest  = document.getElementById('wc-suggest-list');
+  const $gallery  = document.getElementById('wc-gallery');
   const $trace    = document.getElementById('wc-trace');
   const $traceTxt = document.getElementById('wc-trace-text');
   const $error    = document.getElementById('wc-error');
@@ -21,51 +21,71 @@
   const $frameTitle = document.getElementById('wc-frame-title');
   const $frameMeta  = document.getElementById('wc-frame-meta');
 
-  if (!$input || !$submit || !$frame) return;
+  if (!$frame) return;
+
+  // Pre-baked world catalog
+  const WORLDS = {
+    'machu-picchu':    { title: 'Machu Picchu · sunset',                meta: 'hand-curated · ~9.5 KB' },
+    'voxel-tokyo':     { title: 'Voxel Tokyo · neon at night',          meta: 'hand-curated · ~7 KB' },
+    'stonehenge-dawn': { title: 'Stonehenge · solstice dawn',           meta: 'hand-curated · ~7 KB' },
+    'coral-reef':      { title: 'Coral reef · shallow tropical water',  meta: 'hand-curated · ~7 KB' },
+    'santorini':       { title: 'Santorini · cliffside village',        meta: 'hand-curated · ~7 KB' },
+  };
 
   let inFlight = false;
 
   // ── Char counter ───────────────────────────────────────────
   function updateChar() {
-    if ($charnum) $charnum.textContent = String($input.value.length);
+    if ($charnum && $input) $charnum.textContent = String($input.value.length);
   }
-  $input.addEventListener('input', updateChar);
-  updateChar();
+  if ($input) {
+    $input.addEventListener('input', updateChar);
+    updateChar();
+  }
 
-  // ── Seed scene: fetch as text, render via srcdoc ───────────
+  // ── Gallery loader: fetch HTML as text, render via srcdoc ──
   // (We never use src= because the site's _headers sets
   //  X-Frame-Options: DENY for hardening. srcdoc HTML is treated
   //  as inline content by the browser and isn't subject to that
   //  header, so same-origin framing works without weakening security.)
-  fetch('/assets/data/worlds/machu-picchu.html')
-    .then(r => r.ok ? r.text() : Promise.reject(new Error('seed missing')))
-    .then(html => { $frame.srcdoc = html; })
-    .catch(err => {
-      // Fallback: minimal inline scene so the page never looks broken
-      $frame.srcdoc = `<!DOCTYPE html><html><body style="margin:0;background:#1a1410;color:#a89576;font-family:monospace;padding:24px;">Seed scene failed to load: ${(err && err.message) || 'unknown'}</body></html>`;
-    });
+  function loadWorld(slug) {
+    const meta = WORLDS[slug];
+    if (!meta) return;
+    fetch(`/assets/data/worlds/${slug}.html`)
+      .then(r => r.ok ? r.text() : Promise.reject(new Error('world missing')))
+      .then(html => {
+        $frame.srcdoc = html;
+        if ($frameTitle) $frameTitle.textContent = meta.title;
+        if ($frameMeta)  $frameMeta.textContent  = meta.meta;
+      })
+      .catch(err => {
+        $frame.srcdoc = `<!DOCTYPE html><html><body style="margin:0;background:#1a1410;color:#a89576;font-family:monospace;padding:24px;">World failed to load: ${(err && err.message) || 'unknown'}</body></html>`;
+      });
+  }
 
-  // ── Submit on button or Enter ──────────────────────────────
-  $input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      submitPrompt();
-    }
-  });
-  $submit.addEventListener('click', submitPrompt);
+  // First paint: the active card's world
+  const initialCard = document.querySelector('.wc-gallery-card.active');
+  loadWorld(initialCard ? initialCard.dataset.world : 'machu-picchu');
 
-  if ($suggest) {
-    $suggest.addEventListener('click', (e) => {
-      const btn = e.target.closest('.wc-suggest-btn');
-      if (!btn) return;
-      const q = btn.dataset.q || btn.textContent.trim();
-      $input.value = q;
-      updateChar();
-      $input.focus();
-      // Don't auto-submit; let the user explicitly press Build the world.
-      // (Auto-submit would fire a generation on every chip click, costing
-      //  $0.15+ each. Better to make the request intentional.)
+  if ($gallery) {
+    $gallery.addEventListener('click', (e) => {
+      const card = e.target.closest('.wc-gallery-card');
+      if (!card) return;
+      document.querySelectorAll('.wc-gallery-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      loadWorld(card.dataset.world);
     });
+  }
+
+  // ── Submit on button or Enter (custom prompt section) ─────
+  if ($input && $submit) {
+    $input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitPrompt();
+      }
+    });
+    $submit.addEventListener('click', submitPrompt);
   }
 
   // ── Trace + error rendering ────────────────────────────────
@@ -102,6 +122,7 @@
 
   // ── Submit ─────────────────────────────────────────────────
   async function submitPrompt() {
+    if (!$input || !$submit) return;
     if (inFlight) return;
     const q = ($input.value || '').trim();
     if (!q) { $input.focus(); return; }

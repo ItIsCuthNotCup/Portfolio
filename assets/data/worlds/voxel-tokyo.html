@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voxel Tokyo at Night</title>
+<style>
+  html, body { margin:0; padding:0; overflow:hidden; background:#0a0612; height:100%; }
+  canvas { display:block; }
+  .lbl {
+    position:fixed; left:14px; bottom:12px;
+    font-family: ui-monospace, "DM Mono", monospace; font-size:10px;
+    letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(220,210,255,0.45); pointer-events:none;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div class="lbl">Voxel Tokyo · neon at night</div>
+<script>
+'use strict';
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0e1a, 0.014);
+scene.background = new THREE.Color(0x05030f);
+
+const camera = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.5, 800);
+camera.position.set(40, 28, 70);
+camera.lookAt(0, 8, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// Cool moonlit ambient + magenta neon fill
+scene.add(new THREE.AmbientLight(0x303060, 0.5));
+const moon = new THREE.DirectionalLight(0x7a90c0, 0.5);
+moon.position.set(-30, 60, 20);
+scene.add(moon);
+
+// Wet street plane (dark, reflective-feeling solid)
+const street = new THREE.Mesh(
+  new THREE.PlaneGeometry(400, 400),
+  new THREE.MeshStandardMaterial({ color: 0x100a18, roughness: 0.4, metalness: 0.6 })
+);
+street.rotation.x = -Math.PI/2;
+scene.add(street);
+
+// Skyline: many low-poly blocks of varying height with neon-window strips
+const cityGroup = new THREE.Group();
+scene.add(cityGroup);
+
+const NEON_COLORS = [0xff3a8a, 0x4af0ff, 0xfff04a, 0x7a4aff, 0xff7a4a, 0x4affa0];
+
+function makeBuilding(x, z, w, d, h, neon) {
+  const grp = new THREE.Group();
+  const concrete = new THREE.MeshStandardMaterial({
+    color: 0x141220, roughness: 0.85, metalness: 0.1,
+  });
+  const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), concrete);
+  body.position.y = h/2;
+  grp.add(body);
+
+  // Vertical neon strip (one face)
+  const stripMat = new THREE.MeshBasicMaterial({ color: neon });
+  const strip = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, h*0.7, 0.05),
+    stripMat
+  );
+  strip.position.set(w/2 + 0.03, h*0.4, d/4);
+  grp.add(strip);
+
+  // Window grid (small emissive dots)
+  const winMat = new THREE.MeshBasicMaterial({ color: 0xffe8a0 });
+  const offWinMat = new THREE.MeshBasicMaterial({ color: 0x1a1418 });
+  const cols = Math.max(2, Math.floor(w/0.7));
+  const rows = Math.max(3, Math.floor(h/0.9));
+  for (let cx = 0; cx < cols; cx++) {
+    for (let r = 0; r < rows; r++) {
+      const lit = Math.random() < 0.55;
+      const wm = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.3, 0.4),
+        lit ? winMat : offWinMat
+      );
+      const px = -w/2 + 0.5 + cx * (w-1) / Math.max(1, cols-1);
+      const py = 0.6 + r * 0.9;
+      wm.position.set(px, py, d/2 + 0.001);
+      grp.add(wm);
+    }
+  }
+
+  grp.position.set(x, 0, z);
+  return grp;
+}
+
+// 80-ish buildings on a 60x60 grid, sparsity tuned for a skyline look
+for (let i = 0; i < 80; i++) {
+  const x = (Math.random() - 0.5) * 60;
+  const z = (Math.random() - 0.5) * 60;
+  if (Math.abs(x) < 4 && Math.abs(z) < 4) continue; // open central plaza
+  const w = 2 + Math.random() * 4;
+  const d = 2 + Math.random() * 4;
+  const h = 4 + Math.random() * 22;
+  const neon = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
+  cityGroup.add(makeBuilding(x, z, w, d, h, neon));
+}
+
+// Big landmark tower at the center (Tokyo Tower-ish)
+const towerGrp = new THREE.Group();
+const towerSegments = 4;
+for (let i = 0; i < towerSegments; i++) {
+  const segH = 6;
+  const segR = 2.6 - i * 0.5;
+  const seg = new THREE.Mesh(
+    new THREE.CylinderGeometry(segR * 0.7, segR, segH, 6),
+    new THREE.MeshStandardMaterial({ color: 0xff6a4a, roughness: 0.6 })
+  );
+  seg.position.y = segH * (i + 0.5);
+  towerGrp.add(seg);
+}
+const towerLight = new THREE.Mesh(
+  new THREE.SphereGeometry(0.8, 8, 6),
+  new THREE.MeshBasicMaterial({ color: 0xff3030 })
+);
+towerLight.position.y = towerSegments * 6 + 1;
+towerGrp.add(towerLight);
+towerGrp.position.set(0, 0, 0);
+scene.add(towerGrp);
+
+// Drifting neon clouds
+const clouds = [];
+function makeCloud() {
+  const grp = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({
+    color: 0xff5a9a, transparent: true, opacity: 0.18,
+  });
+  for (let i = 0; i < 4; i++) {
+    const r = 4 + Math.random() * 3;
+    const m = new THREE.Mesh(new THREE.SphereGeometry(r, 6, 4), mat);
+    m.position.set((Math.random()-0.5)*8, (Math.random()-0.5)*1.5, (Math.random()-0.5)*4);
+    grp.add(m);
+  }
+  return grp;
+}
+for (let i = 0; i < 6; i++) {
+  const c = makeCloud();
+  c.position.set((Math.random()-0.5)*120, 28 + Math.random() * 12, -30 - Math.random() * 70);
+  clouds.push({ obj: c, drift: 0.04 + Math.random()*0.03 });
+  scene.add(c);
+}
+
+// Animate slow camera dolly + cloud drift + tower light pulse
+let t = 0;
+function animate() {
+  t += 0.0035;
+  camera.position.x = Math.sin(t) * 50;
+  camera.position.z = Math.cos(t) * 50 + 25;
+  camera.position.y = 24 + Math.sin(t * 0.5) * 6;
+  camera.lookAt(0, 12, 0);
+
+  for (const c of clouds) {
+    c.obj.position.x += c.drift;
+    if (c.obj.position.x > 80) c.obj.position.x = -80;
+  }
+
+  // tower light pulses
+  towerLight.material.color.setHSL(0, 1, 0.5 + Math.sin(t * 4) * 0.15);
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
