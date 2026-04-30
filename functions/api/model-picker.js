@@ -49,7 +49,11 @@ function isAllowedOrigin(origin) {
 }
 
 // On-topic keyword guard. Cheap; intentionally permissive — we only
-// reject queries that have NO model-related signal at all.
+// reject queries that have NO model-related signal at all. The real
+// abuse defenses are the per-IP rate limit, daily spend cap, and the
+// hard-fail when MODEL_PICKER_KV isn't bound (see onRequest below).
+// Tightening this regex would block legitimate phrasings without
+// adding meaningful protection, so leave it loose.
 const ONTOPIC_PATTERNS = [
   /\b(model|llm|gpt|claude|gemini|llama|mistral|qwen|deepseek|grok|phi|cohere|openai|anthropic)\b/i,
   /\b(token|context|prompt|embedding|reasoning|vision|tool[- ]?use|json[- ]?mode)\b/i,

@@ -418,13 +418,16 @@
     );
     const img = tctx.getImageData(0, 0, PREDICT_INPUT, PREDICT_INPUT).data;
 
-    // Binarize at threshold to better match Quick Draw training data,
-    // which is essentially binary (white pixels where the stroke went,
-    // black elsewhere). Soft grayscale from anti-aliased downsampling
-    // gives the model a fuzzier signal than it was trained on; binarizing
-    // closes that gap. Empirically, raised bird recognition from
-    // ~36% to ~50% on a synthetic test bird, and helps every other
-    // category at the margin.
+    // Binarize at threshold. Note: Quick Draw bitmaps are 28x28
+    // grayscale uint8, NOT binary, and training keeps them
+    // continuous after dividing by 255. So this step doesn't match
+    // training preprocessing — it compensates for a different gap:
+    // drawImage() downsampling 480→28 produces anti-aliased blur
+    // that doesn't resemble Quick Draw's natively-28 strokes.
+    // Thresholding sharpens the input and recovers accuracy
+    // empirically (raised bird recognition from ~36% to ~50% on
+    // synthetic test inputs). The clean fix is to retrain on
+    // binarized data so train and inference agree.
     const INK_THRESH_28 = 80;  // 0..255 on the inverted grayscale
     const arr = new Float32Array(PREDICT_INPUT * PREDICT_INPUT);
     for (let i = 0; i < arr.length; i++) {
