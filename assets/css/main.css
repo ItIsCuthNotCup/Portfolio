@@ -565,11 +565,13 @@ main { position: relative; z-index: 1; }
 .labs-grid {
   margin-top: 64px;
   display: grid;
-  /* 7 cards: 3 cols × 2 rows of normal cards + 1 wide card on row 3. */
-  /* Wraps to 2 cols on tablet, single column on phone.               */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Adaptive: as many columns as fit at 320px min, down to 1 col on narrow */
+  /* viewports. No special-cased data-wide cards — every cell is identical. */
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 0;
-  border: 1px solid var(--ink);
+  /* Top + left borders on the container; cards supply right + bottom. */
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
 }
 .lab-card {
   background: var(--paper);
@@ -583,12 +585,6 @@ main { position: relative; z-index: 1; }
   border-bottom: 1px solid var(--ink);
   transition: background 220ms ease, color 220ms ease;
 }
-/* Right edge of every row has no right border */
-.lab-card:nth-child(3n) { border-right: none; }
-/* Last card has no bottom border or right border (container provides them) */
-.lab-card:last-child { border-bottom: none; border-right: none; }
-/* The wide orphan card spans the full row (used when count is 3n+1) */
-.lab-card[data-wide] { grid-column: 1 / -1; border-right: none; }
 .lab-card:hover {
   background: var(--ink);
   color: var(--paper);
@@ -648,22 +644,7 @@ main { position: relative; z-index: 1; }
   font-size: 10px;
 }
 .project-medium-card .project-receipts { margin-top: 10px; font-size: 10px; }
-@media (max-width: 1100px) {
-  .labs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Reset desktop rules; redraw for 2-col layout */
-  .lab-card { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
-  .lab-card:nth-child(3n) { border-right: 1px solid var(--ink); }
-  .lab-card:nth-child(2n) { border-right: none; }
-  .lab-card:last-child { border-bottom: none; }
-  /* Wide orphan keeps full-row span at 2-col too */
-  .lab-card[data-wide] { grid-column: 1 / -1; border-right: none; }
-}
-@media (max-width: 560px) {
-  .labs-grid { grid-template-columns: 1fr; }
-  .lab-card { border-right: none; border-bottom: 1px solid var(--ink); }
-  .lab-card:last-child { border-bottom: none; }
-  .lab-card[data-wide] { grid-column: 1 / -1; }
-}
+/* Grid column count is handled by auto-fill — no media-query overrides needed. */
 
 /* ── Projects Section ───────────────────────────────────────── */
 .projects-section {
