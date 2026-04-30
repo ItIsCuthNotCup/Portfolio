@@ -462,6 +462,15 @@
     }
     if (totalLen === 0) return;
 
+    // Lock the rendered box dimensions before mutating text. Random glyphs
+    // of varying widths would otherwise change line-wrap mid-animation and
+    // bounce the rest of the page up and down.
+    var rect = root.getBoundingClientRect();
+    var prevMinHeight = root.style.minHeight;
+    var prevOverflow = root.style.overflow;
+    root.style.minHeight = rect.height + 'px';
+    root.style.overflow = 'hidden';
+
     var start = performance.now();
     function frame(now) {
       var p = Math.min(1, (now - start) / duration);
@@ -488,7 +497,13 @@
         entry.node.nodeValue = out;
       }
 
-      if (p < 1) requestAnimationFrame(frame);
+      if (p < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        // Restore inline styles so the element flows naturally afterwards.
+        root.style.minHeight = prevMinHeight;
+        root.style.overflow = prevOverflow;
+      }
     }
     requestAnimationFrame(frame);
   }
