@@ -36,6 +36,52 @@
       0.24
     ]
   },
+  "multi_seed_summary": {
+    "n_seeds": 50,
+    "base_seed": 1000,
+    "sims_per_seed": 200,
+    "note": "Each seed is an independent run of the same protocol. Bands describe sampling variance \u2014 the lesson the lab is about. Point-estimate keys above are kept for backwards compatibility with the live page; future page updates can replace them with mean \u00b1 p05/p95 from this block.",
+    "empirical_fpr": {
+      "n": 50,
+      "mean": 0.3734,
+      "std": 0.0301,
+      "p05": 0.335,
+      "p50": 0.3675,
+      "p95": 0.4227,
+      "min": 0.285,
+      "max": 0.44
+    },
+    "inflation_factor": {
+      "n": 50,
+      "mean": 7.468,
+      "std": 0.6029,
+      "p05": 6.7,
+      "p50": 7.35,
+      "p95": 8.455,
+      "min": 5.7,
+      "max": 8.8
+    },
+    "median_stop_time": {
+      "n": 50,
+      "mean": 5000.0,
+      "std": 0.0,
+      "p05": 5000.0,
+      "p50": 5000.0,
+      "p95": 5000.0,
+      "min": 5000.0,
+      "max": 5000.0
+    },
+    "prob_b_gt_a_120_1000_140_1000": {
+      "n": 50,
+      "mean": 0.9078,
+      "std": 0.0037,
+      "p05": 0.9012,
+      "p50": 0.9083,
+      "p95": 0.9141,
+      "min": 0.9004,
+      "max": 0.9176
+    }
+  },
   "prob_b_gt_a_mc_120_1000_140_1000": 0.9092,
   "beta_pdf_reference": {
     "a": 121,
@@ -128,7 +174,7 @@
       ]
     ]
   },
-  "regenerated_at": "2026-04-23T18:46:44.975254+00:00",
-  "build_seconds": 1.39,
+  "regenerated_at": "2026-04-30T20:20:04.318413+00:00",
+  "build_seconds": 14.65,
   "seed": 42
 }

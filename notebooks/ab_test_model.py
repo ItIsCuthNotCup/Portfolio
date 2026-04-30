@@ -98,8 +98,15 @@ def peek_until_significant(
     max_n_per_arm: int = 5_000,
     peek_every: int = 50,
     n_sims: int = 1_000,
+    rng_local: np.random.Generator | None = None,
 ) -> dict:
-    """Return empirical false-positive rate and stop-time distribution."""
+    """Return empirical false-positive rate and stop-time distribution.
+
+    rng_local lets the caller supply a per-seed Generator so this function
+    is pure with respect to the rng parameter (used by the multi-seed loop).
+    Defaults to the module-level `rng` for backwards compatibility.
+    """
+    r = rng_local if rng_local is not None else rng
     false_positives = 0
     stop_times = []
     observed_lifts = []
@@ -109,8 +116,8 @@ def peek_until_significant(
         n = peek_every
         while n <= max_n_per_arm:
             # generate peek_every new trials per arm
-            x_a += int(rng.binomial(peek_every, p_true))
-            x_b += int(rng.binomial(peek_every, p_true))
+            x_a += int(r.binomial(peek_every, p_true))
+            x_b += int(r.binomial(peek_every, p_true))
             p = two_prop_pvalue(x_a, n, x_b, n)
             if p < alpha:
                 false_positives += 1
@@ -132,6 +139,69 @@ def peek_until_significant(
         "peek_every": peek_every,
         "max_n_per_arm": max_n_per_arm,
         "observed_lift_at_stop_sample": sorted(observed_lifts)[:10] + ["…"] + sorted(observed_lifts)[-10:],
+    }
+
+
+# ══════════════════════════════════════════════════════════════════
+# 4.b MULTI-SEED ENSEMBLE
+#    A/B testing IS variance. Reporting one seed defeats the lesson.
+#    This loop runs the headline calculations across N_SEEDS seeds and
+#    reports the central band. Existing point-estimate keys (seed=42)
+#    stay intact so the lab page keeps working unchanged.
+# ══════════════════════════════════════════════════════════════════
+def _summarize(values: list[float]) -> dict:
+    arr = np.asarray(values, dtype=np.float64)
+    return {
+        "n": int(arr.size),
+        "mean": round(float(arr.mean()), 4),
+        "std": round(float(arr.std(ddof=1)) if arr.size > 1 else 0.0, 4),
+        "p05": round(float(np.percentile(arr, 5)), 4),
+        "p50": round(float(np.percentile(arr, 50)), 4),
+        "p95": round(float(np.percentile(arr, 95)), 4),
+        "min": round(float(arr.min()), 4),
+        "max": round(float(arr.max()), 4),
+    }
+
+
+def multi_seed_ensemble(n_seeds: int = 50, base_seed: int = 1000) -> dict:
+    """Run the headline calculations across n_seeds seeds. Returns
+    distributional summaries — readers see ranges, not point estimates."""
+    fpr_vals: list[float] = []
+    inflation_vals: list[float] = []
+    median_stop_vals: list[float] = []
+    pba_vals: list[float] = []
+
+    for i in range(n_seeds):
+        seed_i = base_seed + i
+        r = np.random.default_rng(seed_i)
+        # Reduce per-seed sims (200 vs 1000) so 50 seeds finish in seconds.
+        # Total: 50 * 200 = 10,000 simulated experiments — same statistical
+        # weight as 10x the original single-seed run.
+        peek = peek_until_significant(n_sims=200, rng_local=r)
+        fpr_vals.append(peek["empirical_fpr"])
+        inflation_vals.append(peek["empirical_fpr"] / 0.05)
+        median_stop_vals.append(peek["median_stop_time"])
+        # P(B > A) for a representative scenario — re-seed the module rng
+        # since prob_b_beats_a uses it directly; we restore after.
+        a_a, b_a = 1 + 120, 1 + (1000 - 120)
+        a_b, b_b = 1 + 140, 1 + (1000 - 140)
+        draws_a = r.beta(a_a, b_a, 5000)
+        draws_b = r.beta(a_b, b_b, 5000)
+        pba_vals.append(float((draws_b > draws_a).mean()))
+
+    return {
+        "n_seeds": n_seeds,
+        "base_seed": base_seed,
+        "sims_per_seed": 200,
+        "note": ("Each seed is an independent run of the same protocol. "
+                 "Bands describe sampling variance — the lesson the lab is "
+                 "about. Point-estimate keys above are kept for backwards "
+                 "compatibility with the live page; future page updates can "
+                 "replace them with mean ± p05/p95 from this block."),
+        "empirical_fpr": _summarize(fpr_vals),
+        "inflation_factor": _summarize(inflation_vals),
+        "median_stop_time": _summarize(median_stop_vals),
+        "prob_b_gt_a_120_1000_140_1000": _summarize(pba_vals),
     }
 
 
@@ -160,9 +230,18 @@ def main() -> None:
             required_sample_size(0.20, 0.25),
     }
 
-    # Peeking Monte Carlo
-    print("[ab-test] running peeking-bias Monte Carlo (1000 sims) …")
+    # Peeking Monte Carlo (single-seed point estimate — kept for the live
+    # page's existing reference-number widgets that read .peeking_bias.*)
+    print("[ab-test] running peeking-bias Monte Carlo (1000 sims, seed=42) …")
     peek = peek_until_significant()
+
+    # Multi-seed ensemble — describes sampling variance, which is what
+    # the lab teaches. 50 independent seeds, summarized as central bands.
+    print("[ab-test] running multi-seed ensemble (50 seeds × 200 sims) …")
+    ensemble = multi_seed_ensemble(n_seeds=50)
+    fpr_band = ensemble["empirical_fpr"]
+    print(f"[ab-test] ensemble FPR: mean={fpr_band['mean']:.3f}  "
+          f"5–95%: [{fpr_band['p05']:.3f}, {fpr_band['p95']:.3f}]")
 
     # P(B>A) closed-form vs Monte Carlo spot check
     pba_mc = prob_b_beats_a(120, 1000, 140, 1000)
@@ -173,6 +252,7 @@ def main() -> None:
     out = {
         "sample_sizes_per_arm": ss,
         "peeking_bias": peek,
+        "multi_seed_summary": ensemble,
         "prob_b_gt_a_mc_120_1000_140_1000": pba_mc,
         "beta_pdf_reference": {
             "a": 121, "b": 881,
