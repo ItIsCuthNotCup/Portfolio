@@ -1,0 +1,297 @@
+/* ═══════════════════════════════════════════════════════════
+   ALGORITHM WATCHDOG LAB — page-specific styles. Editorial
+   chrome inherits from main.css; this file adds the editorial
+   lede block, the histogram + trend pair, the heatmap (the
+   centerpiece), the stacked-bar category mix, and the channels
+   table.
+   ═══════════════════════════════════════════════════════════ */
+
+.aw-main { background: var(--paper); color: var(--ink); }
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.aw-hero {
+  padding: 120px 48px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.aw-title { margin-top: 22px; }
+.aw-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.aw-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.aw-dateline .label { color: var(--ink-dim); }
+.aw-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ────────────────────────────────────────── */
+.aw-section { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+.aw-section .section-label { margin-bottom: 28px; }
+.aw-prose {
+  max-width: 720px;
+  margin-top: 26px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.aw-note {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+}
+
+/* ── The lede block (the editorial signature) ───────────────── */
+.aw-lede-wrap {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 36px 0;
+  max-width: 880px;
+  margin-bottom: 18px;
+}
+.aw-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+
+/* ── Charts — generic frame ─────────────────────────────────── */
+.aw-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.aw-chart-wrap {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 18px 20px 16px;
+}
+.aw-chart-wide { grid-column: 1 / -1; }
+.aw-chart-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--ink-dim);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+.aw-chart-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.aw-chart-wrap .axis line,
+.aw-chart-wrap .axis path { stroke: var(--ink-dim); fill: none; }
+.aw-chart-wrap .axis text {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  fill: var(--ink-dim);
+}
+.aw-chart-wrap .gridline {
+  stroke: var(--ink-dim);
+  stroke-dasharray: 2 3;
+  opacity: 0.18;
+}
+.aw-chart-wrap .data-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.aw-chart-wrap .bar { fill: var(--ink); }
+.aw-chart-wrap .bar.median { fill: var(--accent); }
+.aw-chart-wrap .median-line {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+.aw-chart-wrap .median-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  fill: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ── Heatmap (the centerpiece) ───────────────────────────────── */
+.aw-heatmap-wrap {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 22px 24px;
+}
+#aw-heatmap {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+#aw-heatmap .cell {
+  stroke: var(--paper);
+  stroke-width: 0.5;
+}
+#aw-heatmap .cell:hover { stroke: var(--ink); stroke-width: 1; }
+#aw-heatmap .label {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  fill: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.aw-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.aw-heatmap-legend .swatches { display: flex; }
+.aw-heatmap-legend .sw {
+  width: 18px;
+  height: 12px;
+  display: inline-block;
+}
+
+/* ── Stacked bars (category mix) ────────────────────────────── */
+#aw-stack rect.cat-rect {
+  stroke: var(--paper);
+  stroke-width: 0.4;
+}
+#aw-stack rect.cat-rect:hover { stroke: var(--ink); stroke-width: 1; }
+.aw-stack-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.aw-stack-legend .item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.aw-stack-legend .sw {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+/* ── Channels table ─────────────────────────────────────────── */
+.aw-table-wrap {
+  border: 1px solid var(--ink);
+  overflow-x: auto;
+}
+.aw-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 700px;
+}
+.aw-table thead tr { border-bottom: 1px solid var(--ink-dim); }
+.aw-table th {
+  padding: 14px 16px 10px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.aw-table th.num { text-align: right; }
+.aw-table tbody tr {
+  border-bottom: 1px dotted var(--ink-dim);
+  transition: background 160ms;
+}
+.aw-table tbody tr:last-child { border-bottom: 0; }
+.aw-table tbody tr:hover { background: color-mix(in oklab, var(--ink) 4%, transparent); }
+.aw-table td {
+  padding: 12px 16px;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.aw-table td.num { text-align: right; }
+.aw-table td.channel {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+/* ── Receipts grid ──────────────────────────────────────────── */
+.aw-receipts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.aw-receipt {
+  padding: 22px 20px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.aw-receipt:nth-child(4n) { border-right: 0; }
+.aw-receipt:nth-last-child(-n+4) { border-bottom: 0; }
+.aw-receipt-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.aw-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 28px;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.aw-receipt-value .small {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+
+.aw-colophon-section { padding-bottom: 80px; }
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .aw-hero, .aw-section { padding-left: 24px; padding-right: 24px; }
+  .aw-charts-row { grid-template-columns: 1fr; }
+  .aw-receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .aw-receipt:nth-child(4n) { border-right: 1px solid var(--ink); }
+  .aw-receipt:nth-child(2n) { border-right: 0; }
+  .aw-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .aw-lede { font-size: 22px; }
+}
+@media (max-width: 540px) {
+  .aw-receipts { grid-template-columns: 1fr; }
+  .aw-receipt { border-right: 0; }
+  .aw-lede { font-size: 19px; }
+}

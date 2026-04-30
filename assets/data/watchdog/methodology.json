@@ -1,0 +1,10 @@
+{
+  "days_tracked": 30,
+  "videos_per_pull": 50,
+  "region": "US",
+  "last_refresh": "2026-04-29T21:27:39+00:00",
+  "last_refresh_human": "Stub data \u2014 not yet refreshed",
+  "api_quota_per_day": 10,
+  "api_quota_limit": 10000,
+  "source": "Stub. Real cron pulls from YouTube Data API v3."
+}

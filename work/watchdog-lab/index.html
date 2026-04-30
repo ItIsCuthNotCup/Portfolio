@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algorithm Watchdog — Jake Cuth.</title>
+  <meta name="description" content="What YouTube's algorithm is rewarding right now. Daily-refreshed dashboard of US Trending videos: video length, posting times, category mix, channel concentration.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Algorithm Watchdog — what YouTube is rewarding right now">
+  <meta property="og:description" content="A daily-refreshed dashboard of US Trending videos. Length, posting time, category mix, channel concentration.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/watchdog-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=16">
+  <link rel="stylesheet" href="/assets/css/watchdog-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" class="active" aria-current="page" role="menuitem">Algorithm Watchdog</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="aw-main">
+
+<section class="aw-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 10</span>
+    <span>What YouTube is rewarding</span>
+  </div>
+  <h1 class="serif big-display aw-title">
+    Algorithm<br>
+    <span class="serif-italic" style="color:var(--accent)">Watchdog.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A daily-refreshed read on YouTube's Trending tab. Which video lengths
+    are winning, when creators are posting, which categories are
+    dominating, and which channels keep landing on the list. The
+    algorithm is the most-discussed force in the creator economy. This
+    page reads its public signal.
+  </p>
+  <p class="aw-kicker">
+    Refreshes every morning at 7am ET. Thirty days of rolling data. The
+    posting-time heatmap is the visual centerpiece — it's the chart that
+    tells you when to publish.
+  </p>
+  <div class="mono aw-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Last refresh</div><div class="value" id="aw-last-refresh">—</div></div>
+    <div><div class="label">Source</div><div class="value">YouTube Data API v3 · region=US</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — THE LEDE (computed editorial paragraph) -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>This week on Trending</span>
+  </div>
+  <div class="aw-lede-wrap">
+    <p class="aw-lede" id="aw-lede">Loading…</p>
+  </div>
+  <p class="aw-prose">
+    What you're reading above is computed, not written. The cron pulls
+    every morning, runs a handful of aggregations on the last seven
+    days of data, and picks one of four templates based on which
+    pattern is most newsworthy that week. A quiet week reads quiet. A
+    category swing or a concentration spike rewrites the lede.
+  </p>
+</section>
+
+<hr class="hair">
+
+<!-- § II — VIDEO LENGTH -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. 10.1</span>
+    <span>Video length distribution</span>
+  </div>
+  <p class="aw-note">
+    Histogram of trending video durations over the last 7 days. Below,
+    how the median has shifted across the 30-day window — the answer
+    to the "are short videos back?" question.
+  </p>
+
+  <div class="aw-charts-row">
+    <div class="aw-chart-wrap">
+      <div class="mono aw-chart-head">7-day duration histogram</div>
+      <svg id="aw-hist" viewBox="0 0 540 280" preserveAspectRatio="xMidYMid meet" aria-label="Duration histogram"></svg>
+    </div>
+    <div class="aw-chart-wrap">
+      <div class="mono aw-chart-head">30-day median trend</div>
+      <svg id="aw-trend" viewBox="0 0 540 280" preserveAspectRatio="xMidYMid meet" aria-label="Median duration over 30 days"></svg>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — POSTING HEATMAP (the centerpiece) -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ III · FIG. 10.2</span>
+    <span>When trending videos were posted</span>
+  </div>
+  <p class="aw-note">
+    Day of week × hour of day (ET). Heatmap color is how often that
+    slot shows up in trending across the 30-day window. The hot
+    diagonal stripes are when creator agencies tell their talent to
+    post.
+  </p>
+
+  <div class="aw-heatmap-wrap">
+    <svg id="aw-heatmap" viewBox="0 0 720 240" preserveAspectRatio="xMidYMid meet" aria-label="Posting time heatmap"></svg>
+    <div class="mono aw-heatmap-legend" id="aw-heatmap-legend"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV — CATEGORY MIX -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. 10.3</span>
+    <span>Category mix over time</span>
+  </div>
+  <p class="aw-note">
+    Stacked bars showing the category breakdown of each day's
+    Trending top 50, last 30 days. Sudden vertical bands tell you
+    when one category took over.
+  </p>
+
+  <div class="aw-chart-wrap aw-chart-wide">
+    <svg id="aw-stack" viewBox="0 0 1080 320" preserveAspectRatio="xMidYMid meet" aria-label="Category mix over 30 days"></svg>
+    <div class="mono aw-stack-legend" id="aw-stack-legend"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — CHANNEL CONCENTRATION -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ V · FIG. 10.4</span>
+    <span>Who keeps winning</span>
+  </div>
+  <p class="aw-note">
+    Channels that appeared on Trending most often in the last 30 days.
+    Concentration is a creator-economy bellwether — a few channels
+    dominating means the algorithm is rewarding consistency over
+    discovery.
+  </p>
+
+  <div class="aw-table-wrap">
+    <table class="aw-table mono">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th class="num">Appearances</th>
+          <th class="num">Total views (est.)</th>
+          <th class="num">Avg rank</th>
+          <th>Top category</th>
+        </tr>
+      </thead>
+      <tbody id="aw-channels-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — RECEIPTS -->
+<section class="aw-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Receipts</span>
+  </div>
+  <div class="aw-receipts" id="aw-receipts"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — METHODOLOGY -->
+<section class="aw-section aw-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Pipeline</div>
+      <p>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/watchdog_lab.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/watchdog_lab.py ↗</a>
+        runs every morning via
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/.github/workflows/refresh-watchdog.yml" target="_blank" rel="noopener" style="border-bottom:1px solid">GitHub Actions ↗</a>.
+        It calls the YouTube Data API for the top-50 US Trending videos,
+        appends a row, trims to the 30-day window, computes the lede
+        aggregations, and commits
+        <span class="mono">trending.json</span> back to the repo.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">The lede is computed</div>
+      <p>
+        Four templates: standard, quiet, category shift, concentration
+        spike. The cron picks the one whose threshold is tripped:
+        any category share Δ &gt; 12pp wins; otherwise concentration
+        spikes (top-3 channels &gt; 30% share); otherwise quiet (no
+        movement); otherwise standard. No LLM in the loop, just
+        deterministic rules over the data.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://developers.google.com/youtube/v3/docs/videos/list" target="_blank" rel="noopener" style="border-bottom:1px solid">YouTube Data API · videos.list ↗</a><br>
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/data/watchdog/trending.json" target="_blank" rel="noopener" style="border-bottom:1px solid">The raw 30-day dataset ↗</a><br>
+        <a href="https://docs.github.com/en/actions/automating-builds-and-tests/about-continuous-integration" target="_blank" rel="noopener" style="border-bottom:1px solid">GitHub Actions cron docs ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Honest caveats</div>
+      <p>
+        "Trending" is YouTube-curated, not pure algorithmic. It
+        filters for advertiser-friendliness and applies undisclosed
+        editorial weighting. The dashboard reflects what YouTube
+        <em>promotes</em>, not necessarily what gets the most views.
+        30 days is short for trend confidence; some patterns visible
+        here are weekly noise. Region=US only in v1. Shorts are on a
+        separate Trending tab and aren't included.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/time-use-lab/">← Prev: Time-Use Atlas (FIG. 09)</a>
+    <span>Lab 10 of 10</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn →</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/watchdog_lab.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=6"></script>
+<script src="/assets/js/watchdog-lab.js?v=1"></script>
+</body>
+</html>
