@@ -29,7 +29,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous"></script>
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="assets/css/main.css?v=17">
+  <link rel="stylesheet" href="assets/css/main.css?v=18">
 </head>
 <body>
 
@@ -184,66 +184,77 @@
       <div class="mono lab-fig">FIG. 01</div>
       <h3 class="serif lab-name">Churn Model</h3>
       <p class="lab-line">Finds the customers about to leave. Saves revenue already paid to acquire.</p>
+      <div class="mono lab-metric">3 models &middot; ROC overlaid &middot; disparate-impact audit</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/segmentation-lab/">
       <div class="mono lab-fig">FIG. 02</div>
       <h3 class="serif lab-name">Customer Segmentation</h3>
       <p class="lab-line">Sorts customers by value. Aims spend at the 21% who generate 64% of revenue.</p>
+      <div class="mono lab-metric">Drag the cost &middot; live recompute</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/reco-lab/">
       <div class="mono lab-fig">FIG. 03</div>
       <h3 class="serif lab-name">Recommendation Engine</h3>
       <p class="lab-line">Guesses what they'll watch next. Every basis point of watch-time is a subscription renewed.</p>
+      <div class="mono lab-metric">3 reco models &middot; same likes, three answers</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/ab-test-lab/">
       <div class="mono lab-fig">FIG. 04</div>
       <h3 class="serif lab-name">A/B Test Simulator</h3>
       <p class="lab-line">Shows when a "winning" version is real and when it's noise. Stops losing tests early.</p>
+      <div class="mono lab-metric">Bayesian + frequentist &middot; adjustable priors</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/funnel-sim-lab/">
       <div class="mono lab-fig">FIG. 05</div>
       <h3 class="serif lab-name">Funnel Simulation</h3>
       <p class="lab-line">Finds the one customer segment quietly killing conversion without breaking the rest.</p>
+      <div class="mono lab-metric">4 levers &middot; monte-carlo &middot; segment-aware</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/sketch-lab/">
       <div class="mono lab-fig">FIG. 06</div>
       <h3 class="serif lab-name">Sketch Recognition</h3>
       <p class="lab-line">Draw anything on the canvas. A small AI model running on your laptop guesses what it is, in real time.</p>
+      <div class="mono lab-metric">30 classes &middot; ~300KB ONNX &middot; runs in your browser</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/model-picker-lab/">
       <div class="mono lab-fig">FIG. 07</div>
       <h3 class="serif lab-name">Model Picker</h3>
       <p class="lab-line">Ask in plain language: "cheapest model good at code." Get a side-by-side comparison of the four AI models that fit.</p>
+      <div class="mono lab-metric">300+ models &middot; OpenRouter catalog &middot; refreshed weekly</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/jobs-lab/">
       <div class="mono lab-fig">FIG. 08</div>
       <h3 class="serif lab-name">AI &amp; Jobs</h3>
       <p class="lab-line">Type your job. See how exposed it is to AI and to robotics, and what the BLS projects through 2030. The two pressures hit opposite ends of the workforce.</p>
+      <div class="mono lab-metric">888 occupations &middot; 3 exposure measures &middot; BLS through 2030</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/time-use-lab/">
       <div class="mono lab-fig">FIG. 09</div>
       <h3 class="serif lab-name">Time-Use Atlas</h3>
       <p class="lab-line">How Americans actually spend 24 hours, drawn as a clock. Pick an age, an employment status, or a parenting situation. Watch the day redraw.</p>
+      <div class="mono lab-metric">23 cohorts &middot; 13 categories &middot; BLS ATUS 2019–2023</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/watchdog-lab/" data-wide>
       <div class="mono lab-fig">FIG. 10</div>
       <h3 class="serif lab-name">Algorithm Watchdog</h3>
       <p class="lab-line">A daily-refreshed read on what YouTube's algorithm is rewarding right now. Video length, posting times, category mix, channel concentration.</p>
+      <div class="mono lab-metric">30 days &middot; 50 videos/day &middot; daily 7am ET cron</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
     <a class="lab-card" href="/work/agi-forecast-lab/" data-wide>
       <div class="mono lab-fig">FIG. 11</div>
       <h3 class="serif lab-name">AGI Horizon</h3>
       <p class="lab-line">Two hundred fifty AGI predictions plotted on the year they were said and the year they targeted. The future has been "twenty years out" since 1965.</p>
+      <div class="mono lab-metric">250 predictions &middot; 140 figures &middot; 1950 → 2026</div>
       <div class="mono lab-arrow">Open the lab →</div>
     </a>
   </div>
@@ -274,6 +285,7 @@
       <div class="mono project-kicker">Security · API</div>
       <h3 class="serif project-title">RiskScore</h3>
       <p class="project-body">A vulnerability scoring service that ingests CVE feeds, weights them against deployment context, and emits a single explainable risk score per asset.</p>
+      <div class="mono project-receipts"><strong>Receipts</strong>Built solo &middot; NVD nightly ingest &middot; explainable per-asset score &middot; context-weighted</div>
       <div class="mono project-meta-line">FastAPI · PostgreSQL · CVE/NVD</div>
     </div>
     <div class="video-frame">
@@ -296,6 +308,7 @@
       <div class="mono project-kicker">OSINT · Globe</div>
       <h3 class="serif project-title">Glass Cipher</h3>
       <p class="project-body">An intelligence globe that plots open-source signals in real time. Sources are re-weighted by a small language model so clusters resolve into narratives, not noise.</p>
+      <div class="mono project-receipts"><strong>Receipts</strong>Live globe &middot; LLM-routed source weighting &middot; multi-source signal feeds &middot; clusters into narratives</div>
       <div class="mono project-meta-line">Three.js · Python · LLM routing</div>
     </div>
   </div>
@@ -306,6 +319,7 @@
       <div class="mono project-kicker">Game · Procedural</div>
       <h3 class="serif project-title">Minecraft Clone</h3>
       <p class="project-body">A voxel sandbox built from scratch — chunked world, procedural terrain, block place/break, day-night lighting. Claude Code wrote the engine loop; Python and noise functions shape every biome.</p>
+      <div class="mono project-receipts"><strong>Receipts</strong>Infinite chunked world &middot; procedural biomes &middot; block place/break &middot; day-night lighting</div>
       <div class="mono project-meta-line">Claude Code · Python · Procedural Generation</div>
     </div>
     <div class="video-frame">
@@ -325,6 +339,7 @@
       <div class="mono project-kicker">Personal · Agentic</div>
       <h4 class="serif project-medium-title">Claude Second Brain</h4>
       <p class="project-medium-body">A note graph where Claude backfills links, summaries and open questions. Runs locally against a vault.</p>
+      <div class="mono project-receipts"><strong>Receipts</strong>Runs locally &middot; vault-agnostic &middot; backfills links + summaries</div>
       <div class="mono project-medium-meta">Claude Code · Markdown</div>
     </div>
     <div class="project-medium-card" data-shape="stack">
@@ -334,6 +349,7 @@
       <div class="mono project-kicker">Hardware · Dashboard</div>
       <h4 class="serif project-medium-title">Open Claw Mission Control</h4>
       <p class="project-medium-body">A control surface for a DIY claw machine. Live camera, queueing, telemetry and a leaderboard.</p>
+      <div class="mono project-receipts"><strong>Receipts</strong>Live camera + queue &middot; web telemetry &middot; physical leaderboard</div>
       <div class="mono project-medium-meta">Linux · VPS · Python · JavaScript</div>
     </div>
   </div>

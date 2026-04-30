@@ -610,11 +610,44 @@ main { position: relative; z-index: 1; }
   flex: 1;
 }
 .lab-card:hover .lab-line { color: var(--paper); opacity: 0.85; }
+/* Receipts strip on each lab card — small mono row, real numbers only */
+.lab-metric {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--ink-dim);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.lab-card:hover .lab-metric { color: var(--paper-2); opacity: 0.7; border-top-color: var(--paper-2); }
 .lab-arrow {
   margin-top: 16px;
   font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--ink-soft);
 }
+/* Receipts row on project cards — mono separator-delimited line */
+.project-receipts {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.project-receipts strong {
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+.project-medium-card .project-receipts { margin-top: 10px; font-size: 10px; }
 @media (max-width: 1100px) {
   .labs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* Reset desktop rules; redraw for 2-col layout */
