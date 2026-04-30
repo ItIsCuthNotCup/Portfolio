@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=17">
-  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=2">
+  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=3">
 </head>
 <body>
 
@@ -190,8 +190,12 @@
   </div>
 
   <!-- Side panel for click -->
-  <aside class="af-side-panel" id="af-side-panel" data-open="false" aria-label="Prediction detail">
-    <button type="button" class="af-side-close" id="af-side-close" aria-label="Close">&times;</button>
+  <div class="af-side-backdrop" id="af-side-backdrop" data-open="false" aria-hidden="true"></div>
+  <aside class="af-side-panel" id="af-side-panel" data-open="false" aria-label="Prediction detail" role="dialog">
+    <button type="button" class="af-side-close" id="af-side-close" aria-label="Close panel">
+      <span aria-hidden="true">&times;</span>
+      <span class="af-side-close-label">Close</span>
+    </button>
     <div class="af-side-content" id="af-side-content"></div>
   </aside>
 </section>
@@ -449,7 +453,7 @@
 
   <div class="method-ctas">
     <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
-    <a href="/assets/data/agi-forecast/predictions-v4.json" target="_blank" rel="noopener" class="btn-outline">View JSON &#8599;</a>
+    <a href="/assets/data/agi-forecast/predictions-v5.json" target="_blank" rel="noopener" class="btn-outline">View JSON &#8599;</a>
     <a href="#" id="af-csv-btn" class="btn-outline">Download CSV</a>
   </div>
 </section>
@@ -472,6 +476,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/agi-forecast-lab.js?v=2"></script>
+<script src="/assets/js/agi-forecast-lab.js?v=3"></script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 /* ═══════════════════════════════════════════════════════════
    AGI FORECAST LAB (FIG. 11) — vanilla SVG, no library.
-   Renders eight figures off /assets/data/agi-forecast/predictions-v4.json.
+   Renders eight figures off /assets/data/agi-forecast/predictions-v5.json.
    ═══════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  const DATA_URL = '/assets/data/agi-forecast/predictions-v4.json?v=1';
+  const DATA_URL = '/assets/data/agi-forecast/predictions-v5.json?v=1';
 
   /* Camp → CSS class (for color) */
   const CAMP_CLASS = {
@@ -421,9 +421,13 @@
     `;
     // Fix #6 — data-open lets the CSS transform animate properly
     panel.dataset.open = 'true';
+    const backdrop = document.getElementById('af-side-backdrop');
+    if (backdrop) backdrop.dataset.open = 'true';
   }
   function closeSidePanel() {
     document.getElementById('af-side-panel').dataset.open = 'false';
+    const backdrop = document.getElementById('af-side-backdrop');
+    if (backdrop) backdrop.dataset.open = 'false';
   }
 
   /* ── Playhead animation ────────────────────────────────── */
@@ -1122,7 +1126,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'agi-predictions-v4.csv';
+    a.download = 'agi-predictions-v5.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
