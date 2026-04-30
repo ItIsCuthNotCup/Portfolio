@@ -690,3 +690,109 @@ input#af-year-input::-moz-range-thumb {
     transition: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   FIG. 11.9 — Potential outcomes (iceberg)
+   ═══════════════════════════════════════════════════════════ */
+
+/* JS hook only — the visual frame comes from .af-section. */
+.fig-canvas {
+  position: relative;
+  margin: 0;
+  padding: 8px 0 0;
+}
+.fig-canvas svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+.ice-line       { fill: none; stroke: var(--ink); stroke-width: 1.4;
+                  stroke-linejoin: round; stroke-linecap: round; }
+.ice-fill       { fill: rgba(20,18,15,.05); stroke: none; }
+.ice-fill-deep  { fill: rgba(20,18,15,.08); stroke: none; }
+.waterline      { stroke: var(--ink); stroke-width: 0.7;
+                  stroke-dasharray: 2 4; opacity: .6; }
+.waterline-tag {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px; line-height: 1;
+  letter-spacing: .2em; text-transform: uppercase;
+  fill: var(--ink-dim);
+}
+
+.outcome { cursor: pointer; }
+.outcome .lead { fill: none; stroke: var(--ink); stroke-width: 0.7; opacity: .55; }
+.outcome .dot {
+  r: 2.6; fill: var(--ink);
+  stroke: var(--paper); stroke-width: 1.2;
+  transition: r .15s ease;
+}
+.outcome .lbl {
+  font-family: 'Figtree', system-ui, -apple-system, sans-serif;
+  font-size: 12.5px; line-height: 1.2;
+  fill: var(--ink); letter-spacing: .005em;
+}
+.outcome .lbl.r { text-anchor: start; }
+.outcome .lbl.l { text-anchor: end; }
+.outcome:hover .dot,
+.outcome.is-active .dot { r: 4.5; }
+.outcome:hover .lead,
+.outcome.is-active .lead { opacity: 1; stroke-width: 1; }
+.outcome:hover .lbl,
+.outcome.is-active .lbl { font-weight: 600; }
+.outcome:focus-visible .dot { r: 5; }
+
+.ic-tip {
+  position: absolute;
+  width: min(340px, 86vw);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(20,18,15,.10);
+  padding: 18px 44px 18px 20px;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease;
+}
+.ic-tip.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ic-tip .tt-tier {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10.5px; line-height: 1;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 8px;
+}
+.ic-tip .tt-name {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500; font-size: 22px; line-height: 1.2;
+  margin: 0 0 10px; color: var(--ink);
+}
+.ic-tip .tt-desc {
+  font-family: 'Figtree', system-ui, -apple-system, sans-serif;
+  font-size: 14px; line-height: 1.55;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.ic-tip .tt-foot {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px; line-height: 1.4;
+  color: var(--ink-dim);
+  margin: 0;
+}
+.ic-tip .tt-close {
+  position: absolute; top: 8px; right: 8px;
+  width: 28px; height: 28px; padding: 0;
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--ink); opacity: .55;
+  display: grid; place-items: center;
+  border-radius: 2px;
+}
+.ic-tip .tt-close:hover,
+.ic-tip .tt-close:focus-visible { opacity: 1; outline: 1px solid var(--ink); }
+.ic-tip .tt-close svg { display: block; }
+
+@media (max-width: 640px) {
+  .outcome .lbl { font-size: 11px; }
+  .ic-tip { padding: 16px 40px 16px 16px; }
+}

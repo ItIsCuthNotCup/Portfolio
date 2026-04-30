@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=18">
-  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=3">
+  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=4">
 </head>
 <body>
 
@@ -394,10 +394,142 @@
 
 <hr class="hair">
 
-<!-- § XI — METHODOLOGY -->
+<!-- § XI · FIG. 11.9 — POTENTIAL OUTCOMES (iceberg) -->
+<section class="af-section fig" aria-labelledby="ic-h">
+  <div class="mono section-label">
+    <span class="idx">&sect; XI &middot; FIG. 11.9</span>
+    <span id="ic-h">Potential outcomes</span>
+  </div>
+  <div class="af-prose">
+    <p>
+      Forecasts answer <em>when</em>. They don't answer <em>what</em>. The
+      most-discussed AI futures are the surface ones, utopia and extinction,
+      but the probability mass sits below the waterline, in scenarios where
+      humans don't get conquered so much as <em>made redundant</em>.
+    </p>
+  </div>
+  <p class="af-note">Click a label to read the scenario. Press Esc or the &times; to close.</p>
+
+  <figure class="fig-canvas">
+    <svg viewBox="0 0 900 780" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Iceberg of AI futures">
+      <path class="ice-fill"
+        d="M 400 80 L 472 95 L 512 150 L 540 200 L 318 200 L 348 165 L 378 112 Z"/>
+      <path class="ice-fill-deep"
+        d="M 318 200 L 540 200 L 595 248 L 638 320 L 660 408 L 632 498 L 596 568
+           L 548 632 L 488 678 L 418 700 L 358 692 L 304 658 L 268 596
+           L 238 520 L 212 432 L 198 348 L 212 268 L 258 224 Z"/>
+
+      <line class="waterline" x1="40"  y1="200" x2="860" y2="200"/>
+      <text class="waterline-tag" x="40"  y="192">Waterline</text>
+      <text class="waterline-tag" x="860" y="192" text-anchor="end">Public discourse</text>
+
+      <path class="ice-line" d="M 400 80 L 472 95 L 512 150 L 540 200"/>
+      <path class="ice-line" d="M 318 200 L 348 165 L 378 112 L 400 80"/>
+      <path class="ice-line"
+        d="M 318 200 L 258 224 L 212 268 L 198 348 L 212 432
+           L 238 520 L 268 596 L 304 658 L 358 692 L 418 700
+           L 488 678 L 548 632 L 596 568 L 632 498 L 660 408
+           L 638 320 L 595 248 L 540 200"/>
+      <path class="ice-line" style="opacity:.35" d="M 360 200 L 372 132"/>
+      <path class="ice-line" style="opacity:.25" d="M 290 270 L 330 360 L 305 470 L 350 580"/>
+      <path class="ice-line" style="opacity:.25" d="M 560 240 L 590 340 L 580 460 L 540 560"/>
+
+      <g class="outcome" tabindex="0" data-key="egalitarian">
+        <polyline class="lead" points="175,128 248,128 412,118"/>
+        <circle class="dot" cx="412" cy="118"/>
+        <text class="lbl l" x="170" y="132">Egalitarian Utopia</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="benevolent">
+        <polyline class="lead" points="175,238 246,238 318,228"/>
+        <circle class="dot" cx="318" cy="228"/>
+        <text class="lbl l" x="170" y="242">Benevolent Dictator</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="protector">
+        <polyline class="lead" points="175,302 268,302 372,290"/>
+        <circle class="dot" cx="372" cy="290"/>
+        <text class="lbl l" x="170" y="306">Protector God</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="enslaved">
+        <polyline class="lead" points="175,388 220,388 252,388"/>
+        <circle class="dot" cx="252" cy="388"/>
+        <text class="lbl l" x="170" y="392">Enslaved God</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="zookeeper">
+        <polyline class="lead" points="175,488 240,488 282,510"/>
+        <circle class="dot" cx="282" cy="510"/>
+        <text class="lbl l" x="170" y="492">Zookeeper</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="gradual">
+        <polyline class="lead" points="175,576 282,576 360,612"/>
+        <circle class="dot" cx="360" cy="612"/>
+        <text class="lbl l" x="170" y="580">Gradual Disempowerment</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="self-destruction">
+        <polyline class="lead" points="175,684 312,684 408,696"/>
+        <circle class="dot" cx="408" cy="696"/>
+        <text class="lbl l" x="170" y="688">Self-Destruction</text>
+      </g>
+
+      <g class="outcome" tabindex="0" data-key="libertarian">
+        <polyline class="lead" points="725,92 632,92 478,108"/>
+        <circle class="dot" cx="478" cy="108"/>
+        <text class="lbl r" x="730" y="96">Libertarian Utopia</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="reversion">
+        <polyline class="lead" points="725,228 612,228 528,212"/>
+        <circle class="dot" cx="528" cy="212"/>
+        <text class="lbl r" x="730" y="232">Reversion</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="gatekeeper">
+        <polyline class="lead" points="725,318 660,318 612,300"/>
+        <circle class="dot" cx="612" cy="300"/>
+        <text class="lbl r" x="730" y="322">Gatekeeper</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="descendants">
+        <polyline class="lead" points="725,408 678,408 656,408"/>
+        <circle class="dot" cx="656" cy="408"/>
+        <text class="lbl r" x="730" y="412">Descendants</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="1984">
+        <polyline class="lead" points="725,514 642,514 612,498"/>
+        <circle class="dot" cx="612" cy="498"/>
+        <text class="lbl r" x="730" y="518">1984</text>
+      </g>
+      <g class="outcome" tabindex="0" data-key="conquerors">
+        <polyline class="lead" points="725,612 580,612 528,634"/>
+        <circle class="dot" cx="528" cy="634"/>
+        <text class="lbl r" x="730" y="616">Conquerors</text>
+      </g>
+    </svg>
+
+    <div class="ic-tip" id="icTip" role="dialog" aria-modal="false" aria-labelledby="ttName">
+      <button class="tt-close" type="button" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <line x1="2" y1="2" x2="12" y2="12"/>
+          <line x1="12" y1="2" x2="2" y2="12"/>
+        </svg>
+      </button>
+      <p class="tt-tier"></p>
+      <h3 class="tt-name" id="ttName"></h3>
+      <p class="tt-desc"></p>
+      <p class="tt-foot"></p>
+    </div>
+  </figure>
+
+  <p class="af-note" style="margin-top:24px;">
+    Tegmark, <em>Life 3.0</em> (2017), Ch. 5; Kulveit et al.,
+    "Gradual Disempowerment," arXiv:2501.16946 (2025). Tegmark deliberately
+    does not assign probabilities to these scenarios. They are structural
+    possibilities, not forecasts.
+  </p>
+</section>
+
+<hr class="hair">
+
+<!-- § XII — METHODOLOGY -->
 <section class="af-section af-colophon-section">
   <div class="mono section-label">
-    <span class="idx">&sect; XI</span>
+    <span class="idx">&sect; XII</span>
     <span>Methodology &amp; Colophon</span>
   </div>
 
@@ -477,6 +609,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/agi-forecast-lab.js?v=3"></script>
+<script src="/assets/js/agi-forecast-lab.js?v=4"></script>
 </body>
 </html>

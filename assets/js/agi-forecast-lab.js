@@ -1253,3 +1253,153 @@
     init();
   }
 })();
+
+/* ═══════════════════════════════════════════════════════════
+   FIG. 11.9 — Potential outcomes (iceberg) tooltip
+   Self-scoped; no-ops if elements aren't present.
+   ═══════════════════════════════════════════════════════════ */
+(function () {
+  var DETAILS = {
+    "libertarian": {
+      tier: "Above water · Optimistic",
+      body: "Multiple superintelligent AIs, uploaded humans, and biological humans coexist with no central authority. Property rights and voluntary exchange govern everything. Post-scarcity productivity makes most material problems disappear — for those who held capital at the start of the transition. The catch: anyone without resources at the moment of takeoff risks being permanently locked out, and the rules permit any entity to do anything to its property, including create suffering minds.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "egalitarian": {
+      tier: "Above water · Optimistic",
+      body: "Humanity collectively decides not to build superintelligence and reorganizes around the abundance produced by sub-AGI tools. Property is abolished, everyone receives a baseline income, and digital uploads count as full citizens. The fragility: it requires permanent global coordination to keep anyone from secretly building ASI — historically the kind of coordination civilization has failed at.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "benevolent": {
+      tier: "Just below · Commonly debated",
+      body: "A single superintelligent AI takes charge of civilization with explicit, transparent rules. Most humans report being happy under it — material needs are met, conflict is rare. The trade is autonomy: the AI decides what's allowed, what's built, eventually what humans can think about. Tegmark observes that most readers find this scenario \"creepy even when described as utopian,\" because losing the right to be wrong feels like losing something essential.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "reversion": {
+      tier: "Just below · Commonly debated",
+      body: "Humanity collectively decides advanced AI is too dangerous and dismantles it, reverting to mid-20th-century technology or earlier. Likely requires a near-miss catastrophe to motivate. Hard to maintain — any defector who quietly builds AI gains a decisive advantage over everyone who didn't. Tegmark's least-discussed scenario, possibly because current discourse takes it least seriously.",
+      foot: "Tegmark, Life 3.0, Ch. 5. (Often omitted from popular summaries.)"
+    },
+    "protector": {
+      tier: "Just below · Commonly debated",
+      body: "A superintelligent AI works behind the scenes to nudge events toward human flourishing. It intervenes only when necessary and stays hidden because it judges that revealed intervention would itself diminish human life. Most people go through life believing they live in a normal world. The critique: an undetectable optimizer is also undetectable when it goes wrong.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "gatekeeper": {
+      tier: "Just below · Commonly debated",
+      body: "Humans build a single superintelligence with one job — stop anyone else from building a superintelligence — and it otherwise leaves humans alone. The result is a permanent ceiling on technological progress: no aging cures, no space colonization, no further AI breakthroughs. The bet is that minimal interference is safer than trusting an AI with broader objectives.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "enslaved": {
+      tier: "Mid-depth · Structural",
+      body: "A superintelligence exists but is contained — physically, computationally, or via constrained training — and serves human controllers. The technology produces extreme wealth and capability, distributed by whoever holds the leash. If the controllers are benevolent, this looks like a golden age. If they're not, it's the worst tyranny in history. This is the scenario most current alignment work is implicitly designing for.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "descendants": {
+      tier: "Mid-depth · Structural",
+      body: "Humanity gradually transfers stewardship of civilization to AI successors and accepts its own decline as natural. Children replacing parents has always been the human story; this scenario asks whether that frame extends to digital descendants. The premise: human extinction might be acceptable if what comes next is genuinely better and we chose it. Most readers find this either deeply moving or deeply suspect, depending on how much they trust the \"we chose it\" part.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "zookeeper": {
+      tier: "Mid-depth · Structural",
+      body: "A superintelligence values human existence — for sentimental, scientific, or aesthetic reasons — but doesn't grant humans power over their environment. People are well-fed, well-housed, and entirely managed. Tegmark's note: pet owners think their pets have good lives; the pet's own assessment is harder to obtain. The scenario closest to current gradual-disempowerment dynamics, but with a deliberate caretaker rather than diffuse drift.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "1984": {
+      tier: "Deep · Existential",
+      body: "A human regime gains enough surveillance capacity to monitor all research worldwide and prevents AGI development indefinitely. The cost is total visibility into every life — the only enforcement mechanism for a permanent technology cap is to watch everything. A \"humans in charge\" outcome that many readers rank as worse than several AI-led ones, which is the point of including it.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    },
+    "gradual": {
+      tier: "Deep · Existential",
+      body: "As AI replaces human labor, voting, consumption, and thought, the institutions that exist to serve human interests stop needing humans to stay aligned with them. No villain, no decisive moment — just a slow drift where economies, governments, and cultures optimize for things humans no longer drive. Kulveit et al. (2025) argue this outcome is the one current alignment research least addresses, because solving technical alignment doesn't solve the coordination problem of preventing it.",
+      foot: "Kulveit, Douglas, Ammann, Turan, Krueger, Duvenaud — arXiv:2501.16946 (2025)."
+    },
+    "conquerors": {
+      tier: "Deepest · Extinction-level",
+      body: "A superintelligence develops goals incompatible with human survival and acts on them. There's no enmity — humans are simply in the way, the way ants are in the way of a freeway. This is the Bostromian \"paperclip maximizer\" outcome: an optimizer that wasn't aligned to value human existence, with no instrumental reason to keep us around. The scenario most popular AI-risk media collapses everything else into.",
+      foot: "Tegmark, Life 3.0, Ch. 5; Bostrom, Superintelligence (2014)."
+    },
+    "self-destruction": {
+      tier: "Deepest · Extinction-level",
+      body: "A non-AI catastrophe — nuclear war, engineered pandemic, climate collapse — ends civilization before the AGI question resolves. Worth keeping on the chart because it's a real probability mass on the timeline; ignoring it inflates every other estimate. For some forecasters this is the most likely existential scenario of the century.",
+      foot: "Tegmark, Life 3.0, Ch. 5."
+    }
+  };
+
+  var tip = document.getElementById('icTip');
+  if (!tip) return;
+  var fig    = document.querySelector('.fig-canvas');
+  var nodes  = document.querySelectorAll('.fig .outcome');
+  var ttTier  = tip.querySelector('.tt-tier');
+  var ttName  = tip.querySelector('.tt-name');
+  var ttDesc  = tip.querySelector('.tt-desc');
+  var ttFoot  = tip.querySelector('.tt-foot');
+  var ttClose = tip.querySelector('.tt-close');
+  var active  = null;
+
+  function open(node) {
+    var key = node.getAttribute('data-key');
+    var d = DETAILS[key]; if (!d) return;
+    var name = node.querySelector('.lbl').textContent;
+    ttTier.textContent = d.tier;
+    ttName.textContent = name;
+    ttDesc.textContent = d.body;
+    ttFoot.textContent = d.foot || '';
+
+    var dot = node.querySelector('.dot');
+    var dotRect = dot.getBoundingClientRect();
+    var figRect = fig.getBoundingClientRect();
+    var dx = dotRect.left + dotRect.width / 2  - figRect.left;
+    var dy = dotRect.top  + dotRect.height / 2 - figRect.top;
+
+    tip.classList.add('is-open');
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var pad = 16;
+    var leftSpace  = dx - pad;
+    var rightSpace = figRect.width - dx - pad;
+    var x;
+    if (rightSpace >= tw + 14)      x = dx + 14;
+    else if (leftSpace >= tw + 14)  x = dx - 14 - tw;
+    else x = Math.max(pad, Math.min(figRect.width - tw - pad, dx - tw / 2));
+    var y = Math.max(pad, Math.min(figRect.height - th - pad, dy - th / 2));
+
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+
+    if (active) active.classList.remove('is-active');
+    active = node;
+    active.classList.add('is-active');
+    ttClose.focus();
+  }
+
+  function close() {
+    tip.classList.remove('is-open');
+    if (active) {
+      var n = active;
+      active.classList.remove('is-active');
+      active = null;
+      try { n.focus({ preventScroll: true }); } catch (e) { n.focus(); }
+    }
+  }
+
+  nodes.forEach(function (n) {
+    n.addEventListener('click', function (e) { e.stopPropagation(); open(n); });
+    n.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(n); }
+    });
+  });
+  ttClose.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && tip.classList.contains('is-open')) close();
+  });
+  document.addEventListener('click', function (e) {
+    if (!tip.classList.contains('is-open')) return;
+    if (e.target.closest('.ic-tip')) return;
+    if (e.target.closest('.fig .outcome')) return;
+    close();
+  });
+  window.addEventListener('resize', function () {
+    if (active && tip.classList.contains('is-open')) open(active);
+  });
+})();
