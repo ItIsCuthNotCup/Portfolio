@@ -37,9 +37,11 @@ const ALLOWED_ORIGINS = new Set([
 function isAllowedOrigin(origin) {
   if (!origin) return true;
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  // Cloudflare Pages preview deployments (covers both
-  // <hash>.pages.dev and <hash>.<project>.pages.dev forms).
-  if (/^https:\/\/[a-z0-9.-]+\.pages\.dev$/.test(origin)) return true;
+  // Cloudflare Pages preview deployments for THIS project only.
+  // Forms: <project>.pages.dev, <branch>.<project>.pages.dev,
+  // <hash>.<project>.pages.dev. Locked to the jakecuth project so a
+  // foreign Pages site can't call the API from a browser.
+  if (/^https:\/\/(?:[a-z0-9-]+\.)?jakecuth\.pages\.dev$/.test(origin)) return true;
   return false;
 }
 
@@ -57,27 +59,34 @@ const ONTOPIC_PATTERNS = [
 // ─────────────────────────────────────────────────────────────
 export async function onRequest(context) {
   const { request, env } = context;
+  const reqOrigin = request.headers.get('Origin');
 
   // CORS / method gate
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: corsHeaders(),
+      headers: corsHeaders(reqOrigin),
     });
   }
   if (request.method !== 'POST') {
-    return jsonResponse({ ok: false, error: 'POST only' }, 405);
+    return jsonResponse({ ok: false, error: 'POST only' }, 405, reqOrigin);
   }
 
   // Origin gate. Reject browser calls from foreign origins.
-  const reqOrigin = request.headers.get('Origin');
   if (!isAllowedOrigin(reqOrigin)) {
-    return jsonResponse({ ok: false, error: 'Origin not allowed.' }, 403);
+    return jsonResponse({ ok: false, error: 'Origin not allowed.' }, 403, reqOrigin);
   }
 
   try {
     if (!env.OPENROUTER_API_KEY) {
-      return okFalse('Server is missing the OPENROUTER_API_KEY secret. Set it in the Cloudflare Pages dashboard under Settings → Variables and Secrets.');
+      return okFalse('Server is missing the OPENROUTER_API_KEY secret. Set it in the Cloudflare Pages dashboard under Settings → Variables and Secrets.', reqOrigin);
+    }
+    // Fail closed when KV isn't bound. Without KV the rate limit and
+    // daily spend cap are no-ops, which would expose the OpenRouter
+    // key to unmetered abuse. Rather than silently disable the
+    // controls, refuse to serve.
+    if (!env.MODEL_PICKER_KV) {
+      return okFalse('Model picker is offline in this environment (KV namespace not bound). The production site has KV configured; preview deploys need MODEL_PICKER_KV bound under Settings → Functions → KV namespace bindings to enable the picker.', reqOrigin);
     }
 
     // Parse body
@@ -85,30 +94,30 @@ export async function onRequest(context) {
     try {
       body = await request.json();
     } catch {
-      return jsonResponse({ ok: false, error: 'Body must be JSON.' }, 400);
+      return jsonResponse({ ok: false, error: 'Body must be JSON.' }, 400, reqOrigin);
     }
 
     const query = (body && typeof body.query === 'string') ? body.query.trim() : '';
     if (!query) {
-      return jsonResponse({ ok: false, error: 'Missing "query" string.' }, 400);
+      return jsonResponse({ ok: false, error: 'Missing "query" string.' }, 400, reqOrigin);
     }
     if (query.length > MAX_INPUT_CHARS) {
-      return jsonResponse({ ok: false, error: `Query exceeds ${MAX_INPUT_CHARS}-character limit.` }, 400);
+      return jsonResponse({ ok: false, error: `Query exceeds ${MAX_INPUT_CHARS}-character limit.` }, 400, reqOrigin);
     }
 
     // Topic guard
     const onTopic = ONTOPIC_PATTERNS.some(rx => rx.test(query));
     if (!onTopic) {
-      return okFalse("This picker only answers questions about choosing an LLM. Try one of the suggested questions or rephrase yours to mention models, tokens, context, pricing, or capabilities.");
+      return okFalse("This picker only answers questions about choosing an LLM. Try one of the suggested questions or rephrase yours to mention models, tokens, context, pricing, or capabilities.", reqOrigin);
     }
 
-    // Rate limit + spend cap (KV-backed if available, else in-memory pass)
+    // Rate limit + spend cap (KV-backed)
     const ipHash = await hashIp(request);
     const rateMsg = await checkAndBumpRate(env, ipHash);
-    if (rateMsg) return okFalse(rateMsg);
+    if (rateMsg) return okFalse(rateMsg, reqOrigin);
 
     const spendMsg = await checkAndBumpSpend(env);
-    if (spendMsg) return okFalse(spendMsg);
+    if (spendMsg) return okFalse(spendMsg, reqOrigin);
 
     // Cache check (24h)
     const cacheKey = await sha256Hex(`mp:${normalizeQuery(query)}`);
@@ -119,13 +128,13 @@ export async function onRequest(context) {
         cached: true,
         ...cached,
         trace: `cache hit · ${cached.candidates?.length || 0} candidates · ${GEN_MODEL}`,
-      });
+      }, 200, reqOrigin);
     }
 
     // Load catalog
     const catalog = await loadCatalog(context);
     if (!catalog || !Array.isArray(catalog.chunks) || catalog.chunks.length === 0) {
-      return okFalse('Model catalog is empty. The indexing notebook has not run yet — see /work/model-picker-lab/README.md.');
+      return okFalse('Model catalog is empty. The indexing notebook has not run yet — see /work/model-picker-lab/README.md.', reqOrigin);
     }
 
     // Hard-constraint extraction (regex)
@@ -259,7 +268,7 @@ export async function onRequest(context) {
     return new Response(stream, {
       status: 200,
       headers: {
-        ...corsHeaders(),
+        ...corsHeaders(reqOrigin),
         'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         'X-Accel-Buffering': 'no',
@@ -267,7 +276,7 @@ export async function onRequest(context) {
     });
   } catch (err) {
     // CLAUDE.md hard rule #4: never 5xx.
-    return okFalse(err?.message || 'Unexpected runtime error.');
+    return okFalse(err?.message || 'Unexpected runtime error.', reqOrigin);
   }
 }
 
@@ -531,21 +540,27 @@ async function writeCache(env, key, value) {
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
+function corsHeaders(reqOrigin) {
+  const h = {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
   };
+  // Echo only an allowed Origin. Server-to-server callers (no Origin
+  // header) get no ACAO; that's fine, CORS only applies to browsers.
+  if (reqOrigin && isAllowedOrigin(reqOrigin)) {
+    h['Access-Control-Allow-Origin'] = reqOrigin;
+  }
+  return h;
 }
-function jsonResponse(obj, status = 200) {
+function jsonResponse(obj, status = 200, reqOrigin = null) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { ...corsHeaders(), 'Content-Type': 'application/json; charset=utf-8' },
+    headers: { ...corsHeaders(reqOrigin), 'Content-Type': 'application/json; charset=utf-8' },
   });
 }
-function okFalse(error) {
-  return jsonResponse({ ok: false, error }, 200);
+function okFalse(error, reqOrigin = null) {
+  return jsonResponse({ ok: false, error }, 200, reqOrigin);
 }
 function openrouterHeaders(env) {
   return {
