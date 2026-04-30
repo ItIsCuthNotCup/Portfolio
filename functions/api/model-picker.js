@@ -24,6 +24,9 @@ const DAILY_SPEND_CAP_USD = 2.00;
 // Approx per-call cost for the spend cap. Conservative upper bound:
 // ~700 input tokens + 400 output tokens against gemini-2.0-flash
 // pricing (~$0.10/$0.40 per M).
+// Pricing last verified: 2026-04-30. If OpenRouter changes Gemini
+// 2.0 Flash pricing, recompute and bump this constant — drift here
+// makes the daily spend cap inaccurate.
 const ESTIMATED_COST_PER_CALL_USD = 0.0003;
 
 // Browser origin allowlist. Server-side calls (no Origin header) are
