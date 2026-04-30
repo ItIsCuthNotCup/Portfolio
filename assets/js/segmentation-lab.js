@@ -66,7 +66,7 @@
     renderMeta(d);
     renderProfile(d.data_profile);
     renderMethodTable(d.metrics);
-    renderKSelection(d.k_selection, d.metrics);
+    renderKSelection(d.k_selection, d.metrics, d.methodology);
     renderMap(d.embedding);
     renderClassifier(d.classify, d.segments, d.embedding);
     renderSegmentCards(d.segments);
@@ -191,12 +191,17 @@
   }
 
   // ── § IV k-selection — two line charts ──────────────────────
-  function renderKSelection(kSel, metrics) {
-    drawKSilhouette(kSel, metrics);
+  function renderKSelection(kSel, metrics, methodology) {
+    const degenerateK = (methodology && Array.isArray(methodology.degenerate_k))
+      ? methodology.degenerate_k
+      : [];
+    drawKSilhouette(kSel, metrics, degenerateK);
     drawKInertia(kSel, metrics);
   }
 
-  function drawKSilhouette(kSel, metrics) {
+  function drawKSilhouette(kSel, metrics, degenerateK) {
+    degenerateK = degenerateK || [];
+    const isDegenerate = (k) => degenerateK.indexOf(k) !== -1;
     const svg = document.getElementById('k-silhouette');
     svg.innerHTML = '';
     const W = 600, H = 420;
@@ -246,17 +251,45 @@
     yLab.textContent = 'Silhouette';
     svg.appendChild(yLab);
 
+    // Vertical band shading + 'degenerate' label for k values excluded
+    // from "best k" selection (e.g. k=2 wins on RFM data because of the
+    // bimodal Pareto split, but two clusters is operationally useless).
+    if (degenerateK.length) {
+      degenerateK.forEach(dk => {
+        const cx = sx(dk);
+        // Subtle vertical band centered on the degenerate k
+        const halfBand = Math.max(8, (innerW / Math.max(1, kMax - kMin)) * 0.42);
+        svg.appendChild(ns('rect', {
+          x: cx - halfBand, y: P.t,
+          width: halfBand * 2, height: innerH,
+          fill: 'var(--ink)', 'fill-opacity': '0.045',
+        }));
+        // Inline label so the chart doesn't need a separate caption
+        const lbl = ns('text', {
+          class: 'tick-label',
+          x: cx, y: P.t + 14,
+          'text-anchor': 'middle',
+          fill: 'var(--ink)', 'fill-opacity': '0.55',
+          style: 'font-size:9px;letter-spacing:0.08em;',
+        });
+        lbl.textContent = '(degenerate)';
+        svg.appendChild(lbl);
+      });
+    }
+
     // Lines
     series.forEach(s => {
       const path = s.rows.map((r, i) =>
         (i === 0 ? 'M' : 'L') + sx(r.k).toFixed(1) + ',' + sy(r.silhouette).toFixed(1)
       ).join(' ');
       svg.appendChild(ns('path', { class: 'series ' + s.cls, d: path }));
-      // Dots
+      // Dots — muted at degenerate k so the visual leader doesn't read as winner
       s.rows.forEach(r => {
+        const muted = isDegenerate(r.k);
         svg.appendChild(ns('circle', {
           cx: sx(r.k), cy: sy(r.silhouette), r: 2.5,
           fill: COLOR_VARS[s.cls.replace('series-', '')] || 'var(--ink)',
+          'fill-opacity': muted ? '0.35' : '1',
         }));
       });
     });

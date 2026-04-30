@@ -196,7 +196,10 @@
   </div>
   <p class="seg-note">
     Left: silhouette score vs k — higher is tighter clusters. Accent dot marks
-    the chosen operational k. Right: K-Means inertia elbow — diminishing returns
+    the chosen operational k. The k=2 column is shaded and labeled
+    <em class="mono">(degenerate)</em>: it wins on score because RFM data has
+    a strong bimodal Pareto split, but two clusters is operationally useless
+    for targeted outreach. Right: K-Means inertia elbow — diminishing returns
     after the operational k.
   </p>
   <div class="k-grid">
@@ -478,6 +481,6 @@
 <!-- Shared behaviors (dateline, cursor, theme, progress bar, smooth scroll) -->
 <script src="/assets/js/main.js?v=6"></script>
 <!-- Page logic -->
-<script src="/assets/js/segmentation-lab.js?v=1"></script>
+<script src="/assets/js/segmentation-lab.js?v=2"></script>
 </body>
 </html>

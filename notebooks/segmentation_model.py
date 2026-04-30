@@ -444,6 +444,12 @@ methodology = {
         "gmm": [min(KS_GMM), max(KS_GMM)],
         "agglomerative": [min(KS_AGG), max(KS_AGG)],
     },
+    # k values that are excluded from the "best k" selection because they
+    # are statistically valid but operationally useless. The silhouette
+    # chart in the lab page mutes these dots and labels them "(degenerate)"
+    # so a reader can see why the visual leader isn't chosen.
+    "degenerate_k": list(range(2, BEST_K_MIN)),
+    "best_k_min": BEST_K_MIN,
     "filters": data_profile["filters_applied"],
     "note": "CSV mtime is used as the regeneration timestamp so two runs on the same dataset produce byte-identical artifacts.",
 }
