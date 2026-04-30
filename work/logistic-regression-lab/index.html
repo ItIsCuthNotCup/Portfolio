@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logistic Regression — Jake Cuth.</title>
+  <meta name="description" content="A live, in-browser logistic regression. Click to plant points, watch gradient descent draw a probability boundary. The simplest classifier that still earns its keep in production.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Logistic Regression — A line that learns from gradient">
+  <meta property="og:description" content="A live, in-browser logistic regression. Click to plant points, watch gradient descent draw a probability boundary.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png">
+  <meta property="og:url" content="https://jakecuth.com/work/logistic-regression-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=18">
+  <link rel="stylesheet" href="/assets/css/logistic-regression-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" class="active" aria-current="page" role="menuitem">Logistic Regression</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch ↗</a>
+  </nav>
+</header>
+
+<main class="lr-main">
+
+<!-- HERO -->
+<section class="lr-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 12</span>
+    <span>A line that learns from gradient</span>
+  </div>
+  <h1 class="serif big-display lr-title">
+    The probability<br>
+    <span class="serif-italic" style="color:var(--accent)">boundary.</span>
+  </h1>
+  <p class="lab-biz-line">
+    The simplest classifier worth deploying. Returns a calibrated
+    probability instead of a hard label, which is the difference
+    between "this lead might convert" and "this lead has a 73%
+    chance, so chase the top decile and skip the rest."
+  </p>
+  <p class="lr-kicker">
+    A logistic regression trained live in the browser by batch
+    gradient descent. Plant points by clicking, switch the active
+    class with the toggle, and watch the sigmoid slide its decision
+    boundary into place. Every weight update, every iteration of
+    log-loss, every shift in accuracy is recomputed on this page.
+    Nothing is precomputed.
+  </p>
+  <div class="mono lr-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS · Canvas 2D · batch gradient descent</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/logistic_regression_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/logistic_regression_model.py ↗</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="lr-section">
+  <div class="mono section-label">
+    <span class="idx">§ I</span>
+    <span>Why probability beats a verdict</span>
+  </div>
+  <div class="lr-prose">
+    <p class="lr-lede">
+      A hard "yes or no" classifier is a coin that has been told to
+      stop spinning early. Logistic regression keeps it spinning, and
+      reports the angle.
+    </p>
+    <p>
+      A spam filter that flags an email is useful. A spam filter that
+      flags an email and says "I'm 0.62 confident" is more useful,
+      because now you can route the soft calls to a review queue and
+      auto-archive only the 0.99s. A churn model that returns a
+      probability lets the retention team budget against expected
+      saves rather than gut feel about who looks "shaky."
+    </p>
+    <p>
+      Calibration is the quiet superpower here. The output of a
+      logistic regression isn't just a number between zero and one,
+      it's a number that, when calibrated, actually means what it
+      sounds like. Of all the customers it scores at 0.30, roughly
+      thirty percent really do convert. That is not true of an
+      arbitrary deep network's softmax, and it is what makes
+      logistic regression the model production keeps coming back to
+      even when fancier options exist.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. 12.1 — INTERACTIVE DEMO -->
+<section class="lr-section lr-section-demo">
+  <div class="mono section-label">
+    <span class="idx">§ II · FIG. 12.1</span>
+    <span>The classifier — plant points, fit a boundary</span>
+  </div>
+  <p class="lr-note">
+    Click the canvas to drop a point of the active class. The model
+    refits as you go. The shaded region is the model's probability
+    surface, deepest at the highest-confidence regions. The line is
+    the 0.5 decision boundary.
+  </p>
+
+  <div class="lr-layout">
+    <div class="lr-canvas-wrap">
+      <canvas id="lr-canvas" width="720" height="540"></canvas>
+      <div class="lr-canvas-hint mono" id="lr-canvas-hint">
+        Click to add a <span id="lr-active-class-name">positive</span> point
+      </div>
+    </div>
+
+    <aside class="lr-controls">
+      <div class="lr-control-head mono">Active class</div>
+      <div class="lr-class-toggle" role="tablist">
+        <button type="button" role="tab" class="active" id="lr-class-pos" data-class="1">
+          <span class="lr-class-dot pos"></span>positive
+        </button>
+        <button type="button" role="tab" id="lr-class-neg" data-class="0">
+          <span class="lr-class-dot neg"></span>negative
+        </button>
+      </div>
+
+      <div class="lr-control-head mono">Hyperparameters</div>
+      <label class="lr-field">
+        <div class="mono lr-label">Learning rate · <span id="lr-lr-val">0.30</span></div>
+        <input type="range" id="lr-lr" min="0.01" max="2.0" step="0.01" value="0.30">
+      </label>
+      <label class="lr-field">
+        <div class="mono lr-label">L2 penalty · <span id="lr-l2-val">0.005</span></div>
+        <input type="range" id="lr-l2" min="0" max="0.1" step="0.001" value="0.005">
+      </label>
+
+      <div class="lr-control-head mono">Run</div>
+      <div class="lr-buttons">
+        <button type="button" class="lr-btn primary" id="lr-train">Pause</button>
+        <button type="button" class="lr-btn" id="lr-step">Step ×100</button>
+      </div>
+      <div class="lr-buttons" style="margin-top:8px;">
+        <button type="button" class="lr-btn" id="lr-reset-weights">Reset weights</button>
+        <button type="button" class="lr-btn" id="lr-clear">Clear points</button>
+      </div>
+
+      <div class="lr-control-head mono">Preset shape</div>
+      <select id="lr-preset" class="mono lr-preset-select">
+        <option value="blobs" selected>two blobs (linearly separable)</option>
+        <option value="overlap">overlapping clouds</option>
+        <option value="moons">moons (non-linear, will struggle)</option>
+        <option value="empty">empty canvas</option>
+      </select>
+    </aside>
+  </div>
+
+  <div class="lr-metrics-row">
+    <div class="lr-metric-card">
+      <div class="mono lr-mc-head">Live model</div>
+      <div class="lr-mc-grid">
+        <div><div class="serif lr-mc-val" id="lr-m-iter">0</div><div class="mono lr-mc-lbl">iterations</div></div>
+        <div><div class="serif lr-mc-val" id="lr-m-loss">0.693</div><div class="mono lr-mc-lbl">log loss</div></div>
+        <div><div class="serif lr-mc-val" id="lr-m-acc">50.0<span class="lr-pct">%</span></div><div class="mono lr-mc-lbl">accuracy</div></div>
+        <div><div class="serif lr-mc-val" id="lr-m-n">0</div><div class="mono lr-mc-lbl">points</div></div>
+        <div><div class="serif lr-mc-val" id="lr-m-w0">0.00</div><div class="mono lr-mc-lbl">bias w0</div></div>
+        <div><div class="serif lr-mc-val" id="lr-m-w1">0.00</div><div class="mono lr-mc-lbl">weight w1</div></div>
+      </div>
+    </div>
+    <div class="lr-metric-card lr-loss-chart-card">
+      <div class="mono lr-mc-head">Training loss · log scale step</div>
+      <canvas id="lr-loss-chart" width="520" height="200"></canvas>
+      <div class="mono lr-loss-note">
+        Loss should decline as the boundary settles. A flat line
+        means the data is linearly separable already, or the model
+        is stuck.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — HOW IT WORKS -->
+<section class="lr-section">
+  <div class="mono section-label">
+    <span class="idx">§ III</span>
+    <span>How it works</span>
+  </div>
+  <div class="lr-how-grid">
+    <div class="lr-how-card">
+      <div class="mono lr-how-fig">Fig. A</div>
+      <h3 class="serif lr-how-title">The sigmoid squash</h3>
+      <p>
+        A linear score, w dot x plus b, can land anywhere on the
+        number line. The sigmoid 1 / (1 + e^-z) compresses that
+        score to a probability between zero and one. Big positive
+        scores saturate near one, big negative scores near zero,
+        and the slope at zero is steepest, which is why the
+        boundary is where the model is most uncertain.
+      </p>
+    </div>
+    <div class="lr-how-card">
+      <div class="mono lr-how-fig">Fig. B</div>
+      <h3 class="serif lr-how-title">Log loss has a gradient</h3>
+      <p>
+        Squared error has nasty plateaus on a sigmoid. Log loss does
+        not. Its gradient with respect to the weights collapses to
+        a clean vector, the average of (predicted minus actual)
+        times the input. That gradient is what every step uses to
+        nudge the boundary toward a better fit.
+      </p>
+    </div>
+    <div class="lr-how-card">
+      <div class="mono lr-how-fig">Fig. C</div>
+      <h3 class="serif lr-how-title">L2 keeps the line honest</h3>
+      <p>
+        With perfectly separable points, the loss minimum lies at
+        infinite weights, which produces a brittle vertical wall of
+        a boundary. The L2 penalty adds a small cost for each weight
+        squared. That trades a microscopic amount of training
+        accuracy for a smoother boundary that generalizes better
+        when new points arrive.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. 12.2 — DECISION SURFACE FINGERPRINTS -->
+<section class="lr-section">
+  <div class="mono section-label">
+    <span class="idx">§ IV · FIG. 12.2</span>
+    <span>Where logistic regression breaks</span>
+  </div>
+  <p class="lr-note">
+    The model fits one straight line in feature space. Three failure
+    modes worth memorizing before reaching for it in production.
+  </p>
+  <div class="lr-fail-grid">
+    <div class="lr-fail-card">
+      <div class="mono lr-fail-tag">Failure I</div>
+      <h3 class="serif lr-fail-title">Non-linear truth</h3>
+      <p>
+        Try the moons preset above. Two interlocking arcs cannot be
+        separated by any straight line. The boundary settles into
+        the least-bad compromise and accuracy stalls in the seventies.
+        The fix is feature engineering or a non-linear model, not
+        more iterations.
+      </p>
+    </div>
+    <div class="lr-fail-card">
+      <div class="mono lr-fail-tag">Failure II</div>
+      <h3 class="serif lr-fail-title">Outlier domination</h3>
+      <p>
+        A handful of mislabeled points far from the boundary can
+        pull the line into a worse position than ignoring them.
+        Logistic regression is not robust by default. Real
+        deployments add weight clipping, sample reweighting, or a
+        Huber-style loss to make it less brittle to bad labels.
+      </p>
+    </div>
+    <div class="lr-fail-card">
+      <div class="mono lr-fail-tag">Failure III</div>
+      <h3 class="serif lr-fail-title">Class imbalance</h3>
+      <p>
+        Drop ten positives and one negative on the canvas. The
+        model will happily predict positive everywhere and report
+        ninety percent accuracy. Production fixes are class
+        weighting in the loss, or scoring against a metric that
+        actually rewards minority-class recall like AUC or F1.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS -->
+<section class="lr-section">
+  <div class="mono section-label">
+    <span class="idx">§ V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="lr-receipts" id="lr-receipts">
+    <div class="lr-receipt">
+      <div class="lr-receipt-label">parameters</div>
+      <div class="lr-receipt-value">3<span class="small">weights</span></div>
+    </div>
+    <div class="lr-receipt">
+      <div class="lr-receipt-label">training</div>
+      <div class="lr-receipt-value">batch GD<span class="small">in browser</span></div>
+    </div>
+    <div class="lr-receipt">
+      <div class="lr-receipt-label">runtime</div>
+      <div class="lr-receipt-value">0<span class="small">deps</span></div>
+    </div>
+    <div class="lr-receipt">
+      <div class="lr-receipt-label">file size</div>
+      <div class="lr-receipt-value">~14<span class="small">KB JS</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY + LAB-NAV -->
+<section class="lr-section lr-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">§ VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript, HTML5 Canvas 2D, no libraries. Three weights
+        (bias plus two features) updated by batch gradient descent
+        every animation frame. Decision surface drawn by sampling the
+        sigmoid on a 60 by 45 grid and shading by probability. No
+        external scoring service, no model file, no precomputed
+        anything.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Inference</div>
+      <p>
+        Forward pass is one dot product and one sigmoid per point.
+        For each iteration, we compute predictions on every planted
+        point, derive the gradient of cross-entropy plus L2, and
+        step. The Python notebook linked in the source field uses
+        the identical update rule with NumPy and converges to the
+        same weights to within four decimal places.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://web.stanford.edu/~hastie/ElemStatLearn/" target="_blank" rel="noopener" style="border-bottom:1px solid">Hastie, Tibshirani, Friedman · The Elements of Statistical Learning ↗</a><br>
+        <a href="https://www.cs.cmu.edu/~tom/mlbook/NBayesLogReg.pdf" target="_blank" rel="noopener" style="border-bottom:1px solid">Tom Mitchell · Generative and Discriminative Classifiers ↗</a><br>
+        <a href="https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression" target="_blank" rel="noopener" style="border-bottom:1px solid">scikit-learn · the canonical production implementation ↗</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Two-feature toy by design. Real deployments handle hundreds
+        of features, sparse inputs, and need stochastic or
+        mini-batch optimization for memory reasons. Calibration
+        beyond the training distribution is not free, requires
+        Platt scaling or isotonic regression. Decision boundary is
+        always a hyperplane in feature space, so anything truly
+        non-linear needs explicit feature crosses.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/agi-forecast-lab/">← Prev: AGI Horizon (FIG. 11)</a>
+    <span>Lab 12 of 12</span>
+    <a href="/">↑ Back to the front page</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">← Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/logistic_regression_model.py" target="_blank" rel="noopener" class="btn-outline">View the script on GitHub ↗</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>
+  <div>© Jacob Cuthbertson · MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> ·
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn active" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=6"></script>
+<script src="/assets/js/logistic-regression-lab.js?v=1"></script>
+</body>
+</html>

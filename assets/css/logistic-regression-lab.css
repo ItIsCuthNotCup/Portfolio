@@ -1,0 +1,374 @@
+/* logistic-regression-lab.css
+   Styles for the FIG. 07 lab. Page chrome matches the template
+   pattern; lab-specific styles live below the marker.
+*/
+
+.lr-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Hero */
+.lr-hero {
+  padding: 120px 48px 60px;
+  max-width: 1200px;
+}
+.lr-title { margin-top: 22px; }
+.lr-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.lr-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.lr-dateline .label { color: var(--ink-dim); }
+.lr-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* Sections */
+.lr-section {
+  padding: 80px 48px;
+  max-width: 1200px;
+}
+.lr-section .section-label { margin-bottom: 28px; }
+.lr-prose { max-width: 720px; }
+.lr-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.lr-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.lr-note {
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+}
+
+/* How-it-works grid */
+.lr-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 12px;
+}
+.lr-how-card {
+  border-top: 1px solid var(--ink);
+  padding-top: 18px;
+}
+.lr-how-fig {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.lr-how-title {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+.lr-how-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* Failure modes grid (§ IV) */
+.lr-fail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.lr-fail-card {
+  padding: 22px 22px 24px;
+  border-right: 1px solid var(--ink);
+}
+.lr-fail-card:last-child { border-right: none; }
+.lr-fail-tag {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.lr-fail-title {
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  margin: 0 0 10px;
+}
+.lr-fail-card p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* Receipts */
+.lr-receipts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.lr-receipt {
+  padding: 22px 20px;
+  border-right: 1px solid var(--ink);
+}
+.lr-receipt:last-child { border-right: none; }
+.lr-receipt-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.lr-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+}
+.lr-receipt-value .small {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-left: 6px;
+}
+
+.lr-colophon-section { padding-bottom: 80px; }
+
+/* ──────────────────────────────────────────────────────────── */
+/* LAB-SPECIFIC                                                 */
+/* ──────────────────────────────────────────────────────────── */
+
+.lr-section-demo .section-label { margin-bottom: 12px; }
+
+.lr-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 32px;
+  align-items: start;
+}
+
+.lr-canvas-wrap {
+  position: relative;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+#lr-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+.lr-canvas-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: var(--paper);
+  padding: 4px 8px;
+  border: 1px solid var(--ink-dim);
+}
+
+.lr-controls {
+  border: 1px solid var(--ink);
+  padding: 18px 18px 22px;
+  background: var(--paper);
+}
+.lr-control-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+}
+.lr-control-head:not(:first-child) { margin-top: 18px; }
+
+.lr-class-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+}
+.lr-class-toggle button {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  background: var(--paper);
+  color: var(--ink);
+  border: none;
+  padding: 10px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 160ms ease, color 160ms ease;
+}
+.lr-class-toggle button + button {
+  border-left: 1px solid var(--ink);
+}
+.lr-class-toggle button.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.lr-class-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.lr-class-dot.pos { background: var(--accent); }
+.lr-class-dot.neg { background: var(--ink); border: 1px solid var(--paper); }
+
+.lr-field { display: block; margin-bottom: 14px; }
+.lr-field:last-of-type { margin-bottom: 0; }
+.lr-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.lr-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.lr-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.lr-btn {
+  flex: 1;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 9px 10px;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.lr-btn:hover { background: var(--ink); color: var(--paper); }
+.lr-btn.primary { background: var(--ink); color: var(--paper); }
+.lr-btn.primary:hover { background: var(--accent); }
+
+.lr-preset-select {
+  width: 100%;
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+/* Metrics row */
+.lr-metrics-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+.lr-metric-card {
+  border: 1px solid var(--ink);
+  padding: 18px 20px 20px;
+  background: var(--paper);
+}
+.lr-mc-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 14px;
+}
+.lr-mc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 14px;
+  column-gap: 16px;
+}
+.lr-mc-val {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.lr-pct { font-size: 14px; color: var(--ink-soft); margin-left: 2px; }
+.lr-mc-lbl {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 4px;
+}
+.lr-loss-chart-card #lr-loss-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 6px;
+}
+.lr-loss-note {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  text-transform: none;
+  line-height: 1.4;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .lr-hero, .lr-section { padding-left: 24px; padding-right: 24px; }
+  .lr-how-grid { grid-template-columns: 1fr; gap: 24px; }
+  .lr-fail-grid { grid-template-columns: 1fr; }
+  .lr-fail-card { border-right: none; border-bottom: 1px solid var(--ink); }
+  .lr-fail-card:last-child { border-bottom: none; }
+  .lr-receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lr-receipt:nth-child(2n) { border-right: none; }
+  .lr-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .lr-layout { grid-template-columns: 1fr; }
+  .lr-metrics-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .lr-receipts { grid-template-columns: 1fr; }
+  .lr-receipt { border-right: none; }
+  .lr-mc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
