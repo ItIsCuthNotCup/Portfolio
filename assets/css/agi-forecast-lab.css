@@ -195,6 +195,16 @@
   opacity: 0.5;
 }
 
+/* Fix #1 — zoom pill row */
+.af-zoom-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.af-zoom-pill { font-variant-numeric: tabular-nums; }
+
 .af-horizon-wrap {
   position: relative;
   border: 1px solid var(--ink);
@@ -279,6 +289,7 @@
   transition: opacity 0.4s;
 }
 
+/* Fix #6 — data-open lets transform animate (hidden=display:none breaks transitions) */
 .af-side-panel {
   position: fixed;
   top: 0;
@@ -293,9 +304,11 @@
   box-shadow: -10px 0 30px rgba(0,0,0,0.08);
   transform: translateX(100%);
   transition: transform 0.3s ease-out;
+  pointer-events: none;
 }
-.af-side-panel:not([hidden]) {
+.af-side-panel[data-open="true"] {
   transform: translateX(0);
+  pointer-events: auto;
 }
 .af-side-close {
   position: absolute;
@@ -419,6 +432,14 @@
   align-items: center;
   gap: 16px;
 }
+/* Fix #8 — density strip row */
+.af-picker-density-row { align-items: end; }
+.af-density-strip {
+  display: block;
+  width: 100%;
+  height: 36px;
+  border-bottom: 1px solid var(--ink-dim);
+}
 .af-picker-label {
   font-size: 10px;
   letter-spacing: 0.18em;
@@ -534,12 +555,15 @@ input#af-year-input::-moz-range-thumb {
 .af-ref-label { fill: var(--accent); font-family: "DM Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
 .af-grid-line { stroke: var(--ink-dim); stroke-width: 0.5; opacity: 0.18; }
 
-/* Camp colors — muted editorial palette */
-.af-camp-frontier { stroke: oklch(0.62 0.13 60); fill: oklch(0.62 0.13 60); }
+/* Camp colors — muted editorial palette
+   Fix #3: survey-aggregate moved to muted olive so it stops fighting
+   the +20 horizon line for the eye. Red is reserved for the horizon
+   and active selections only. */
+.af-camp-frontier { stroke: oklch(0.62 0.13 60);  fill: oklch(0.62 0.13 60); }
 .af-camp-academic { stroke: oklch(0.55 0.06 240); fill: oklch(0.55 0.06 240); }
-.af-camp-tech { stroke: oklch(0.45 0.02 50); fill: oklch(0.45 0.02 50); }
-.af-camp-public { stroke: oklch(0.58 0.06 70); fill: oklch(0.58 0.06 70); }
-.af-camp-survey { stroke: var(--accent); fill: var(--accent); opacity: 0.85; }
+.af-camp-tech     { stroke: oklch(0.45 0.02 50);  fill: oklch(0.45 0.02 50); }
+.af-camp-public   { stroke: oklch(0.58 0.06 70);  fill: oklch(0.58 0.06 70); }
+.af-camp-survey   { stroke: oklch(0.55 0.10 110); fill: oklch(0.55 0.10 110); }
 
 .af-lift {
   cursor: pointer;

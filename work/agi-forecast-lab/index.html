@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=17">
-  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=1">
+  <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=2">
 </head>
 <body>
 
@@ -168,6 +168,14 @@
     <button type="button" class="af-pill af-pill-toggle" id="af-toggle-horizon" data-active="true">Show the horizon</button>
   </div>
 
+  <!-- Fix #1 — zoom level pills -->
+  <div class="af-zoom-filter mono" id="af-zoom-filter">
+    <span class="af-filter-label">Zoom</span>
+    <button type="button" class="af-zoom-pill af-pill active" data-zoom="all">All (1950–2030)</button>
+    <button type="button" class="af-zoom-pill af-pill" data-zoom="modern">Modern (2000+)</button>
+    <button type="button" class="af-zoom-pill af-pill" data-zoom="recent">Recent (2018+)</button>
+  </div>
+
   <!-- Chart -->
   <div class="af-horizon-wrap" id="af-horizon-wrap">
     <svg id="af-horizon" viewBox="0 0 1280 540" preserveAspectRatio="xMidYMid meet"
@@ -182,7 +190,7 @@
   </div>
 
   <!-- Side panel for click -->
-  <aside class="af-side-panel" id="af-side-panel" hidden aria-label="Prediction detail">
+  <aside class="af-side-panel" id="af-side-panel" data-open="false" aria-label="Prediction detail">
     <button type="button" class="af-side-close" id="af-side-close" aria-label="Close">&times;</button>
     <div class="af-side-content" id="af-side-content"></div>
   </aside>
@@ -257,6 +265,13 @@
     what camp they belong to.
   </p>
   <div class="af-picker mono">
+    <!-- Fix #8 — density strip showing how many predictions land at each year -->
+    <div class="af-picker-row af-picker-density-row">
+      <span class="af-picker-label">Density</span>
+      <svg id="af-density-strip" class="af-density-strip" preserveAspectRatio="none"
+           role="img" aria-label="Density of predictions across years"></svg>
+      <span class="af-picker-value" style="opacity:.5;font-size:11px;">2025 → 2100</span>
+    </div>
     <div class="af-picker-row">
       <span class="af-picker-label">Target year</span>
       <input type="range" id="af-year-input" min="2025" max="2100" step="1" value="2030"
@@ -434,7 +449,8 @@
 
   <div class="method-ctas">
     <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
-    <a href="/assets/data/agi-forecast/predictions-v4.json" target="_blank" rel="noopener" class="btn-outline">View the raw dataset &#8599;</a>
+    <a href="/assets/data/agi-forecast/predictions-v4.json" target="_blank" rel="noopener" class="btn-outline">View JSON &#8599;</a>
+    <a href="#" id="af-csv-btn" class="btn-outline">Download CSV</a>
   </div>
 </section>
 
@@ -456,6 +472,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=6"></script>
-<script src="/assets/js/agi-forecast-lab.js?v=1"></script>
+<script src="/assets/js/agi-forecast-lab.js?v=2"></script>
 </body>
 </html>

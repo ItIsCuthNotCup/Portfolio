@@ -56,6 +56,28 @@
   const PLAY_FROM = 1950;
   const PLAY_TO = 2026;
 
+  /* Zoom levels for the Horizon — fix #1 */
+  const ZOOM_LEVELS = {
+    all:    { xMin: 1950, xMax: 2030, tickStep: 10, label: 'All (1950–2030)' },
+    modern: { xMin: 2000, xMax: 2030, tickStep: 5,  label: 'Modern (2000+)' },
+    recent: { xMin: 2018, xMax: 2030, tickStep: 2,  label: 'Recent (2018+)' },
+  };
+  let ZOOM_KEY = 'all';
+
+  /* Deterministic hash for jitter — fix #2 */
+  function hashStr(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+      h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h);
+  }
+  function lifJitter(r) {
+    // Spread duplicates ±3px horizontally, deterministic per row
+    const seed = `${r.person}${r.year_mid}${r.year_said}`;
+    return (hashStr(seed) % 7 - 3) * 1.6;
+  }
+
   /* ── Data load ──────────────────────────────────────────── */
   async function loadData() {
     try {
@@ -87,12 +109,14 @@
 
   const HORIZON_VB = { w: 1280, h: 540 };
   const HORIZON_PAD = { l: 70, r: 30, t: 30, b: 60 };
-  const X_MIN = 1950, X_MAX = 2030;
   const Y_MIN = 1950, Y_MAX = 2100;
 
+  function currentZoom() { return ZOOM_LEVELS[ZOOM_KEY]; }
+
   function xScale(year) {
+    const z = currentZoom();
     const w = HORIZON_VB.w - HORIZON_PAD.l - HORIZON_PAD.r;
-    return HORIZON_PAD.l + ((year - X_MIN) / (X_MAX - X_MIN)) * w;
+    return HORIZON_PAD.l + ((year - z.xMin) / (z.xMax - z.xMin)) * w;
   }
   function yScale(year) {
     const h = HORIZON_VB.h - HORIZON_PAD.t - HORIZON_PAD.b;
@@ -104,10 +128,11 @@
     const svg = document.getElementById('af-horizon');
     svg.innerHTML = '';
 
+    const z = currentZoom();
     const innerW = HORIZON_VB.w - HORIZON_PAD.l - HORIZON_PAD.r;
     const innerH = HORIZON_VB.h - HORIZON_PAD.t - HORIZON_PAD.b;
 
-    /* Decade gridlines */
+    /* Decade gridlines (Y) */
     for (let y = 1950; y <= 2100; y += 10) {
       const py = yScale(y);
       svg.appendChild(el('line', {
@@ -115,7 +140,8 @@
         y1: py, y2: py, class: 'af-grid-line'
       }));
     }
-    for (let x = 1950; x <= 2030; x += 10) {
+    /* Year gridlines (X) — uses zoom tickStep */
+    for (let x = z.xMin; x <= z.xMax; x += z.tickStep) {
       const px = xScale(x);
       svg.appendChild(el('line', {
         x1: px, x2: px,
@@ -127,26 +153,27 @@
     /* Reference lines */
     // y = x today line
     svg.appendChild(el('line', {
-      x1: xScale(X_MIN), y1: yScale(X_MIN),
-      x2: xScale(X_MAX), y2: yScale(X_MAX),
+      x1: xScale(z.xMin), y1: yScale(z.xMin),
+      x2: xScale(z.xMax), y2: yScale(z.xMax),
       class: 'af-ref-today'
     }));
     // y = x + 50
     svg.appendChild(el('line', {
-      x1: xScale(X_MIN), y1: yScale(X_MIN + 50),
-      x2: xScale(X_MAX - 0), y2: yScale(X_MAX + 50),
+      x1: xScale(z.xMin), y1: yScale(z.xMin + 50),
+      x2: xScale(z.xMax), y2: yScale(z.xMax + 50),
       class: 'af-ref-fifty'
     }));
     // y = x + 20 horizon
     if (HORIZON_VISIBLE) {
       svg.appendChild(el('line', {
-        x1: xScale(X_MIN), y1: yScale(X_MIN + 20),
-        x2: xScale(X_MAX), y2: yScale(X_MAX + 20),
+        x1: xScale(z.xMin), y1: yScale(z.xMin + 20),
+        x2: xScale(z.xMax), y2: yScale(z.xMax + 20),
         class: 'af-ref-horizon', id: 'af-horizon-line'
       }));
       // Horizon label, near right
-      const labelX = xScale(2018);
-      const labelY = yScale(2038) - 6;
+      const labelAnchor = z.xMin + (z.xMax - z.xMin) * 0.6;
+      const labelX = xScale(labelAnchor);
+      const labelY = yScale(labelAnchor + 20) - 6;
       svg.appendChild(el('text', {
         x: labelX, y: labelY, class: 'af-ref-label'
       }, '+20 yr horizon'));
@@ -160,7 +187,7 @@
       y2: HORIZON_VB.h - HORIZON_PAD.b,
       class: 'af-axis-line'
     }));
-    for (let x = 1950; x <= 2030; x += 10) {
+    for (let x = z.xMin; x <= z.xMax; x += z.tickStep) {
       const px = xScale(x);
       svg.appendChild(el('text', {
         x: px, y: HORIZON_VB.h - HORIZON_PAD.b + 18,
@@ -192,13 +219,14 @@
     }, 'Year forecasted for AGI →'));
 
     /* Lifts — render each prediction */
-    const rows = plottableAGIYearRows();
+    const rows = plottableAGIYearRows().filter(r => r.year_said >= z.xMin && r.year_said <= z.xMax);
     const liftGroup = el('g', { id: 'af-lift-group' });
     rows.forEach((r, i) => {
       const xs = r.year_said;
       const baseY = yScale(xs);
       const topY = yScale(clamp(r.year_mid, Y_MIN, Y_MAX));
-      const px = xScale(xs);
+      // Fix #2 — deterministic horizontal jitter so duplicates don't stack
+      const px = xScale(xs) + lifJitter(r);
 
       const campClass = CAMP_CLASS[r.category] || 'af-camp-tech';
       const visible = isVisibleAtPlayhead(xs) && campMatches(r.category);
@@ -212,6 +240,14 @@
         style: 'transition: opacity 0.4s'
       });
 
+      // Fix #4 — invisible hit-target rect, generous, drawn first (behind visible elements)
+      const hitTop = Math.min(topY, baseY) - 6;
+      const hitH = Math.abs(baseY - topY) + 12;
+      g.appendChild(el('rect', {
+        x: px - 7, y: hitTop, width: 14, height: hitH,
+        fill: 'transparent', 'pointer-events': 'all'
+      }));
+
       // Range bar if year_low and year_high differ
       if (r.year_low && r.year_high && r.year_low !== r.year_high) {
         const lowY = yScale(clamp(r.year_low, Y_MIN, Y_MAX));
@@ -220,7 +256,8 @@
           x1: px, x2: px,
           y1: highY, y2: lowY,
           'stroke-width': 2,
-          'stroke-linecap': 'round'
+          'stroke-linecap': 'round',
+          'pointer-events': 'none'
         }));
       }
 
@@ -229,16 +266,18 @@
         x1: px, x2: px,
         y1: baseY, y2: topY,
         'stroke-width': 1.2,
-        opacity: 0.7
+        opacity: 0.7,
+        'pointer-events': 'none'
       }));
 
       // Top dot
       g.appendChild(el('circle', {
         cx: px, cy: topY, r: 2.5,
-        class: 'af-lift-dot'
+        class: 'af-lift-dot',
+        'pointer-events': 'none'
       }));
 
-      // Hover/click handlers
+      // Hover/click handlers (delegated via the hit-target rect; group catches them)
       g.addEventListener('mouseenter', (e) => showTooltip(e, r));
       g.addEventListener('mouseleave', hideTooltip);
       g.addEventListener('click', () => openSidePanel(r));
@@ -247,8 +286,8 @@
     });
     svg.appendChild(liftGroup);
 
-    /* Playhead */
-    if (IS_PLAYING || PLAYHEAD_YEAR < X_MAX) {
+    /* Playhead — only show when in zoom range */
+    if ((IS_PLAYING || PLAYHEAD_YEAR < z.xMax) && PLAYHEAD_YEAR >= z.xMin) {
       const phx = xScale(PLAYHEAD_YEAR);
       svg.appendChild(el('line', {
         x1: phx, x2: phx,
@@ -262,6 +301,7 @@
     }
 
     updateCounters();
+    updateNarrativeTicker();  // Fix #7 — ticker syncs on every render, not just play frames
   }
 
   function isVisibleAtPlayhead(yearSaid) {
@@ -379,10 +419,11 @@
         </div>
       ` : ''}
     `;
-    panel.hidden = false;
+    // Fix #6 — data-open lets the CSS transform animate properly
+    panel.dataset.open = 'true';
   }
   function closeSidePanel() {
-    document.getElementById('af-side-panel').hidden = true;
+    document.getElementById('af-side-panel').dataset.open = 'false';
   }
 
   /* ── Playhead animation ────────────────────────────────── */
@@ -407,8 +448,7 @@
     const t = clamp((now - PLAY_START_TIME) / PLAY_DURATION_MS, 0, 1);
     const eased = easeOutCubic(t);
     PLAYHEAD_YEAR = lerp(PLAY_FROM, PLAY_TO, eased);
-    renderHorizon();
-    updateNarrativeTicker();
+    renderHorizon();  // ticker is updated inside renderHorizon (fix #7)
 
     if (t < 1) {
       PLAY_RAF = requestAnimationFrame(playFrame);
@@ -420,16 +460,20 @@
   }
   function updateNarrativeTicker() {
     const ticker = document.getElementById('af-ticker-text');
+    if (!ticker) return;
     let bestYear = null;
     for (const yk of Object.keys(NARRATIVE).map(Number).sort((a, b) => a - b)) {
       if (PLAYHEAD_YEAR >= yk) bestYear = yk;
     }
-    if (bestYear !== null && ticker.dataset.shownYear !== String(bestYear)) {
+    const targetText = bestYear !== null ? NARRATIVE[bestYear] :
+      'Press play and the chart fills decade by decade.';
+    const targetKey = bestYear !== null ? String(bestYear) : 'idle';
+    if (ticker.dataset.shownYear !== targetKey) {
       ticker.style.opacity = 0;
       setTimeout(() => {
-        ticker.textContent = NARRATIVE[bestYear];
+        ticker.textContent = targetText;
         ticker.style.opacity = 1;
-        ticker.dataset.shownYear = String(bestYear);
+        ticker.dataset.shownYear = targetKey;
       }, 200);
     }
   }
@@ -690,34 +734,103 @@
     const colors = ['af-camp-frontier', 'af-camp-academic', 'af-camp-survey',
                    'af-camp-public', 'af-camp-tech', 'af-camp-frontier'];
 
+    /* First pass: draw paths + dots */
+    const labelData = [];
     TOP.forEach((traj, i) => {
       const cls = colors[i % colors.length];
-      // Path connecting points
       const ptsArr = traj.points.map(p => `${xm(p.year_said)},${ym(p.year_mid)}`).join(' L ');
       const pathStr = `M ${ptsArr}`;
       svg.appendChild(el('path', {
         d: pathStr, class: cls, fill: 'none',
         'stroke-width': 1.6, opacity: 0.7
       }));
-      // Dots
       traj.points.forEach(p => {
         svg.appendChild(el('circle', {
           cx: xm(p.year_said), cy: ym(p.year_mid),
           r: 4, class: cls, opacity: 0.95
         }));
       });
-      // Label at last point
       const last = traj.points[traj.points.length - 1];
+      labelData.push({
+        x: xm(last.year_said) + 8,
+        y: ym(last.year_mid) + 4,
+        anchorY: ym(last.year_mid),
+        text: traj.person,
+        cls
+      });
+    });
+
+    /* Fix #5 — collision-avoidance for end-of-trajectory labels.
+       Sort by y, push down any label within 14px of the previous. */
+    labelData.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < labelData.length; i++) {
+      const gap = labelData[i].y - labelData[i - 1].y;
+      if (gap < 14) labelData[i].y = labelData[i - 1].y + 14;
+    }
+    labelData.forEach(L => {
+      // Optional connector line if label was nudged
+      if (Math.abs(L.y - L.anchorY - 4) > 2) {
+        svg.appendChild(el('line', {
+          x1: L.x - 4, x2: L.x - 4,
+          y1: L.anchorY, y2: L.y - 3,
+          stroke: 'var(--ink-dim)', 'stroke-width': 0.6, opacity: 0.5
+        }));
+      }
       svg.appendChild(el('text', {
-        x: xm(last.year_said) + 8, y: ym(last.year_mid) + 4,
+        x: L.x, y: L.y,
         class: 'af-axis-text-bold'
-      }, traj.person));
+      }, L.text));
     });
   }
 
   /* ═══════════════════════════════════════════════════════
      FIG. 11.5 — PICK A YEAR
      ═══════════════════════════════════════════════════════ */
+  function renderPickerDensity() {
+    const strip = document.getElementById('af-density-strip');
+    if (!strip) return;
+    strip.innerHTML = '';
+    const STRIP_W = 1100, STRIP_H = 36, STRIP_PAD = 4;
+    const yMin = 2025, yMax = 2100;
+    const counts = {};
+    for (let y = yMin; y <= yMax; y++) counts[y] = 0;
+    DATA.rows.forEach(r => {
+      if (r.prediction_type !== 'agi_year') return;
+      if (r.year_low && r.year_high) {
+        for (let y = Math.max(yMin, r.year_low); y <= Math.min(yMax, r.year_high); y++) {
+          counts[y] = (counts[y] || 0) + 1;
+        }
+      } else if (r.year_mid) {
+        const ym = clamp(r.year_mid, yMin, yMax);
+        counts[ym] = (counts[ym] || 0) + 1;
+      }
+    });
+    const maxC = Math.max(...Object.values(counts), 1);
+    const innerW = STRIP_W - STRIP_PAD * 2;
+    const barW = innerW / (yMax - yMin);
+    strip.setAttribute('viewBox', `0 0 ${STRIP_W} ${STRIP_H}`);
+    for (let y = yMin; y <= yMax; y++) {
+      const c = counts[y] || 0;
+      if (c === 0) continue;
+      const h = (c / maxC) * (STRIP_H - 6);
+      const x = STRIP_PAD + (y - yMin) * barW;
+      strip.appendChild(el('rect', {
+        x: x, y: STRIP_H - h - 2,
+        width: Math.max(barW - 0.4, 0.6), height: h,
+        fill: 'var(--accent)', opacity: 0.55
+      }));
+    }
+    // Decade ticks
+    for (let y = yMin; y <= yMax; y += 10) {
+      const x = STRIP_PAD + (y - yMin) * barW;
+      strip.appendChild(el('text', {
+        x: x, y: STRIP_H - 0.5,
+        class: 'af-axis-text', 'font-size': 9,
+        'text-anchor': 'middle', 'fill-opacity': 0.6
+      }, y));
+    }
+  }
+
   function renderPicker(targetYear) {
     const grid = document.getElementById('af-picker-grid');
     grid.innerHTML = '';
@@ -921,6 +1034,7 @@
       }, y));
     }
 
+    // Fix #9 — shorter labels, more breathing room around endpoint values
     // HLMI line
     const hlmiY = PAD.t + innerH * 0.3;
     const hlmiX = xg(2047);
@@ -933,12 +1047,13 @@
       cx: hlmiX, cy: hlmiY, r: 6, class: 'af-camp-frontier'
     }));
     svg.appendChild(el('text', {
-      x: PAD.l, y: hlmiY - 12,
+      x: PAD.l + 8, y: hlmiY - 10,
       class: 'af-axis-text-bold'
-    }, 'HLMI — 50% probability AI can do every task'));
+    }, 'HLMI · AI can do every task'));
     svg.appendChild(el('text', {
-      x: hlmiX + 12, y: hlmiY + 4,
-      class: 'af-axis-text-bold', fill: 'var(--accent)'
+      x: hlmiX + 18, y: hlmiY + 4,
+      class: 'af-axis-text-bold', fill: 'var(--accent)',
+      'font-size': 13
     }, '2047'));
 
     // FAOL line
@@ -953,12 +1068,13 @@
       cx: faolX, cy: faolY, r: 6, class: 'af-camp-academic'
     }));
     svg.appendChild(el('text', {
-      x: PAD.l, y: faolY - 12,
+      x: PAD.l + 8, y: faolY - 10,
       class: 'af-axis-text-bold'
-    }, 'FAOL — 50% probability all labor is automated'));
+    }, 'FAOL · all labor automated'));
     svg.appendChild(el('text', {
-      x: faolX + 12, y: faolY + 4,
-      class: 'af-axis-text-bold', fill: 'var(--accent)'
+      x: faolX + 18, y: faolY + 4,
+      class: 'af-axis-text-bold', fill: 'var(--accent)',
+      'font-size': 13
     }, '2116'));
 
     // Gap span
@@ -980,6 +1096,37 @@
       x: PAD.l, y: PAD.t - 16,
       class: 'af-axis-text', 'fill-opacity': 0.7
     }, 'AI Impacts ESPAI 2023 — same survey, two questions, sixty-nine years between answers.'));
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     FIX #10 — CSV EXPORT
+     ═══════════════════════════════════════════════════════ */
+  function downloadCSV() {
+    if (!DATA || !DATA.rows) return;
+    const cols = ['person', 'role', 'organization', 'date_said', 'year_said',
+      'year_low', 'year_high', 'year_mid', 'predicted_year_raw', 'concept',
+      'verbatim', 'quote_text', 'source_title', 'source_url', 'verified_level',
+      'tier', 'category', 'stance_category', 'prediction_type',
+      'include_in_average', 'notes'];
+    const escapeCsv = (v) => {
+      if (v === null || v === undefined) return '';
+      const s = String(v);
+      if (/[,"\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    };
+    const lines = [cols.join(',')];
+    for (const r of DATA.rows) {
+      lines.push(cols.map(c => escapeCsv(r[c])).join(','));
+    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'agi-predictions-v4.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -1014,6 +1161,7 @@
     renderJagged();
     renderStairs();
     renderGap();
+    renderPickerDensity();  // Fix #8
     renderPicker(2030);
 
     // Wire controls
@@ -1030,6 +1178,22 @@
       btn.classList.toggle('active', !active);
       renderHorizon();
     });
+
+    // Fix #1 — zoom level toggle
+    document.querySelectorAll('.af-zoom-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const key = e.currentTarget.dataset.zoom;
+        if (!ZOOM_LEVELS[key]) return;
+        ZOOM_KEY = key;
+        document.querySelectorAll('.af-zoom-pill').forEach(b =>
+          b.classList.toggle('active', b.dataset.zoom === key));
+        renderHorizon();
+      });
+    });
+
+    // Fix #10 — CSV download
+    const csvBtn = document.getElementById('af-csv-btn');
+    if (csvBtn) csvBtn.addEventListener('click', (e) => { e.preventDefault(); downloadCSV(); });
 
     // Camp filter pills
     document.querySelectorAll('.af-camp-filter .af-pill[data-camp]').forEach(btn => {
