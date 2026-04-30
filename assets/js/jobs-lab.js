@@ -148,9 +148,9 @@
       return;
     }
     $results.innerHTML = matches.map(o => `
-      <div class="aj-search-result" data-soc="${o.soc}">
+      <div class="aj-search-result" data-soc="${escapeHtml(o.soc)}">
         <span>${escapeHtml(o.title)}</span>
-        <span class="soc">${o.soc}</span>
+        <span class="soc">${escapeHtml(o.soc)}</span>
       </div>
     `).join('');
     $results.hidden = false;
@@ -239,7 +239,7 @@
 
     return `
       <div class="aj-card-head">
-        <div class="aj-card-soc">SOC ${o.soc} · ${escapeHtml(major)}</div>
+        <div class="aj-card-soc">SOC ${escapeHtml(o.soc)} · ${escapeHtml(major)}</div>
         <h2 class="aj-card-title">${escapeHtml(o.title)}</h2>
       </div>
 
@@ -353,7 +353,7 @@
       const cx = x(clamp(o.ai_composite_z, xMin, xMax));
       const cy = y(o.robotics_score);
       const rr = r(o.bls?.employment_thousands);
-      return `<circle class="dot" data-soc="${o.soc}"
+      return `<circle class="dot" data-soc="${escapeHtml(o.soc)}"
                  cx="${cx}" cy="${cy}" r="${rr}"
                  fill="${colorFor(o.bls?.projected_pct_change)}"
                  fill-opacity="0.62"
@@ -589,7 +589,7 @@
     const opts = DATA.occupations
       .filter(o => o.bls)
       .sort((a, b) => a.title.localeCompare(b.title))
-      .map(o => `<option value="${o.soc}">${escapeHtml(o.title)} · ${o.soc}</option>`)
+      .map(o => `<option value="${escapeHtml(o.soc)}">${escapeHtml(o.title)} · ${escapeHtml(o.soc)}</option>`)
       .join('');
     $cmpA.innerHTML = opts;
     $cmpB.innerHTML = opts;
@@ -640,7 +640,7 @@
       </div>`;
     return `
       <div class="aj-cmp-title">${escapeHtml(o.title)}</div>
-      ${stat('SOC', `<span style="font-family:'DM Mono',monospace; font-size:13px;">${o.soc}</span>`)}
+      ${stat('SOC', `<span style="font-family:'DM Mono',monospace; font-size:13px;">${escapeHtml(o.soc)}</span>`)}
       ${bls ? stat('Employment', fmtEmp(bls.employment_thousands)) : ''}
       ${bls ? stat('Median wage', fmtWage(bls.median_wage_usd)) : ''}
       ${bls ? stat('2024–34', fmtPct(bls.projected_pct_change), deltaClass(bls.projected_pct_change)) : ''}

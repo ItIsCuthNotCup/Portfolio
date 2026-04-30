@@ -34,6 +34,9 @@ import re
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+ET = ZoneInfo("America/New_York")
 from pathlib import Path
 from typing import Optional
 
@@ -195,8 +198,8 @@ def posting_window_text(vids: list[dict]) -> str:
             dt = datetime.fromisoformat(pub.replace("Z", "+00:00"))
         except ValueError:
             continue
-        # Convert UTC to ET (UTC-5, ignoring DST for v1)
-        dt_et = dt.astimezone(timezone(timedelta(hours=-5)))
+        # Convert UTC to ET. zoneinfo handles DST so EST/EDT switch correctly.
+        dt_et = dt.astimezone(ET)
         slots[(dt_et.weekday(), dt_et.hour)] += 1
 
     # Find best contiguous 6-hour window
