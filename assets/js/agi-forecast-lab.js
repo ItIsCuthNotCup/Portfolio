@@ -344,7 +344,7 @@
     const quoteText = r.quote_text || r.claim_summary || '';
     const quoteSnippet = quoteText.length > 180 ? quoteText.slice(0, 180) + '…' : quoteText;
     tt.innerHTML = `
-      <div class="tt-name">${escapeHtml(r.person)} <span class="tt-badge ${r.verified_level || 'medium'}">${verifyBadge}</span></div>
+      <div class="tt-name">${escapeHtml(r.person)} <span class="tt-badge ${escapeHtml(r.verified_level || 'medium')}">${verifyBadge}</span></div>
       <div class="tt-meta">${escapeHtml(r.role || '')}</div>
       <div class="tt-meta">${r.year_said} → ${yearStr} &middot; lift ${lift > 0 ? '+' : ''}${lift} yr</div>
       <div class="tt-quote">${r.verbatim ? '“' : ''}${escapeHtml(quoteSnippet)}${r.verbatim ? '”' : ''}</div>
@@ -376,6 +376,17 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[m]));
   }
+  // Reject anything that isn't http(s):. Returns '' for unsafe input so the
+  // caller falls back to plain text instead of emitting a clickable link.
+  function safeHttpUrl(s) {
+    const raw = String(s || '').trim();
+    if (!raw) return '';
+    try {
+      const u = new URL(raw, 'https://jakecuth.com');
+      if (u.protocol === 'http:' || u.protocol === 'https:') return u.href;
+    } catch (_) { /* fall through */ }
+    return '';
+  }
 
   /* ── Side panel ────────────────────────────────────────── */
   function openSidePanel(r) {
@@ -387,8 +398,9 @@
       o.person === r.person && o !== r && o.year_said && o.year_mid
     ).sort((a, b) => a.year_said - b.year_said);
 
-    const sourceLink = r.source_url
-      ? `<a href="${escapeHtml(r.source_url)}" target="_blank" rel="noopener">${escapeHtml(r.source_title || 'Source')} ↗</a>`
+    const safeUrl = safeHttpUrl(r.source_url);
+    const sourceLink = safeUrl
+      ? `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener">${escapeHtml(r.source_title || 'Source')} ↗</a>`
       : escapeHtml(r.source_title || '');
 
     const yearStr = (r.year_low && r.year_high && r.year_low !== r.year_high)
@@ -404,7 +416,7 @@
         <span class="label">Forecasted</span>${yearStr}
         <span class="label">Concept</span>${escapeHtml(r.concept || 'AGI')}
         <span class="label">Source</span>${sourceLink}
-        <span class="label">Verification</span>${verificationBadge(r.verified_level)} ${r.verified_level || 'medium'}
+        <span class="label">Verification</span>${verificationBadge(r.verified_level)} ${escapeHtml(r.verified_level || 'medium')}
         ${r.notes ? `<span class="label">Notes</span>${escapeHtml(r.notes)}` : ''}
       </div>
       ${others.length > 0 ? `
