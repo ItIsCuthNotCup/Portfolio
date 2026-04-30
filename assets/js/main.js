@@ -434,4 +434,80 @@
 
   // Fire initial scroll
   onScroll();
+
+  /* ═══════════════════════════════════════════════════════════
+     TEXT SCRAMBLE
+     Decode-wave reveal across the text nodes of any
+     [data-scramble] element. Preserves child element structure
+     (italic / accent spans), only mutates text nodes. Letters
+     scramble with letters; punctuation and whitespace stay put
+     so the layout doesn't pulse.
+     ═══════════════════════════════════════════════════════════ */
+  function scrambleElement(root, opts) {
+    opts = opts || {};
+    var duration = opts.duration || 1100;
+    var scrambleSpeed = opts.scrambleSpeed || 50;
+    // Restricted to letters so the result reads like prose, not noise.
+    var POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    // Walk leaf text nodes in document order and snapshot their final values.
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [];
+    var totalLen = 0;
+    var n;
+    while ((n = walker.nextNode())) {
+      var v = n.nodeValue;
+      nodes.push({ node: n, finalText: v, startIdx: totalLen });
+      totalLen += v.length;
+    }
+    if (totalLen === 0) return;
+
+    var start = performance.now();
+    function frame(now) {
+      var p = Math.min(1, (now - start) / duration);
+      var seed = Math.floor(now / scrambleSpeed);
+
+      for (var k = 0; k < nodes.length; k++) {
+        var entry = nodes[k];
+        var finalText = entry.finalText;
+        var startIdx = entry.startIdx;
+        var out = '';
+        for (var i = 0; i < finalText.length; i++) {
+          var globalI = startIdx + i;
+          var my = totalLen > 0 ? globalI / totalLen : 0;
+          var c = finalText.charAt(i);
+          if (p > my + 0.02) {
+            out += c;
+          } else if (/[A-Za-z]/.test(c)) {
+            out += POOL.charAt((globalI * 31 + seed * 17) % POOL.length);
+          } else {
+            // Spaces, punctuation, newlines, anything non-letter: leave intact.
+            out += c;
+          }
+        }
+        entry.node.nodeValue = out;
+      }
+
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function initScramble() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    var targets = document.querySelectorAll('[data-scramble]');
+    targets.forEach(function (el, i) {
+      var delay = parseInt(el.getAttribute('data-scramble-delay') || (i * 150), 10);
+      var dur = parseInt(el.getAttribute('data-scramble-duration') || '1100', 10);
+      setTimeout(function () { scrambleElement(el, { duration: dur }); }, delay);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScramble);
+  } else {
+    initScramble();
+  }
 })();
