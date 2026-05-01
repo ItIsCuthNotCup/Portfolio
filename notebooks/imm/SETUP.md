@@ -222,7 +222,7 @@ Subsequent builds are cached and complete in <60s.
 **Cloud Run cold-start latency**
 The first `/predict` request after idle takes ~3-4s while the container
 spins up and downloads `imm_model.pkl` from GCS. Subsequent requests in
-the same instance are <100ms. For the demo, hit `/healthz` once to warm
+the same instance are <100ms. For the demo, hit `/health` once to warm
 the instance before showing the what-if tool.
 
 **Rate limit triggers during demo**

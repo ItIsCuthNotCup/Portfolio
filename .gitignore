@@ -1,31 +1,29 @@
-.DS_Store
-magick-*
-*.mov
-data/ml-latest-small/
 
-# Sandbox / tooling cruft (do not ship to the repo)
-node_modules/
-.wrangler/
-# Ignore everything in .claude/ EXCEPT the skills directory (we DO
-# ship custom skills so future sessions and scheduled jobs can use
-# them). Note: pattern must be .claude/* not .claude/ — git won't
-# recurse into a directory that's been fully ignored.
-.claude/*
-!.claude/skills/
-
-# Quick Draw raw bitmap downloads — re-fetched on training run
-.cache/
-notebooks/.cache/
-
-# Local working files that aren't part of the published site
-*.xlsx
-PORTFOLIO-REWRITE-PLAN.md
-.impeccable.md
-
-# macOS iCloud sync ghost files (FUSE artifacts when files are open elsewhere)
-.fuse_hidden*
-
-# Python compile artifacts
 __pycache__/
+!.claude/skills/
+.cache/
+.claude/*
+.DS_Store
+.fuse_hidden*
+.impeccable.md
+.venv/
+.wrangler/
+*.mov
 *.pyc
 *.pyo
+*.xlsx
+# Ignore everything in .claude/ EXCEPT the skills directory (we DO
+# Local working files that aren't part of the published site
+# macOS iCloud sync ghost files (FUSE artifacts when files are open elsewhere)
+# Python compile artifacts
+# Quick Draw raw bitmap downloads — re-fetched on training run
+# recurse into a directory that's been fully ignored.
+# Sandbox / tooling cruft (do not ship to the repo)
+# ship custom skills so future sessions and scheduled jobs can use
+# them). Note: pattern must be .claude/* not .claude/ — git won't
+data/ml-latest-small/
+magick-*
+models/imm/
+node_modules/
+notebooks/.cache/
+PORTFOLIO-REWRITE-PLAN.md

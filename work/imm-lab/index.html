@@ -287,6 +287,11 @@
     <span class="imm-filter-divider"></span>
     <button type="button" class="imm-pill" id="imm-reset-btn">Reset to current</button>
     <button type="button" class="imm-pill imm-pill-action" id="imm-optimize-btn">Find optimal allocation</button>
+    <span class="imm-filter-divider"></span>
+    <span class="imm-api-badge" id="imm-api-badge" title="Cloud Run prediction API status">
+      <span class="imm-api-dot"></span>
+      <span id="imm-api-text">API: checking&hellip;</span>
+    </span>
   </div>
 
   <div class="imm-whatif-grid" id="imm-whatif-grid"></div>
@@ -457,6 +462,7 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/imm-lab.js?v=2"></script>
+<script>window.IMM_API_URL = 'https://imm-lab-api-290331859515.us-central1.run.app';</script>
+<script src="/assets/js/imm-lab.js?v=3"></script>
 </body>
 </html>

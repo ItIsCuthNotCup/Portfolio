@@ -132,7 +132,7 @@ def root() -> dict[str, str]:
     return {"service": "imm-lab-api", "status": "ok"}
 
 
-@app.get("/healthz")
+@app.get("/health")
 def health() -> dict[str, str]:
     try:
         load_model()

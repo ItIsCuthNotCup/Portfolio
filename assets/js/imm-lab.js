@@ -74,6 +74,29 @@
     };
   }
 
+  // ── API status badge ──────────────────────────────────────────────
+  // Ping the Cloud Run /health route if window.IMM_API_URL is set so the
+  // badge in §V reflects whether the backend is reachable. Predictions
+  // continue to run client-side regardless — the badge is documentation.
+  function setBadge(state, text) {
+    const b = document.getElementById('imm-api-badge');
+    const t = document.getElementById('imm-api-text');
+    if (!b || !t) return;
+    b.classList.remove('live', 'local', 'error');
+    b.classList.add(state);
+    t.textContent = text;
+  }
+  function pingApi() {
+    if (!window.IMM_API_URL) {
+      setBadge('local', 'API: local-only');
+      return;
+    }
+    fetch(window.IMM_API_URL + '/health', { method: 'GET' })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(j => setBadge('live', 'API: live · Cloud Run'))
+      .catch(() => setBadge('error', 'API: unreachable'));
+  }
+
   // ── Bootstrap ──────────────────────────────────────────────────────
   Promise.all([
     fetch('/assets/data/imm-lab/data.json').then(r => r.json()),
@@ -88,6 +111,7 @@
     renderWhatIfTool(data, model);
     renderRecoveryTable(data, model);
     renderReceipts(data, model);
+    pingApi();
   }).catch(err => {
     console.error('IMM Lab data load failed:', err);
     document.querySelectorAll('.imm-section svg').forEach(s => {

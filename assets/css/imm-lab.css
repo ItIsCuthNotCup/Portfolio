@@ -372,6 +372,33 @@
   color: var(--paper);
 }
 
+/* ── Cloud Run API status badge ─────────────────────────────── */
+.imm-api-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 9.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--ink-dim);
+  background: var(--paper);
+}
+.imm-api-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-dim);
+  display: inline-block;
+}
+.imm-api-badge.live .imm-api-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+.imm-api-badge.local .imm-api-dot { background: var(--ink-dim); }
+.imm-api-badge.error .imm-api-dot { background: #c66e6e; }
+
 .imm-whatif-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
