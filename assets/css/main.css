@@ -220,28 +220,49 @@ main { position: relative; }
 .nav-dropdown-menu {
   position: absolute;
   top: 100%; right: 0;
-  /* padding-top is the hover bridge — mouse can travel from button to
-     card without losing hover on .nav-dropdown */
-  margin: 0;
-  padding: 14px 0 0 0;
+  margin: 6px 0 0 0;
+  padding: 0;
   min-width: 240px;
   list-style: none;
+  /* Card style applied directly to the menu so every item — including
+     scrolled-past-the-fold items — lives inside one consistent
+     background. (Previously the card was an absolutely-positioned
+     ::before that didn't scroll with the items, so items past the
+     fold rendered "outside" the card frame.) */
+  background: var(--paper);
+  border: 1px solid var(--ink);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
   transition: opacity 180ms ease, transform 180ms ease;
   z-index: 60;
-  /* Cap height so a long list (14+ labs) stays reachable on short
-     viewports — the bottom items become scrollable rather than clipped. */
+  /* Cap height so a long list (15+ labs) stays reachable on short
+     viewports — items past max-height become scrollable rather than
+     bleeding out below the card. */
   max-height: calc(100vh - 96px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--ink-dim) transparent;
 }
+.nav-dropdown-menu::before { display: none; }
 .nav-dropdown-menu::-webkit-scrollbar { width: 6px; }
 .nav-dropdown-menu::-webkit-scrollbar-thumb { background: var(--ink-dim); border-radius: 3px; }
 .nav-dropdown-menu::-webkit-scrollbar-track { background: transparent; }
+/* Re-create the hover bridge: a small invisible buffer above the card
+   so the cursor can travel from button → menu without losing hover. */
+.nav-dropdown::after {
+  content: '';
+  position: absolute;
+  top: 100%; right: 0;
+  width: 240px;
+  height: 10px;
+  pointer-events: none;
+}
+.nav-dropdown:hover::after,
+.nav-dropdown:focus-within::after {
+  pointer-events: auto;
+}
 .nav-dropdown-menu::before {
   /* the visible card — starts below the hover-bridge padding */
   content: '';
