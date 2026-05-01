@@ -358,7 +358,7 @@
   text-transform: uppercase;
 }
 .ev-bench-tile-status.saturated { color: var(--accent); }
-.ev-bench-tile-status.open { color: #264F73; }
+.ev-bench-tile-status.open { color: #5B9BD5; }
 .ev-bench-tile svg {
   display: block;
   width: 100%;

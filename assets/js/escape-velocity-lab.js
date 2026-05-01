@@ -183,7 +183,7 @@
     drawMoore();
 
     // Model dots
-    const eraDotColors = { 'pre-dl': '#7A6C8A', 'dl': '#264F73', 'scaling': '#E04E1A' };
+    const eraDotColors = { 'pre-dl': '#A89BB8', 'dl': '#5B9BD5', 'scaling': '#FF6B3D' };
     models.forEach(m => {
       const cx = xScale(m.year), cy = yScale(m.flop);
       const circle = svgEl('circle', { cx, cy, r: m.label ? 5 : 3.5, fill: eraDotColors[m.era] || '#999', stroke: 'var(--paper)', 'stroke-width': 1.5, 'data-model': m.name });
@@ -298,7 +298,7 @@
           const y = yScale(m.compute_flop);
           d += (i ? 'L' : 'M') + x + ',' + y;
         });
-        svg.appendChild(svgEl('path', { d, stroke: '#264F73', 'stroke-width': 2.5, fill: 'none' }));
+        svg.appendChild(svgEl('path', { d, stroke: '#5B9BD5', 'stroke-width': 2.5, fill: 'none' }));
       }
 
       // All milestones as scatter points
@@ -306,7 +306,7 @@
         const cx = xScale(new Date(m.year + '-06').getTime());
         const cy = yScale(m.compute_flop);
         const isFrontier = m.compute_flop >= 1e23;
-        const c = svgEl('circle', { cx, cy, r: isFrontier ? 4 : 3, fill: isFrontier ? '#264F73' : '#7A6C8A', stroke: 'var(--paper)', 'stroke-width': 1.5 });
+        const c = svgEl('circle', { cx, cy, r: isFrontier ? 4 : 3, fill: isFrontier ? '#5B9BD5' : '#A89BB8', stroke: 'var(--paper)', 'stroke-width': 1.5 });
         c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${m.model}</div><div class="tt-meta">${isFrontier ? 'Frontier' : 'Efficiency'} &middot; ${formatNumber(m.compute_flop)} FLOP</div>`, e.offsetX, e.offsetY));
         c.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(c);
@@ -324,7 +324,7 @@
           const y = yScale(Math.min(p.val, yDomain[1]));
           d += (i ? 'L' : 'M') + x + ',' + y;
         });
-        const stroke = view === 'combined' ? 'var(--accent)' : '#B59E5C';
+        const stroke = view === 'combined' ? 'var(--accent)' : '#D4B970';
         svg.appendChild(svgEl('path', { d, stroke, 'stroke-width': 2.5, fill: 'none', 'stroke-dasharray': view === 'separate' ? '6,4' : 'none' }));
       }
 
@@ -332,11 +332,11 @@
       const lbls = svgEl('g', { id: 'ev-eff-labels' });
       if (view === 'separate') {
         const lastFrontier = frontierMs[frontierMs.length - 1];
-        const t1 = svgEl('text', { x: W - M.r - 10, y: yScale(lastFrontier.compute_flop) - 10, 'text-anchor': 'end', fill: '#264F73', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
+        const t1 = svgEl('text', { x: W - M.r - 10, y: yScale(lastFrontier.compute_flop) - 10, 'text-anchor': 'end', fill: '#5B9BD5', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
         t1.textContent = 'Raw compute';
         lbls.appendChild(t1);
         const effY = Math.min(lastFrontier.compute_flop * Math.pow(2, (frontierMs.length - 1) * 1.5), yDomain[1] * 0.9);
-        const t2 = svgEl('text', { x: W - M.r - 10, y: yScale(effY) - 10, 'text-anchor': 'end', fill: '#B59E5C', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
+        const t2 = svgEl('text', { x: W - M.r - 10, y: yScale(effY) - 10, 'text-anchor': 'end', fill: '#D4B970', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
         t2.textContent = 'Effective compute';
         lbls.appendChild(t2);
       } else {
@@ -711,9 +711,9 @@
         scores.forEach((s, i) => {
           bd += (i ? 'L' : 'M') + bx(i) + ',' + by(s.score);
         });
-        tileSvg.appendChild(svgEl('path', { d: bd, stroke: saturated ? 'var(--accent)' : '#264F73', 'stroke-width': 2, fill: 'none' }));
+        tileSvg.appendChild(svgEl('path', { d: bd, stroke: saturated ? 'var(--accent)' : '#5B9BD5', 'stroke-width': 2, fill: 'none' }));
         scores.forEach((s, i) => {
-          tileSvg.appendChild(svgEl('circle', { cx: bx(i), cy: by(s.score), r: 2.5, fill: saturated ? 'var(--accent)' : '#264F73' }));
+          tileSvg.appendChild(svgEl('circle', { cx: bx(i), cy: by(s.score), r: 2.5, fill: saturated ? 'var(--accent)' : '#5B9BD5' }));
         });
 
         // Current score label
@@ -753,7 +753,7 @@
     const xScale = makeScale(xDomain, [M.l, W - M.r]);
     const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
 
-    const colors = { data: '#264F73', power: '#7A6C8A', duration: '#B59E5C', cost: '#A04A4A' };
+    const colors = { data: '#5B9BD5', power: '#A89BB8', duration: '#D4B970', cost: '#C66E6E' };
     const currentVals = { data: 15, power: 100, duration: 6, cost: 0.5 };
     const ceilingVals = { data: 300, power: 10000, duration: 9, cost: 100 };
 
