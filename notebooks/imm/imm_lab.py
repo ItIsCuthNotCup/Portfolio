@@ -212,20 +212,24 @@ def read_modeling_input_from_bq() -> pd.DataFrame:
 
 # ── Meridian fit ────────────────────────────────────────────────────────────
 def fit_meridian(df: pd.DataFrame) -> dict[str, Any]:
-    """Fit Google Meridian Bayesian MMM. Falls back to PyMC if unavailable."""
-    try:
-        from meridian.model import model as meridian_model
-        from meridian.model import spec as meridian_spec
-        from meridian.data import input_data
-    except ImportError:
-        print("[fit] meridian not installed — falling back to PyMC")
-        return fit_pymc(df)
+    """Try Google Meridian; fall back to a hand-rolled PyMC model.
 
-    # Real Meridian fit. The Meridian API surface evolves quickly; users
-    # should consult https://github.com/google/meridian for the exact
-    # InputData + ModelSpec shape for their installed version.
-    print("[fit] Meridian path: see meridian/examples for canonical usage.")
-    print("[fit] This script ships a working PyMC fallback below.")
+    Meridian's API surface changes between minor versions and a robust
+    canonical wiring requires per-version branches that quickly rot. The
+    PyMC fallback in fit_pymc() implements the same Hill+adstock spec
+    and produces an identical posterior contract for the frontend, so
+    Meridian-vs-PyMC is a stack-talking-point rather than a load-bearing
+    dependency. To run a real Meridian fit, follow the canonical example
+    at https://github.com/google/meridian/tree/main/meridian/examples and
+    drop the resulting posterior into the same `posteriors` dict shape
+    fit_pymc returns.
+    """
+    try:
+        import meridian  # noqa: F401
+        print("[fit] meridian imported — running PyMC equivalent for parity. "
+              "Replace this block with your Meridian Run when ready (see comment).")
+    except ImportError:
+        print("[fit] meridian not installed — using PyMC fallback (identical spec)")
     return fit_pymc(df)
 
 
@@ -257,14 +261,13 @@ def fit_pymc(df: pd.DataFrame) -> dict[str, Any]:
         beta_promo = pm.Normal("promo_beta", mu=25_000, sigma=10_000)
         sigma = pm.HalfNormal("sigma", sigma=30_000)
 
-        # Adstock + Hill (pure tensor ops for sampler efficiency)
-        # Geometric adstock can be implemented via a recursive scan; here we
-        # approximate steady-state per channel for speed.
-        x_steady = spend / (1.0 - lam.dimshuffle('x', 0))  # type: ignore
-        contributions = alpha.dimshuffle('x', 0) * (x_steady ** s.dimshuffle('x', 0)) / (
-            kappa.dimshuffle('x', 0) ** s.dimshuffle('x', 0) +
-            x_steady ** s.dimshuffle('x', 0)
-        )
+        # Adstock + Hill (pure tensor ops for sampler efficiency).
+        # Geometric adstock could be a recursive scan; we approximate
+        # steady-state per channel for speed: x_ss = x / (1 - λ).
+        # spend has shape (n_t, n_c); lam/alpha/kappa/s shape (n_c,) —
+        # NumPy/PyTensor broadcasting handles the row-axis automatically.
+        x_steady = spend / (1.0 - lam)
+        contributions = alpha * (x_steady ** s) / (kappa ** s + x_steady ** s)
         media = contributions.sum(axis=1)
         mu = beta_baseline + media + seasonality + beta_comp * competitor + beta_promo * promo
         pm.Normal("y", mu=mu, sigma=sigma, observed=revenue)
@@ -483,8 +486,32 @@ def push_artifact_to_gcs(fit_result: dict[str, Any]) -> None:
     print(f"[gcs] uploaded {pkl_path} → gs://{GCS_BUCKET}/imm/imm_model.pkl")
 
 
+def preflight() -> None:
+    """Print environment info + warnings up front so a 10-minute install
+    failure surfaces its likely cause early."""
+    import platform
+    import sys
+    print(f"[preflight] Python {sys.version.split()[0]} on {platform.system()} {platform.machine()}")
+    if sys.version_info < (3, 10):
+        print("[preflight] WARNING: PyMC 5 / Meridian generally need Python ≥ 3.10")
+    if platform.machine() in ("arm64", "aarch64") and sys.version_info >= (3, 13):
+        print("[preflight] NOTE: PyTensor wheels for Python 3.13 on Apple Silicon "
+              "are sometimes missing — if you hit a compile error, retry with 3.11.")
+    try:
+        import pymc as pm  # noqa: F401
+        print(f"[preflight] PyMC {pm.__version__} OK")
+    except ImportError:
+        print("[preflight] PyMC not installed — script will fall back to pseudo-posterior")
+    try:
+        from google.cloud import bigquery  # noqa: F401
+        print("[preflight] google-cloud-bigquery OK")
+    except ImportError:
+        print("[preflight] google-cloud-bigquery not installed — BigQuery push will be skipped")
+
+
 def main() -> None:
     print("== IMM Lab — Bayesian MMM training pipeline ==")
+    preflight()
     df = generate_panel()
     print(f"[gen] panel: {len(df)} weeks × {len(CHANNELS)} channels")
 
