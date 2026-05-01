@@ -428,15 +428,53 @@
         svg.appendChild(svgEl('path', { d, stroke: '#5B9BD5', 'stroke-width': 2.5, fill: 'none' }));
       }
 
-      // All milestones as scatter points
+      // All milestones as scatter points + labels
+      const placedLabels = [];
+      const labW = 90, labH = 13;
       milestones.forEach(m => {
         const cx = xScale(new Date(m.year + '-06').getTime());
         const cy = yScale(m.compute_flop);
         const isFrontier = m.compute_flop >= 1e23;
-        const c = svgEl('circle', { cx, cy, r: isFrontier ? 4 : 3, fill: isFrontier ? '#5B9BD5' : '#A89BB8', stroke: 'var(--paper)', 'stroke-width': 1.5 });
+        const c = svgEl('circle', { cx, cy, r: isFrontier ? 5 : 4, fill: isFrontier ? '#5B9BD5' : '#A89BB8', stroke: 'var(--paper)', 'stroke-width': 1.5 });
         c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${m.model}</div><div class="tt-meta">${isFrontier ? 'Frontier' : 'Efficiency'} &middot; ${formatNumber(m.compute_flop)} FLOP</div>`, e.offsetX, e.offsetY));
         c.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(c);
+
+        // Label every milestone — this chart only has ~8 of them so layout is easy.
+        const candidates = [
+          { dx: 9, dy: -7, anchor: 'start' },
+          { dx: 9, dy: 14, anchor: 'start' },
+          { dx: -9, dy: -7, anchor: 'end' },
+          { dx: -9, dy: 14, anchor: 'end' },
+          { dx: 9, dy: -22, anchor: 'start' },
+          { dx: 9, dy: 28, anchor: 'start' },
+        ];
+        let chosen = candidates[0];
+        let bestOverlap = Infinity;
+        for (const cand of candidates) {
+          const x0 = cx + cand.dx + (cand.anchor === 'end' ? -labW : 0);
+          const y0 = cy + cand.dy - labH;
+          if (x0 < M.l - 4 || x0 + labW > W - M.r + 60) continue;
+          if (y0 < M.t - 4 || y0 > H - M.b) continue;
+          const overlap = placedLabels.reduce((s, p) => {
+            const dx = Math.max(0, Math.min(x0 + labW, p.x0 + labW) - Math.max(x0, p.x0));
+            const dy = Math.max(0, Math.min(y0 + labH, p.y0 + labH) - Math.max(y0, p.y0));
+            return s + dx * dy;
+          }, 0);
+          if (overlap < bestOverlap) { bestOverlap = overlap; chosen = cand; if (overlap === 0) break; }
+        }
+        const lbl = svgEl('text', {
+          x: cx + chosen.dx, y: cy + chosen.dy,
+          'text-anchor': chosen.anchor,
+          fill: isFrontier ? 'var(--ink)' : 'var(--ink-soft)',
+          'font-size': 10, 'font-family': 'DM Mono, monospace'
+        });
+        lbl.textContent = m.model;
+        svg.appendChild(lbl);
+        placedLabels.push({
+          x0: cx + chosen.dx + (chosen.anchor === 'end' ? -labW : 0),
+          y0: cy + chosen.dy - labH,
+        });
       });
 
       // Efficiency multiplier line (synthetic, based on frontier trajectory)
