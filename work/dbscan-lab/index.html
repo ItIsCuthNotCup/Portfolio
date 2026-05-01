@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBSCAN — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="Density-based clustering. Eps and minPts control what counts as a cluster — and what gets called noise. No need to pick k.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DBSCAN — clusters without committing to k">
+  <meta property="og:description" content="A live DBSCAN demo. Eps + minPts sliders, density-connected clusters, noise points called out. Where K-Means breaks, DBSCAN works.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/dbscan-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span></div>
+  <div class="masthead-name"><a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a></div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">Labs <span class="nav-caret" aria-hidden="true">&#9662;</span></button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>DBSCAN</span></div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Clusters without<br><span class="serif-italic" style="color:var(--accent)">committing to k.</span></h1>
+  <p class="lab-biz-line">
+    Density-based clustering. Points in dense neighborhoods form
+    clusters. <mark class="ink-mark">Sparse points get labeled noise — and that's a useful signal</mark>,
+    not a failure mode. No need to pick k. Two parameters take its place.
+  </p>
+  <p class="mc-kicker">
+    Move <em>eps</em> to change the neighborhood radius. Move
+    <em>minPts</em> to change how many points constitute a "dense"
+    region. Faded gray dots are noise &mdash; points that didn't make it into
+    any cluster. Try the rings preset to feel where K-Means stalls and
+    DBSCAN does the obvious thing.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; brute-force neighbor search</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/dbscan-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">dbscan-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; I</span><span>Density, drawn live</span></div>
+  <p class="mc-note">Points within eps of a core point join that cluster. Points with too few neighbors are noise.</p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="db-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="DBSCAN clustering canvas"></svg>
+      <div class="mc-canvas-hint">faded dots are noise</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill db-preset is-active" data-preset="rings">Concentric rings</button>
+        <button type="button" class="mc-preset-pill db-preset" data-preset="blobs">Blobs + noise</button>
+        <button type="button" class="mc-preset-pill db-preset" data-preset="noise">Pure noise</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">eps (radius)</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>eps</span><span class="val" id="db-eps-val">0.050</span></div>
+        <input type="range" id="db-eps" min="0.01" max="0.20" step="0.005" value="0.05">
+      </div>
+      <div class="mc-control-head" style="margin-top: 4px;">minPts</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>minPts</span><span class="val" id="db-minpts-val">4</span></div>
+        <input type="range" id="db-minpts" min="2" max="10" step="1" value="4">
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">clusters found</div><span class="value" id="db-k">—</span></div>
+        <div class="mc-readout-cell"><div class="label">noise points</div><span class="value" id="db-noise">—</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <div class="mc-prose">
+    <p>
+      Pick a point. Find its neighbors within distance eps. If there are
+      at least minPts of them, this is a "core" point and it starts a
+      cluster. Recursively grow the cluster by including any other point
+      within eps of any point already in the cluster. Repeat for every
+      unvisited point. Anything left over with too few neighbors is noise.
+    </p>
+    <p>
+      The "core" definition is what makes DBSCAN density-based.
+      K-Means cares about distance to a centroid; DBSCAN cares about
+      whether enough nearby points exist to call this region "dense."
+      That subtle reframing is what lets it find arbitrary-shaped
+      clusters and explicitly model outliers.
+    </p>
+    <p>
+      The cost: two parameters that interact in non-obvious ways. The
+      epsilon-vs-minPts grid search is the practical equivalent of
+      picking k for K-Means &mdash; same kind of guesswork, different shape.
+    </p>
+  </div>
+  <details class="mc-math"><summary>The math</summary><div class="mc-math-body">
+    <p>For a point <span class="formula">p</span>, define its eps-neighborhood:</p>
+    <span class="formula formula-block">N_ε(p) = { q : ‖p − q‖ ≤ ε }</span>
+    <p><span class="formula">p</span> is a <em>core point</em> iff <span class="formula">|N_ε(p)| ≥ minPts</span>. Two core points are <em>density-reachable</em> if a chain of core points connects them via overlapping eps-neighborhoods. A cluster is a maximal set of density-reachable points plus all their (non-core) eps-neighbors. Anything else is noise.</p>
+    <p>The algorithm runs in <span class="formula">O(n²)</span> with brute-force neighbor search, <span class="formula">O(n log n)</span> with a spatial index.</p>
+  </div></details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <div class="mc-grid-2">
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Non-convex clusters</h3>
+      <p>Try the rings preset. K-Means slices the plane with straight lines and gets the wrong answer. DBSCAN follows density and finds the two rings as separate clusters. Anything spatial that isn't roughly globular is DBSCAN's territory.</p></div>
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Noise as signal</h3>
+      <p>Outlier detection comes free. The points labeled noise are points DBSCAN couldn't fit into any dense region — frequently exactly the points you want to flag. Fraud detection, sensor anomaly, industrial QC.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Variable-density clusters</h3>
+      <p>One eps for the whole dataset. If you have a dense cluster nested inside a sparse one, eps either splits the dense cluster or merges everything together. HDBSCAN was specifically designed to handle this.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">High dimensions</h3>
+      <p>Distance metrics degrade as dimensions climb. By 50 dimensions, the difference between "near" and "far" collapses, and DBSCAN's eps neighborhood becomes meaningless. Dimensionality-reduce first (UMAP, PCA) or use a model that doesn't depend on geometry.</p></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <polygon points="100,52 156,100 100,148 36,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 60%"></span></span><span class="num">0.60</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 70%"></span></span><span class="num">0.70</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 65%"></span></span><span class="num">0.65</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 80%"></span></span><span class="num">0.80</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <p class="mc-real">
+    <strong>Astronomical surveys at LSST and the Sloan Digital Sky Survey.</strong>
+    DBSCAN is the workhorse for finding stellar streams, galaxy clusters,
+    and tidal tails in catalogs of billions of objects. Density &mdash; not
+    distance to a hand-picked centroid &mdash; is the natural language of
+    sky structure. The "noise" label happens to be where most of the
+    interesting transient phenomena hide.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/kmeans-lab/"><p class="name">K-Means</p><p class="note">Faster &middot; convex clusters only</p></a>
+    <a class="mc-compare-card" href="/work/isolation-forest-lab/"><p class="name">Isolation Forest</p><p class="note">Anomaly detection &middot; complementary</p></a>
+    <a class="mc-compare-card" href="/work/segmentation-lab/"><p class="name">Segmentation Lab</p><p class="note">K-Means in production &middot; FIG. 02</p></a>
+  </div>
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div><a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot; <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a></div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/dbscan-lab.js?v=1"></script>
+</body>
+</html>

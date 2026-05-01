@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ridge / Lasso — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="Linear, but disciplined. Ridge (L2) and Lasso (L1) regularization on a polynomial fit. Watch coefficients shrink — and Lasso zero them out — as lambda grows.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ridge / Lasso — linear, but disciplined">
+  <meta property="og:description" content="Visualize how L2 vs L1 regularization shape coefficients on a degree-7 polynomial fit. Lasso performs feature selection automatically.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/ridge-lasso-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+  <style>
+    .rl-coefs { display: grid; gap: 6px; }
+    .rl-coef-row { display: grid; grid-template-columns: 36px 1fr 60px; gap: 10px; align-items: center; font-family: 'DM Mono', monospace; font-size: 11px; }
+    .rl-coef-name { color: var(--ink-dim); letter-spacing: 0.16em; text-transform: uppercase; }
+    .rl-coef-bar { position: relative; height: 8px; background: color-mix(in oklab, var(--ink) 12%, transparent); }
+    .rl-coef-bar > span { position: absolute; inset: 0 auto 0 0; }
+    .rl-coef-val { text-align: right; font-variant-numeric: tabular-nums; }
+    .rl-coef-val.is-zero { color: var(--ink-dim); opacity: 0.4; }
+  </style>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span></div>
+  <div class="masthead-name"><a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a></div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">Labs <span class="nav-caret" aria-hidden="true">&#9662;</span></button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Ridge / Lasso</span></div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Linear, but<br><span class="serif-italic" style="color:var(--accent)">disciplined.</span></h1>
+  <p class="lab-biz-line">
+    Linear models with an L2 (ridge) or L1 (lasso) penalty on the
+    coefficients. <mark class="ink-mark">Lasso zeroes out unhelpful features automatically</mark> &mdash;
+    feature selection as a side effect of the loss function.
+  </p>
+  <p class="mc-kicker">
+    Below: a degree-7 polynomial fitted to a wiggly dataset. Move
+    lambda to crank up regularization. Toggle between Ridge (which
+    shrinks every coefficient toward zero smoothly) and Lasso (which
+    pushes some all the way to zero). Watch the curve straighten and
+    the bars collapse.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; gradient + soft-thresholding</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/ridge-lasso-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">ridge-lasso-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; I</span><span>Coefficients, shrunk live</span></div>
+  <p class="mc-note">Bars on the right show coefficient magnitude. Lasso at high lambda zeroes most of them &mdash; the useful ones survive.</p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="rl-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ridge/Lasso polynomial fit"></svg>
+      <div class="mc-canvas-hint">degree-7 polynomial fit</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Penalty type</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill rl-mode is-active" data-mode="ridge">Ridge (L2)</button>
+        <button type="button" class="mc-preset-pill rl-mode" data-mode="lasso">Lasso (L1)</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill rl-preset is-active" data-preset="wiggly">Wiggly</button>
+        <button type="button" class="mc-preset-pill rl-preset" data-preset="noisy">Noisy</button>
+        <button type="button" class="mc-preset-pill rl-preset" data-preset="linear">Linear</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">Lambda (λ)</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>λ</span><span class="val" id="rl-lambda-val">0.100</span></div>
+        <input type="range" id="rl-lambda" min="0.001" max="2" step="0.01" value="0.1">
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">R²</div><span class="value" id="rl-r2">—</span></div>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">Coefficients</div>
+      <div class="rl-coefs" id="rl-coefs"></div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <div class="mc-prose">
+    <p>
+      Ridge adds <span class="formula">λ·Σwⱼ²</span> to the loss; Lasso
+      adds <span class="formula">λ·Σ|wⱼ|</span>. The difference matters
+      more than it looks. The squared term has a continuous derivative
+      and shrinks all coefficients smoothly. The absolute-value term has
+      a kink at zero that &mdash; combined with the optimization &mdash; pushes
+      coefficients exactly to zero rather than near-zero.
+    </p>
+    <p>
+      That zero-pinning is automatic feature selection. Lasso is the
+      reason a model fitted to thousands of features can come out with
+      a sparse explanation that uses only twenty. Ridge can't do that;
+      every coefficient stays nonzero, just smaller.
+    </p>
+    <p>
+      Elastic Net combines both penalties. It's what scikit-learn's
+      <span class="formula">ElasticNet</span> defaults to and what most
+      production teams use when they want grouped feature selection
+      (Lasso alone is unstable when features are correlated).
+    </p>
+  </div>
+  <details class="mc-math"><summary>The math</summary><div class="mc-math-body">
+    <p>Ridge:</p>
+    <span class="formula formula-block">min_w  Σ_i (y_i − w·x_i)² + λ Σ_j w_j²</span>
+    <p>Lasso:</p>
+    <span class="formula formula-block">min_w  Σ_i (y_i − w·x_i)² + λ Σ_j |w_j|</span>
+    <p>Ridge has a closed form: <span class="formula">ŵ = (XᵀX + λI)⁻¹ Xᵀy</span>. Lasso doesn't &mdash; the absolute-value term breaks differentiability at zero. Solved with coordinate descent or proximal gradient methods (this demo uses soft-thresholded gradient steps).</p>
+  </div></details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <div class="mc-grid-2">
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">High-dimensional data</h3>
+      <p>Genomics, text, images-as-features &mdash; whenever you have many more candidate predictors than samples, regularization is essential. Lasso-based feature selection turns "thousands of correlated genes" into "the eight that drive the outcome."</p></div>
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Multi-collinearity</h3>
+      <p>When features are highly correlated, OLS coefficients explode. Ridge stabilizes them by trading bias for variance. The model becomes less interpretable per-coefficient, but the predictions become trustworthy.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Non-linear relationships</h3>
+      <p>Ridge / Lasso are still linear models. Polynomial features (as in this demo) extend their reach but blow up in high dimensions. For genuine non-linearity, switch to trees, kernels, or neural networks.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Lambda is a guess</h3>
+      <p>The "right" lambda depends on your data and your loss surface. Cross-validation finds a value that minimizes held-out error. Without CV you're picking lambda by feel, which usually means too small (underfit by overfit).</p></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <polygon points="100,24 152,100 100,172 28,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 65%"></span></span><span class="num">0.65</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 90%"></span></span><span class="num">0.90</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <p class="mc-real">
+    <strong>Insurance underwriting at GEICO and Progressive.</strong>
+    Generalized Linear Models with elastic-net regularization underwrite
+    auto policies across hundreds of millions of risk-rated drivers. The
+    L1 component performs automatic actuarial feature selection across
+    thousands of candidate predictors; the L2 component stabilizes
+    coefficients across correlated demographic and driving-history
+    features. Black-box gradient-boosted models score better but the
+    regulatory-friendly elastic-net is what ships.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/linear-regression-lab/"><p class="name">Linear Regression</p><p class="note">No regularization</p></a>
+    <a class="mc-compare-card" href="/work/logistic-regression-lab/"><p class="name">Logistic Regression</p><p class="note">Same idea, classification</p></a>
+    <a class="mc-compare-card" href="/work/gradient-boosting-lab/"><p class="name">Gradient Boosting</p><p class="note">Higher accuracy &middot; less interpretable</p></a>
+  </div>
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div><a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot; <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a></div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/ridge-lasso-lab.js?v=1"></script>
+</body>
+</html>

@@ -171,7 +171,7 @@
       summary:
         'Linear models with an L2 (ridge) or L1 (lasso) penalty on the coefficients. Lasso ' +
         'zeroes out unhelpful features automatically — feature selection as a side effect.',
-      live: false,
+      live: true,
     },
     'mlp': {
       slug: 'mlp',
@@ -185,7 +185,7 @@
       summary:
         'Stacked layers of linear transforms with nonlinear activations. Universal function ' +
         'approximators in theory; in practice, hungry for data and tuning.',
-      live: false,
+      live: true,
     },
     'dbscan': {
       slug: 'dbscan',
@@ -199,7 +199,7 @@
       summary:
         'Density-based clustering: points in dense neighborhoods are clusters, sparse points are noise. ' +
         'No need to pick k — but two parameters (eps, minPts) replace it.',
-      live: false,
+      live: true,
     },
     'isolation-forest': {
       slug: 'isolation-forest',
@@ -213,7 +213,7 @@
       summary:
         'Randomly split features until every point is isolated. Anomalies require fewer splits — ' +
         'so the average path-length in a forest of random trees becomes an anomaly score.',
-      live: false,
+      live: true,
     },
   };
 
