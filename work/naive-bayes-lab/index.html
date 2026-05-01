@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naive Bayes — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="Bayes' theorem, applied bluntly. Gaussian Naive Bayes in 2D — wrong assumption, surprisingly useful answer.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Naive Bayes — Bayes theorem, applied bluntly">
+  <meta property="og:description" content="A live Gaussian Naive Bayes demo. Conditional independence assumption made visible — and the cases where it works anyway.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/naive-bayes-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span></div>
+  <div class="masthead-name"><a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a></div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">Labs <span class="nav-caret" aria-hidden="true">&#9662;</span></button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Naive Bayes</span></div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Bayes' theorem,<br><span class="serif-italic" style="color:var(--accent)">applied bluntly.</span></h1>
+  <p class="lab-biz-line">
+    Apply Bayes' theorem under the assumption that features are
+    conditionally independent. <mark class="ink-mark">Wrong assumption, surprisingly useful answer</mark> &mdash;
+    especially when text is the data.
+  </p>
+  <p class="mc-kicker">
+    Click anywhere to add a labeled point. The dashed ellipses show the
+    1-sigma boundary of each class's fitted Gaussian. The decision
+    surface is wherever the posterior of the two classes is equal &mdash; a
+    quadratic curve, not a straight line.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; Gaussian NB with diagonal covariance</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/naive-bayes-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">naive-bayes-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; I</span><span>The fitted Gaussians</span></div>
+  <p class="mc-note">Each class's mean and per-axis variance is estimated from its points. Predict by comparing log-likelihoods plus the class prior.</p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="nb-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Naive Bayes canvas"></svg>
+      <div class="mc-canvas-hint">dashed ellipses = 1-sigma per class</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Active class</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill nb-class" data-class="0">Class A</button>
+        <button type="button" class="mc-preset-pill nb-class is-active" data-class="1">Class B</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill nb-preset is-active" data-preset="gaussian">Two Gaussians</button>
+        <button type="button" class="mc-preset-pill nb-preset" data-preset="overlap">Overlapping</button>
+        <button type="button" class="mc-preset-pill nb-preset" data-preset="imbalanced">Imbalanced</button>
+      </div>
+      <div class="mc-buttons">
+        <button type="button" class="mc-btn" id="nb-clear">Clear all</button>
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">train accuracy</div><span class="value" id="nb-acc">—</span></div>
+        <div class="mc-readout-cell"><div class="label">μ class A</div><span class="value" id="nb-p0">—</span></div>
+        <div class="mc-readout-cell"><div class="label">μ class B</div><span class="value" id="nb-p1">—</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <div class="mc-prose">
+    <p>
+      Bayes' theorem says <em>posterior ∝ likelihood × prior.</em> For
+      classification, predict whichever class has the highest posterior
+      probability given the features. Naive Bayes makes one ruthless
+      simplification: assume features are conditionally independent
+      given the class. That assumption is almost always wrong &mdash; hence
+      "naive" &mdash; but it makes the math trivial and the model fast.
+    </p>
+    <p>
+      For continuous features (this demo), each feature within a class
+      is modeled as a univariate Gaussian. Multinomial Naive Bayes does
+      the same with word counts and is famously strong on text. The two
+      variants share the same skeleton: estimate per-class likelihoods
+      independently and multiply them at prediction time.
+    </p>
+    <p>
+      The naive assumption breaks reality, but its effect on
+      <em>argmax</em> classification is often muted. Even when the
+      probabilities are wildly miscalibrated, the relative ordering
+      (which class is most likely?) is frequently correct. That's why
+      Naive Bayes survives in spam filters, sentiment classifiers, and
+      document categorization decades after better-calibrated models existed.
+    </p>
+  </div>
+  <details class="mc-math"><summary>The math</summary><div class="mc-math-body">
+    <p>For features <span class="formula">x = (x_1, …, x_d)</span> and classes <span class="formula">C_k</span>:</p>
+    <span class="formula formula-block">P(C_k | x) ∝ P(C_k) · ∏_(j=1..d) P(x_j | C_k)</span>
+    <p>For Gaussian features, <span class="formula">P(x_j | C_k) = N(x_j; μ_(jk), σ²_(jk))</span> &mdash; one mean and one variance per (feature, class) pair.</p>
+    <p>The decision boundary in 2D is the curve where two posteriors are equal:</p>
+    <span class="formula formula-block">log P(C_0)P(x | C_0) = log P(C_1)P(x | C_1)</span>
+    <p>For Gaussians with different variances, this is a conic section &mdash; ellipse, parabola, or hyperbola depending on the covariance ratio.</p>
+  </div></details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <div class="mc-grid-2">
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Text classification</h3>
+      <p>Word counts in documents are reasonably independent given the topic. Spam filtering, sentiment analysis, language detection, document tagging all run beautifully on multinomial Naive Bayes with bag-of-words features.</p></div>
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Tiny training, fast inference</h3>
+      <p>Training is one pass through the data to estimate per-class statistics. Prediction is one likelihood evaluation per class. Both are trivially parallelizable. For real-time per-document scoring at internet scale, NB is hard to beat on cost.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Correlated features</h3>
+      <p>The "naive" assumption hurts most when features are highly correlated. Two near-duplicate features count their evidence twice; the posterior probabilities skew dramatically even when the argmax holds. Calibration fixes the probabilities; logistic regression usually reads better.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Continuous, non-Gaussian features</h3>
+      <p>If your continuous features have heavy tails or multimodal distributions, Gaussian NB models them poorly. Bin them into categorical buckets and use multinomial NB, or switch to a tree-based model that doesn't care about distributional shape.</p></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- inference 0.95, accuracy 0.60, training 0.95, size 0.95 -->
+        <polygon points="100,24 148,100 100,176 24,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 60%"></span></span><span class="num">0.60</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <p class="mc-real">
+    <strong>The original Paul Graham spam filter (2002).</strong>
+    Multinomial Naive Bayes on per-word probabilities &mdash; trained on a
+    user's own ham and spam folders &mdash; was the algorithm that turned
+    spam from an unsolvable mess into a routine background problem.
+    Modern spam filters layer many models, but the foundation is still
+    a Naive Bayes pass.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/logistic-regression-lab/"><p class="name">Logistic Regression</p><p class="note">Calibrated probabilities</p></a>
+    <a class="mc-compare-card" href="/work/svm-lab/"><p class="name">SVM</p><p class="note">Higher accuracy on text</p></a>
+    <a class="mc-compare-card" href="/work/decision-tree-lab/"><p class="name">Decision Tree</p><p class="note">Different bias entirely</p></a>
+  </div>
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div><a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot; <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a></div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/naive-bayes-lab.js?v=1"></script>
+</body>
+</html>

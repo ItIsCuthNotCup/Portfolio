@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradient Boosting — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="Trees, but each one fixes the last. Sequential gradient-boosted trees fitted to residuals. The technique behind XGBoost.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gradient Boosting — trees, but each one fixes the last">
+  <meta property="og:description" content="Live gradient-boosted trees in 2D. Move sliders for iteration count, learning rate, and depth. The engine behind XGBoost / LightGBM.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/gradient-boosting-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span></div>
+  <div class="masthead-name"><a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a></div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">Labs <span class="nav-caret" aria-hidden="true">&#9662;</span></button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Gradient Boosting</span></div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Trees, but each<br><span class="serif-italic" style="color:var(--accent)">one fixes the last.</span></h1>
+  <p class="lab-biz-line">
+    Add trees one at a time, each fitted to the residual error of the
+    ensemble so far. <mark class="ink-mark">XGBoost and LightGBM dominate Kaggle leaderboards for a reason</mark>:
+    a sequence of weak learners, taken together, is rarely beaten on tabular data.
+  </p>
+  <p class="mc-kicker">
+    Move the iteration slider to watch the boundary form. Each step adds
+    a small decision tree that fits the residuals of the cumulative
+    prediction. Lower learning rate means slower but smoother learning.
+    Depth controls how flexible each individual tree is.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; squared-error gradient boosting</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/gradient-boosting-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">gradient-boosting-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; I</span><span>The ensemble, growing</span></div>
+  <p class="mc-note">Move iterations from 1 to 100. Each step adds one tree fitted to current residuals.</p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="gb-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gradient boosting decision boundary"></svg>
+      <div class="mc-canvas-hint">cumulative score shaded by confidence</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill gb-preset is-active" data-preset="moons">Moons</button>
+        <button type="button" class="mc-preset-pill gb-preset" data-preset="spiral">Spiral</button>
+        <button type="button" class="mc-preset-pill gb-preset" data-preset="noisy">Noisy</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">Iterations</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>n_estimators</span><span class="val" id="gb-iter-val">30</span></div>
+        <input type="range" id="gb-iter" min="1" max="100" step="1" value="30">
+      </div>
+      <div class="mc-control-head" style="margin-top: 4px;">Learning rate</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>lr</span><span class="val" id="gb-lr-val">0.30</span></div>
+        <input type="range" id="gb-lr" min="0.05" max="1.0" step="0.05" value="0.3">
+      </div>
+      <div class="mc-control-head" style="margin-top: 4px;">Tree depth</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>max_depth</span><span class="val" id="gb-depth-val">3</span></div>
+        <input type="range" id="gb-depth" min="1" max="6" step="1" value="3">
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">train accuracy</div><span class="value" id="gb-acc">—</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <div class="mc-prose">
+    <p>
+      Start with a constant prediction (zero, or the class mean). Compute
+      the residual at each training point: how far off is the current
+      prediction? Fit a small decision tree to predict those residuals.
+      Add it to the ensemble, scaled by the learning rate. Repeat.
+    </p>
+    <p>
+      The trick is that each tree fixes the previous ensemble's mistakes.
+      Random Forest averages independent trees. Gradient Boosting <em>chains</em>
+      them. The dependency means boosting trains slower (you can't
+      parallelize across trees the way you can with a forest) but the
+      sequential corrections produce tighter fits with the same total
+      tree budget.
+    </p>
+    <p>
+      Modern implementations &mdash; XGBoost, LightGBM, CatBoost &mdash; add
+      regularization, smarter split-finding, histogram-based binning,
+      and second-order gradient information. The algorithm in this demo
+      is the basic version; production libraries are several
+      generations more sophisticated.
+    </p>
+  </div>
+  <details class="mc-math"><summary>The math</summary><div class="mc-math-body">
+    <p>For squared-error loss, given predictions <span class="formula">F_m(x)</span> after m iterations:</p>
+    <span class="formula formula-block">r_i^(m+1) = y_i − F_m(x_i)</span>
+    <p>Fit a regression tree <span class="formula">h_(m+1)</span> to the residuals, then update:</p>
+    <span class="formula formula-block">F_(m+1)(x) = F_m(x) + ν · h_(m+1)(x)</span>
+    <p>where <span class="formula">ν</span> is the learning rate. After M iterations, the prediction is the cumulative sum of all tree outputs scaled by ν. For classification, replace squared error with log-loss and the residuals become probability gradients.</p>
+  </div></details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <div class="mc-grid-2">
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Tabular accuracy ceiling</h3>
+      <p>For mixed-type tabular data &mdash; the realm of finance, e-commerce, retention &mdash; gradient boosting is roughly the ceiling of what's achievable without deep learning. Often beats neural networks at the same problem.</p></div>
+    <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Robust to dirty data</h3>
+      <p>Trees handle missing values, mixed scales, irrelevant features, monotonic constraints. XGBoost in particular has direct support for missing-value branches and feature interaction constraints.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Sequential training</h3>
+      <p>Trees can't be built in parallel because each depends on the residuals from the last. LightGBM mitigates this with histogram binning, but the fundamental dependency is real. Random forests are dramatically faster to train.</p></div>
+    <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Overfit risk on noisy labels</h3>
+      <p>Try the noisy preset above and crank n_estimators to 100. The boundary memorizes the noise. Cross-validation, early stopping, and regularization (γ, λ in XGBoost) are not optional in production.</p></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- inference 0.55, accuracy 0.90, training 0.45, size 0.40 -->
+        <polygon points="100,64 172,100 100,156 52,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 55%"></span></span><span class="num">0.55</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 90%"></span></span><span class="num">0.90</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 45%"></span></span><span class="num">0.45</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 40%"></span></span><span class="num">0.40</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <p class="mc-real">
+    <strong>Airbnb's price recommendations.</strong>
+    A multi-stage gradient-boosted system predicts host-market-pricing
+    suggestions across millions of listings worldwide. The model
+    consumes hundreds of features &mdash; seasonality, neighborhood, photo
+    quality scores, local events &mdash; and outputs a single nightly rate.
+    XGBoost was the first algorithm to beat Airbnb's hand-tuned pricing
+    heuristics, and it's been the workhorse since.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/random-forest-lab/"><p class="name">Random Forest</p><p class="note">Parallel trees &middot; faster training</p></a>
+    <a class="mc-compare-card" href="/work/decision-tree-lab/"><p class="name">Decision Tree</p><p class="note">Single tree &middot; interpretable</p></a>
+    <div class="mc-compare-card is-stub"><p class="name">Neural Network (MLP)</p><p class="note">Deep learning &middot; phase 3</p></div>
+  </div>
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div><a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot; <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a></div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/gradient-boosting-lab.js?v=1"></script>
+</body>
+</html>

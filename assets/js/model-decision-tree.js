@@ -115,7 +115,7 @@
       summary:
         'No model. Predict by finding the k closest training points and voting (or averaging). ' +
         'Trivially simple, but every prediction scans the dataset.',
-      live: false,
+      live: true,
     },
     'svm': {
       slug: 'svm',
@@ -129,7 +129,7 @@
       summary:
         'Find the hyperplane with the largest margin between classes, optionally lifted into a higher-dimensional ' +
         'space via a kernel. Strong on small high-dimensional datasets.',
-      live: false,
+      live: true,
     },
     'gradient-boosting': {
       slug: 'gradient-boosting',
@@ -143,7 +143,7 @@
       summary:
         'Sequentially adds decision trees, each one fitted to the residuals of the previous. ' +
         'XGBoost / LightGBM dominate Kaggle leaderboards for a reason.',
-      live: false,
+      live: true,
     },
     'naive-bayes': {
       slug: 'naive-bayes',
@@ -157,7 +157,7 @@
       summary:
         'Apply Bayes\' theorem under the assumption that features are conditionally independent. ' +
         'Wrong assumption, surprisingly useful answer — especially on text.',
-      live: false,
+      live: true,
     },
     'ridge-lasso': {
       slug: 'ridge-lasso',
