@@ -14,22 +14,46 @@
     {
       "id": "moores_law",
       "label": "Moore's Law (transistors)",
-      "color": "#7A6C8A",
+      "color": "#A89BB8",
       "start_year": 1971,
       "end_year": 2025,
       "saturation_start": 2015,
       "points": [
-        { "year": 1971, "normalized": 1.0 },
-        { "year": 1980, "normalized": 100.0 },
-        { "year": 1990, "normalized": 10000.0 },
-        { "year": 2000, "normalized": 1000000.0 },
-        { "year": 2010, "normalized": 50000000.0 },
-        { "year": 2015, "normalized": 200000000.0 },
-        { "year": 2020, "normalized": 300000000.0 },
-        { "year": 2025, "normalized": 350000000.0 }
+        {
+          "year": 1971,
+          "normalized": 1.0
+        },
+        {
+          "year": 1980,
+          "normalized": 100.0
+        },
+        {
+          "year": 1990,
+          "normalized": 10000.0
+        },
+        {
+          "year": 2000,
+          "normalized": 1000000.0
+        },
+        {
+          "year": 2010,
+          "normalized": 50000000.0
+        },
+        {
+          "year": 2015,
+          "normalized": 200000000.0
+        },
+        {
+          "year": 2020,
+          "normalized": 300000000.0
+        },
+        {
+          "year": 2025,
+          "normalized": 350000000.0
+        }
       ],
       "doubling_years": 2,
-      "note": "Biphasic-sigmoid per PLOS ONE: ~9.5-year stages, each ~10× over ~6 years then ~3-year pause."
+      "note": "Biphasic-sigmoid per PLOS ONE: ~9.5-year stages, each ~10\u00d7 over ~6 years then ~3-year pause."
     },
     {
       "id": "sequencing",
@@ -39,16 +63,37 @@
       "end_year": 2024,
       "saturation_start": 2019,
       "points": [
-        { "year": 2001, "normalized": 1.0 },
-        { "year": 2007, "normalized": 10000.0 },
-        { "year": 2011, "normalized": 1000000.0 },
-        { "year": 2015, "normalized": 10000000.0 },
-        { "year": 2019, "normalized": 50000000.0 },
-        { "year": 2022, "normalized": 60000000.0 },
-        { "year": 2024, "normalized": 65000000.0 }
+        {
+          "year": 2001,
+          "normalized": 1.0
+        },
+        {
+          "year": 2007,
+          "normalized": 10000.0
+        },
+        {
+          "year": 2011,
+          "normalized": 1000000.0
+        },
+        {
+          "year": 2015,
+          "normalized": 10000000.0
+        },
+        {
+          "year": 2019,
+          "normalized": 50000000.0
+        },
+        {
+          "year": 2022,
+          "normalized": 60000000.0
+        },
+        {
+          "year": 2024,
+          "normalized": 65000000.0
+        }
       ],
       "doubling_years": null,
-      "note": "5 OOMs in 18 years (2001 $95M → 2019 $1K), then plateaued at ~$200 by 2024."
+      "note": "5 OOMs in 18 years (2001 $95M \u2192 2019 $1K), then plateaued at ~$200 by 2024."
     },
     {
       "id": "airline_speed",
@@ -58,18 +103,45 @@
       "end_year": 2025,
       "saturation_start": 1969,
       "points": [
-        { "year": 1903, "normalized": 1.0 },
-        { "year": 1915, "normalized": 5.0 },
-        { "year": 1930, "normalized": 15.0 },
-        { "year": 1945, "normalized": 40.0 },
-        { "year": 1960, "normalized": 80.0 },
-        { "year": 1969, "normalized": 100.0 },
-        { "year": 1980, "normalized": 100.0 },
-        { "year": 2000, "normalized": 100.0 },
-        { "year": 2025, "normalized": 100.0 }
+        {
+          "year": 1903,
+          "normalized": 1.0
+        },
+        {
+          "year": 1915,
+          "normalized": 5.0
+        },
+        {
+          "year": 1930,
+          "normalized": 15.0
+        },
+        {
+          "year": 1945,
+          "normalized": 40.0
+        },
+        {
+          "year": 1960,
+          "normalized": 80.0
+        },
+        {
+          "year": 1969,
+          "normalized": 100.0
+        },
+        {
+          "year": 1980,
+          "normalized": 100.0
+        },
+        {
+          "year": 2000,
+          "normalized": 100.0
+        },
+        {
+          "year": 2025,
+          "normalized": 100.0
+        }
       ],
       "doubling_years": null,
-      "note": "Rapid 1903–1969, flat since. Boeing 747 cruise speed (~560 mph) same as Concorde subsonic."
+      "note": "Rapid 1903\u20131969, flat since. Boeing 747 cruise speed (~560 mph) same as Concorde subsonic."
     },
     {
       "id": "solar_pv",
@@ -79,13 +151,34 @@
       "end_year": 2024,
       "saturation_start": null,
       "points": [
-        { "year": 1976, "normalized": 1.0 },
-        { "year": 1985, "normalized": 10.0 },
-        { "year": 1995, "normalized": 100.0 },
-        { "year": 2005, "normalized": 1000.0 },
-        { "year": 2015, "normalized": 5000.0 },
-        { "year": 2020, "normalized": 8000.0 },
-        { "year": 2024, "normalized": 12000.0 }
+        {
+          "year": 1976,
+          "normalized": 1.0
+        },
+        {
+          "year": 1985,
+          "normalized": 10.0
+        },
+        {
+          "year": 1995,
+          "normalized": 100.0
+        },
+        {
+          "year": 2005,
+          "normalized": 1000.0
+        },
+        {
+          "year": 2015,
+          "normalized": 5000.0
+        },
+        {
+          "year": 2020,
+          "normalized": 8000.0
+        },
+        {
+          "year": 2024,
+          "normalized": 12000.0
+        }
       ],
       "doubling_years": null,
       "note": "Still declining as of 2024, though rate has slowed."
@@ -93,21 +186,51 @@
     {
       "id": "ai_compute",
       "label": "AI training compute",
-      "color": "#E04E1A",
+      "color": "#FF6B3D",
       "start_year": 2010,
       "end_year": 2026,
       "saturation_start": null,
       "points": [
-        { "year": 2010, "normalized": 1.0 },
-        { "year": 2012, "normalized": 10.0 },
-        { "year": 2014, "normalized": 100.0 },
-        { "year": 2016, "normalized": 1000.0 },
-        { "year": 2018, "normalized": 10000.0 },
-        { "year": 2020, "normalized": 100000.0 },
-        { "year": 2022, "normalized": 1000000.0 },
-        { "year": 2024, "normalized": 5000000.0 },
-        { "year": 2025, "normalized": 10000000.0 },
-        { "year": 2026, "normalized": 20000000.0 }
+        {
+          "year": 2010,
+          "normalized": 1.0
+        },
+        {
+          "year": 2012,
+          "normalized": 10.0
+        },
+        {
+          "year": 2014,
+          "normalized": 100.0
+        },
+        {
+          "year": 2016,
+          "normalized": 1000.0
+        },
+        {
+          "year": 2018,
+          "normalized": 10000.0
+        },
+        {
+          "year": 2020,
+          "normalized": 100000.0
+        },
+        {
+          "year": 2022,
+          "normalized": 1000000.0
+        },
+        {
+          "year": 2024,
+          "normalized": 5000000.0
+        },
+        {
+          "year": 2025,
+          "normalized": 10000000.0
+        },
+        {
+          "year": 2026,
+          "normalized": 20000000.0
+        }
       ],
       "doubling_years": 0.43,
       "note": "Frontier LLM compute doubling every ~5.2 months since 2020."
@@ -115,22 +238,46 @@
     {
       "id": "ai_horizon",
       "label": "AI agent task horizon",
-      "color": "#264F73",
+      "color": "#5B9BD5",
       "start_year": 2019,
       "end_year": 2026,
       "saturation_start": null,
       "points": [
-        { "year": 2019, "normalized": 1.0 },
-        { "year": 2020, "normalized": 2.0 },
-        { "year": 2021, "normalized": 4.0 },
-        { "year": 2022, "normalized": 8.0 },
-        { "year": 2023, "normalized": 16.0 },
-        { "year": 2024, "normalized": 40.0 },
-        { "year": 2025, "normalized": 110.0 },
-        { "year": 2026, "normalized": 420.0 }
+        {
+          "year": 2019,
+          "normalized": 1.0
+        },
+        {
+          "year": 2020,
+          "normalized": 2.0
+        },
+        {
+          "year": 2021,
+          "normalized": 4.0
+        },
+        {
+          "year": 2022,
+          "normalized": 8.0
+        },
+        {
+          "year": 2023,
+          "normalized": 16.0
+        },
+        {
+          "year": 2024,
+          "normalized": 40.0
+        },
+        {
+          "year": 2025,
+          "normalized": 110.0
+        },
+        {
+          "year": 2026,
+          "normalized": 420.0
+        }
       ],
       "doubling_years": 0.58,
-      "note": "Doubling every ~7 months (2019–2026), accelerating to ~4 months in 2024–2026."
+      "note": "Doubling every ~7 months (2019\u20132026), accelerating to ~4 months in 2024\u20132026."
     }
   ],
   "projections": {
@@ -139,7 +286,7 @@
       {
         "id": "exponential",
         "label": "Pure exponential (Kurzweil)",
-        "color": "#E04E1A",
+        "color": "#FF6B3D",
         "style": "solid",
         "ai_curve": "ai_compute",
         "description": "Continues current doubling rate indefinitely."
@@ -147,15 +294,15 @@
       {
         "id": "s_curve",
         "label": "S-curve fit (PLOS biphasic)",
-        "color": "#7A6C8A",
+        "color": "#A89BB8",
         "style": "dashed",
         "ai_curve": "ai_compute",
-        "description": "Bends into sigmoid around 2030–2035."
+        "description": "Bends into sigmoid around 2030\u20132035."
       },
       {
         "id": "compute_takeoff",
         "label": "Compute-centric takeoff (Davidson 2023)",
-        "color": "#264F73",
+        "color": "#5B9BD5",
         "style": "dotted",
         "ai_curve": "ai_compute",
         "description": "Faster-than-exponential if AI assists AI research."

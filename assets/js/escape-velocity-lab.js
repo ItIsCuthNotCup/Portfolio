@@ -188,80 +188,110 @@
       });
 
       // ── Reference curves ─────────────────────────────────────
-      // All anchored to the earliest visible frontier model so they're comparable.
-      const anchor = visible[0];
-      const ax = anchor.year, ay = anchor.flop;
+      // AI growth-rate curves anchor at GPT-3 (2020, 3.1e23 FLOP) — the start of
+      // the modern scaling era. Drawn FORWARD ONLY from that anchor, so the
+      // curves stay visually comparable to the actual data (instead of
+      // extrapolating backward to absurd 1957 values).
+      const aiAnchor = allModels.find(m => m.name === 'GPT-3') || allModels.find(m => m.flop >= 1e22) || allModels[0];
+      const ax = aiAnchor.year, ay = aiAnchor.flop;
 
-      function plotCurve(fn, color, dash, label, alignBelow) {
-        const path = svgEl('path', { stroke: color, 'stroke-width': 1.6, 'stroke-dasharray': dash, fill: 'none', opacity: 0.85 });
+      function plotCurve(fn, color, dash, label, opts) {
+        opts = opts || {};
+        const startYear = opts.startYear !== undefined ? opts.startYear : Math.max(xDomain[0], ax);
+        const endYear = xDomain[1];
+        if (startYear >= endYear) return;
+        const path = svgEl('path', { stroke: color, 'stroke-width': 1.8, 'stroke-dasharray': dash, fill: 'none', opacity: 0.9 });
         let d = '';
-        const step = (xDomain[1] - xDomain[0]) / 120;
-        for (let yr = xDomain[0]; yr <= xDomain[1]; yr += step) {
+        const step = Math.max(0.05, (endYear - startYear) / 120);
+        let lastValidPx = null, lastValidPy = null;
+        for (let yr = startYear; yr <= endYear; yr += step) {
           const flop = fn(yr);
           if (flop <= 0 || !isFinite(flop)) continue;
-          // Don't draw above plot area
-          const py = yScale(Math.min(flop, yDomain[1] * 5));
-          if (py < M.t - 20) continue;
           const px = xScale(yr);
-          d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + py.toFixed(1);
+          // Clamp to plot area top so curve flatlines visually but doesn't disappear
+          const flopClamped = Math.min(flop, yDomain[1]);
+          const py = yScale(flopClamped);
+          if (py < M.t || py > H - M.b) {
+            // Cap exactly at the boundary
+            const clampPy = Math.max(M.t, Math.min(H - M.b, py));
+            d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + clampPy.toFixed(1);
+            lastValidPx = px; lastValidPy = clampPy;
+            // Once curve hits the top, stop drawing further
+            if (flop >= yDomain[1]) break;
+          } else {
+            d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + py.toFixed(1);
+            lastValidPx = px; lastValidPy = py;
+          }
         }
         path.setAttribute('d', d);
         svg.appendChild(path);
-        // Label at the right edge
-        const lastFlop = fn(xDomain[1]);
-        if (lastFlop > 0 && isFinite(lastFlop)) {
-          const ly = Math.max(M.t + 12, Math.min(H - M.b - 4, yScale(Math.min(lastFlop, yDomain[1])) + (alignBelow ? 14 : -6)));
-          const lx = W - M.r - 4;
-          const lbl = svgEl('text', { x: lx, y: ly, 'text-anchor': 'end', fill: color, 'font-size': 10, 'font-family': 'DM Mono, monospace', 'font-style': 'italic', opacity: 0.95 });
+        // Label near where the curve exits the plot
+        if (lastValidPx !== null) {
+          const labelX = Math.min(W - M.r - 4, lastValidPx + 4);
+          const labelY = Math.max(M.t + 12, Math.min(H - M.b - 4, lastValidPy + (opts.labelBelow ? 14 : -6)));
+          const lbl = svgEl('text', {
+            x: labelX, y: labelY,
+            'text-anchor': labelX >= W - M.r - 8 ? 'end' : 'start',
+            fill: color, 'font-size': 10.5, 'font-family': 'DM Mono, monospace',
+            'font-style': 'italic', opacity: 0.95
+          });
           lbl.textContent = label;
           svg.appendChild(lbl);
         }
       }
 
-      // Moore's Law (2-yr doubling, anchored to its own start)
+      // Moore's Law — kept on its own anchor (1971/1B FLOP) since its whole
+      // point is to be the historical-electronics baseline that AI compute is
+      // measured against.
       if (curveOn.moore) {
         const moore = data.moores_law;
         plotCurve(
           yr => moore.start_flop * Math.pow(2, (yr - moore.start_year) / 2),
-          'var(--ink-dim)', '5,4', "Moore's Law (2y)", false
+          'var(--ink-dim)', '5,4', "Moore's Law (2y doubling)",
+          { startYear: Math.max(xDomain[0], moore.start_year), labelBelow: false }
         );
       }
-      // AI exponential — 6-month doubling, anchored to first visible frontier model
+      // AI exponential — 6-month doubling, anchored at GPT-3 (2020).
+      // Forward only.
       if (curveOn.exp) {
         plotCurve(
           yr => ay * Math.pow(2, (yr - ax) * 2),
-          '#5B9BD5', '4,3', 'AI exp. (6-mo)', true
+          '#5B9BD5', '4,3', 'AI exp. (6-mo doubling)',
+          { labelBelow: true }
         );
       }
-      // Super-exponential — doubling time itself shrinks (Kurzweil-flavored).
-      // Effective doubling shrinks from 12mo → 4mo over the visible range.
+      // Super-exponential — doubling time itself shrinks from 9mo to 3mo
+      // across the visible projection horizon. Anchored at GPT-3, forward only.
       if (curveOn.super) {
-        const yrRange = xDomain[1] - xDomain[0];
         plotCurve(yr => {
           const t = yr - ax;
-          // doubling time decays linearly from 1.0 yr to 0.33 yr across 8 years
-          const dT = Math.max(0.33, 1.0 - (t / 8) * 0.67);
-          // integrate: log2(flop/ay) = ∫ dt/dT(t)
-          // approximate via small steps
+          if (t < 0) return ay;
+          // doubling time shrinks: dT(t) = max(0.25, 0.75 - 0.05*t)
+          // integrate log2-growth = ∫ dt/dT(t)
           let logScaled = 0;
-          const steps = Math.max(1, Math.round(t * 10));
+          const steps = Math.max(1, Math.round(t * 12));
           const dt = t / steps;
           for (let i = 0; i < steps; i++) {
             const ti = i * dt;
-            const dTi = Math.max(0.33, 1.0 - (ti / 8) * 0.67);
+            const dTi = Math.max(0.25, 0.75 - 0.05 * ti);
             logScaled += dt / dTi;
           }
           return ay * Math.pow(2, logScaled);
-        }, '#FF6B3D', '2,3', 'Super-exp.', false);
+        }, '#FF6B3D', '2,3', 'Super-exp. (doubling time shrinks)',
+        { labelBelow: false });
       }
-      // Best-fit through 2018+ frontier — the "what is the data actually doing right now?" line.
+      // Best-fit through 2018+ frontier — the "what is the data ACTUALLY
+      // doing right now?" line. Drawn through the data's own range so the
+      // reader can see whether the data tracks ordinary exp or beats it.
       if (curveOn.fit) {
         const recentFrontier = allModels.filter(m => m.year >= 2018 && m.flop >= 1e22);
         const fit = bestFit(recentFrontier);
         if (fit) {
+          const fitStart = Math.max(xDomain[0], 2018);
           plotCurve(
             yr => Math.pow(10, fit.slope * yr + fit.intercept),
-            '#D4B970', '6,3', 'Fit (' + fit.doublingMonths.toFixed(1) + ' mo)', true
+            '#D4B970', '6,3', 'Best-fit (' + fit.doublingMonths.toFixed(1) + '-mo doubling)',
+            { startYear: fitStart, labelBelow: true }
           );
         }
       }
