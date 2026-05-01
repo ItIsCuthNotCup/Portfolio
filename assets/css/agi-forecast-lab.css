@@ -294,7 +294,8 @@
   position: fixed;
   inset: 0;
   background: rgba(20, 18, 15, 0.32);
-  z-index: 190;
+  /* Above masthead (z=50) so the dim covers the whole viewport. */
+  z-index: 999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s;
@@ -313,8 +314,10 @@
   height: 100vh;
   background: var(--paper);
   border-left: 1px solid var(--ink);
-  padding: 76px 32px 40px;
-  z-index: 200;
+  /* Top padding clears the masthead (~60px tall) plus the
+     close-button row that sits at top:80px. */
+  padding: 132px 32px 40px;
+  z-index: 1000;
   overflow-y: auto;
   box-shadow: -10px 0 30px rgba(0,0,0,0.16);
   transform: translateX(100%);
@@ -325,10 +328,10 @@
   transform: translateX(0);
   pointer-events: auto;
 }
-/* Prominent close button — accent-colored pill instead of subtle ✕ */
+/* Close button sits below the masthead so it's never occluded. */
 .af-side-close {
   position: absolute;
-  top: 16px;
+  top: 80px;
   right: 18px;
   display: inline-flex;
   align-items: center;
