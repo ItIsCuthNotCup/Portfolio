@@ -1,0 +1,502 @@
+/* ── How LLMs Learn — lab styles ───────────────────────────── */
+
+.llm-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 0 64px;
+}
+.llm-section { padding: 56px 56px 48px; }
+.llm-hero    { padding: 100px 56px 48px; }
+
+.llm-title {
+  margin: 12px 0 18px;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.llm-kicker {
+  font-family: "Newsreader", serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 18px 0 22px;
+  max-width: 70ch;
+}
+.llm-prose {
+  font-family: "Newsreader", serif;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 72ch;
+  margin: 8px 0 28px;
+}
+
+.llm-dateline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin: 22px 0 12px;
+}
+.llm-dateline > div {
+  background: var(--paper);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.llm-dateline .label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.llm-dateline .value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+/* ── Charts ─────────────────────────────────────────────────── */
+.llm-chart-wrap { margin: 18px 0 22px; }
+.llm-chart-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+}
+.llm-chart-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--paper);
+  border: 1px solid var(--ink-dim);
+}
+
+/* ── Plain-language readout ────────────────────────────────── */
+.llm-readout {
+  max-width: 760px;
+  padding: 18px 22px;
+  border-left: 2px solid var(--accent);
+  background: var(--paper-2);
+  margin: 18px 0 22px;
+}
+.llm-readout-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.llm-readout p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.llm-readout strong { color: var(--ink); font-weight: 500; }
+.llm-readout em     { color: var(--ink); font-style: italic; }
+
+/* ── Equation block ─────────────────────────────────────────── */
+.llm-eq-wrap {
+  border: 1px solid var(--ink-dim);
+  background: var(--paper-2);
+  padding: 22px 28px;
+  margin: 18px 0;
+}
+.llm-eq-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.llm-eq {
+  font-family: "Newsreader", serif;
+  font-size: 22px;
+  line-height: 1.7;
+  color: var(--ink);
+  font-style: italic;
+}
+.llm-eq .llm-fn { font-style: normal; color: var(--accent); }
+.llm-eq-legend {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Training-stack grid ────────────────────────────────────── */
+.llm-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+}
+.llm-stack-tile {
+  background: var(--paper);
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.llm-stack-bar {
+  height: 6px;
+  background: var(--paper-2);
+  position: relative;
+  margin: 4px 0 6px;
+}
+.llm-stack-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.85;
+}
+.llm-stack-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.llm-stack-name {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.llm-stack-share {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--accent);
+}
+.llm-stack-row {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+  margin-top: 2px;
+}
+.llm-stack-row .key {
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+.llm-stack-tile .narrative {
+  font-family: "Newsreader", serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* ── Tokenization examples ─────────────────────────────────── */
+.llm-tokens {
+  border: 1px solid var(--ink-dim);
+  background: var(--paper);
+  padding: 18px 22px;
+  margin: 14px 0 18px;
+  display: grid;
+  gap: 14px;
+}
+.llm-token-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  border-top: 1px dashed var(--ink-dim);
+  padding-top: 12px;
+}
+.llm-token-row:first-child { border-top: 0; padding-top: 0; }
+.llm-token-row .src {
+  font-family: "Newsreader", serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink);
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+.llm-token-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.llm-token-side .head {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.llm-token-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.llm-token-piece {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink-dim);
+  color: var(--ink);
+  white-space: pre;
+}
+.llm-token-piece .id {
+  display: block;
+  font-size: 8.5px;
+  color: var(--ink-dim);
+  margin-top: 2px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Architecture history strip ────────────────────────────── */
+.llm-history {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin-top: 14px;
+}
+.llm-history-cell {
+  background: var(--paper);
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.llm-history-year {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.10em;
+}
+.llm-history-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+.llm-history-meta {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9.5px;
+  color: var(--ink-soft);
+}
+
+/* ── Phenomena grid (training dynamics) ────────────────────── */
+.llm-phenomena {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin-top: 14px;
+}
+.llm-phen-tile {
+  background: var(--paper);
+  padding: 18px 22px;
+}
+.llm-phen-tile h4 {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.llm-phen-tile .summary {
+  font-family: "Newsreader", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.llm-phen-tile .evidence {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Alignment table ───────────────────────────────────────── */
+.llm-alignment {
+  background: var(--paper);
+  border: 1px solid var(--ink-dim);
+}
+.llm-align-row {
+  display: grid;
+  grid-template-columns: 180px 80px 1fr 1.4fr 1fr;
+  gap: 1px;
+  background: var(--ink-dim);
+}
+.llm-align-row > div {
+  background: var(--paper);
+  padding: 10px 12px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.llm-align-row.head > div {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: var(--paper-2);
+}
+.llm-align-row .name { color: var(--ink); font-weight: 500; }
+.llm-align-row .year { color: var(--accent); }
+.llm-align-row .citation { color: var(--ink-soft); font-size: 9.5px; }
+
+/* ── Coda grid ──────────────────────────────────────────────── */
+.llm-coda-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+}
+.llm-coda-tile {
+  background: var(--paper);
+  padding: 22px 26px;
+  border-left: 2px solid var(--accent);
+}
+.llm-coda-tile h4 {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+.llm-coda-tile p {
+  font-family: "Newsreader", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+.llm-coda-tile ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+.llm-coda-tile li { padding: 3px 0; }
+
+/* ── Receipts ───────────────────────────────────────────────── */
+.llm-receipts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+}
+.llm-receipt {
+  background: var(--paper);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.llm-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.llm-receipt-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.llm-receipt-sub {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+/* ── Methodology ────────────────────────────────────────────── */
+.llm-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 36px;
+  margin-top: 14px;
+}
+.llm-method-grid .method-head,
+.llm-method-head {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.llm-method-grid p {
+  font-family: "Newsreader", serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.llm-readinglist { margin-top: 22px; }
+.llm-readinglist ul { list-style: none; margin: 0; padding: 0; }
+.llm-readinglist li { font-size: 11px; margin-bottom: 4px; }
+.llm-readinglist a {
+  border-bottom: 1px solid var(--ink-dim);
+  color: var(--ink-soft);
+}
+.llm-readinglist a:hover { color: var(--accent); border-color: var(--accent); }
+
+.llm-caveats {
+  margin-top: 28px;
+  border-top: 1px solid var(--ink-dim);
+  padding-top: 22px;
+}
+.llm-caveat-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.llm-caveats ul {
+  margin: 0;
+  padding-left: 22px;
+  list-style: square;
+}
+.llm-caveats li {
+  font-family: "Newsreader", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .llm-section { padding: 48px 36px; }
+  .llm-hero    { padding: 88px 36px 40px; }
+  .llm-receipts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .llm-history  { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .llm-stack-grid, .llm-phenomena, .llm-coda-grid { grid-template-columns: 1fr; }
+  .llm-align-row { grid-template-columns: 130px 60px 1fr 1.4fr 1fr; font-size: 9.5px; }
+}
+@media (max-width: 720px) {
+  .llm-section { padding: 36px 20px; }
+  .llm-hero    { padding: 72px 20px 32px; }
+  .llm-dateline { grid-template-columns: 1fr 1fr; }
+  .llm-method-grid { grid-template-columns: 1fr; }
+  .llm-receipts { grid-template-columns: 1fr 1fr; }
+  .llm-history  { grid-template-columns: 1fr 1fr; }
+  .llm-token-row { grid-template-columns: 1fr; }
+  .llm-align-row { grid-template-columns: 1fr; }
+  .llm-align-row.head { display: none; }
+}

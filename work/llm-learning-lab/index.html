@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How LLMs Learn — Jake Cuth.</title>
+  <meta name="description" content="What actually happens inside the box. Eight charts on scaling laws, the training stack, tokenization, the Transformer, training dynamics, emergence, alignment, and benchmark saturation.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="How LLMs Learn — Jake Cuth.">
+  <meta property="og:description" content="Eight charts of real numbers on what actually happens inside a large language model when it learns.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/llm-learning-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=25">
+  <link rel="stylesheet" href="/assets/css/llm-learning-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">04</span> &middot; <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" class="active" aria-current="page" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="llm-main">
+
+<!-- HERO -->
+<section class="llm-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 16</span>
+    <span>How LLMs Learn</span>
+  </div>
+  <h1 class="serif big-display llm-title">
+    A trillion words.<br>
+    <span class="serif-italic" style="color:var(--accent)">A handful of equations.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Eight charts of real numbers on what actually happens inside a large
+    language model when it learns. Scaling laws. The training stack.
+    Tokenization. The Transformer. Training dynamics. Emergence — real
+    or measurement artifact. Alignment. Benchmark saturation.
+  </p>
+  <p class="llm-kicker">
+    The page assumes you've heard the words but not necessarily seen the
+    math behind them. Equations show up where they earn their keep, then
+    get a sentence in plain language. Where the field is genuinely
+    divided — emergence, the data wall, next-token prediction as a
+    sufficient objective — both sides get the floor.
+  </p>
+  <div class="mono llm-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">8 charts &middot; 2017 → 2026</div></div>
+    <div><div class="label">Sources</div><div class="value">Vaswani · Kaplan · Hoffmann · Wei · Schaeffer · Epoch AI</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — SCALING LAWS -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Scaling laws — the closest thing ML has to a physical law</span>
+  </div>
+  <p class="llm-prose">
+    Plot training compute on a log axis, plot pretraining loss on the other
+    log axis, and you get something almost too clean: a near-straight line
+    that has held across four orders of magnitude. Kaplan et al. (2020)
+    discovered it; Hoffmann et al. (2022) refined it with a 70-billion
+    parameter model called Chinchilla. The chart below shows where the
+    notable models actually land.
+  </p>
+  <div class="llm-chart-wrap" id="llm-scaling-wrap">
+    <div class="mono llm-chart-title">FIG. 16.1 &middot; Pretraining loss vs training compute (log–log)</div>
+    <svg id="llm-scaling" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Pretraining loss vs compute, log-log"></svg>
+  </div>
+  <div class="llm-readout">
+    <p class="mono llm-readout-label">What this means</p>
+    <p>
+      The Chinchilla rule: for a fixed compute budget, you should train on
+      <strong>~20 tokens per parameter</strong>. GPT-3 had 175B params and
+      300B tokens — only 1.7 tokens per param, far below the optimum.
+      Llama 3 70B trained on <strong>15T tokens</strong> — 214 tokens per
+      param, ten times past the Chinchilla point. Why the overshoot? Because
+      Chinchilla is training-optimal, not <em>inference</em>-optimal: a
+      smaller, more-trained model is cheaper to run forever even if it
+      cost more to train once. Most modern releases optimise for the model
+      you'll serve, not the model you'll train.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II — TRAINING STACK -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>The training stack — what data goes in, in what order</span>
+  </div>
+  <p class="llm-prose">
+    A modern frontier model goes through four training stages, and they
+    are not equal. <strong>96% of compute</strong> is spent on
+    pretraining — the model reads a substantial fraction of the public
+    internet, predicting the next token at every step. The remaining 4%
+    teaches it to talk like an assistant, prefer helpful answers, and —
+    since 2024 — think before responding.
+  </p>
+  <div class="llm-chart-wrap" id="llm-stack-wrap">
+    <div class="mono llm-chart-title">FIG. 16.2 &middot; Training stages by compute share, dataset size, and what they teach</div>
+    <div id="llm-stack" class="llm-stack-grid"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — TOKENIZATION -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Tokenization — how language becomes integers</span>
+  </div>
+  <p class="llm-prose">
+    Before a model sees a word, the word becomes a number. Byte-pair
+    encoding (BPE) chops text into the most-common sub-word pieces and
+    assigns each piece an integer. Vocabulary sizes have grown roughly
+    five-fold since GPT-2 to better handle code, multiple languages, and
+    rare characters.
+  </p>
+  <div class="llm-chart-wrap" id="llm-vocab-wrap">
+    <div class="mono llm-chart-title">FIG. 16.3 &middot; Vocabulary size by model and year</div>
+    <svg id="llm-vocab" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Vocabulary size over time"></svg>
+  </div>
+  <div class="llm-tokens" id="llm-tokens"></div>
+  <div class="llm-readout">
+    <p class="mono llm-readout-label">Why it matters</p>
+    <p>
+      <strong>Math:</strong> GPT-2 splits long numbers into 3-digit chunks.
+      Multi-digit arithmetic gets harder as a result. GPT-4 keeps longer
+      runs together. <strong>Code:</strong> doubling the vocabulary roughly
+      halves the token count for source code, lowering inference cost.
+      <strong>Multilingual fairness:</strong> a small English-leaning
+      vocab can turn one Korean character into 4–6 tokens, making
+      non-English inference systematically more expensive.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV — TRANSFORMER -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>The Transformer — the one architectural idea that worked</span>
+  </div>
+  <p class="llm-prose">
+    Vaswani et al. (2017) replaced the recurrence in RNN/LSTM language
+    models with a single mechanism: self-attention. Every token can attend
+    to every other token in parallel, and the network learns which
+    connections matter. Almost every modern LLM is a stack of decoder-only
+    Transformer blocks. The breakdown of where the parameters actually
+    live is below.
+  </p>
+  <div class="llm-eq-wrap">
+    <div class="mono llm-eq-label">The attention equation</div>
+    <div class="llm-eq">
+      <span class="serif-italic" style="color:var(--accent)">Attention</span>(Q, K, V) =
+      <span class="llm-fn">softmax</span>(QK<sup>T</sup> / &radic;d<sub>k</sub>) · V
+    </div>
+    <div class="llm-eq-legend mono">
+      Q queries the K keys to produce attention weights, which then take a
+      weighted average over V values. The &radic;d<sub>k</sub> divisor keeps
+      the softmax from saturating at large dimensions.
+    </div>
+  </div>
+  <div class="llm-chart-wrap" id="llm-arch-wrap">
+    <div class="mono llm-chart-title">FIG. 16.4 &middot; Llama 3 70B parameter breakdown</div>
+    <svg id="llm-arch" viewBox="0 0 1100 280" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Parameter share by component"></svg>
+  </div>
+  <div class="llm-history" id="llm-history"></div>
+  <div class="llm-readout">
+    <p class="mono llm-readout-label">What this means</p>
+    <p>
+      Most readers picture an LLM as "a giant attention machine." It isn't.
+      Attention takes about <strong>14% of the parameters</strong>. The
+      MLP — two big linear layers per block, with a non-linearity in
+      between — takes about <strong>83%</strong>. The MLP is where most
+      learned facts live; attention just decides which facts are
+      relevant to which token.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — TRAINING DYNAMICS -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>What learning actually looks like — training dynamics</span>
+  </div>
+  <p class="llm-prose">
+    Pretraining loss falls along a startlingly clean line on a log-step
+    axis. But "training" isn't a single curve; it's a landscape of named
+    phenomena. Below: the loss curve from a real public training run
+    (OLMo 2 / Pythia–style), and four phenomena that make naive
+    extrapolation dangerous.
+  </p>
+  <div class="llm-chart-wrap" id="llm-dynamics-wrap">
+    <div class="mono llm-chart-title">FIG. 16.5 &middot; Public training loss curve — log-step axis</div>
+    <svg id="llm-dynamics" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Loss curve over training steps"></svg>
+  </div>
+  <div class="llm-phenomena" id="llm-phenomena"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — EMERGENCE -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Emergence — real, or a measurement artifact?</span>
+  </div>
+  <p class="llm-prose">
+    Wei et al. (2022) coined the term: certain capabilities — multi-digit
+    arithmetic, MMLU at threshold sizes, instruction-following on novel
+    tasks — appeared to <em>emerge</em> suddenly past a specific compute
+    threshold. Below that threshold, models scored near zero; above it,
+    performance jumped to non-trivial levels. Schaeffer, Miranda &amp;
+    Koyejo (2023, NeurIPS Best Paper) argued the jumps largely come from
+    <em>discontinuous metrics</em> like exact-match accuracy. Switch to
+    a continuous metric and the curves smooth out.
+  </p>
+  <div class="llm-chart-wrap" id="llm-emergence-wrap">
+    <div class="mono llm-chart-title">FIG. 16.6 &middot; Same training run, two metrics — discrete vs continuous</div>
+    <svg id="llm-emergence" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Discrete vs continuous metric on the same training trajectory"></svg>
+  </div>
+  <div class="llm-readout">
+    <p class="mono llm-readout-label">Where the field has landed</p>
+    <p>
+      Most working researchers now treat both papers as partly right.
+      Schaeffer's mirage critique is convincing for many specific
+      "emergence" claims — the apparent jumps were artifacts of
+      thresholded metrics. But Olsson et al.'s induction-head work
+      (Anthropic, 2022) found <em>real</em>, sharp circuit-formation
+      events during training that aren't artifacts of measurement.
+      Practical takeaway: do not bet a product on a benchmark with a
+      discrete metric; do read the underlying log-prob curve.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — ALIGNMENT -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Alignment — the post-pretraining toolkit</span>
+  </div>
+  <p class="llm-prose">
+    A fresh pretrained model knows the internet but doesn't yet know how
+    to be an assistant. The toolkit for closing that gap has grown
+    substantially since 2017. Each method addresses a specific problem;
+    modern frontier models stack several of them in sequence.
+  </p>
+  <div class="llm-table-wrap" id="llm-alignment-wrap">
+    <div class="mono llm-chart-title">FIG. 16.7 &middot; Methods, what they solve, what they cost</div>
+    <div id="llm-alignment" class="llm-alignment"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VIII — BENCHMARKS -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VIII</span>
+    <span>The benchmark race — what 'better' has actually meant</span>
+  </div>
+  <p class="llm-prose">
+    For most of the field's history, a new benchmark would last 4–5 years
+    before frontier systems caught up to humans. Since 2022 that window
+    has closed to under 18 months. The chart below shows trajectories on
+    six canonical benchmarks plus the new ones built since 2024 to
+    outpace saturation.
+  </p>
+  <div class="llm-chart-wrap" id="llm-benchmarks-wrap">
+    <div class="mono llm-chart-title">FIG. 16.8 &middot; Frontier scores on six capability benchmarks, 2020 → 2026</div>
+    <svg id="llm-benchmarks" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Benchmark trajectories over time"></svg>
+  </div>
+  <div class="llm-readout">
+    <p class="mono llm-readout-label">What this means</p>
+    <p>
+      MMLU went from random-chance (44% at GPT-3) to past the human
+      baseline (~89.8%) in four years. HumanEval, MATH, and the older
+      benchmarks have all saturated. The newer ones — GPQA Diamond,
+      SWE-Bench Verified, ARC-AGI-2/3, FrontierMath, Humanity's Last Exam —
+      were specifically designed to <em>not</em> saturate quickly. As of
+      April 2026, frontier scores are still under 1% on ARC-AGI-3 and
+      under 17% on FrontierMath.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- CODA — INTERP & NEXT-TOKEN -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">Coda</span>
+    <span>Two threads worth flagging</span>
+  </div>
+  <div class="llm-coda-grid" id="llm-coda"></div>
+</section>
+
+<hr class="hair">
+
+<!-- RECEIPTS -->
+<section class="llm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IX</span>
+    <span>Receipts</span>
+  </div>
+  <div class="llm-receipts" id="llm-receipts"></div>
+</section>
+
+<hr class="hair">
+
+<!-- METHODOLOGY -->
+<section class="llm-section" id="methodology">
+  <div class="mono section-label">
+    <span class="idx">&sect; X</span>
+    <span>Methodology, sources, caveats</span>
+  </div>
+
+  <div class="llm-method-grid">
+    <div>
+      <div class="mono method-head">Where the numbers come from</div>
+      <p>
+        Model parameter and token counts: official model cards (Llama 3,
+        DeepSeek-V3) and Epoch AI's notable-models database. GPT-4
+        architecture details are press estimates, not confirmed by OpenAI
+        — labelled as such in the chart. Loss values are pretraining
+        cross-entropy as reported in the relevant papers.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">What's a 'token'?</div>
+      <p>
+        BPE (byte-pair encoding) is the dominant scheme. A token is
+        usually a sub-word: common words tokenize to one token, rare
+        words tokenize to several. The exact split depends on the model's
+        tokenizer. Token IDs in the worked example are correct for the
+        respective tokenizers as of the cited model versions.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">The emergence demonstration</div>
+      <p>
+        The discrete-vs-continuous chart in &sect; VI uses a
+        representative trajectory in the spirit of Schaeffer et al.
+        (2023). The original paper provides the full reproduction across
+        multiple BIG-Bench tasks. Both the metric jump and the smooth
+        underlying curve are real phenomena; only the framing is in
+        dispute.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Frontier benchmark scores</div>
+      <p>
+        Scores are from official model cards and the underlying benchmark
+        leaderboards (lmsys, EpochAI, SWE-Bench Verified, ARC Prize
+        Foundation). 2025–26 scores update as new model releases land.
+      </p>
+    </div>
+  </div>
+
+  <div class="llm-readinglist mono">
+    <div class="llm-method-head">Reading list</div>
+    <ul>
+      <li><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al. 2017 &middot; Attention Is All You Need &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al. 2020 &middot; Scaling Laws for Neural Language Models &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al. 2022 &middot; Chinchilla &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2206.07682" target="_blank" rel="noopener">Wei et al. 2022 &middot; Emergent Abilities of Large Language Models &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2304.15004" target="_blank" rel="noopener">Schaeffer, Miranda, Koyejo 2023 &middot; Mirage &middot; NeurIPS Best Paper &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">Power et al. 2022 &middot; Grokking &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener">Hu et al. 2021 &middot; LoRA &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Rafailov et al. 2023 &middot; DPO &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al. 2022 &middot; InstructGPT &nearr;</a></li>
+      <li><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-AI 2025 &middot; R1 &middot; reasoning RL &nearr;</a></li>
+      <li><a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank" rel="noopener">Olsson et al. 2022 &middot; Induction Heads &middot; Anthropic &nearr;</a></li>
+      <li><a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" target="_blank" rel="noopener">Stanford HAI 2025 AI Index &nearr;</a></li>
+    </ul>
+  </div>
+
+  <div class="llm-caveats">
+    <div class="mono llm-caveat-label">Honest caveats</div>
+    <ul>
+      <li>GPT-4 architecture numbers are press estimates. OpenAI has never
+        confirmed parameter count, MoE structure, or training-token total.
+        The chart labels them as such.</li>
+      <li>"Loss proxy" values for the largest models are extrapolations
+        consistent with published scaling laws, not measured pretraining
+        loss; lab reports of pretraining loss for GPT-5/Claude 4 don't
+        exist publicly.</li>
+      <li>Compute-share percentages for the four training stages are
+        approximate. Reasoning-RL changes the budget materially; the
+        share quoted (1–10%) is from the DeepSeek-R1 paper and is not
+        directly comparable across labs.</li>
+      <li>Tokenization examples use the GPT-2 and GPT-4 tiktoken
+        tokenizers. Other model families use different schemes; a SentencePiece
+        BPE tokenizer can produce different splits even for the same vocab size.</li>
+    </ul>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/productivity-lab/">&larr; The Productivity Mystery</a>
+    <span>Lab 16 of 16</span>
+    <a href="/work/imm-lab/">Influencer Mix Modeling &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/assets/data/llm-learning-lab" target="_blank" rel="noopener" class="btn-outline">View the data on GitHub &nearr;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/llm-learning-lab.js?v=1"></script>
+</body>
+</html>

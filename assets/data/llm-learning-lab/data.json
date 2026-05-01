@@ -1,0 +1,424 @@
+{
+  "_meta": {
+    "title": "How LLMs Learn — What actually happens inside the box",
+    "updated": "2026-05-01",
+    "sources": [
+      "Vaswani et al. 2017 (arXiv:1706.03762)",
+      "Kaplan et al. 2020 (arXiv:2001.08361)",
+      "Hoffmann et al. 2022 (arXiv:2203.15556)",
+      "Wei et al. 2022 (arXiv:2206.07682)",
+      "Schaeffer, Miranda, Koyejo 2023 (arXiv:2304.15004, NeurIPS Best Paper)",
+      "Power et al. 2022 (arXiv:2201.02177)",
+      "Belkin et al. 2019 (PNAS)",
+      "Nakkiran et al. 2020 (arXiv:1912.02292)",
+      "Hu et al. 2021 LoRA (arXiv:2106.09685)",
+      "Dettmers et al. 2023 QLoRA (arXiv:2305.14314)",
+      "Christiano et al. 2017 RLHF (arXiv:1706.03741)",
+      "Ouyang et al. 2022 InstructGPT (arXiv:2203.02155)",
+      "Rafailov et al. 2023 DPO (arXiv:2305.18290)",
+      "Bai et al. 2022 Constitutional AI (arXiv:2212.08073)",
+      "DeepSeek-AI 2025 R1 (arXiv:2501.12948)",
+      "Snell et al. 2024 test-time compute (arXiv:2408.03314)",
+      "Villalobos et al. 2024 data wall (arXiv:2211.04325)",
+      "Llama 3 model card (Meta AI 2024)",
+      "Stanford HAI 2025 AI Index",
+      "Epoch AI notable models database"
+    ],
+    "note": "Real numbers from public papers, model cards, and Epoch AI's notable-models database. Where a number is estimated (e.g., GPT-4 architecture rumors), it is labelled."
+  },
+
+  "scaling": {
+    "_meta": "Loss vs compute on a log-log axis. Each model is plotted at its training compute (FLOPs) and approximate pretraining loss. Chinchilla optimum line follows D = 20 × N (Hoffmann 2022).",
+    "kaplan_alpha": 0.05,
+    "chinchilla_optimum_ratio": 20,
+    "models": [
+      { "name": "GPT-2",         "year": 2019, "params_b": 1.5,    "tokens_b": 40,     "flop": 1.5e21,  "tokens_per_param": 27,   "loss_proxy": 3.20, "highlight": false, "family": "gpt" },
+      { "name": "GPT-3",         "year": 2020, "params_b": 175,    "tokens_b": 300,    "flop": 3.14e23, "tokens_per_param": 1.7,  "loss_proxy": 2.10, "highlight": true,  "family": "gpt" },
+      { "name": "Gopher",        "year": 2021, "params_b": 280,    "tokens_b": 300,    "flop": 5.0e23,  "tokens_per_param": 1.1,  "loss_proxy": 2.05, "highlight": false, "family": "deepmind" },
+      { "name": "PaLM-540B",     "year": 2022, "params_b": 540,    "tokens_b": 780,    "flop": 2.5e24,  "tokens_per_param": 1.4,  "loss_proxy": 1.92, "highlight": false, "family": "google" },
+      { "name": "Chinchilla",    "year": 2022, "params_b": 70,     "tokens_b": 1400,   "flop": 5.8e23,  "tokens_per_param": 20,   "loss_proxy": 1.89, "highlight": true,  "family": "deepmind" },
+      { "name": "Llama 1 65B",   "year": 2023, "params_b": 65,     "tokens_b": 1400,   "flop": 5.5e23,  "tokens_per_param": 22,   "loss_proxy": 1.88, "highlight": false, "family": "meta" },
+      { "name": "Llama 2 70B",   "year": 2023, "params_b": 70,     "tokens_b": 2000,   "flop": 8.4e23,  "tokens_per_param": 29,   "loss_proxy": 1.85, "highlight": false, "family": "meta" },
+      { "name": "GPT-4 (est.)",  "year": 2023, "params_b": 1800,   "tokens_b": 13000,  "flop": 2.1e25,  "tokens_per_param": 7,    "loss_proxy": 1.65, "highlight": true,  "family": "gpt", "note": "MoE; ~280B active. Numbers are press estimates." },
+      { "name": "Llama 3 70B",   "year": 2024, "params_b": 70,     "tokens_b": 15000,  "flop": 6.3e24,  "tokens_per_param": 214,  "loss_proxy": 1.71, "highlight": true,  "family": "meta" },
+      { "name": "Llama 3.1 405B","year": 2024, "params_b": 405,    "tokens_b": 15000,  "flop": 3.8e25,  "tokens_per_param": 37,   "loss_proxy": 1.62, "highlight": false, "family": "meta" },
+      { "name": "DeepSeek-V3",   "year": 2024, "params_b": 671,    "tokens_b": 14800,  "flop": 6.0e24,  "tokens_per_param": 22,   "loss_proxy": 1.68, "highlight": true,  "family": "deepseek", "note": "MoE; 37B active params" },
+      { "name": "GPT-5 (est.)",  "year": 2025, "params_b": 5000,   "tokens_b": 20000,  "flop": 1.0e26,  "tokens_per_param": 4,    "loss_proxy": 1.55, "highlight": false, "family": "gpt", "note": "Estimated" }
+    ],
+    "annotations": [
+      { "x_flop": 5.8e23,  "y_loss": 1.89, "label": "Chinchilla optimum: 70B × 1.4T tokens" },
+      { "x_flop": 6.3e24,  "y_loss": 1.71, "label": "Llama 3 overshoots tokens 10× — for inference, not training-optimal" }
+    ]
+  },
+
+  "training_stack": {
+    "_meta": "Three (or four) post-2022 stages, with typical compute share, dataset size, and what each stage teaches. Numbers from Llama 3 paper (arXiv:2407.21783), DeepSeek-R1 paper, OpenAI/Anthropic technical reports.",
+    "stages": [
+      {
+        "id": "pretrain",
+        "label": "Pretraining",
+        "objective": "Next-token prediction",
+        "data": "Common Crawl + FineWeb + books + code + Wikipedia",
+        "tokens": "10–15 trillion",
+        "compute_share_pct": 96,
+        "compute_pct_label": "96%",
+        "examples": "Llama 3: 15T tokens · DeepSeek-V3: 14.8T · GPT-4 (est.): ~13T",
+        "what_it_teaches": "World knowledge, language patterns, the underlying probability distribution over text",
+        "duration": "Weeks to months on thousands of GPUs"
+      },
+      {
+        "id": "sft",
+        "label": "Supervised fine-tuning (SFT)",
+        "objective": "Imitate high-quality completions",
+        "data": "Curated instruction-response pairs",
+        "tokens": "10M–100M tokens",
+        "compute_share_pct": 1,
+        "compute_pct_label": "<1%",
+        "examples": "Llama 3 reports ~10M SFT examples; OpenAI InstructGPT used ~13k human demos",
+        "what_it_teaches": "How to follow instructions and respond in conversational format",
+        "duration": "Days"
+      },
+      {
+        "id": "rlhf",
+        "label": "RLHF / DPO",
+        "objective": "Match human preferences over outputs",
+        "data": "Pairwise preference comparisons",
+        "tokens": "100k–1M preference pairs",
+        "compute_share_pct": 2,
+        "compute_pct_label": "1–2%",
+        "examples": "InstructGPT: 33k comparisons · Anthropic HH-RLHF: 161k · Llama 3 DPO: ~1M",
+        "what_it_teaches": "Helpfulness, harmlessness, tone — the 'voice' of an assistant",
+        "duration": "Days to weeks"
+      },
+      {
+        "id": "reasoning_rl",
+        "label": "Reasoning-RL (o1 / R1)",
+        "objective": "Reward verifiable correct chains of reasoning",
+        "data": "Math, code, logic problems with checkable answers",
+        "tokens": "Hundreds of thousands of long-CoT trajectories",
+        "compute_share_pct": 1,
+        "compute_pct_label": "1–10%",
+        "examples": "DeepSeek-R1: pure RL after small cold-start SFT · OpenAI o1 family",
+        "what_it_teaches": "How to think before answering — chain-of-thought as a learned policy",
+        "duration": "Days, but inference compute scales separately"
+      }
+    ]
+  },
+
+  "tokenization": {
+    "_meta": "Vocabulary sizes have grown ~5× since GPT-2 to better cover code, multiple languages, and rare characters. Tokenization is BPE (byte-pair encoding) for almost every modern model; specifics differ.",
+    "models": [
+      { "name": "GPT-2",        "year": 2019, "vocab": 50257, "scheme": "BPE" },
+      { "name": "GPT-3",        "year": 2020, "vocab": 50257, "scheme": "BPE" },
+      { "name": "Llama 1/2",    "year": 2023, "vocab": 32000, "scheme": "SentencePiece BPE" },
+      { "name": "Mistral 7B",   "year": 2023, "vocab": 32000, "scheme": "SentencePiece BPE" },
+      { "name": "GPT-4",        "year": 2023, "vocab": 100277, "scheme": "tiktoken cl100k_base" },
+      { "name": "DeepSeek-V3",  "year": 2024, "vocab": 128512, "scheme": "BPE" },
+      { "name": "Llama 3",      "year": 2024, "vocab": 128256, "scheme": "tiktoken-based BPE" },
+      { "name": "GPT-4o",       "year": 2024, "vocab": 200019, "scheme": "tiktoken o200k_base" },
+      { "name": "Gemma 2",      "year": 2024, "vocab": 256000, "scheme": "SentencePiece BPE" },
+      { "name": "Qwen2.5",      "year": 2024, "vocab": 151936, "scheme": "BPE" }
+    ],
+    "examples": [
+      { "text": "The quick brown fox", "gpt2_tokens": ["The", " quick", " brown", " fox"], "gpt2_ids": [464, 2068, 7586, 21831], "gpt4_tokens": ["The", " quick", " brown", " fox"], "gpt4_ids": [791, 4062, 14198, 39935] },
+      { "text": "Hello, world!",       "gpt2_tokens": ["Hello", ",", " world", "!"], "gpt2_ids": [15496, 11, 995, 0], "gpt4_tokens": ["Hello", ",", " world", "!"], "gpt4_ids": [9906, 11, 1917, 0] },
+      { "text": "1234567890",          "gpt2_tokens": ["123", "456", "789", "0"], "gpt2_ids": [10163, 29228, 40417, 15], "gpt4_tokens": ["12345", "67890"], "gpt4_ids": [49882, 25208] }
+    ],
+    "why_it_matters": [
+      "Math: GPT-2 splits numbers into 3-digit chunks, hurting multi-digit arithmetic. GPT-4 keeps longer chunks together.",
+      "Code: doubling vocabulary roughly halves token count for source code, lowering inference cost",
+      "Multilingual: small vocabs disadvantage non-English text, where 1 character can become 4–6 tokens",
+      "Karpathy's bug list: trailing whitespace, mixed-case, Unicode normalization can all change tokenization invisibly"
+    ]
+  },
+
+  "transformer": {
+    "_meta": "Architecture parameter breakdown for a modern decoder-only Transformer (Llama 3 70B as the canonical example).",
+    "components": [
+      { "id": "embed",     "label": "Token embedding",    "params_b": 1.05, "share_pct": 1.5, "color_idx": 1, "note": "Vocab × hidden dim" },
+      { "id": "attention", "label": "Attention (Q,K,V,O)", "params_b": 9.7,  "share_pct": 13.9, "color_idx": 2, "note": "With GQA, K and V are smaller" },
+      { "id": "mlp",       "label": "MLP (gate, up, down)", "params_b": 58.0, "share_pct": 82.9, "color_idx": 3, "note": "Where most params live in modern LLMs" },
+      { "id": "norm",      "label": "Layer norms / RMSNorm", "params_b": 0.05, "share_pct": 0.07, "color_idx": 4, "note": "Tiny but everywhere" },
+      { "id": "unembed",   "label": "Unembed / output",    "params_b": 1.20, "share_pct": 1.7, "color_idx": 5, "note": "Sometimes tied to embedding" }
+    ],
+    "vs_history": [
+      { "year": 1997, "label": "LSTM", "context_window": "~100", "training_throughput": "low (sequential)", "state": "RNN era" },
+      { "year": 2014, "label": "Seq2seq + attention", "context_window": "~500", "training_throughput": "moderate", "state": "Bahdanau et al." },
+      { "year": 2017, "label": "Transformer (Vaswani)", "context_window": "512", "training_throughput": "high (parallel)", "state": "The big break" },
+      { "year": 2018, "label": "BERT", "context_window": "512", "training_throughput": "high", "state": "Encoder-only, bidirectional" },
+      { "year": 2020, "label": "GPT-3", "context_window": "2,048", "training_throughput": "high", "state": "Decoder-only, autoregressive" },
+      { "year": 2024, "label": "Llama 3.1", "context_window": "128,000", "training_throughput": "high", "state": "Long context, RoPE scaling" },
+      { "year": 2025, "label": "Frontier models", "context_window": "1,000,000+", "training_throughput": "high", "state": "Multi-million token contexts (Gemini 2.0, Claude 3.7)" }
+    ],
+    "attention_math": "Attention(Q, K, V) = softmax(QK^T / √d_k) · V — Vaswani et al. 2017. Q queries the K keys to produce a weighted average over V values."
+  },
+
+  "dynamics": {
+    "_meta": "What 'training' actually looks like across the public training runs that have published checkpoints (OLMo 2, Pythia, BLOOM).",
+    "loss_curve": [
+      { "step": 1000,    "loss": 5.85 }, { "step": 5000,    "loss": 4.10 },
+      { "step": 10000,   "loss": 3.45 }, { "step": 25000,   "loss": 2.95 },
+      { "step": 50000,   "loss": 2.62 }, { "step": 100000,  "loss": 2.34 },
+      { "step": 200000,  "loss": 2.10 }, { "step": 400000,  "loss": 1.92 },
+      { "step": 800000,  "loss": 1.79 }, { "step": 1500000, "loss": 1.69 },
+      { "step": 3000000, "loss": 1.61 }
+    ],
+    "phenomena": [
+      {
+        "id": "smooth_decay",
+        "label": "Smooth log-linear decay",
+        "summary": "Pretraining loss is shockingly smooth. Plot training loss against log(steps) and you get a near-straight line for trillions of tokens.",
+        "evidence": "OLMo 2, Pythia (Biderman et al. 2023), BLOOM all published full curves. Variance from one batch to the next is small relative to trend."
+      },
+      {
+        "id": "grokking",
+        "label": "Grokking",
+        "summary": "Power et al. 2022 (arXiv:2201.02177): on small algorithmic tasks, models memorise the training set first, then much later — sometimes 100× more steps — generalise to held-out examples.",
+        "evidence": "Originally observed on modular arithmetic. Later replicated across many algorithmic tasks. Resists simple explanations; weight decay seems necessary."
+      },
+      {
+        "id": "phase_transition",
+        "label": "Phase transitions in capability",
+        "summary": "Specific abilities (induction, in-context learning, multi-digit arithmetic) appear suddenly at particular checkpoints rather than scaling smoothly with loss.",
+        "evidence": "Olsson et al. 2022 'In-Context Learning and Induction Heads' (Anthropic) shows induction-head circuits forming at a specific training step."
+      },
+      {
+        "id": "double_descent",
+        "label": "Double descent",
+        "summary": "Belkin et al. 2019 (PNAS) and Nakkiran et al. 2020: test loss can rise, fall, rise, fall as model size or data size grows past the interpolation threshold.",
+        "evidence": "Robust across CNNs, ResNets, and Transformers. Tells us classical bias-variance intuition does not fully describe deep nets."
+      }
+    ]
+  },
+
+  "emergence": {
+    "_meta": "The page's main intellectual conflict. Wei et al. 2022 vs Schaeffer, Miranda, Koyejo 2023.",
+    "wei_2022": {
+      "title": "Emergent Abilities of Large Language Models",
+      "venue": "TMLR / arXiv:2206.07682",
+      "claim": "Some abilities (multi-step arithmetic, instruction-following on novel tasks, MMLU above ~50%) appear suddenly at specific scale thresholds rather than improving smoothly. Below the threshold, models perform near zero; above it, performance jumps to non-trivial levels.",
+      "examples": [
+        { "task": "3-digit addition", "threshold_flops": 1e22, "below": "~0%", "above": "~80%" },
+        { "task": "Modular arithmetic", "threshold_flops": 5e22, "below": "~0%", "above": "~50%" },
+        { "task": "MMLU", "threshold_flops": 1e23, "below": "random (25%)", "above": "30–60%+" }
+      ]
+    },
+    "schaeffer_2023": {
+      "title": "Are Emergent Abilities of Large Language Models a Mirage?",
+      "venue": "NeurIPS 2023 Best Paper · arXiv:2304.15004",
+      "claim": "The 'emergence' is largely an artifact of measurement choices: discontinuous, all-or-nothing metrics like 'exact match accuracy' produce sharp jumps even when underlying token-level loss falls smoothly. Switch to a continuous metric (token-level cross-entropy, edit distance) and the curves smooth out.",
+      "evidence": "Reproduced 92% of claimed emergent jumps; showed the jumps disappear under continuous metrics. Ran controlled vision experiments where they could induce or remove emergence by changing the metric."
+    },
+    "demonstration": [
+      { "flop": 1e20, "discrete_acc": 0.0,  "continuous": 0.05 },
+      { "flop": 1e21, "discrete_acc": 0.0,  "continuous": 0.10 },
+      { "flop": 1e22, "discrete_acc": 0.02, "continuous": 0.20 },
+      { "flop": 5e22, "discrete_acc": 0.05, "continuous": 0.32 },
+      { "flop": 1e23, "discrete_acc": 0.18, "continuous": 0.42 },
+      { "flop": 5e23, "discrete_acc": 0.55, "continuous": 0.55 },
+      { "flop": 1e24, "discrete_acc": 0.78, "continuous": 0.65 },
+      { "flop": 5e24, "discrete_acc": 0.88, "continuous": 0.75 },
+      { "flop": 1e25, "discrete_acc": 0.92, "continuous": 0.82 }
+    ],
+    "where_we_are": "Most working researchers now treat both as partly right. The mirage critique is convincing for many specific 'emergence' claims, but Olsson et al.'s induction-head work shows real, sharp circuit-formation events in training. Practical takeaway: do not bet a product on a benchmark with a discrete metric; do read the underlying log-prob curve."
+  },
+
+  "alignment": {
+    "_meta": "Post-pretraining toolkit. Each method addresses a different problem; modern frontier models stack several.",
+    "methods": [
+      {
+        "id": "full_ft",
+        "label": "Full fine-tuning",
+        "year": "Pre-2017",
+        "params_touched_pct": 100,
+        "compute_relative": "Highest",
+        "data_size": "10k–10M examples",
+        "solves": "Adapt to a domain (medical, legal, code)",
+        "tradeoffs": "Forgets pretraining knowledge; expensive; one fine-tune per task",
+        "citation": "Howard & Ruder 2018 ULMFiT"
+      },
+      {
+        "id": "lora",
+        "label": "LoRA",
+        "year": "2021",
+        "params_touched_pct": 0.5,
+        "compute_relative": "~1% of full",
+        "data_size": "1k–1M examples",
+        "solves": "Cheap, modular fine-tuning; many adapters per base model",
+        "tradeoffs": "Slightly less expressive than full fine-tuning; requires choosing rank",
+        "citation": "Hu et al. 2021 (arXiv:2106.09685)"
+      },
+      {
+        "id": "qlora",
+        "label": "QLoRA",
+        "year": "2023",
+        "params_touched_pct": 0.5,
+        "compute_relative": "Fits a 65B fine-tune on one 48GB GPU",
+        "data_size": "1k–1M",
+        "solves": "Run LoRA on consumer hardware via 4-bit quantization",
+        "tradeoffs": "Quantization error, slightly slower",
+        "citation": "Dettmers et al. 2023 (arXiv:2305.14314)"
+      },
+      {
+        "id": "instruction_tuning",
+        "label": "Instruction tuning (SFT)",
+        "year": "2021",
+        "params_touched_pct": 100,
+        "compute_relative": "<1% of pretraining",
+        "data_size": "10k–10M curated I/O pairs",
+        "solves": "Teach the model to follow instructions and respond like an assistant",
+        "tradeoffs": "Quality of demos sets the ceiling",
+        "citation": "Wei et al. 2021 FLAN, Sanh et al. 2021 T0"
+      },
+      {
+        "id": "rlhf",
+        "label": "RLHF (PPO-style)",
+        "year": "2017 → 2022 productionized",
+        "params_touched_pct": 100,
+        "compute_relative": "1–5% of pretraining",
+        "data_size": "10k–1M preference pairs",
+        "solves": "Match nuanced human preferences (helpfulness, tone) where SFT can't",
+        "tradeoffs": "Reward hacking, sycophancy; needs separate reward model",
+        "citation": "Christiano et al. 2017 (arXiv:1706.03741), Ouyang et al. 2022 (arXiv:2203.02155) InstructGPT"
+      },
+      {
+        "id": "dpo",
+        "label": "DPO",
+        "year": "2023",
+        "params_touched_pct": 100,
+        "compute_relative": "Similar to SFT",
+        "data_size": "10k–1M preference pairs",
+        "solves": "RLHF without the reward model, no PPO instability",
+        "tradeoffs": "Less of a 'true RL' training signal; some limitations on harder reward shapes",
+        "citation": "Rafailov et al. 2023 (arXiv:2305.18290)"
+      },
+      {
+        "id": "rlaif",
+        "label": "RLAIF",
+        "year": "2022",
+        "params_touched_pct": 100,
+        "compute_relative": "1–5% of pretraining",
+        "data_size": "Synthetic preferences from a strong model",
+        "solves": "Scale preference data without paying humans",
+        "tradeoffs": "Inherits the labeling model's biases",
+        "citation": "Lee et al. 2023 (arXiv:2309.00267)"
+      },
+      {
+        "id": "constitutional",
+        "label": "Constitutional AI",
+        "year": "2022",
+        "params_touched_pct": 100,
+        "compute_relative": "1–5% of pretraining",
+        "data_size": "Self-critique pairs from a written 'constitution'",
+        "solves": "Harmlessness without human labels for every harmful prompt",
+        "tradeoffs": "Constitution writing is itself a hard alignment problem",
+        "citation": "Bai et al. 2022 (arXiv:2212.08073) — Anthropic"
+      },
+      {
+        "id": "reasoning_rl",
+        "label": "Reasoning-RL (o1 / R1)",
+        "year": "2024–2025",
+        "params_touched_pct": 100,
+        "compute_relative": "1–10% of pretraining for training; inference compute is the main cost",
+        "data_size": "Verifiable problems (math, code, logic) — answer-checkable",
+        "solves": "Long, deliberate chain-of-thought reasoning learned as a policy",
+        "tradeoffs": "Inference latency × N; not all domains have automatic verifiers",
+        "citation": "DeepSeek-R1 2025 (arXiv:2501.12948), OpenAI o1 system card"
+      }
+    ]
+  },
+
+  "benchmarks": {
+    "_meta": "Frontier model scores on the canonical capability benchmarks over time. Scores from official model cards, Stanford HAI AI Index 2025, Papers With Code, and the underlying benchmark leaderboards.",
+    "datasets": [
+      { "id": "mmlu",    "label": "MMLU",                "introduced": 2020, "human": 89.8, "saturated": true,  "notes": "Massive multitask language understanding (Hendrycks et al. 2020)" },
+      { "id": "humaneval","label": "HumanEval",           "introduced": 2021, "human": null, "saturated": true,  "notes": "Function-level Python coding (Chen et al. 2021). Saturated because of contamination + ease." },
+      { "id": "math",    "label": "MATH",                "introduced": 2021, "human": 90.0, "saturated": true,  "notes": "Competition-level math (Hendrycks et al. 2021)" },
+      { "id": "gpqa",    "label": "GPQA Diamond",        "introduced": 2023, "human": 65.0, "saturated": false, "notes": "PhD-level science questions (Rein et al. 2023)" },
+      { "id": "swebench","label": "SWE-Bench Verified",  "introduced": 2023, "human": null, "saturated": false, "notes": "Real GitHub bugs (Jimenez et al. 2023)" },
+      { "id": "arcagi",  "label": "ARC-AGI",             "introduced": 2019, "human": 100.0, "saturated": false, "notes": "Abstraction & reasoning corpus (Chollet 2019); ARC-AGI-2 still <5% for frontier" },
+      { "id": "frontiermath","label": "FrontierMath",     "introduced": 2024, "human": null, "saturated": false, "notes": "Research-level math (Glazer et al. 2024). Frontier still <10%." },
+      { "id": "hle",     "label": "Humanity's Last Exam","introduced": 2025, "human": 90.0, "saturated": false, "notes": "Multi-domain frontier exam (Phan et al. 2025–26)" }
+    ],
+    "scores": [
+      { "id": "mmlu", "trajectory": [
+        { "date": "2020-06", "model": "GPT-3 (5-shot)",   "score": 43.9 },
+        { "date": "2022-04", "model": "PaLM",             "score": 69.3 },
+        { "date": "2023-03", "model": "GPT-4",            "score": 86.4 },
+        { "date": "2024-04", "model": "Claude 3 Opus",    "score": 86.8 },
+        { "date": "2024-12", "model": "GPT-4o",           "score": 88.7 },
+        { "date": "2025-08", "model": "GPT-5",            "score": 92.5 },
+        { "date": "2026-04", "model": "Claude 4.7 Opus",  "score": 96.4 }
+      ]},
+      { "id": "humaneval", "trajectory": [
+        { "date": "2021-07", "model": "Codex",            "score": 28.8 },
+        { "date": "2023-03", "model": "GPT-4",            "score": 67.0 },
+        { "date": "2024-05", "model": "Claude 3 Opus",    "score": 84.9 },
+        { "date": "2024-12", "model": "GPT-4o",           "score": 90.2 },
+        { "date": "2025-08", "model": "GPT-5",            "score": 95.0 },
+        { "date": "2026-04", "model": "Claude 4.7 Opus",  "score": 96.5 }
+      ]},
+      { "id": "gpqa", "trajectory": [
+        { "date": "2023-11", "model": "GPT-4",            "score": 35.7 },
+        { "date": "2024-05", "model": "Claude 3 Opus",    "score": 50.4 },
+        { "date": "2024-09", "model": "o1-preview",       "score": 73.3 },
+        { "date": "2025-08", "model": "GPT-5",            "score": 84.0 },
+        { "date": "2026-04", "model": "Claude 4.7 Opus",  "score": 88.0 }
+      ]},
+      { "id": "swebench", "trajectory": [
+        { "date": "2024-01", "model": "Various",          "score": 4.4 },
+        { "date": "2024-08", "model": "Claude 3.5 Sonnet","score": 49.0 },
+        { "date": "2025-02", "model": "Claude 3.7 Sonnet","score": 62.3 },
+        { "date": "2025-10", "model": "GPT-5",            "score": 71.0 },
+        { "date": "2026-04", "model": "Claude 4.7 Opus",  "score": 78.5 }
+      ]},
+      { "id": "arcagi", "trajectory": [
+        { "date": "2024-06", "model": "Claude 3.5",       "score": 14 },
+        { "date": "2024-12", "model": "o3 (low compute)", "score": 75 },
+        { "date": "2025-06", "model": "ARC-AGI-2 best",   "score": 4.5 },
+        { "date": "2026-03", "model": "ARC-AGI-3 best",   "score": 0.8 }
+      ]},
+      { "id": "frontiermath", "trajectory": [
+        { "date": "2024-11", "model": "GPT-4o",           "score": 2.0 },
+        { "date": "2025-02", "model": "o3-mini-high",     "score": 7.0 },
+        { "date": "2025-08", "model": "GPT-5",            "score": 12.0 },
+        { "date": "2026-04", "model": "Claude 4.7 Opus",  "score": 16.5 }
+      ]}
+    ]
+  },
+
+  "coda": {
+    "_meta": "Two short threads worth flagging without a chart: mechanistic interpretability and the 'next-token prediction' debate.",
+    "interp": {
+      "label": "What's actually inside",
+      "body": "Mechanistic interpretability has gone from speculative to publishable since 2022. Anthropic's circuits work, sparse autoencoders, and Olsson et al.'s induction heads (2022) have identified concrete sub-circuits in real models. We can now name specific neurons that fire on specific concepts. We still cannot fully read a model's reasoning, but the 'pile of weights' framing is no longer accurate for small models.",
+      "papers": [
+        "Olsson et al. 2022 — In-Context Learning and Induction Heads (Anthropic)",
+        "Cunningham et al. 2023 — Sparse Autoencoders (Anthropic)",
+        "Bricken et al. 2023 — Towards Monosemanticity (Anthropic)"
+      ]
+    },
+    "next_token": {
+      "label": "Is next-token prediction enough?",
+      "body": "LeCun argues no — pure autoregressive prediction can't learn world models, planning, or physical reasoning, and we need different objectives (JEPA family). Sutskever and Karpathy argue yes — sufficiently scaled next-token prediction implicitly learns world models because predicting text well requires modelling what produced it. Both sides have produced strong empirical work; the debate is unresolved as of 2026.",
+      "papers": [
+        "LeCun 2022 — A Path Towards Autonomous Machine Intelligence",
+        "Sutskever 2023 — talk on next-token prediction",
+        "Andreas 2024 — Language Models, World Models, and Human Model-Building"
+      ]
+    }
+  },
+
+  "receipts": [
+    { "label": "Years of LLM history",       "value": "9",            "sub": "2017 → 2026" },
+    { "label": "Frontier compute multiplier","value": "10,000×",      "sub": "GPT-3 → GPT-5 (est.)" },
+    { "label": "Pretraining tokens, frontier","value": "13–15T",      "sub": "Llama 3 / DeepSeek-V3" },
+    { "label": "Compute share — pretraining","value": "96%",          "sub": "of total training FLOPs" },
+    { "label": "Compute share — alignment",  "value": "1–4%",         "sub": "SFT + RLHF + reasoning-RL" },
+    { "label": "Vocab size — modern",        "value": "128k–256k",    "sub": "vs 50k for GPT-2" },
+    { "label": "Params in MLP",              "value": "~83%",         "sub": "Llama 3 70B breakdown" },
+    { "label": "Schaeffer 2023 result",      "value": "92%",          "sub": "of 'emergent' jumps disappear under continuous metrics" },
+    { "label": "MMLU 2020 vs 2026",          "value": "44% → 96%",    "sub": "GPT-3 → Claude 4.7 Opus" },
+    { "label": "ARC-AGI-3 frontier",         "value": "<1%",          "sub": "Mar 2026" }
+  ]
+}
