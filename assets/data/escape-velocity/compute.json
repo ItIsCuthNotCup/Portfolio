@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "title": "Frontier Training Compute, 1950–2026",
+    "sources": [
+      "https://epoch.ai/data/notable-ai-models",
+      "https://epoch.ai/blog/compute-trends",
+      "https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+    ],
+    "updated": "2026-04-30",
+    "note": "FLOP values are approximate training compute. Era tags follow Epoch AI classification."
+  },
+  "eras": [
+    { "id": "pre-dl", "label": "Pre-Deep Learning", "start": 1950, "end": 2010, "doubling_months": 24 },
+    { "id": "dl", "label": "Deep Learning Era", "start": 2010, "end": 2018, "doubling_months": 6 },
+    { "id": "scaling", "label": "Scaling Era", "start": 2018, "end": 2026, "doubling_months": 5.2 }
+  ],
+  "models": [
+    { "name": "Perceptron", "year": 1957, "flop": 1e7, "era": "pre-dl", "label": false },
+    { "name": "ALVINN", "year": 1989, "flop": 1e9, "era": "pre-dl", "label": false },
+    { "name": "LeNet-5", "year": 1998, "flop": 1e10, "era": "pre-dl", "label": false },
+    { "name": "AlexNet", "year": 2012, "flop": 4.7e15, "era": "dl", "label": true },
+    { "name": "VGG-19", "year": 2014, "flop": 1.6e17, "era": "dl", "label": false },
+    { "name": "ResNet-152", "year": 2015, "flop": 1.1e18, "era": "dl", "label": false },
+    { "name": "Transformer", "year": 2017, "flop": 3.3e18, "era": "dl", "label": false },
+    { "name": "BERT-Large", "year": 2018, "flop": 6.4e18, "era": "scaling", "label": true },
+    { "name": "GPT-2", "year": 2019, "flop": 1.5e19, "era": "scaling", "label": false },
+    { "name": "GPT-3", "year": 2020, "flop": 3.1e23, "era": "scaling", "label": true },
+    { "name": "AlphaFold2", "year": 2021, "flop": 1.0e24, "era": "scaling", "label": false },
+    { "name": "PaLM", "year": 2022, "flop": 2.5e24, "era": "scaling", "label": true },
+    { "name": "GPT-4", "year": 2023, "flop": 2.0e25, "era": "scaling", "label": true },
+    { "name": "Gemini 1.0 Ultra", "year": 2024, "flop": 5.0e25, "era": "scaling", "label": false },
+    { "name": "Claude 3.5 Sonnet", "year": 2024, "flop": 1.0e25, "era": "scaling", "label": false },
+    { "name": "Grok 2", "year": 2024, "flop": 2.0e25, "era": "scaling", "label": false },
+    { "name": "Llama 3.1 405B", "year": 2024, "flop": 3.8e25, "era": "scaling", "label": false },
+    { "name": "GPT-4o", "year": 2024, "flop": 2.0e25, "era": "scaling", "label": false },
+    { "name": "Gemini 2.0 Flash", "year": 2025, "flop": 8.0e25, "era": "scaling", "label": false },
+    { "name": "Claude 3.7 Sonnet", "year": 2025, "flop": 1.2e26, "era": "scaling", "label": false },
+    { "name": "Grok 3", "year": 2025, "flop": 2.5e26, "era": "scaling", "label": false },
+    { "name": "GPT-4.5", "year": 2025, "flop": 3.0e26, "era": "scaling", "label": false },
+    { "name": "Grok 4", "year": 2025, "flop": 5.0e26, "era": "scaling", "label": false },
+    { "name": "Claude 4 Opus", "year": 2025, "flop": 8.0e26, "era": "scaling", "label": true },
+    { "name": "GPT-5", "year": 2026, "flop": 2.0e27, "era": "scaling", "label": true },
+    { "name": "Claude 4.7 Opus", "year": 2026, "flop": 3.5e27, "era": "scaling", "label": true },
+    { "name": "Grok 5", "year": 2026, "flop": 6.0e27, "era": "scaling", "label": false }
+  ],
+  "moores_law": {
+    "label": "Moore's Law (transistor count)",
+    "start_year": 1971,
+    "start_flop": 1e6,
+    "doubling_months": 24
+  },
+  "counterpoint": {
+    "text": "Frontier-only growth slowed to ~4.2×/year after 2018 per Epoch's own finding.",
+    "source": "Lohn (2023)"
+  }
+}

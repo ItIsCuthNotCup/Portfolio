@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escape Velocity — Jake Cuth.</title>
+  <meta name="description" content="A data-driven look at whether AI is approaching an intelligence explosion — or just changing shape. Seven charts drawn from public data.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Escape Velocity — Are we approaching the singularity?">
+  <meta property="og:description" content="Seven charts. Eleven datasets. One question: is the curve still bending up?">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/escape-velocity-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/escape-velocity-lab.css?v=2">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">04</span> &middot; <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" class="active" aria-current="page" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="ev-main">
+
+<!-- KIMI ATTRIBUTION BANNER -->
+<div class="mono ev-kimi-banner">
+  <span class="ev-kimi-tag">Experimental</span>
+  <span>This test was built with <strong>Kimi K2.6</strong>. Quality may vary compared to Claude Code.</span>
+  <span class="ev-kimi-right">Verify the primary sources &middot; Models can hallucinate</span>
+</div>
+
+<!-- HERO -->
+<section class="ev-hero">
+  <div class="mono section-label">
+    <span class="idx">TEST. 01</span>
+    <span>The curve that won't quit</span>
+  </div>
+  <h1 class="serif big-display ev-title">
+    The inputs are bending up.<br>
+    <span class="serif-italic" style="color:var(--accent)">Is intelligence following?</span>
+  </h1>
+  <p class="lab-biz-line">
+    Seven charts drawn from public data. Epoch AI, METR, Stanford's AI Index,
+    the IEA, and the major capability leaderboards. Each chart asks a single
+    question. Together they answer a bigger one: are we, in any concrete and
+    measurable sense, approaching escape velocity?
+  </p>
+  <p class="ev-kicker">
+    Scroll through seven interactive charts. Each one comes from a real public
+    dataset you can check yourself. The pro-singularity case and the skeptical
+    case are both drawn from the same numbers. You decide which story fits.
+  </p>
+  <div class="mono ev-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">7 charts &middot; 11 datasets &middot; 1950–2030</div></div>
+    <div><div class="label">Built with</div><div class="value">Kimi K2.6</div></div>
+  </div>
+  <p class="mono ev-disclaimer" style="margin-top:18px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);">
+    TEST. 01 &middot; Created with Kimi K2.6 &middot; Language models can hallucinate. Verify primary sources.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="ev-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>I. J. Good's last invention</span>
+  </div>
+  <div class="ev-prose">
+    <p class="ev-lede">
+      In 1965, the British cryptographer I. J. Good described the last invention
+      humanity would ever need to make.
+    </p>
+    <p>
+      He called it an "ultraintelligent machine," and predicted that once it
+      could improve its own design, "there would unquestionably be an intelligence
+      explosion." Sixty years later, the CEOs building today's AI say much the
+      same thing. Other serious researchers say the curve is about to flatten.
+    </p>
+    <p>
+      This page doesn't pick a side. It <em>shows</em> the data. Seven charts,
+      each from a public dataset you can verify. The question underneath is
+      simple: are the trends that feed AI actually accelerating, or are they
+      about to hit a wall?
+    </p>
+    <div class="ev-callout mono" id="ev-horizon-callout">
+      Experts have predicted AGI by <strong>2030</strong> for seventy years.
+      The date never moves. But the <em>ingredients</em> of intelligence,
+      compute, better algorithms, and falling cost, are climbing faster than
+      ever.
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. 13.1 — COMPUTE CURVE -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; II &middot; TEST. 01.1</span>
+    <span>The Curve That Won't Quit</span>
+  </div>
+  <p class="ev-note">
+    Frontier training compute, 1950–2026. Toggle eras to see the doubling time
+    compress from ~24 months to ~5.2 months. The Moore's Law overlay is dashed
+    for reference.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Compute chart controls">
+    <span class="ev-filter-label">Era</span>
+    <button type="button" class="ev-pill active" data-era="all">All (1950–2026)</button>
+    <button type="button" class="ev-pill" data-era="pre-dl">Pre-DL</button>
+    <button type="button" class="ev-pill" data-era="dl">DL Era</button>
+    <button type="button" class="ev-pill" data-era="scaling">Scaling Era</button>
+    <span class="ev-filter-divider"></span>
+    <button type="button" class="ev-pill ev-pill-toggle active" id="ev-toggle-moore" data-active="true">Show Moore's Law</button>
+    <span class="ev-filter-divider"></span>
+    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-compute" data-active="false">Show counterpoint</button>
+    <span class="ev-filter-divider"></span>
+    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-horizon" data-active="false">Show caveats</button>
+  </div>
+
+  <div class="ev-chart-wrap" id="ev-compute-wrap">
+    <svg id="ev-compute" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Frontier training compute over time, log scale">
+      <path id="ev-moore-line" d="" stroke="var(--ink-dim)" stroke-width="1.5" stroke-dasharray="6,4" fill="none"></path>
+      <text id="ev-moore-label" x="0" y="0" text-anchor="end" fill="var(--ink-dim)" font-size="10" font-family="DM Mono, monospace" font-style="italic"></text>
+    </svg>
+    <div id="ev-tooltip-compute" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-counterpoint" id="ev-counterpoint-compute" data-open="false">
+    <p class="mono ev-counterpoint-label">Counterpoint</p>
+    <p>
+      Epoch's own data shows that growth in the very largest training runs
+      slowed to about 4.2&times; per year after 2018. And here is the key
+      caveat: more compute does not automatically mean smarter AI. Compute
+      is just an ingredient, not the finished product.
+    </p>
+  </div>
+
+  <div class="ev-ticker" id="ev-ticker-compute">
+    <span class="mono ev-ticker-tag">The record</span>
+    <span class="ev-ticker-text">Frontier compute has grown roughly 10,000&times; since 2020.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · FIG. 13.2 — ALGORITHMIC EFFICIENCY -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; III &middot; TEST. 01.2</span>
+    <span>The Hidden Multiplier</span>
+  </div>
+  <p class="ev-note">
+    AI gets cheaper in two ways at once: the chips get faster, and the code
+    gets smarter. This chart shows both curves. Click "Combined" to see what
+    happens when you multiply them together.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Efficiency chart controls">
+    <button type="button" class="ev-pill active" data-view="separate">Separate</button>
+    <button type="button" class="ev-pill" data-view="combined">Combined effective compute</button>
+  </div>
+
+  <div class="ev-chart-wrap" id="ev-efficiency-wrap">
+    <svg id="ev-efficiency" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Algorithmic efficiency vs raw compute over time"></svg>
+    <div id="ev-tooltip-efficiency" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-chart-callout mono">
+    <span class="ev-callout-stat">~8 months</span>
+    <span>Pre-training compute efficiency doubling time for LLMs (Ho et al., 2024)</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. 13.3 — METR TIME HORIZON -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV &middot; TEST. 01.3</span>
+    <span>A New Moore's Law for Agents</span>
+  </div>
+  <p class="ev-note">
+    How long a task can an AI complete on its own? METR measures this in
+    minutes of human-equivalent work. Since 2019 that number has doubled every
+    7 months. In 2024–2026 it sped up to every 4 months. Drag the handle to see
+    where that trend lands.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Horizon chart controls">
+    <span class="ev-filter-label">Trend</span>
+    <button type="button" class="ev-pill active" data-trend="long">7-month doubling (2019–2025)</button>
+    <button type="button" class="ev-pill" data-trend="fast">4-month doubling (2024–25)</button>
+  </div>
+
+  <div class="ev-chart-wrap" id="ev-horizon-wrap">
+    <svg id="ev-horizon" viewBox="0 0 1100 540" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="METR time-horizon doubling curve with extrapolation"></svg>
+    <div id="ev-tooltip-horizon" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-horizon-extrapolation mono" id="ev-horizon-extrapolation">
+    <span class="ev-extrap-label">Drag the handle &rarr;</span>
+    <span class="ev-extrap-value" id="ev-extrap-value">Month-long tasks by ~2030</span>
+  </div>
+
+  <div class="ev-counterpoint" id="ev-counterpoint-horizon" data-open="false">
+    <p class="mono ev-counterpoint-label">Caveats</p>
+    <p>
+      The early data points in this series have been questioned for dataset
+      robustness. And METR's own July 2025 study found that experienced
+      developers were actually 19% <em>slower</em> when using AI tools on their
+      own real codebases. A 50% success rate on a benchmark is not the same
+      as working reliably in production.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · FIG. 13.4 — COST COLLAPSE -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; V &middot; TEST. 01.4</span>
+    <span>Deflationary Intelligence</span>
+  </div>
+  <p class="ev-note">
+    GPT-4-level intelligence cost $36 per million tokens in 2023. By early 2026 it
+    costs about $0.18. That is not a typo. Scrub the timeline or press play
+    to watch the price fall.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Cost chart controls">
+    <span class="ev-filter-label">View</span>
+    <button type="button" class="ev-pill active" data-cost-view="tokens">Price per million tokens</button>
+    <button type="button" class="ev-pill" data-cost-view="labor">Human-labor-equivalent cost</button>
+    <span class="ev-filter-divider"></span>
+    <button type="button" class="ev-play-btn" id="ev-cost-play">Play 2022–2026</button>
+    <input type="range" id="ev-cost-slider" min="0" max="9" step="1" value="9"
+           aria-label="Cost timeline scrubber">
+  </div>
+
+  <div class="ev-chart-wrap" id="ev-cost-wrap">
+    <svg id="ev-cost" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Cost per unit capability over time, animated Pareto frontier"></svg>
+    <div id="ev-tooltip-cost" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-chart-callout mono">
+    <span class="ev-callout-stat">450&times;</span>
+    <span>Cost decrease for GPT-3.5-equivalent quality in 28 months (Stanford AI Index 2025 + Artificial Analysis 2026)</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · FIG. 13.5 — BENCHMARK SATURATION -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI &middot; TEST. 01.5</span>
+    <span>Saturation Watch</span>
+  </div>
+  <p class="ev-note">
+    AI keeps beating the tests we give it. MMLU, HumanEval, GSM8K — all
+    saturated. But the harder tests, ARC-AGI-3, FrontierMath, Humanity's Last
+    Exam, are still mostly unsolved. Toggle to see which ones remain open.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Benchmark controls">
+    <button type="button" class="ev-pill active" data-bench-filter="all">All benchmarks</button>
+    <button type="button" class="ev-pill" data-bench-filter="unsaturated">Only unsaturated</button>
+  </div>
+
+  <div class="ev-meta-chart-wrap" id="ev-meta-chart-wrap">
+    <svg id="ev-meta-chart" viewBox="0 0 1100 240" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Time from introduction to benchmark saturation"></svg>
+  </div>
+
+  <div class="ev-small-multiples" id="ev-small-multiples">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="ev-counterpoint" id="ev-counterpoint-bench" data-open="true">
+    <p class="mono ev-counterpoint-label">The mirage warning</p>
+    <p>
+      A 2023 study showed that many "sudden leaps" in AI ability disappear when
+      you change how you measure them. And the same models that score 80% on
+      one coding test score 45% on a harder, cleaner version. The tests may be
+      easier to game than they look.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII · FIG. 13.6 — THE WALLS -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII &middot; TEST. 01.6</span>
+    <span>The Walls</span>
+  </div>
+  <p class="ev-note">
+    Exponentials always hit a ceiling eventually. We are running out of training
+    data, power grid capacity, and money for bigger runs. Drag the dashed lines
+    to see when each wall might arrive.
+  </p>
+
+  <div class="ev-chart-wrap" id="ev-walls-wrap">
+    <svg id="ev-walls" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Data, energy, and cost ceilings with draggable intersection lines"></svg>
+    <div id="ev-tooltip-walls" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-walls-panel mono" id="ev-walls-panel">
+    <div class="ev-wall-item">
+      <span class="ev-wall-label">Data wall</span>
+      <span class="ev-wall-value" id="ev-wall-data">2028</span>
+    </div>
+    <div class="ev-wall-item">
+      <span class="ev-wall-label">Power wall</span>
+      <span class="ev-wall-value" id="ev-wall-power">2029</span>
+    </div>
+    <div class="ev-wall-item">
+      <span class="ev-wall-label">Duration ceiling</span>
+      <span class="ev-wall-value" id="ev-wall-duration">2027</span>
+    </div>
+    <div class="ev-wall-item">
+      <span class="ev-wall-label">Cost wall</span>
+      <span class="ev-wall-value" id="ev-wall-cost">2028</span>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VIII · FIG. 13.7 — S-CURVE OR SINGULARITY -->
+<section class="ev-section ev-section-demo">
+  <div class="mono section-label">
+    <span class="idx">&sect; VIII &middot; TEST. 01.7</span>
+    <span>S-Curve or Singularity?</span>
+  </div>
+  <p class="ev-note">
+    Every past technology that looked like a runaway exponential eventually
+    bent into an S-curve or flattened out. Moore's Law slowed. Genome sequencing
+    plateaued. Airline speeds peaked in 1969. Toggle the layers to compare AI's
+    trajectory against history's other "this time is different" moments.
+  </p>
+
+  <div class="ev-chart-controls mono" aria-label="Historical chart controls">
+    <span class="ev-filter-label">Layers</span>
+    <button type="button" class="ev-pill active" data-layer="ai_compute">AI compute</button>
+    <button type="button" class="ev-pill active" data-layer="ai_horizon">AI horizon</button>
+    <button type="button" class="ev-pill" data-layer="moores_law">Moore's Law</button>
+    <button type="button" class="ev-pill" data-layer="sequencing">Genome seq.</button>
+    <button type="button" class="ev-pill" data-layer="airline_speed">Airline speed</button>
+    <button type="button" class="ev-pill" data-layer="solar_pv">Solar PV</button>
+    <span class="ev-filter-divider"></span>
+    <span class="ev-filter-label">Projection</span>
+    <button type="button" class="ev-pill active" data-proj="exponential">Exponential</button>
+    <button type="button" class="ev-pill" data-proj="s_curve">S-curve</button>
+    <button type="button" class="ev-pill" data-proj="takeoff">Takeoff</button>
+  </div>
+
+  <div class="ev-chart-wrap" id="ev-historical-wrap">
+    <svg id="ev-historical" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Historical exponentials normalized and compared to AI trends"></svg>
+    <div id="ev-tooltip-historical" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-counterpoint" id="ev-counterpoint-historical" data-open="true">
+    <p class="mono ev-counterpoint-label">Editorial note</p>
+    <p>
+      This chart is the most opinionated one here. Kurzweil's "Law of
+      Accelerating Returns" sounds convincing, but it is a guess, not a law
+      of physics. You only know an exponential has bent after it has already
+      happened.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IX — SYNTHESIS -->
+<section class="ev-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IX</span>
+    <span>What does the data actually say?</span>
+  </div>
+
+  <div class="ev-synthesis" id="ev-synthesis">
+    <div class="ev-synthesis-tabs mono">
+      <button type="button" class="ev-syn-tab active" data-read="accelerationist">
+        The accelerationist read
+      </button>
+      <button type="button" class="ev-syn-tab" data-read="s_curve">
+        The S-curve read
+      </button>
+      <button type="button" class="ev-syn-tab" data-read="dont_know">
+        The "we don't know yet" read
+      </button>
+    </div>
+
+    <div class="ev-synthesis-panels">
+      <div class="ev-syn-panel active" data-read="accelerationist">
+        <p>
+          The raw ingredients of AI are accelerating. Compute doubles every 5
+          months. Algorithms get twice as efficient every 8 months. Multiply
+          those together and effective compute doubles every ~3.5 months.
+        </p>
+        <p>
+          AI agents can now handle tasks that took humans ~7 hours, and that
+          horizon is doubling every 4–7 months. The price of GPT-4-level
+          intelligence has fallen ~200&times; in two years. Benchmarks designed
+          to be "uncrackable" in 2023 were solved in 12–18 months.
+        </p>
+        <p>
+          If even half these trends hold for another 2–3 years, the world looks
+          qualitatively different. It does not matter whether you call that
+          "singularity" or just "really fast progress."
+        </p>
+      </div>
+      <div class="ev-syn-panel" data-read="s_curve">
+        <p>
+          Every exponential in history eventually bends. Moore's Law slowed
+          after 2015. Genome sequencing collapsed in cost, then plateaued.
+          Airline speeds peaked in 1969 and have not moved since.
+        </p>
+        <p>
+          AI faces real walls. We may run out of quality training data by
+          2028–2032. Training runs are projected to bump against a 9-month
+          practical ceiling around 2027. Power demand is on track to strain
+          the electrical grid.
+        </p>
+        <p>
+          And the benchmarks are messier than they look. The same models that
+          score 80% on one coding test score 45% on a cleaner version. METR's
+          own study found experienced developers were <em>slower</em> with AI
+          tools on real tasks. These are the fingerprints of an S-curve in its
+          early innings.
+        </p>
+      </div>
+      <div class="ev-syn-panel" data-read="dont_know">
+        <p>
+          Both stories fit the same data. The single question that splits them
+          is this: <em>Can AI meaningfully speed up AI research itself?</em>
+        </p>
+        <p>
+          Right now the answer is "maybe, on short tasks." METR's RE-Bench
+          shows AI agents beat human experts on quick ML engineering problems
+          but still lose on projects that take a full workday. The gap is
+          closing, but we will not know which way it breaks until 2026–27.
+        </p>
+        <p>
+          Until then, the honest read is simpler than either camp admits. We
+          are watching the fastest input-side acceleration in technological
+          history run headfirst into the first credible physical and data
+          ceilings. That collision, not the headline, is the real story.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ev-checklist" id="ev-checklist">
+    <h3 class="mono ev-checklist-title">What would change your mind?</h3>
+    <div class="ev-checklist-grid">
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>METR horizon hits 1 month with &gt;80% reliability</span>
+      </label>
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>ARC-AGI-3 cracked above 50%</span>
+      </label>
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>Data-wall projections move past 2030</span>
+      </label>
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>Frontier compute doubling drops below 10%/year</span>
+      </label>
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>AI R&amp;D agents beat humans on day-long tasks</span>
+      </label>
+      <label class="ev-check-item mono">
+        <input type="checkbox" disabled>
+        <span>First $100B+ training run announced</span>
+      </label>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § X — RECEIPTS -->
+<section class="ev-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; X</span>
+    <span>Receipts</span>
+  </div>
+  <div class="ev-receipts" id="ev-receipts">
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">Compute scale-up since 2020</div>
+      <div class="ev-receipt-value">10,000&times;<span class="small"></span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">Compute doubling time (2020–25)</div>
+      <div class="ev-receipt-value">5.2<span class="small">months</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">Algorithmic efficiency doubling</div>
+      <div class="ev-receipt-value">~8<span class="small">months</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">METR horizon doubling (2019–25)</div>
+      <div class="ev-receipt-value">~7<span class="small">months</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">METR horizon (fast trend)</div>
+      <div class="ev-receipt-value">~4<span class="small">months</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">Cost drop (GPT-3.5 equiv.)</div>
+      <div class="ev-receipt-value">450&times;<span class="small">in 28 mo.</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">SWE-bench Verified (2023→2026)</div>
+      <div class="ev-receipt-value">4.4% &rarr; 56%<span class="small"></span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">ARC-AGI-3 frontier score</div>
+      <div class="ev-receipt-value">&lt;1%<span class="small">vs humans 100%</span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">Data wall projection</div>
+      <div class="ev-receipt-value">2026–2032<span class="small"></span></div>
+    </div>
+    <div class="ev-receipt">
+      <div class="ev-receipt-label">IEA global DC electricity 2030</div>
+      <div class="ev-receipt-value">~945<span class="small">TWh</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § XI — METHODOLOGY + LAB-NAV -->
+<section class="ev-section ev-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; XI</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is drawn with plain JavaScript and SVG. No frameworks, no
+        build step, no analytics trackers. The data lives as simple JSON files
+        right next to the page. Once loaded, it works offline.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data pipeline</div>
+      <p>
+        Every number comes from a public dataset you can check yourself.
+        Primary sources: Epoch AI (compute trends), METR (agent capability),
+        Stanford HAI (AI Index), IEA (energy projections), and the major
+        benchmark leaderboards. Last updated April 2026.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://epoch.ai/blog/compute-trends" target="_blank" rel="noopener" style="border-bottom:1px solid">Epoch AI &middot; Compute Trends &nearr;</a><br>
+        <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank" rel="noopener" style="border-bottom:1px solid">METR &middot; Time-Horizon Paper &nearr;</a><br>
+        <a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" target="_blank" rel="noopener" style="border-bottom:1px solid">Stanford HAI &middot; AI Index 2025 &nearr;</a><br>
+        <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener" style="border-bottom:1px solid">IEA &middot; Energy and AI &nearr;</a><br>
+        <a href="https://arxiv.org/abs/2304.15004" target="_blank" rel="noopener" style="border-bottom:1px solid">Schaeffer et al. &middot; Emergent Abilities Mirage &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Several anchor numbers are current as of early 2026 and will move.
+        Benchmark scores are contested and subject to contamination. The
+        "intelligence explosion" framing carries unavoidable editorial weight.
+        This page shows signals, not prophecies. The data argues with itself
+        by design.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Hallucination warning</div>
+      <p>
+        This page was generated by a large language model (Kimi K2.6). While
+        every dataset is anchored to a real public source, LLMs can
+        hallucinate figures, misattribute findings, and confabulate citations.
+        Do not treat any number here as verified fact without checking the
+        primary source. The links in the reading list are the ground truth.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Test navigation">
+    <span>Test 01 of 01</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/assets/data/escape-velocity" target="_blank" rel="noopener" class="btn-outline">View the data on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/escape-velocity-lab.js?v=1"></script>
+</body>
+</html>

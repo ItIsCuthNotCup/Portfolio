@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "title": "Algorithmic Progress in Language Models",
+    "sources": [
+      "https://epoch.ai/blog/algorithmic-progress-in-language-models",
+      "https://epoch.ai/blog/revisiting-algorithmic-progress",
+      "https://arxiv.org/abs/2005.04305"
+    ],
+    "updated": "2026-04-30",
+    "note": "Compute-equivalent efficiency gains for pre-training. Doubling intervals with 95% CIs."
+  },
+  "domains": [
+    {
+      "id": "llm",
+      "label": "Language Models",
+      "doubling_months": 8,
+      "ci_low": 5,
+      "ci_high": 14,
+      "source": "Ho et al. (2024)"
+    },
+    {
+      "id": "vision",
+      "label": "ImageNet Classification",
+      "doubling_months": 9,
+      "ci_low": 6,
+      "ci_high": 16,
+      "source": "Erdil & Besiroglu"
+    },
+    {
+      "id": "early",
+      "label": "Neural Networks (Hernandez & Brown)",
+      "doubling_months": 16,
+      "ci_low": 10,
+      "ci_high": 28,
+      "source": "Hernandez & Brown (2020)"
+    }
+  ],
+  "milestones": [
+    { "year": 2020, "model": "GPT-3", "params_b": 175, "mmlu": 43.9, "compute_flop": 3.1e23, "era": "baseline" },
+    { "year": 2021, "model": "Gopher", "params_b": 280, "mmlu": 60.0, "compute_flop": 6.3e23, "era": "scale" },
+    { "year": 2022, "model": "PaLM-540B", "params_b": 540, "mmlu": 69.3, "compute_flop": 2.5e24, "era": "scale" },
+    { "year": 2022, "model": "Chinchilla", "params_b": 70, "mmlu": 67.5, "compute_flop": 5.8e23, "era": "efficiency" },
+    { "year": 2023, "model": "Llama 2 70B", "params_b": 70, "mmlu": 69.8, "compute_flop": 1.7e24, "era": "efficiency" },
+    { "year": 2024, "model": "Phi-3-mini", "params_b": 3.8, "mmlu": 61.5, "compute_flop": 3.8e21, "era": "efficiency" },
+    { "year": 2024, "model": "Llama 3.1 8B", "params_b": 8, "mmlu": 66.5, "compute_flop": 8.0e21, "era": "efficiency" },
+    { "year": 2024, "model": "GPT-4o mini", "params_b": 8, "mmlu": 70.0, "compute_flop": 1.0e22, "era": "efficiency" }
+  ],
+  "effective_compute": {
+    "note": "Raw compute × algorithmic efficiency multiplier. Both trends multiply.",
+    "combined_doubling_months_approx": 3.5
+  },
+  "caveats": [
+    "Most measured efficiency is in pretraining; reasoning/test-time compute is a separate axis.",
+    "Algorithmic gains depend on access to compute (Epoch's compute-dependent vs compute-independent finding)."
+  ]
+}

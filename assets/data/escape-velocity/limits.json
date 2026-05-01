@@ -1,0 +1,81 @@
+{
+  "_meta": {
+    "title": "Data, Energy, and Cost Ceilings",
+    "sources": [
+      "https://epoch.ai/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data",
+      "https://epoch.ai/blog/can-ai-scaling-continue-through-2030",
+      "https://epoch.ai/blog/power-demands-of-frontier-ai-training",
+      "https://www.iea.org/reports/energy-and-ai",
+      "https://www.pewresearch.org/short-reads/2025/10/24/"
+    ],
+    "updated": "2026-04-30",
+    "note": "Ceiling values are projections with uncertainty intervals."
+  },
+  "ceilings": [
+    {
+      "id": "data",
+      "label": "Data Wall",
+      "current_tokens_t": 15,
+      "ceiling_tokens_t": 300,
+      "ci_low_tokens_t": 100,
+      "ci_high_tokens_t": 1000,
+      "crossing_year_central": 2028,
+      "crossing_year_low": 2026,
+      "crossing_year_high": 2032,
+      "source": "Villalobos et al., Epoch",
+      "note": "Public text ceiling. Upper bound ~20 quadrillion tokens with multimodal + synthetic.",
+      "unit": "trillion tokens"
+    },
+    {
+      "id": "power",
+      "label": "Power Wall",
+      "current_mw": 100,
+      "ceiling_mw": 10000,
+      "projected_2030_mw_low": 4000,
+      "projected_2030_mw_high": 16000,
+      "crossing_year_central": 2029,
+      "crossing_year_low": 2027,
+      "crossing_year_high": 2032,
+      "source": "Epoch + EPRI",
+      "note": "Individual training-run power draw. IEA projects global data-center electricity 415→945 TWh by 2030.",
+      "unit": "megawatts"
+    },
+    {
+      "id": "duration",
+      "label": "Duration Ceiling",
+      "current_months": 6,
+      "ceiling_months": 9,
+      "crossing_year_central": 2027,
+      "crossing_year_low": 2025,
+      "crossing_year_high": 2029,
+      "source": "Epoch",
+      "note": "Frontier training runs face a ~9-month practical ceiling.",
+      "unit": "months"
+    },
+    {
+      "id": "cost",
+      "label": "Cost Wall",
+      "current_cost_b": 0.5,
+      "ceiling_cost_b": 100,
+      "doubling_months": 8,
+      "crossing_year_central": 2028,
+      "crossing_year_low": 2027,
+      "crossing_year_high": 2030,
+      "source": "Epoch",
+      "note": "Training compute costs are doubling every 8 months for the largest models.",
+      "unit": "billion USD"
+    }
+  ],
+  "energy_context": {
+    "global_dc_2024_twh": 415,
+    "global_dc_2030_twh": 945,
+    "us_share_2024": 4,
+    "us_share_2030": 9,
+    "source": "IEA Energy and AI 2025"
+  },
+  "caveats": [
+    "Epoch's upper bound for data is ~20 quadrillion effective tokens once multimodal and synthetic are included.",
+    "Reasoning models trade training-compute scaling for test-time compute scaling, which has a different physical profile.",
+    "IEA's AI share of data centers is itself uncertain."
+  ]
+}
