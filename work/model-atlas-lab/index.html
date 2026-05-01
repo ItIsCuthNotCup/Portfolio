@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="An interactive guide to picking the right discriminative ML model. Five questions about your problem. A recommendation with reasons. Live demos of every model.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Model Atlas — pick the right ML model">
+  <meta property="og:description" content="An expert system over 13 discriminative models. Answer five questions, get a recommendation with reasons. Editorial encyclopedia meets diagnostic instrument.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/model-atlas-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-atlas-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="ma-main">
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ma-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 13</span>
+    <span>The Model Atlas</span>
+  </div>
+  <h1 class="serif big-display ma-title" data-scramble data-scramble-duration="1200">
+    Pick the right model.<br>
+    <span class="serif-italic" style="color:var(--accent)">With reasons.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Answer five questions about your problem. The atlas routes you to one
+    of thirteen discriminative models with a deep, live, interactive
+    explanation. <mark class="ink-mark">Every junior data scientist asks "what model should I use" too late</mark>.
+    This page inverts that.
+  </p>
+  <p class="ma-kicker">
+    The wizard below is opinionated. It is not a substitute for cross-
+    validation, baseline comparisons, or honest evaluation against your
+    actual data. It is a shape-of-the-problem heuristic — the
+    conversation a senior would have with a junior on day one. Read the
+    methodology section at the bottom for what it is and is not.
+  </p>
+  <div class="mono ma-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Catalog</div><div class="value">13 discriminative models &middot; 5 phase-1 destinations live</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/model-decision-tree.js" target="_blank" rel="noopener" style="border-bottom:1px solid">model-decision-tree.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- Sticky progress bar -->
+<div class="ma-progress" aria-label="Wizard progress">
+  <span class="ma-progress-label" id="ma-progress-label">0 of 5 answered</span>
+  <div class="ma-progress-track" role="progressbar" aria-label="Questions answered">
+    <div class="ma-progress-bar" id="ma-progress-bar"></div>
+  </div>
+  <a href="#ma-browse-section" class="mono" style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-dim);text-decoration:underline;">Browse all &darr;</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WIZARD
+     ═══════════════════════════════════════════════════════════ -->
+<div id="ma-wizard">
+  <div id="ma-steps"></div>
+
+  <!-- Recommendation panel — fills in once all 5 questions are answered -->
+  <div id="ma-recommendation" aria-hidden="true"></div>
+</div>
+
+<hr class="hair" style="margin: 80px auto; max-width: 1280px;">
+
+<!-- ═══════════════════════════════════════════════════════════
+     BROWSE ALL MODELS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ma-section" id="ma-browse-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Browse the catalog directly</span>
+  </div>
+  <p class="ma-kicker" style="margin-top: 0; margin-bottom: 28px;">
+    For readers who already know what they're looking for. Each card
+    links to a destination page (or a stub, in the case of phase 2/3
+    models still on the build queue).
+  </p>
+  <div id="ma-browse"></div>
+</section>
+
+<hr class="hair" style="margin: 80px auto; max-width: 1280px;">
+
+<!-- ═══════════════════════════════════════════════════════════
+     METHODOLOGY
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ma-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Methodology &amp; Honest Caveats</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+    <div>
+      <div class="mono" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;">How the atlas decides</div>
+      <p>
+        The wizard is a scoring function over a curated catalog. Question
+        1 (the task) is a <em>hard filter</em> &mdash; a regression won't
+        recommend a classifier. Questions 2 through 5 contribute weighted
+        scores. The top score is the recommendation; ranks 2 and 3 are
+        offered as "honest alternatives." The full rule set lives in
+        <span class="mono">model-decision-tree.js</span> &mdash; ~150 lines, intentionally
+        readable. Tweak it; the wizard recalculates instantly.
+      </p>
+    </div>
+    <div>
+      <div class="mono" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;">What the atlas is not</div>
+      <p>
+        Real model selection is empirical. You build several candidates,
+        cross-validate them on <em>your</em> data, and pick the one that
+        wins on a metric you trust. The atlas is the conversation
+        <em>before</em> that &mdash; a structured way to narrow from thirteen
+        candidates to two or three, so the empirical work has fewer
+        directions to spread across. "Best model" is a fiction. The right
+        model is the one that survives evaluation on your data.
+      </p>
+    </div>
+    <div>
+      <div class="mono" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;">2D demos, on purpose</div>
+      <p>
+        Every destination page demonstrates its model on a 2D synthetic
+        dataset. Two dimensions are everything you can see. They are not
+        everything that matters &mdash; the curse of dimensionality is real
+        and not visualizable. A model that handles 2D data perfectly may
+        struggle in 200D. Read the per-model "when it fails" sections;
+        they break the demo on purpose so you can feel where the
+        boundaries are.
+      </p>
+    </div>
+    <div>
+      <div class="mono" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;">The trade-off scorecards</div>
+      <p>
+        Inference / accuracy / training / size on every model card are
+        directional, not exact. They reflect typical-case performance on
+        typical-size data. Specific architectures, optimizations, and
+        hardware can move any of these values significantly. Treat them
+        as a map, not a benchmark.
+      </p>
+    </div>
+  </div>
+
+  <!-- Receipts -->
+  <div class="ma-receipts">
+    <div class="ma-receipt">
+      <div class="ma-receipt-label">Models in catalog</div>
+      <div class="ma-receipt-value">13<span class="small">discriminative</span></div>
+    </div>
+    <div class="ma-receipt">
+      <div class="ma-receipt-label">Live destinations</div>
+      <div class="ma-receipt-value">5<span class="small">phase 1 v1</span></div>
+    </div>
+    <div class="ma-receipt">
+      <div class="ma-receipt-label">Wizard depth</div>
+      <div class="ma-receipt-value">5<span class="small">questions, 1 hard filter</span></div>
+    </div>
+    <div class="ma-receipt">
+      <div class="ma-receipt-label">Decision rules</div>
+      <div class="ma-receipt-value">~150<span class="small">readable lines of JS</span></div>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/logistic-regression-lab/">&larr; Prev: Logistic Regression (FIG. 12)</a>
+    <span>Lab 13 of 13</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/model-decision-tree.js?v=1"></script>
+<script src="/assets/js/model-atlas-lab.js?v=1"></script>
+</body>
+</html>

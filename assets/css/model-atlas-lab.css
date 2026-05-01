@@ -1,0 +1,452 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MODEL ATLAS — wizard styles
+   Editorial-encyclopedia layout: large typographic questions on the
+   left, mini-visualization above the option cards. Reads as a
+   diagnostic instrument, not a quiz.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ma-main { background: var(--paper); color: var(--ink); }
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.ma-hero {
+  padding: 120px 48px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ma-title { margin-top: 22px; }
+.ma-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ma-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ma-dateline .label { color: var(--ink-dim); }
+.ma-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.ma-section {
+  padding: 60px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ma-section .section-label { margin-bottom: 28px; }
+
+/* ── Progress (sticky) ────────────────────────────────────────────── */
+.ma-progress {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  padding: 10px 48px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ma-progress-track {
+  flex: 1;
+  height: 2px;
+  background: color-mix(in oklab, var(--ink) 14%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.ma-progress-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--accent);
+  transition: width 360ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.ma-progress-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ── Wizard / question screens ────────────────────────────────────── */
+#ma-wizard { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.ma-q {
+  padding: 80px 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+}
+.ma-q:first-child { border-top: none; padding-top: 40px; }
+.ma-q-kicker {
+  display: flex; align-items: baseline; gap: 16px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 18px;
+}
+.ma-q-kicker .idx {
+  color: var(--accent);
+  font-weight: 500;
+}
+.ma-q-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  font-weight: 400;
+  margin: 0 0 12px;
+  max-width: 22ch;
+}
+.ma-q-help {
+  max-width: 56ch;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 36px;
+}
+
+/* Mini-visualization frame */
+.ma-viz {
+  margin: 0 0 32px;
+  padding: 20px;
+  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  background: var(--paper-2);
+  min-height: 120px;
+}
+.ma-viz .ma-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Option cards */
+.ma-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.ma-opt {
+  background: var(--paper);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 22px 22px 20px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  border: 0;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  transition: background 200ms ease, color 200ms ease;
+}
+.ma-opt:hover, .ma-opt:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+  outline: none;
+}
+.ma-opt.is-selected {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ma-opt.is-selected::after {
+  content: '✓';
+  position: absolute;
+}
+.ma-opt-label {
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+.ma-opt-sub {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.ma-opt:hover .ma-opt-sub,
+.ma-opt:focus-visible .ma-opt-sub,
+.ma-opt.is-selected .ma-opt-sub {
+  color: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+
+/* ── Recommendation panel ─────────────────────────────────────────── */
+#ma-recommendation {
+  margin: 80px 0 0;
+  padding: 48px 40px;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 320ms ease, transform 320ms ease;
+  pointer-events: none;
+}
+#ma-recommendation.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ma-rec-kicker { margin-bottom: 14px; }
+.ma-rec-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.0;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+.ma-rec-kick {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--accent);
+  margin: 0 0 24px;
+}
+.ma-rec-summary {
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 64ch;
+  color: var(--ink-soft);
+  margin: 0 0 24px;
+}
+.ma-rec-reasons {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  gap: 8px;
+}
+.ma-rec-reasons li {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.45;
+}
+.ma-rec-reasons li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.ma-rec-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 22px;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  transition: background 200ms ease, color 200ms ease;
+}
+.ma-rec-cta:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.ma-rec-cta.is-stub {
+  background: transparent;
+  color: var(--ink-dim);
+  border-style: dashed;
+  cursor: default;
+}
+.ma-rec-alts {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px dashed color-mix(in oklab, var(--ink) 18%, transparent);
+}
+.ma-rec-alts-head {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.ma-rec-alt {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed color-mix(in oklab, var(--ink) 12%, transparent);
+}
+.ma-rec-alt:last-child { border-bottom: none; }
+.ma-rec-alt a, .ma-rec-alt span:first-child {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+}
+.ma-rec-alt a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.ma-rec-alt-name { font-size: 18px; }
+.ma-rec-alt-kick {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.ma-rec-restart { margin-top: 28px; }
+.ma-restart-btn {
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+  color: var(--ink-soft);
+  padding: 10px 16px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.ma-restart-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.ma-rec-empty {
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+
+/* ── Browse-all mode ──────────────────────────────────────────────── */
+.ma-browse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+}
+.ma-browse-card {
+  background: var(--paper);
+  color: inherit;
+  text-decoration: none;
+  padding: 22px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  transition: background 200ms ease, color 200ms ease;
+  min-height: 220px;
+}
+.ma-browse-card:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ma-browse-card.is-stub { opacity: 0.7; cursor: default; }
+.ma-browse-status {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  align-self: flex-start;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+}
+.ma-browse-status.is-live { color: var(--accent); border-color: var(--accent); }
+.ma-browse-card:hover .ma-browse-status { color: var(--paper); border-color: color-mix(in oklab, var(--paper) 60%, transparent); }
+.ma-browse-name {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 400;
+  margin: 0;
+}
+.ma-browse-kick {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--accent);
+  margin: 0;
+}
+.ma-browse-card:hover .ma-browse-kick { color: var(--paper); }
+.ma-browse-summary {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  flex: 1;
+}
+.ma-browse-card:hover .ma-browse-summary { color: color-mix(in oklab, var(--paper) 80%, transparent); }
+.ma-browse-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.ma-browse-tags span {
+  padding: 2px 6px;
+  border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.ma-browse-card:hover .ma-browse-tags span { border-color: color-mix(in oklab, var(--paper) 30%, transparent); color: color-mix(in oklab, var(--paper) 70%, transparent); }
+
+/* ── Methodology section receipts ─────────────────────────────────── */
+.ma-receipts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0;
+  margin-top: 28px;
+  border-top: 1px dashed color-mix(in oklab, var(--ink) 18%, transparent);
+  padding-top: 18px;
+}
+.ma-receipt {
+  padding: 14px 18px 14px 0;
+  border-right: 1px dashed color-mix(in oklab, var(--ink) 12%, transparent);
+}
+.ma-receipt:last-child { border-right: none; }
+.ma-receipt-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 6px;
+}
+.ma-receipt-value {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+}
+.ma-receipt-value .small {
+  display: block;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 6px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .ma-hero { padding: 100px 24px 40px; }
+  .ma-section, #ma-wizard { padding-left: 24px; padding-right: 24px; }
+  .ma-q-title { font-size: clamp(28px, 8vw, 44px); }
+  .ma-rec-title { font-size: clamp(34px, 9vw, 56px); }
+  #ma-recommendation { padding: 32px 24px; }
+  .ma-progress { padding: 10px 24px; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #ma-recommendation, .ma-progress-bar { transition: none !important; }
+}
