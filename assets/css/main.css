@@ -1156,3 +1156,122 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   .glossary-pop { transition: none !important; }
   .logo-track { animation: none !important; }
 }
+
+/* ═════════════════════════════════════════════════════════════
+   AESTHETIC EXPERIMENT — 1-bit dither (branch: aesthetic/dither-1bit)
+   Inspired by isometric-strategy 1-bit aesthetic (Mars After Midnight,
+   Songs of Syx, Obra Dinn). To revert: delete this block + bump cache.
+
+   Approach: override the graphite theme tokens (the dark default used
+   site-wide) with a pure greyscale palette. Replace the grain overlay
+   with a Bayer-ish dither tile. Kill border-radius site-wide. Drop
+   color accents — emphasis comes from weight, dither, and 1px frames.
+   ═════════════════════════════════════════════════════════════ */
+
+[data-theme="graphite"] {
+  /* Light "snowy paper" base — the screenshot's UI panels feel */
+  --paper:    #ECE6D8;
+  --paper-2:  #DCD5C4;
+  --ink:      #0A0907;
+  --ink-soft: #1F1C16;
+  --ink-dim:  #5D564A;
+  --rule:     #0A0907;
+  /* Pure B&W — no color accent */
+  --accent:   #0A0907;
+  --accent-2: #3A352A;
+  --mark-bg:  rgba(10, 9, 7, 0.85);
+  /* Greyscale chart palette — high contrast for B&W */
+  --chart-1: #0A0907;
+  --chart-2: #3A352A;
+  --chart-3: #6B6359;
+  --chart-4: #9A9382;
+  --chart-5: #C5BEA9;
+}
+
+/* Replace the soft grain with a Bayer-style dither tile. 4×4 with two
+   filled cells = 12.5% coverage; multiply blend over the paper tone
+   gives a stippled-print texture. image-rendering: pixelated keeps
+   the dots sharp instead of letting the browser smooth them. */
+[data-theme="graphite"] body::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%230A0907'/><rect x='2' y='2' width='1' height='1' fill='%230A0907'/></svg>");
+  background-size: 4px 4px;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  image-rendering: pixelated;
+}
+
+/* Sharp 1-bit framing: kill rounding everywhere. */
+[data-theme="graphite"] *,
+[data-theme="graphite"] *::before,
+[data-theme="graphite"] *::after {
+  border-radius: 0 !important;
+}
+
+/* Make borders feel hand-drawn / 1-bit by hardening their color */
+[data-theme="graphite"] {
+  --border-1: 1px solid var(--ink);
+  --border-thick: 2px solid var(--ink);
+}
+
+/* Section labels, datelines, mono chrome get a touch of pixel weight */
+[data-theme="graphite"] .mono {
+  letter-spacing: 0.06em;
+  font-feature-settings: "ss01" on;
+}
+
+/* Buttons / pills: no fill on default, 1px solid frame, invert on hover.
+   Scoped to common button patterns across the labs. */
+[data-theme="graphite"] .btn-pill,
+[data-theme="graphite"] .btn-outline,
+[data-theme="graphite"] .btn-primary {
+  border: 1px solid var(--ink) !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+[data-theme="graphite"] .btn-pill:hover,
+[data-theme="graphite"] .btn-outline:hover,
+[data-theme="graphite"] .btn-primary:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+/* The .ink-mark highlight (used in homepage hero copy) becomes a
+   solid black knockout — text reads as paper inside the mark. */
+[data-theme="graphite"] .ink-mark {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  padding: 0 4px;
+}
+
+/* Section labels get a heavier, more "1-bit" feel */
+[data-theme="graphite"] .section-label .idx {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 6px;
+}
+
+/* Lab cards, dropdowns, panels — override any soft greys with paper-2
+   so the dither shows through cleanly. */
+[data-theme="graphite"] .nav-dropdown-menu {
+  background: var(--paper) !important;
+  border: 1px solid var(--ink) !important;
+}
+[data-theme="graphite"] .nav-dropdown-menu a {
+  color: var(--ink) !important;
+}
+[data-theme="graphite"] .nav-dropdown-menu a:hover,
+[data-theme="graphite"] .nav-dropdown-menu a.active {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+/* The cursor-dot uses --accent — kill the red dot */
+[data-theme="graphite"] .cursor-dot {
+  background: var(--ink);
+}
+
+/* Selection */
+[data-theme="graphite"] ::selection {
+  background: var(--ink);
+  color: var(--paper);
+}

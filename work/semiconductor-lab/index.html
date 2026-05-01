@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semiconductor Cartography — Jake Cuth.</title>
+  <meta name="description" content="A data-driven look at the AI semiconductor supply chain. Thirty facilities, seven layers, and the chokepoints that could stall the industry.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Semiconductor Cartography — Mapping the AI chip supply chain">
+  <meta property="og:description" content="Thirty facilities. Seven layers. One question: where does it break?">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/semiconductor-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=25">
+  <link rel="stylesheet" href="/assets/css/semiconductor-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">04</span> &middot; <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" class="active" aria-current="page" role="menuitem">Semiconductor Cartography</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="sc-main">
+
+<!-- KIMI ATTRIBUTION BANNER -->
+<div class="mono sc-kimi-banner">
+  <span class="sc-kimi-tag">Experimental</span>
+  <span>This test was built with <strong>Kimi K2.6</strong>. Quality may vary compared to Claude Code.</span>
+  <span class="sc-kimi-right">Verify the primary sources &middot; Models can hallucinate</span>
+</div>
+
+<!-- HERO -->
+<section class="sc-hero">
+  <div class="mono section-label">
+    <span class="idx">TEST. 02</span>
+    <span>Mapping the silicon backbone</span>
+  </div>
+  <h1 class="serif big-display sc-title">
+    Every AI chip passes through<br>
+    <span class="serif-italic" style="color:var(--accent)">seven layers and a handful of hands.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Thirty facilities. Seven supply-chain layers. One map. This page traces the
+    physical and corporate geography of the semiconductor industry, from rare-earth
+    mines in Mongolia to EUV lithography in the Netherlands to advanced packaging
+    in Taiwan. The data is drawn from public filings, industry associations, and
+    open government reports.
+  </p>
+  <p class="sc-kicker">
+    Explore three interactive visualizations: a world map of facilities, a
+    layer-by-layer flow diagram, and a chokepoint dashboard showing where
+    concentration risk is highest.
+  </p>
+  <div class="mono sc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">30 nodes &middot; 7 layers &middot; 35 edges</div></div>
+    <div><div class="label">Built with</div><div class="value">Kimi K2.6</div></div>
+  </div>
+  <p class="mono sc-disclaimer" style="margin-top:18px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);">
+    TEST. 02 &middot; Created with Kimi K2.6 &middot; Language models can hallucinate. Verify primary sources.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- &sect; I -- PROBLEM -->
+<section class="sc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The invisible backbone</span>
+  </div>
+  <div class="sc-prose">
+    <p class="sc-lede">
+      AI runs on silicon. But silicon does not appear by magic.
+    </p>
+    <p>
+      A single leading-edge GPU passes through a global supply chain that spans
+      rare-earth mining, polysilicon refinement, lithography equipment, wafer
+      fabrication, memory stacking, advanced packaging, and final assembly. Each
+      step is concentrated in a handful of companies and, often, a handful of
+      countries. The result is a network that looks robust on paper but is
+      fragile in practice.
+    </p>
+    <p>
+      This page maps that network. It shows where the facilities are, what flows
+      between them, and where the chokepoints lie. The question underneath is
+      simple: if one node fails, what stops?
+    </p>
+    <div class="sc-callout mono" id="sc-chokepoint-callout">
+      Six layers show concentration above 80%. In three of them, a single company
+      controls more than <strong>90%</strong> of the market.
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; II &middot; TEST. 02.1 -- THE MAP -->
+<section class="sc-section sc-section-demo">
+  <div class="mono section-label">
+    <span class="idx">TEST. 02.1</span>
+    <span>The Map</span>
+  </div>
+  <p class="sc-note">
+    Thirty facilities positioned by latitude and longitude. Toggle layers to
+    isolate parts of the chain. Turn on flows to see the directed connections
+    between facilities.
+  </p>
+
+  <div class="sc-chart-controls mono" aria-label="Map layer controls">
+    <span class="sc-filter-label">Layers</span>
+    <button type="button" class="sc-pill active" data-layer="all">All</button>
+    <button type="button" class="sc-pill" data-layer="materials">Materials</button>
+    <button type="button" class="sc-pill" data-layer="design">Design</button>
+    <button type="button" class="sc-pill" data-layer="equipment">Equipment</button>
+    <button type="button" class="sc-pill" data-layer="fabrication">Fabrication</button>
+    <button type="button" class="sc-pill" data-layer="memory">Memory</button>
+    <button type="button" class="sc-pill" data-layer="packaging">Packaging</button>
+    <button type="button" class="sc-pill" data-layer="enduse">End Use</button>
+    <span class="sc-filter-divider"></span>
+    <button type="button" class="sc-pill sc-pill-toggle" id="sc-toggle-flows" data-active="false">Show flows</button>
+  </div>
+
+  <div class="sc-chart-wrap" id="sc-map-wrap">
+    <svg id="sc-map" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="World map of semiconductor facilities">
+      <!-- Continent outlines drawn by JS -->
+    </svg>
+    <div id="sc-tooltip-map" class="sc-tooltip mono" hidden></div>
+  </div>
+
+  <div class="sc-readout">
+    <p class="mono sc-readout-label">What this means</p>
+    <p>
+      Each dot is a real facility with a known latitude and longitude. The colors
+      encode the supply-chain layer. The map uses an equirectangular projection
+      -- straightforward, but accurate enough to show the geographic concentration.
+      Notice the clustering: design in California, fabrication in East Asia,
+      equipment in the Netherlands and Japan, rare earths in China and Australia.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; III &middot; TEST. 02.2 -- THE FLOWS -->
+<section class="sc-section sc-section-demo">
+  <div class="mono section-label">
+    <span class="idx">TEST. 02.2</span>
+    <span>The Flows</span>
+  </div>
+  <p class="sc-note">
+    A Sankey-style view of the supply chain. Materials enter on the left;
+    packaged chips exit on the right. Toggle between all layers and critical
+    paths only to see where the bottlenecks are.
+  </p>
+
+  <div class="sc-chart-controls mono" aria-label="Flow diagram controls">
+    <span class="sc-filter-label">View</span>
+    <button type="button" class="sc-pill active" data-flow-view="all">All layers</button>
+    <button type="button" class="sc-pill" data-flow-view="critical">Critical paths only</button>
+  </div>
+
+  <div class="sc-chart-wrap" id="sc-flow-wrap">
+    <svg id="sc-flow" viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Supply chain flow diagram between layers"></svg>
+    <div id="sc-tooltip-flow" class="sc-tooltip mono" hidden></div>
+  </div>
+
+  <div class="sc-readout">
+    <p class="mono sc-readout-label">What this means</p>
+    <p>
+      The width of each connection is proportional to the number of edges in the
+      dataset, not dollar value or physical volume. Even so, the pattern is clear:
+      TSMC sits at the center of the network, receiving inputs from nearly every
+      upstream layer and shipping wafers to packaging and design. Remove TSMC and
+      the graph falls apart.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; IV &middot; TEST. 02.3 -- THE CHOKEPOINTS -->
+<section class="sc-section sc-section-demo">
+  <div class="mono section-label">
+    <span class="idx">TEST. 02.3</span>
+    <span>The Chokepoints</span>
+  </div>
+  <p class="sc-note">
+    Six metrics where market concentration exceeds 80%. Below: the Herfindahl-
+    Hirschman Index (HHI) for each layer. An HHI above 2,500 indicates high
+    concentration; above 5,000 indicates near-monopoly conditions.
+  </p>
+
+  <div class="sc-stat-grid" id="sc-stat-grid">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="sc-hhi-wrap">
+    <div class="mono sc-hhi-title">Concentration by layer (HHI)</div>
+    <svg id="sc-hhi-chart" viewBox="0 0 1100 260" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="HHI concentration bars by supply chain layer"></svg>
+  </div>
+
+  <div class="sc-readout">
+    <p class="mono sc-readout-label">What this means</p>
+    <p>
+      The HHI is a standard antitrust metric: sum the squared market shares of
+      all players. It ranges from near zero (perfect competition) to 10,000
+      (pure monopoly). Equipment and fabrication both exceed 2,500; fabrication
+      hits 7,200, driven by TSMC's ~90% share of leading-edge logic. These numbers
+      matter because they predict vulnerability: the higher the HHI, the more
+      damage a single disruption can do.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; V -- SYNTHESIS -->
+<section class="sc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>What does the data actually say?</span>
+  </div>
+
+  <div class="sc-synthesis" id="sc-synthesis">
+    <div class="sc-synthesis-tabs mono">
+      <button type="button" class="sc-syn-tab active" data-read="concentration">
+        The concentration read
+      </button>
+      <button type="button" class="sc-syn-tab" data-read="resilience">
+        The resilience read
+      </button>
+      <button type="button" class="sc-syn-tab" data-read="dont_know">
+        The "we don't know yet" read
+      </button>
+    </div>
+
+    <div class="sc-synthesis-panels">
+      <div class="sc-syn-panel active" data-read="concentration">
+        <p>
+          The semiconductor supply chain is one of the most concentrated industrial
+          networks on earth. ASML has a 100% monopoly on EUV lithography. TSMC
+          makes ~90% of leading-edge logic. SK Hynix and Samsung together control
+          ~95% of HBM, the memory type that determines AI training speed. NVIDIA
+          holds ~90% of datacenter GPUs.
+        </p>
+        <p>
+          These are not ordinary market shares. They are structural chokepoints
+          created by decades of cumulative technical expertise, patent moats, and
+          capital intensity. A new competitor cannot simply enter. The barriers
+          are too high and the learning curves too steep.
+        </p>
+        <p>
+          The honest conclusion: AI hardware progress is bottlenecked by a dozen
+          companies and half a dozen countries. If any of them stumble, the whole
+          stack slows.
+        </p>
+      </div>
+      <div class="sc-syn-panel" data-read="resilience">
+        <p>
+          Concentration is not the same as fragility. TSMC has survived earthquakes,
+          typhoons, and geopolitical tension for decades. ASML's single-factory
+          monopoly is a deliberate strategy: one perfect machine beats ten adequate
+          ones. And every major player is diversifying.
+        </p>
+        <p>
+          Intel is spending $100B to return to leading edge. Samsung has poured
+          $40B into new fabs. The U.S. CHIPS Act, the EU Chips Act, and Japan's
+          subsidies are all aimed at reshoring capacity. By 2030 the geographic
+          map may look very different.
+        </p>
+        <p>
+          The counter-argument is that diversification takes time. A fab takes
+          3--5 years to build and costs $20B. In the meantime, the current
+          concentration is the only game in town.
+        </p>
+      </div>
+      <div class="sc-syn-panel" data-read="dont_know">
+        <p>
+          Both stories are true. The supply chain is dangerously concentrated
+          <em>and</em> the industry knows it and is spending unprecedented sums
+          to fix it. The single question that splits them is timing.
+        </p>
+        <p>
+          Will diversification arrive before the next disruption? A Taiwan
+          contingency, an export-control escalation, or a raw-material shortage
+          could all stress-test the network before the new fabs come online.
+        </p>
+        <p>
+          Until then, the honest read is this: the map shows where the risk is.
+          It does not predict when, or whether, that risk turns into a crisis.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; VI -- RECEIPTS -->
+<section class="sc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Receipts</span>
+  </div>
+  <div class="sc-receipts" id="sc-receipts">
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Facilities mapped</div>
+      <div class="sc-receipt-value">30</div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Supply-chain layers</div>
+      <div class="sc-receipt-value">7</div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Directed connections</div>
+      <div class="sc-receipt-value">35</div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Countries represented</div>
+      <div class="sc-receipt-value">9</div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">EUV lithography share</div>
+      <div class="sc-receipt-value">100<span class="small">% ASML</span></div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Leading-edge logic share</div>
+      <div class="sc-receipt-value">90<span class="small">% TSMC</span></div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">HBM market share</div>
+      <div class="sc-receipt-value">95<span class="small">% SK + Samsung</span></div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Datacenter GPU share</div>
+      <div class="sc-receipt-value">90<span class="small">% NVIDIA</span></div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Rare earth processing</div>
+      <div class="sc-receipt-value">85<span class="small">% China</span></div>
+    </div>
+    <div class="sc-receipt">
+      <div class="sc-receipt-label">Highest HHI (fabrication)</div>
+      <div class="sc-receipt-value">7,200</div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; VII -- METHODOLOGY + LAB-NAV -->
+<section class="sc-section sc-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is drawn with plain JavaScript and SVG. No frameworks, no
+        build step, no analytics trackers. The data lives as simple JSON files
+        right next to the page. Once loaded, it works offline.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data pipeline</div>
+      <p>
+        Every number comes from a public dataset you can check yourself.
+        Primary sources: SIA 2024 Factbook, CSIS Silicon Boxed report, Boston
+        Consulting Group, CHIPS Act Tracker, and company SEC filings. Last
+        updated April 2026.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.semiconductors.org/resources/2024-sia-factbook/" target="_blank" rel="noopener" style="border-bottom:1px solid">SIA &middot; 2024 Factbook &nearr;</a><br>
+        <a href="https://www.csis.org/programs/technology-policy-program" target="_blank" rel="noopener" style="border-bottom:1px solid">CSIS &middot; Technology Policy &nearr;</a><br>
+        <a href="https://www.bcg.com/publications/2024/turning-the-tide-on-semiconductors" target="_blank" rel="noopener" style="border-bottom:1px solid">BCG &middot; Turning the Tide &nearr;</a><br>
+        <a href="https://www.chips.gov/" target="_blank" rel="noopener" style="border-bottom:1px solid">CHIPS Act Tracker &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Market-share figures are approximate and move quarterly. The dataset
+        covers only the most prominent facilities; many smaller players are
+        omitted. Edge weights in the flow diagram are uniform, not proportional
+        to real transaction volumes. The map projection distorts high-latitude
+        regions.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Hallucination warning</div>
+      <p>
+        This page was generated by a large language model (Kimi K2.6). While
+        every dataset is anchored to a real public source, LLMs can
+        hallucinate figures, misattribute findings, and confabulate citations.
+        Do not treat any number here as verified fact without checking the
+        primary source. The links in the reading list are the ground truth.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Test navigation">
+    <span>Test 02 of 02</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/assets/data/semiconductor" target="_blank" rel="noopener" class="btn-outline">View the data on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/semiconductor-lab.js?v=1"></script>
+</body>
+</html>
