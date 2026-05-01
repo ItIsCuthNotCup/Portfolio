@@ -437,75 +437,116 @@
 
   /* ═══════════════════════════════════════════════════════════
      TEXT SCRAMBLE
-     Decode-wave reveal across the text nodes of any
-     [data-scramble] element. Preserves child element structure
-     (italic / accent spans), only mutates text nodes. Letters
-     scramble with letters; punctuation and whitespace stay put
-     so the layout doesn't pulse.
+     Decode-wave reveal across [data-scramble] elements.
+
+     Layout-stable strategy: every character is wrapped in an
+     inline-block span whose width is pinned to its FINAL glyph's
+     rendered width. Mutating each span's textContent during the
+     animation can never change the H1's line-wrap or height, so
+     anything below the H1 stays exactly where it was.
+
+     Word-level wrapping is preserved because we only span
+     non-whitespace runs and leave actual whitespace as plain text
+     between them. Italic / accent child spans are preserved
+     because each text node is replaced in-place — character spans
+     are inserted under the same parent (which keeps inheriting
+     the styling).
      ═══════════════════════════════════════════════════════════ */
   function scrambleElement(root, opts) {
     opts = opts || {};
     var duration = opts.duration || 1100;
     var scrambleSpeed = opts.scrambleSpeed || 50;
-    // Restricted to letters so the result reads like prose, not noise.
+    // Letters only — reads as prose, not keyboard mashing.
     var POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-    // Walk leaf text nodes in document order and snapshot their final values.
-    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    var nodes = [];
-    var totalLen = 0;
-    var n;
-    while ((n = walker.nextNode())) {
-      var v = n.nodeValue;
-      nodes.push({ node: n, finalText: v, startIdx: totalLen });
-      totalLen += v.length;
-    }
-    if (totalLen === 0) return;
+    function run() {
+      // Walk leaf text nodes; replace each with a sequence of
+      // word-grouped character spans. Build a flat list of all
+      // character entries for the animation loop.
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      var origNodes = [];
+      var n;
+      while ((n = walker.nextNode())) origNodes.push(n);
+      if (origNodes.length === 0) return;
 
-    // Lock the rendered box dimensions before mutating text. Random glyphs
-    // of varying widths would otherwise change line-wrap mid-animation and
-    // bounce the rest of the page up and down.
-    var rect = root.getBoundingClientRect();
-    var prevMinHeight = root.style.minHeight;
-    var prevOverflow = root.style.overflow;
-    root.style.minHeight = rect.height + 'px';
-    root.style.overflow = 'hidden';
+      var charEntries = [];
 
-    var start = performance.now();
-    function frame(now) {
-      var p = Math.min(1, (now - start) / duration);
-      var seed = Math.floor(now / scrambleSpeed);
+      origNodes.forEach(function (textNode) {
+        var text = textNode.nodeValue;
+        if (text.length === 0) return;
+        var parent = textNode.parentNode;
+        var frag = document.createDocumentFragment();
 
-      for (var k = 0; k < nodes.length; k++) {
-        var entry = nodes[k];
-        var finalText = entry.finalText;
-        var startIdx = entry.startIdx;
-        var out = '';
-        for (var i = 0; i < finalText.length; i++) {
-          var globalI = startIdx + i;
-          var my = totalLen > 0 ? globalI / totalLen : 0;
-          var c = finalText.charAt(i);
-          if (p > my + 0.02) {
-            out += c;
-          } else if (/[A-Za-z]/.test(c)) {
-            out += POOL.charAt((globalI * 31 + seed * 17) % POOL.length);
+        // Split into runs of whitespace vs non-whitespace so
+        // line-wrap can still happen at word boundaries.
+        var parts = text.split(/(\s+)/);
+        parts.forEach(function (part) {
+          if (part.length === 0) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
           } else {
-            // Spaces, punctuation, newlines, anything non-letter: leave intact.
-            out += c;
+            for (var i = 0; i < part.length; i++) {
+              var span = document.createElement('span');
+              span.className = 'scr-c';
+              span.textContent = part.charAt(i);
+              frag.appendChild(span);
+              charEntries.push({ span: span, finalChar: part.charAt(i) });
+            }
+          }
+        });
+
+        parent.replaceChild(frag, textNode);
+      });
+
+      // Pin each char-span's width to its rendered final width.
+      // Read all dimensions first (one layout pass), then write
+      // all styles (no thrashing).
+      var widths = charEntries.map(function (e) {
+        return e.span.getBoundingClientRect().width;
+      });
+      charEntries.forEach(function (e, i) {
+        e.span.style.display = 'inline-block';
+        e.span.style.width = widths[i] + 'px';
+        e.span.style.textAlign = 'center';
+      });
+
+      var totalLen = charEntries.length;
+      var start = performance.now();
+
+      function frame(now) {
+        var p = Math.min(1, (now - start) / duration);
+        var seed = Math.floor(now / scrambleSpeed);
+
+        for (var k = 0; k < totalLen; k++) {
+          var entry = charEntries[k];
+          var c = entry.finalChar;
+          var my = k / totalLen;
+          var glyph;
+          if (p > my + 0.02) {
+            glyph = c;
+          } else if (/[A-Za-z]/.test(c)) {
+            glyph = POOL.charAt((k * 31 + seed * 17) % POOL.length);
+          } else {
+            glyph = c;
+          }
+          if (entry.span.firstChild && entry.span.firstChild.nodeValue !== glyph) {
+            entry.span.firstChild.nodeValue = glyph;
           }
         }
-        entry.node.nodeValue = out;
+
+        if (p < 1) requestAnimationFrame(frame);
       }
 
-      if (p < 1) {
-        requestAnimationFrame(frame);
-      } else {
-        // Restore inline styles so the element flows naturally afterwards.
-        root.style.minHeight = prevMinHeight;
-        root.style.overflow = prevOverflow;
-      }
+      requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+
+    // Wait for webfonts so character widths are measured against
+    // the real Newsreader, not the system fallback.
+    if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+      document.fonts.ready.then(run);
+    } else {
+      run();
+    }
   }
 
   function initScramble() {
