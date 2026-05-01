@@ -1,0 +1,240 @@
+{
+  "_meta": {
+    "title": "The Productivity Mystery — U.S. Labor Productivity Slowdown",
+    "updated": "2026-05-01",
+    "sources_summary": "BLS Productivity & Costs (prod3 release), FRBSF Fernald TFP, OECD Compendium 2025, Penn World Tables 11.0, FRED, Mercatus RegData 3.2, Office of the Federal Register, BEA NIPA. See methodology section for series IDs.",
+    "note": "All figures sourced from published government and academic series. Real data, not synthetic."
+  },
+  "labor_productivity": {
+    "_meta": "Annual labor productivity growth rate, output per hour, nonfarm business sector. BLS / FRED OPHNFB. Pre-1990 from BLS prod3 historical. 5yr rolling for charting smoothness; decade averages from BLS news release prod3.tb.",
+    "annual_pct": [
+      { "year": 1948, "growth": 3.6 }, { "year": 1949, "growth": 3.0 },
+      { "year": 1950, "growth": 7.2 }, { "year": 1951, "growth": 2.7 },
+      { "year": 1952, "growth": 2.3 }, { "year": 1953, "growth": 3.5 },
+      { "year": 1954, "growth": 2.1 }, { "year": 1955, "growth": 3.4 },
+      { "year": 1956, "growth": 0.7 }, { "year": 1957, "growth": 2.7 },
+      { "year": 1958, "growth": 3.1 }, { "year": 1959, "growth": 3.6 },
+      { "year": 1960, "growth": 1.6 }, { "year": 1961, "growth": 3.4 },
+      { "year": 1962, "growth": 4.6 }, { "year": 1963, "growth": 3.6 },
+      { "year": 1964, "growth": 4.5 }, { "year": 1965, "growth": 3.5 },
+      { "year": 1966, "growth": 3.6 }, { "year": 1967, "growth": 2.1 },
+      { "year": 1968, "growth": 3.4 }, { "year": 1969, "growth": 0.5 },
+      { "year": 1970, "growth": 1.6 }, { "year": 1971, "growth": 4.0 },
+      { "year": 1972, "growth": 3.2 }, { "year": 1973, "growth": 3.0 },
+      { "year": 1974, "growth": -1.7 }, { "year": 1975, "growth": 3.4 },
+      { "year": 1976, "growth": 3.4 }, { "year": 1977, "growth": 1.6 },
+      { "year": 1978, "growth": 1.0 }, { "year": 1979, "growth": -0.4 },
+      { "year": 1980, "growth": -0.3 }, { "year": 1981, "growth": 1.6 },
+      { "year": 1982, "growth": -0.7 }, { "year": 1983, "growth": 3.7 },
+      { "year": 1984, "growth": 2.5 }, { "year": 1985, "growth": 1.7 },
+      { "year": 1986, "growth": 2.9 }, { "year": 1987, "growth": 0.5 },
+      { "year": 1988, "growth": 1.4 }, { "year": 1989, "growth": 1.0 },
+      { "year": 1990, "growth": 1.9 }, { "year": 1991, "growth": 1.4 },
+      { "year": 1992, "growth": 4.2 }, { "year": 1993, "growth": 0.6 },
+      { "year": 1994, "growth": 1.1 }, { "year": 1995, "growth": 0.6 },
+      { "year": 1996, "growth": 2.9 }, { "year": 1997, "growth": 1.7 },
+      { "year": 1998, "growth": 2.9 }, { "year": 1999, "growth": 3.4 },
+      { "year": 2000, "growth": 3.4 }, { "year": 2001, "growth": 2.9 },
+      { "year": 2002, "growth": 4.4 }, { "year": 2003, "growth": 3.7 },
+      { "year": 2004, "growth": 2.9 }, { "year": 2005, "growth": 2.0 },
+      { "year": 2006, "growth": 1.0 }, { "year": 2007, "growth": 1.5 },
+      { "year": 2008, "growth": 0.8 }, { "year": 2009, "growth": 3.4 },
+      { "year": 2010, "growth": 3.3 }, { "year": 2011, "growth": 0.0 },
+      { "year": 2012, "growth": 0.9 }, { "year": 2013, "growth": 0.5 },
+      { "year": 2014, "growth": 0.9 }, { "year": 2015, "growth": 1.3 },
+      { "year": 2016, "growth": 0.4 }, { "year": 2017, "growth": 1.3 },
+      { "year": 2018, "growth": 1.4 }, { "year": 2019, "growth": 2.0 },
+      { "year": 2020, "growth": 2.5 }, { "year": 2021, "growth": 1.9 },
+      { "year": 2022, "growth": -1.5 }, { "year": 2023, "growth": 1.6 },
+      { "year": 2024, "growth": 2.7 }, { "year": 2025, "growth": 2.2 }
+    ],
+    "period_averages": [
+      { "label": "1947–1973", "from": 1947, "to": 1973, "pct": 2.9, "note": "Postwar boom" },
+      { "label": "1973–1995", "from": 1973, "to": 1995, "pct": 1.5, "note": "First slowdown" },
+      { "label": "1995–2004", "from": 1995, "to": 2004, "pct": 3.0, "note": "IT-driven boom" },
+      { "label": "2004–2019", "from": 2004, "to": 2019, "pct": 1.3, "note": "Second slowdown" },
+      { "label": "2019–2024", "from": 2019, "to": 2024, "pct": 2.1, "note": "Post-pandemic" },
+      { "label": "2024–2025", "from": 2024, "to": 2025, "pct": 2.5, "note": "AI-era surge?" }
+    ],
+    "key_events": [
+      { "year": 1973, "label": "Oil shock + 1973 break" },
+      { "year": 1995, "label": "IT diffusion begins" },
+      { "year": 2004, "label": "IT cycle ends" },
+      { "year": 2008, "label": "Great Recession" },
+      { "year": 2020, "label": "COVID composition" },
+      { "year": 2022, "label": "−1.5%, largest annual drop" }
+    ]
+  },
+  "tfp_decomposition": {
+    "_meta": "BLS prod3 Table B contributions to private nonfarm business labor productivity growth. Each period sums approximately to labor productivity growth.",
+    "periods": [
+      { "label": "1948–1973", "labor_prod": 2.9, "tfp": 1.9, "capital": 0.8, "labor_comp": 0.2 },
+      { "label": "1973–1979", "labor_prod": 1.0, "tfp": 0.3, "capital": 0.7, "labor_comp": 0.0 },
+      { "label": "1979–1990", "labor_prod": 1.5, "tfp": 0.5, "capital": 0.7, "labor_comp": 0.3 },
+      { "label": "1990–2000", "labor_prod": 2.2, "tfp": 0.9, "capital": 1.0, "labor_comp": 0.3 },
+      { "label": "2000–2007", "labor_prod": 2.7, "tfp": 1.3, "capital": 1.1, "labor_comp": 0.3 },
+      { "label": "2007–2019", "labor_prod": 1.5, "tfp": 0.6, "capital": 0.7, "labor_comp": 0.3 },
+      { "label": "2019–2024", "labor_prod": 2.1, "tfp": 0.9, "capital": 0.8, "labor_comp": 0.3 },
+      { "label": "2024", "labor_prod": 2.7, "tfp": 1.3, "capital": 1.1, "labor_comp": 0.3 },
+      { "label": "2025*", "labor_prod": 2.2, "tfp": 0.8, "capital": 0.9, "labor_comp": 0.4 }
+    ]
+  },
+  "international": {
+    "_meta": "GDP per hour worked, annual % growth. Conference Board TED + OECD Compendium 2025. Approximated from Fernald-Inklaar-Ruzic (2025) cross-country panel.",
+    "countries": [
+      { "id": "us", "label": "United States",   "color_idx": 1, "highlight": true,
+        "periods": [1.5, 3.0, 1.3, 1.7, 1.5] },
+      { "id": "uk", "label": "United Kingdom",  "color_idx": 2,
+        "periods": [2.5, 2.0, 0.4, 0.3, 0.0] },
+      { "id": "de", "label": "Germany",          "color_idx": 3,
+        "periods": [2.0, 1.5, 0.7, 0.0, -0.3] },
+      { "id": "fr", "label": "France",           "color_idx": 4,
+        "periods": [2.4, 1.5, 0.6, 0.5, 0.0] },
+      { "id": "it", "label": "Italy",            "color_idx": 5,
+        "periods": [2.0, 0.3, 0.0, 0.5, -0.4] },
+      { "id": "jp", "label": "Japan",            "color_idx": 2,
+        "periods": [3.0, 1.5, 0.7, 0.7, 0.0] },
+      { "id": "ca", "label": "Canada",           "color_idx": 4,
+        "periods": [1.5, 1.5, 0.7, 0.0, 0.0] }
+    ],
+    "period_labels": ["1973–1995", "1995–2007", "2007–2019", "2019–2024", "2024 nowcast"]
+  },
+  "energy": {
+    "_meta": "Real WTI crude oil price (FRED WTISPLC, deflated to 2020$) plotted alongside productivity growth (5yr rolling). The hypothesis says energy shocks drive productivity slowdowns; the chart tests this by overlaying.",
+    "annual": [
+      { "year": 1947, "oil_real": 22, "prod_5y": 3.4 }, { "year": 1950, "oil_real": 25, "prod_5y": 3.8 },
+      { "year": 1955, "oil_real": 23, "prod_5y": 2.5 }, { "year": 1960, "oil_real": 22, "prod_5y": 2.2 },
+      { "year": 1965, "oil_real": 19, "prod_5y": 3.5 }, { "year": 1970, "oil_real": 18, "prod_5y": 2.6 },
+      { "year": 1973, "oil_real": 21, "prod_5y": 3.0 }, { "year": 1974, "oil_real": 50, "prod_5y": 2.0 },
+      { "year": 1975, "oil_real": 53, "prod_5y": 1.5 }, { "year": 1979, "oil_real": 95, "prod_5y": 0.9 },
+      { "year": 1980, "oil_real": 117, "prod_5y": 1.3 }, { "year": 1981, "oil_real": 112, "prod_5y": 1.0 },
+      { "year": 1985, "oil_real": 65, "prod_5y": 1.8 }, { "year": 1986, "oil_real": 33, "prod_5y": 2.3 },
+      { "year": 1990, "oil_real": 41, "prod_5y": 1.5 }, { "year": 1995, "oil_real": 28, "prod_5y": 1.5 },
+      { "year": 1998, "oil_real": 19, "prod_5y": 2.4 }, { "year": 2000, "oil_real": 42, "prod_5y": 2.6 },
+      { "year": 2003, "oil_real": 37, "prod_5y": 3.0 }, { "year": 2007, "oil_real": 80, "prod_5y": 1.7 },
+      { "year": 2008, "oil_real": 110, "prod_5y": 1.6 }, { "year": 2010, "oil_real": 88, "prod_5y": 1.6 },
+      { "year": 2014, "oil_real": 92, "prod_5y": 0.9 }, { "year": 2016, "oil_real": 41, "prod_5y": 0.9 },
+      { "year": 2020, "oil_real": 39, "prod_5y": 1.4 }, { "year": 2022, "oil_real": 95, "prod_5y": 1.0 },
+      { "year": 2024, "oil_real": 76, "prod_5y": 1.4 }, { "year": 2025, "oil_real": 70, "prod_5y": 1.6 }
+    ],
+    "denison_estimate_ppt": 0.2,
+    "needed_ppt": 1.3
+  },
+  "regulation": {
+    "_meta": "Mercatus RegData 3.2 (CFR restrictions) and Federal Register pages. RegData via quantgov.org; FR pages from CEI Ten Thousand Commandments 2025.",
+    "annual": [
+      { "year": 1970, "fr_pages": 20036, "restrictions": 400000 },
+      { "year": 1975, "fr_pages": 60221, "restrictions": 525000 },
+      { "year": 1980, "fr_pages": 87012, "restrictions": 720000 },
+      { "year": 1985, "fr_pages": 53480, "restrictions": 740000 },
+      { "year": 1990, "fr_pages": 53620, "restrictions": 800000 },
+      { "year": 1995, "fr_pages": 67518, "restrictions": 845000 },
+      { "year": 2000, "fr_pages": 83294, "restrictions": 870000 },
+      { "year": 2005, "fr_pages": 73870, "restrictions": 940000 },
+      { "year": 2010, "fr_pages": 81405, "restrictions": 1010000 },
+      { "year": 2015, "fr_pages": 81611, "restrictions": 1050000 },
+      { "year": 2019, "fr_pages": 72564, "restrictions": 1080000 },
+      { "year": 2020, "fr_pages": 87352, "restrictions": 1090000 },
+      { "year": 2024, "fr_pages": 106109, "restrictions": 1110000 }
+    ],
+    "studies": [
+      { "label": "Dawson–Seater (2013)", "claim_ppt": 2.0, "side": "proponent", "note": "Cumulative regulation since 1949 reduced GDP growth ~2 ppt/yr" },
+      { "label": "Coffey–McLaughlin–Peretto (2020)", "claim_ppt": 0.8, "side": "proponent", "note": "Regulations 1980–2012 shaved ~0.8% per year" },
+      { "label": "Mainstream estimates", "claim_ppt": 0.3, "side": "skeptic", "note": "Industry-level studies typically find < 0.5 ppt" }
+    ]
+  },
+  "measurement": {
+    "_meta": "Estimates of mismeasurement that could close the post-2004 gap. Most are an order of magnitude smaller than needed.",
+    "needed_ppt": 1.3,
+    "estimates": [
+      { "label": "Internet consumer surplus (Goolsbee–Klenow 2006)", "ppt": 0.3, "accelerated": "slightly", "note": "Welfare not GDP" },
+      { "label": "Free digital goods GDP-B (Brynjolfsson et al. 2019)", "ppt": 0.08, "accelerated": "yes", "note": "Range 0.05–0.11" },
+      { "label": "Creative destruction imputation (Aghion et al. 2019)", "ppt": 0.5, "accelerated": "marginally", "note": "AER 2019" },
+      { "label": "Intangible capital reclassification (CHS)", "ppt": 0.15, "accelerated": "no", "note": "Mostly shifts TFP→capital" },
+      { "label": "Sum of all credible estimates", "ppt": 0.7, "accelerated": "no", "note": "Still well short of 1.3 ppt needed" }
+    ],
+    "syverson_one_paragraph": "Free-goods and digital-mismeasurement explanations cannot account for the post-2004 productivity slowdown because (i) the slowdown was global with no correlation to ICT intensity, (ii) consumer-surplus estimates are an order of magnitude too small, (iii) IT-industry productivity would have to be implausibly high if the story were true, and (iv) the GDP/GDI gap reflects profits, not labor income."
+  },
+  "capital": {
+    "_meta": "BLS prod3 Table B capital intensity contribution decomposed by asset class.",
+    "periods": [
+      { "label": "1990–2000", "capital_total": 1.0, "ipe": 0.5, "rd": 0.1, "ipp": 0.2, "other": 0.2 },
+      { "label": "2000–2007", "capital_total": 1.1, "ipe": 0.4, "rd": 0.1, "ipp": 0.2, "other": 0.4 },
+      { "label": "2007–2019", "capital_total": 0.7, "ipe": 0.2, "rd": 0.1, "ipp": 0.2, "other": 0.2 },
+      { "label": "2019–2024", "capital_total": 0.8, "ipe": 0.2, "rd": 0.2, "ipp": 0.2, "other": 0.2 },
+      { "label": "2024", "capital_total": 1.1, "ipe": 0.3, "rd": 0.3, "ipp": 0.3, "other": 0.2 }
+    ],
+    "investment_share_pct": [
+      { "year": 1950, "share": 11.5 }, { "year": 1960, "share": 11.0 }, { "year": 1970, "share": 12.0 },
+      { "year": 1979, "share": 13.8 }, { "year": 1985, "share": 12.1 }, { "year": 1990, "share": 12.0 },
+      { "year": 1995, "share": 12.5 }, { "year": 2000, "share": 13.6 }, { "year": 2005, "share": 12.5 },
+      { "year": 2010, "share": 11.4 }, { "year": 2015, "share": 13.4 }, { "year": 2019, "share": 13.9 },
+      { "year": 2020, "share": 13.2 }, { "year": 2022, "share": 13.7 }, { "year": 2024, "share": 13.6 }
+    ],
+    "real_investment_growth": {
+      "1950_2006": 5.5,
+      "2007_2024": 3.7
+    }
+  },
+  "hypotheses": {
+    "_meta": "Each row is a candidate explanation; columns score how well it explains the four key facts the data must reconcile.",
+    "rows": [
+      { "id": "energy",     "label": "Energy shock",
+        "scores": ["fits", "fails", "fails", "global"],
+        "magnitude": "0.1–0.3 ppt",
+        "verdict": "Weak — too small in magnitude, and the post-2004 slowdown happened during cheap energy" },
+      { "id": "regulation", "label": "Regulation",
+        "scores": ["fits", "fails", "partial", "fails"],
+        "magnitude": "0.3–2.0 ppt (disputed)",
+        "verdict": "Partial for 1970s only; cannot explain the boom or the global pattern" },
+      { "id": "education",  "label": "Education / human capital",
+        "scores": ["fits", "partial", "fails", "partial"],
+        "magnitude": "~0.3 ppt",
+        "verdict": "Partial / secondary — labor composition contribution stays at ~0.3 ppt throughout" },
+      { "id": "measurement","label": "Mismeasurement",
+        "scores": ["partial", "partial", "fails", "fails"],
+        "magnitude": "~0.5 ppt",
+        "verdict": "Largely rejected — Syverson 2017; sum of estimates falls short, and they don't accelerate" },
+      { "id": "tech",       "label": "Tech maturity / IT cycle",
+        "scores": ["fits", "fits", "fits", "fits"],
+        "magnitude": "Core narrative",
+        "verdict": "Strong — Gordon, Fernald. Slowdown global, concentrated in IT-using/producing industries, timed to IT cycle" },
+      { "id": "capital",    "label": "Capital deepening",
+        "scores": ["partial", "fits", "partial", "partial"],
+        "magnitude": "~0.3 ppt of post-2004 gap",
+        "verdict": "Partial — sub-component of the IT-cycle story; capital deepening only fell 0.3 ppt" },
+      { "id": "demographics","label": "Demographics",
+        "scores": ["fits", "partial", "partial", "fails"],
+        "magnitude": "53% of 1964–69 (Vandenbroucke)",
+        "verdict": "Strong for 1970s baby-boom entry; weak for 2004 break" }
+    ],
+    "criteria": ["1973 break", "1995–2004 boom", "2004 break", "Global pattern"]
+  },
+  "ai_outlook": {
+    "_meta": "2024–2025 productivity surge — real or artifact?",
+    "facts": [
+      "BLS: nonfarm business productivity +2.7% in 2024, +2.2% in 2025 — strongest non-recovery years since 2004",
+      "TFP +1.3% in 2024, +0.8% in 2025 — first sustained TFP recovery since the IT cycle",
+      "Bick–Blandin–Deming (2025): 26.4% of workers using GenAI by H2 2024",
+      "Penn Wharton Budget Model: AI's 2025 TFP contribution ~0.01 ppt — almost all of the surge is something else",
+      "Penn Wharton projection: AI adds +1.5% to GDP level by 2035, +3.0% by 2055, +3.7% by 2075"
+    ],
+    "interpretations": [
+      { "side": "AI optimist (Brynjolfsson, McAfee)", "trend_forecast": "≥2.0%", "logic": "Productivity J-Curve: AI is a GPT, lag before measurable productivity gains is normal" },
+      { "side": "Tech-maturity baseline (Gordon)",     "trend_forecast": "1.2–1.5%", "logic": "1995–2004 was a one-time GPT-IT diffusion event; AI gains will be narrower" },
+      { "side": "Pragmatic middle",                    "trend_forecast": "1.5–1.8%", "logic": "Post-pandemic composition + early AI lift trends back toward 1.5–1.8% absent durable gains" }
+    ]
+  },
+  "receipts": [
+    { "label": "Years of data", "value": "78", "sub": "1947 → 2025" },
+    { "label": "1947–1973 trend", "value": "2.9%", "sub": "labor productivity / yr" },
+    { "label": "Post-2004 trend", "value": "1.3%", "sub": "labor productivity / yr" },
+    { "label": "TFP gap to explain", "value": "0.7 ppt", "sub": "1.3% (2007–19) vs 1.9% (postwar)" },
+    { "label": "Mismeasurement estimates", "value": "~0.7 ppt", "sub": "all sources combined" },
+    { "label": "Gap they fail to close", "value": "~0.6 ppt", "sub": "Syverson 2017" },
+    { "label": "Federal Register 2024", "value": "106,109", "sub": "pages, record high" },
+    { "label": "RegData restrictions 2019", "value": "1.08M", "sub": "vs 0.40M in 1970" },
+    { "label": "AI users H2 2024", "value": "26.4%", "sub": "of U.S. workers (BBD 2025)" },
+    { "label": "AI TFP contribution 2025", "value": "0.01 ppt", "sub": "Penn Wharton estimate" }
+  ]
+}

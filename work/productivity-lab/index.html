@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Productivity Mystery — Jake Cuth.</title>
+  <meta name="description" content="The U.S. labor productivity slowdown from 1947 to 2025, told through seven public datasets and seven hypotheses. Why did the curve break in 1973, again in 2004, and what is it doing now?">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Productivity Mystery — Jake Cuth.">
+  <meta property="og:description" content="Seventy-eight years of U.S. productivity data, seven competing explanations, one chart at a time.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/productivity-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=24">
+  <link rel="stylesheet" href="/assets/css/productivity-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">04</span> &middot; <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" class="active" aria-current="page" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="prod-main">
+
+<!-- HERO -->
+<section class="prod-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 15</span>
+    <span>The Productivity Mystery</span>
+  </div>
+  <h1 class="serif big-display prod-title">
+    The curve broke twice.<br>
+    <span class="serif-italic" style="color:var(--accent)">No one fully agrees why.</span>
+  </h1>
+  <p class="lab-biz-line">
+    U.S. labor productivity grew about 3% a year from 1947 to 1973. Then it
+    slowed. The 1995–2004 IT decade was a brief revival; after 2004 the
+    curve broke again. This page tells the story through seven public
+    datasets and the seven competing explanations they refute, support, or
+    only partially accommodate.
+  </p>
+  <p class="prod-kicker">
+    The mystery isn't that growth slowed once. It's that growth slowed,
+    came back, and slowed again — and almost every advanced economy did
+    the same thing at the same time. That synchronicity is the single
+    fact that shapes which explanations survive contact with the data.
+  </p>
+  <div class="mono prod-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">8 charts &middot; 1947 → 2025 &middot; G7 panel</div></div>
+    <div><div class="label">Sources</div><div class="value">BLS &middot; FRBSF &middot; OECD &middot; PWT &middot; FRED &middot; Mercatus</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — HEADLINE MYSTERY -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The headline mystery</span>
+  </div>
+  <p class="prod-prose">
+    Annual labor productivity growth, U.S. nonfarm business sector,
+    1948 to 2025. Each bar is one year. The horizontal lines mark
+    period averages: a postwar boom near 3%, the 1973–95 slowdown,
+    the brief IT-decade revival, the post-2004 break, and the recent
+    surge of unclear durability. Hover any year to read it; click a
+    period to focus on it.
+  </p>
+  <div class="prod-chart-wrap" id="prod-headline-wrap">
+    <div class="mono prod-chart-title">FIG. 15.1 &middot; Output per hour, nonfarm business — annual % growth</div>
+    <svg id="prod-headline" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="U.S. labor productivity annual growth, 1948-2025"></svg>
+    <div id="prod-tooltip-headline" class="prod-tooltip mono" hidden></div>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">What this means</p>
+    <p>
+      Every hypothesis in the next six charts has to explain four things
+      at once: the sharp <strong>1973 break</strong> (3% to 1.5%), the
+      <strong>1995–2004 IT-driven exception</strong>, the <strong>2004
+      break</strong> back to 1.3%, and the <strong>2024–2025 surge</strong>
+      whose cause we don't yet know. The repeated visit to ~1.5% across
+      decades is what makes the technology-cycle hypothesis (§ V) the
+      hardest to falsify.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II — TFP DECOMPOSITION -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>The deeper mystery — TFP, not labor productivity</span>
+  </div>
+  <p class="prod-prose">
+    Labor productivity decomposes into three components: total factor
+    productivity (the residual — technology, management, intangibles),
+    capital deepening (more capital per worker), and labor composition
+    (workforce skill mix). The chart below shows BLS Table B
+    contributions for each period. The key fact: post-2004, capital
+    deepening barely fell. <em>The slowdown is in TFP — the residual</em>.
+  </p>
+  <div class="prod-chart-wrap" id="prod-tfp-wrap">
+    <div class="mono prod-chart-title">FIG. 15.2 &middot; Labor productivity decomposed (ppt contribution per yr)</div>
+    <svg id="prod-tfp" viewBox="0 0 1100 440" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="TFP, capital, and labor composition contributions by period"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">What this rules out</p>
+    <p>
+      Stories that work only through <em>capital</em> — low investment,
+      savings glut, infrastructure neglect — can't be the full story for
+      the post-2004 break, because capital deepening only fell about 0.3
+      percentage points. Stories that work only through <em>workforce
+      composition</em> can't be it either: the labor-composition contribution
+      sits near 0.3 ppt the whole period. The slowdown is in the residual,
+      and the residual is where technology lives.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — INTERNATIONAL -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>The slowdown is global</span>
+  </div>
+  <p class="prod-prose">
+    GDP per hour worked, annual % growth, by period, for the G7. After
+    rising in parallel before 1995, the U.S. pulled ahead in the IT decade.
+    Since the mid-2000s every major economy slowed. In 2024 only the U.S.
+    showed meaningful re-acceleration — most of Europe was flat or
+    negative. The synchronicity is the single most important fact for
+    sorting hypotheses.
+  </p>
+  <div class="prod-chart-wrap" id="prod-intl-wrap">
+    <div class="mono prod-chart-title">FIG. 15.3 &middot; Labor productivity growth by country and period</div>
+    <svg id="prod-intl" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="G7 productivity growth across periods"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">What this rules out</p>
+    <p>
+      Almost-synchronous slowdown across countries with different
+      regulators, different education systems, different demographics, and
+      different energy mixes is hard for U.S.-specific stories to explain.
+      It strengthens common-shock stories — technology maturity (§ V) and
+      capital cycles (§ VII) — at the expense of regulation (§ V) and
+      education-as-cause.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV — ENERGY -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Hypothesis 1 — Energy shocks</span>
+  </div>
+  <p class="prod-prose">
+    The 1970s slowdown coincided with the OPEC oil crisis. The hypothesis
+    is that energy-price shocks reallocate capital away from productive
+    uses and force industry into energy-saving rather than
+    growth-producing investment. It works if and only if the productivity
+    curve tracks the oil-price curve.
+  </p>
+  <div class="prod-chart-wrap" id="prod-energy-wrap">
+    <div class="mono prod-chart-title">FIG. 15.4 &middot; Real WTI oil price (2020$) vs productivity growth (5yr rolling)</div>
+    <svg id="prod-energy" viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Oil price and productivity growth on dual axes"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">Verdict — weak</p>
+    <p>
+      Energy correlates with the timing of the 1973 break but fails the
+      falsification test: when real oil prices fell sharply 1982–1998,
+      productivity stayed at 1.5%. The post-2004 slowdown happened during
+      ultimately falling real energy costs, especially the 2014–2020 cheap
+      shale years. Denison estimated higher energy prices reduced
+      productivity by only <strong>0.1–0.3 ppt</strong> — far short of the
+      ~1.3 ppt to explain. Energy was the precipitating shock for 1973;
+      it isn't the cause of the long-run trend.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — REGULATION -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Hypothesis 2 — Regulation</span>
+  </div>
+  <p class="prod-prose">
+    The U.S. regulatory state grew rapidly in the 1970s — OSHA (1970), EPA
+    (1970), Clean Air Act (1970), Clean Water Act (1972), ERISA (1974) —
+    and has continued to grow. Mercatus' RegData counts CFR restrictions
+    (instances of "shall," "must," "required," "prohibited") at roughly
+    400,000 in 1970 versus 1.08 million in 2019. The Federal Register
+    set a record at 106,109 pages in 2024.
+  </p>
+  <div class="prod-chart-wrap" id="prod-reg-wrap">
+    <div class="mono prod-chart-title">FIG. 15.5 &middot; Regulatory volume — CFR restrictions and Federal Register pages</div>
+    <svg id="prod-reg" viewBox="0 0 1100 420" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Regulatory restrictions and Federal Register pages over time"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">Verdict — partial, 1970s only</p>
+    <p>
+      Regulation grew fastest in 1970–1981 — that timing fits the 1973
+      break. But regulation also grew through the 1995–2004 productivity
+      boom and continued growing during the post-2004 slowdown, with no
+      visible inflection. Reagan-era deregulation didn't produce a
+      productivity boom in the 1980s. The 2024 record-high coincided with
+      a strong productivity year. Dawson–Seater (2013) estimate −2 ppt;
+      mainstream industry-level studies find under 0.5 ppt. And
+      regulation differs sharply across the G7, yet the slowdown
+      doesn't.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — MEASUREMENT -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Hypothesis 3 — Mismeasurement</span>
+  </div>
+  <p class="prod-prose">
+    GDP statistics were built for a steel-and-cars economy. Maybe modern
+    GDP fails to value free internet services, intangible capital, and
+    quality-adjusted product replacement. If true, the productivity
+    slowdown is an illusion of statistics rather than a real change in
+    the economy. Below: every credible estimate of how much "missing
+    output" each mechanism could explain, vs the gap that needs explaining.
+  </p>
+  <div class="prod-chart-wrap" id="prod-measure-wrap">
+    <div class="mono prod-chart-title">FIG. 15.6 &middot; Mismeasurement estimates vs the gap to be explained</div>
+    <svg id="prod-measure" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Mismeasurement estimates vs needed gap"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">Verdict — largely rejected</p>
+    <p>
+      Even summing every credible mismeasurement source — internet
+      consumer surplus, free digital goods, creative destruction
+      imputation, intangible capital — yields about <strong>0.7 ppt</strong>,
+      well short of the ~1.3 ppt the post-2004 gap requires. Most haven't
+      accelerated since the early 2000s. Syverson (2017) closed the
+      debate: the slowdown was global with no correlation to ICT
+      intensity, and the "missing output" implied by the slowdown is
+      $2.7 trillion — orders of magnitude bigger than any digital-surplus
+      estimate. Mismeasurement is real and matters for welfare; it
+      doesn't explain away the slowdown.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — CAPITAL -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Hypothesis 4 — Capital deepening and the IT cycle</span>
+  </div>
+  <p class="prod-prose">
+    The 1995–2004 boom is, quantitatively, a story about IT investment
+    plus IT-producer TFP. Information-processing equipment alone
+    contributed 0.5 ppt to labor productivity in the 1990s. After the
+    dot-com bust and the saturation of corporate IT, that contribution
+    fell to 0.2 ppt and stayed there. The chart below shows the breakdown.
+  </p>
+  <div class="prod-chart-wrap" id="prod-capital-wrap">
+    <div class="mono prod-chart-title">FIG. 15.7 &middot; Capital intensity contribution by asset class (ppt)</div>
+    <svg id="prod-capital" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Capital deepening contribution decomposed"></svg>
+  </div>
+  <div class="prod-readout">
+    <p class="mono prod-readout-label">Verdict — partial; sub-component of the IT-cycle story</p>
+    <p>
+      Capital deepening did slow after 2007, but only by ~0.3 ppt — about
+      one-fifth of the post-2004 labor productivity gap. Most of the gap
+      is TFP. The 1995–2004 episode looks like a one-time diffusion event
+      for general-purpose IT (PCs, internet, ERP). This is the
+      "low-hanging fruit" view (Cowen 2011, Gordon 2016): the corporate
+      world only digitizes once. AI may be a second wave — Penn Wharton
+      projects AI's TFP contribution rising through the 2030s — but the
+      <strong>2025 contribution from AI is estimated at 0.01 ppt</strong>.
+      Most of the 2024–25 surge is something else.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VIII — SCORING -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VIII</span>
+    <span>Hypothesis scoring matrix</span>
+  </div>
+  <p class="prod-prose">
+    Each row is a candidate explanation. Each column is one of the four
+    facts the data forces every theory to explain. A green tile means the
+    hypothesis fits the fact, a yellow tile means it partially fits, and a
+    grey tile means it fails or contradicts.
+  </p>
+  <div class="prod-chart-wrap" id="prod-matrix-wrap">
+    <div id="prod-matrix" class="prod-matrix"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IX — AI -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IX</span>
+    <span>2024–2025 — real or artifact?</span>
+  </div>
+  <p class="prod-prose">
+    Productivity grew 2.7% in 2024 — the strongest non-recovery year since
+    2004. TFP grew 1.3%, the first sustained TFP recovery since the IT
+    cycle. Generative-AI adoption hit 26.4% of workers by H2 2024
+    (Bick–Blandin–Deming 2025). But the Penn Wharton Budget Model
+    estimates AI's actual contribution to 2025 TFP at <strong>0.01
+    percentage points</strong>. Most of the surge is something else —
+    composition, post-pandemic reallocation, cyclical recovery.
+  </p>
+  <div class="prod-chart-wrap" id="prod-ai-wrap">
+    <div id="prod-ai" class="prod-ai-grid"></div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § X — RECEIPTS -->
+<section class="prod-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; X</span>
+    <span>Receipts</span>
+  </div>
+  <div class="prod-receipts" id="prod-receipts"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § XI — METHODOLOGY -->
+<section class="prod-section" id="methodology">
+  <div class="mono section-label">
+    <span class="idx">&sect; XI</span>
+    <span>Methodology, sources, caveats</span>
+  </div>
+
+  <div class="prod-method-grid">
+    <div>
+      <div class="mono method-head">Series and IDs</div>
+      <p>
+        Labor productivity from BLS / FRED <code>OPHNFB</code>, quarterly
+        1947–latest. TFP from BLS Productivity & Costs prod3 release
+        (Tables A &amp; B) and FRBSF Fernald quarterly utilization-adjusted
+        TFP series. International from OECD Productivity Database +
+        Conference Board TED + Penn World Tables 11.0. Oil prices from
+        FRED <code>WTISPLC</code>. Regulation counts from Mercatus RegData
+        3.2 (CFR restrictions) and Office of the Federal Register.
+        Investment share from BEA NIPA Table 1.1.10 / FRED
+        <code>A008RE1A156NBEA</code>.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">What's a 'break'</div>
+      <p>
+        The 1973 and 2004 breaks are both estimated as roughly 1.3
+        percentage-point drops in trend labor productivity growth.
+        Period boundaries follow the BLS major-business-cycle convention
+        and Fernald (2014). Some scholars see a continuous deceleration
+        rather than two breaks; the BLS convention is what's used here.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Why TFP is "the residual"</div>
+      <p>
+        Total factor productivity is what remains of output growth after
+        you subtract measured contributions of capital and labor. It's
+        called <em>the measure of our ignorance</em> — anything mismeasured,
+        any unmeasured input, any markup variation shows up there.
+        Utilization adjustment (Basu–Fernald–Kimball 2006) materially
+        affects estimates; revisions are routinely large.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data, not commentary</div>
+      <p>
+        Every annual figure comes from a public dataset you can verify.
+        The verdicts below each chart reflect the academic consensus
+        as of early 2026 — Syverson 2017 on mismeasurement,
+        Fernald–Inklaar–Ruzic 2025 on the global pattern, Penn Wharton
+        2025 on AI's near-term contribution. Where consensus disagrees
+        (Dawson–Seater vs mainstream on regulation), both magnitudes
+        appear in the chart and the readout names the disagreement.
+      </p>
+    </div>
+  </div>
+
+  <div class="prod-readinglist mono">
+    <div class="prod-method-head">Reading list</div>
+    <ul>
+      <li><a href="https://www.bls.gov/news.release/prod3.toc.htm" target="_blank" rel="noopener">BLS &middot; Productivity &amp; Costs (prod3 release) &nearr;</a></li>
+      <li><a href="https://www.frbsf.org/research-and-insights/data-and-indicators/total-factor-productivity-tfp/" target="_blank" rel="noopener">FRBSF &middot; Fernald quarterly utilization-adjusted TFP &nearr;</a></li>
+      <li><a href="https://www.aeaweb.org/articles?id=10.1257/jep.31.2.165" target="_blank" rel="noopener">Syverson (2017) &middot; "Challenges to Mismeasurement Explanations" &middot; JEP &nearr;</a></li>
+      <li><a href="https://www.brookings.edu/wp-content/uploads/2016/03/byrnetextfallbpea.pdf" target="_blank" rel="noopener">Byrne, Fernald &amp; Reinsdorf (2016) &middot; Brookings &nearr;</a></li>
+      <li><a href="https://press.princeton.edu/books/hardcover/9780691147727/the-rise-and-fall-of-american-growth" target="_blank" rel="noopener">Gordon (2016) &middot; <em>The Rise and Fall of American Growth</em> &nearr;</a></li>
+      <li><a href="https://www.aeaweb.org/articles?id=10.1257/aer.20170973" target="_blank" rel="noopener">Aghion, Bergeaud, Boppart, Klenow, Li (2019) &middot; Missing Growth from Creative Destruction &middot; AER &nearr;</a></li>
+      <li><a href="https://onlinelibrary.wiley.com/journal/14754991" target="_blank" rel="noopener">Fernald, Inklaar &amp; Ruzic (2025) &middot; Review of Income and Wealth &nearr;</a></li>
+      <li><a href="https://budgetmodel.wharton.upenn.edu/" target="_blank" rel="noopener">Penn Wharton Budget Model &middot; AI productivity projections &nearr;</a></li>
+    </ul>
+  </div>
+
+  <div class="prod-caveats">
+    <div class="mono prod-caveat-label">Honest caveats</div>
+    <ul>
+      <li>BLS productivity prints have a ±1 ppt 80% confidence interval per
+        quarter. Decade averages are more reliable but still revised at
+        comprehensive NIPA revisions.</li>
+      <li>TFP is a residual. Anything mismeasured, including intangible
+        capital not yet capitalized by BEA, shows up there.</li>
+      <li>International comparisons depend on hours-worked methodology that
+        differs sharply across countries. Period boundaries follow Fernald
+        (2014) and the OECD 2025 Compendium nowcast.</li>
+      <li>The 2024–2025 surge is real in the data but its durability and
+        cause are unproven. AI optimists and tech-maturity baseliners are
+        consistent with the same dataset for the next 24 months at least.</li>
+    </ul>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/imm-lab/">&larr; Influencer Mix Modeling</a>
+    <span>Lab 15 of 15</span>
+    <a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/assets/data/productivity-lab" target="_blank" rel="noopener" class="btn-outline">View the data on GitHub &nearr;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/productivity-lab.js?v=1"></script>
+</body>
+</html>
