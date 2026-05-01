@@ -231,7 +231,17 @@ main { position: relative; }
   transform: translateY(-4px);
   transition: opacity 180ms ease, transform 180ms ease;
   z-index: 60;
+  /* Cap height so a long list (14+ labs) stays reachable on short
+     viewports — the bottom items become scrollable rather than clipped. */
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-dim) transparent;
 }
+.nav-dropdown-menu::-webkit-scrollbar { width: 6px; }
+.nav-dropdown-menu::-webkit-scrollbar-thumb { background: var(--ink-dim); border-radius: 3px; }
+.nav-dropdown-menu::-webkit-scrollbar-track { background: transparent; }
 .nav-dropdown-menu::before {
   /* the visible card — starts below the hover-bridge padding */
   content: '';
