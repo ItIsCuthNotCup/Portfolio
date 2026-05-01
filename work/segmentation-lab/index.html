@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=19">
+  <link rel="stylesheet" href="/assets/css/main.css?v=20">
   <link rel="stylesheet" href="/assets/css/segmentation-lab.css?v=1">
 </head>
 <body>
@@ -74,13 +74,13 @@
     <span class="idx">FIG. 02</span>
     <span>Customer Segmentation, Unsupervised</span>
   </div>
-  <h1 class="serif big-display seg-title">
+  <h1 class="serif big-display seg-title" data-scramble data-scramble-duration="1200">
     Which customers<br>
     <span class="serif-italic" style="color:var(--accent)">earn their keep.</span>
   </h1>
   <p class="lab-biz-line">
     A segmentation model that sorts every customer by value. Aims every
-    marketing dollar at the 21% who generate 64% of revenue. The other
+    marketing dollar at the <mark class="ink-mark">21% who generate 64% of revenue</mark>. The other
     79% stop draining the budget.
   </p>
   <p class="seg-kicker">
@@ -120,7 +120,7 @@
     <p>
       Well-run segmentation programs routinely deliver double-digit
       percentage-point lift in campaign ROI over blanket sends. This page
-      shows the <em>method</em> — RFM features, three clustering algorithms
+      shows the <em>method</em> — <span data-glossary="Recency, Frequency, Monetary — three columns derived from each customer's transaction history. The ML literature's standard feature set for value-based segmentation.">RFM</span> features, three clustering algorithms
       compared, each segment profiled against its revenue contribution — run
       against the public UCI <span class="serif-italic">Online Retail II</span>
       dataset so every number is reproducible from the linked script.
@@ -479,7 +479,7 @@
 </div>
 
 <!-- Shared behaviors (dateline, cursor, theme, progress bar, smooth scroll) -->
-<script src="/assets/js/main.js?v=10"></script>
+<script src="/assets/js/main.js?v=11"></script>
 <!-- Page logic -->
 <script src="/assets/js/segmentation-lab.js?v=2"></script>
 </body>

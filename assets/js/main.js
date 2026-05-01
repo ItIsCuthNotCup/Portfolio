@@ -576,4 +576,300 @@
   } else {
     initScramble();
   }
+
+  /* ═══════════════════════════════════════════════════════════
+     COUNTING RECEIPTS
+     When a .lab-metric or .project-receipts strip enters view,
+     count up its leading numbers. Real numbers are sacred per
+     CLAUDE.md — counting them up makes them feel earned.
+     ═══════════════════════════════════════════════════════════ */
+  function countReceipts() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var targets = document.querySelectorAll('.lab-metric, .project-receipts, .lab-fig');
+    if (targets.length === 0) return;
+
+    function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+
+    function animateNumber(node, finalText, startMs, durMs) {
+      // Find numeric tokens in the text and animate each one.
+      // Skip 4-digit numbers (years). Skip if the surrounding
+      // context suggests it's a year or time (e.g., '2030', '7am').
+      var tokens = [];
+      var re = /(\d+)/g;
+      var match;
+      while ((match = re.exec(finalText)) !== null) {
+        var n = parseInt(match[1], 10);
+        var ctxBefore = finalText.slice(Math.max(0, match.index - 6), match.index);
+        var ctxAfter = finalText.slice(match.index + match[1].length, match.index + match[1].length + 4);
+        // Heuristics: skip years, ranges, am/pm clock hours.
+        var isYear = match[1].length === 4 && n >= 1900 && n <= 2100;
+        var isClock = /\d?\s*(?:am|pm|et|ct|pt|mt)/i.test(ctxAfter);
+        var isCardinal = /(–|—|-|to)\s*$/.test(ctxBefore);
+        if (isYear || isClock || isCardinal) {
+          tokens.push({ start: match.index, end: match.index + match[1].length, finalN: n, animate: false });
+        } else {
+          tokens.push({ start: match.index, end: match.index + match[1].length, finalN: n, animate: true });
+        }
+      }
+      if (tokens.length === 0) return;
+
+      function frame(now) {
+        var t = Math.min(1, (now - startMs) / durMs);
+        var eased = easeOutQuad(t);
+        var out = '';
+        var cursor = 0;
+        for (var i = 0; i < tokens.length; i++) {
+          var tk = tokens[i];
+          out += finalText.slice(cursor, tk.start);
+          if (tk.animate) {
+            var cur = Math.round(tk.finalN * eased);
+            out += String(cur);
+          } else {
+            out += String(tk.finalN);
+          }
+          cursor = tk.end;
+        }
+        out += finalText.slice(cursor);
+        node.nodeValue = out;
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function activate(el) {
+      if (el.dataset.counted === '1') return;
+      el.dataset.counted = '1';
+      // Walk text nodes; count up numbers in each.
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      var nodes = [];
+      var n;
+      while ((n = walker.nextNode())) nodes.push(n);
+      var startMs = performance.now();
+      var dur = 900 + Math.random() * 200;
+      nodes.forEach(function (node) {
+        if (!/\d/.test(node.nodeValue)) return;
+        animateNumber(node, node.nodeValue, startMs, dur);
+      });
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          activate(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+    targets.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SECTION RULE DRAW-IN
+     <hr class="rule"> and <hr class="hair"> animate width
+     0% -> 100% as they enter the viewport. Like ink printing.
+     ═══════════════════════════════════════════════════════════ */
+  function initRuleDraw() {
+    if (!('IntersectionObserver' in window)) return;
+    var rules = document.querySelectorAll('hr.rule, hr.hair');
+    if (rules.length === 0) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-drawn');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+    rules.forEach(function (r) { io.observe(r); });
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SECTION-NUMERAL ANCHOR SCRAMBLE
+     When the page scrolls past a §-section's label, briefly
+     scramble its roman numeral and settle. One-shot per label.
+     ═══════════════════════════════════════════════════════════ */
+  function initSectionScramble() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var labels = document.querySelectorAll('.section-label .idx');
+    if (labels.length === 0) return;
+
+    var POOL = 'IVXLCDM&sect;';
+    function flicker(el, durMs) {
+      var finalText = el.textContent;
+      var start = performance.now();
+      function frame(now) {
+        var t = (now - start) / durMs;
+        if (t >= 1) {
+          el.textContent = finalText;
+          return;
+        }
+        var seed = Math.floor(now / 40);
+        var out = '';
+        for (var i = 0; i < finalText.length; i++) {
+          var c = finalText.charAt(i);
+          // Only flicker letters/numerals; preserve spaces, dots, accents.
+          if (/[A-Za-z0-9]/.test(c) && Math.random() < (1 - t * 1.6)) {
+            out += POOL.charAt((i * 7 + seed) % POOL.length);
+          } else {
+            out += c;
+          }
+        }
+        el.textContent = out;
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !entry.target.dataset.flickered) {
+          entry.target.dataset.flickered = '1';
+          flicker(entry.target, 350);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '-20% 0px -50% 0px', threshold: 0 });
+
+    labels.forEach(function (l) { io.observe(l); });
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     READING-PROGRESS DATELINE
+     Find the "X min read" span in the hero dateline and convert
+     it to "X:XX remaining" that updates on scroll.
+     ═══════════════════════════════════════════════════════════ */
+  function initReadingProgress() {
+    var dateline = document.querySelector('.hero-dateline');
+    if (!dateline) return;
+    // Find the "Length" / "min read" cell.
+    var cells = dateline.querySelectorAll('div');
+    var valueEl = null;
+    var totalSec = 0;
+    for (var i = 0; i < cells.length; i++) {
+      var label = cells[i].querySelector('.label');
+      if (label && /length|read/i.test(label.textContent)) {
+        valueEl = cells[i].querySelector('.value');
+        break;
+      }
+    }
+    if (!valueEl) return;
+    var m = valueEl.textContent.match(/(\d+)\s*min/i);
+    if (!m) return;
+    totalSec = parseInt(m[1], 10) * 60;
+    if (totalSec <= 0) return;
+
+    function update() {
+      var doc = document.documentElement;
+      var scrolled = window.scrollY || window.pageYOffset || 0;
+      var maxScroll = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+      var p = maxScroll > 0 ? Math.min(1, Math.max(0, scrolled / maxScroll)) : 0;
+      var remaining = Math.max(0, Math.round(totalSec * (1 - p)));
+      var mm = Math.floor(remaining / 60);
+      var ss = remaining % 60;
+      var pad = ss < 10 ? '0' + ss : '' + ss;
+      valueEl.textContent = mm + ':' + pad + ' remaining';
+    }
+
+    var ticking = false;
+    function onScrollProgress() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { update(); ticking = false; });
+    }
+    update();
+    window.addEventListener('scroll', onScrollProgress, { passive: true });
+    window.addEventListener('resize', onScrollProgress);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     GLOSSARY POPOVER
+     [data-glossary="term"] elements show a footnote-style popover
+     on hover/focus with the term's definition.
+     ═══════════════════════════════════════════════════════════ */
+  function initGlossary() {
+    var nodes = document.querySelectorAll('[data-glossary]');
+    if (nodes.length === 0) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'glossary-pop';
+    pop.setAttribute('role', 'tooltip');
+    pop.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(pop);
+    var hideTimer = null;
+
+    function show(target) {
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      var def = target.getAttribute('data-glossary');
+      if (!def) return;
+      pop.textContent = def;
+      pop.classList.add('is-open');
+      pop.setAttribute('aria-hidden', 'false');
+      var rect = target.getBoundingClientRect();
+      // Make sure pop is rendered so we can read its size
+      var pw = pop.offsetWidth;
+      var ph = pop.offsetHeight;
+      var pad = 12;
+      var x = rect.left + rect.width / 2 - pw / 2;
+      x = Math.max(pad, Math.min(window.innerWidth - pw - pad, x));
+      var y = rect.top - ph - 10;
+      if (y < pad) y = rect.bottom + 10;
+      pop.style.left = (x + window.scrollX) + 'px';
+      pop.style.top = (y + window.scrollY) + 'px';
+    }
+    function hide() {
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () {
+        pop.classList.remove('is-open');
+        pop.setAttribute('aria-hidden', 'true');
+      }, 80);
+    }
+
+    nodes.forEach(function (n) {
+      n.addEventListener('mouseenter', function () { show(n); });
+      n.addEventListener('mouseleave', hide);
+      n.addEventListener('focus', function () { show(n); });
+      n.addEventListener('blur', hide);
+    });
+    pop.addEventListener('mouseenter', function () { if (hideTimer) clearTimeout(hideTimer); });
+    pop.addEventListener('mouseleave', hide);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     INK-MARK reveal
+     <mark class="ink-mark"> highlight slides in left-to-right
+     when it enters view.
+     ═══════════════════════════════════════════════════════════ */
+  function initInkMark() {
+    if (!('IntersectionObserver' in window)) return;
+    var marks = document.querySelectorAll('.ink-mark');
+    if (marks.length === 0) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-drawn');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.4 });
+    marks.forEach(function (m) { io.observe(m); });
+  }
+
+  function initMotionExtras() {
+    countReceipts();
+    initRuleDraw();
+    initSectionScramble();
+    initReadingProgress();
+    initGlossary();
+    initInkMark();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMotionExtras);
+  } else {
+    initMotionExtras();
+  }
 })();

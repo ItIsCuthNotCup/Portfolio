@@ -965,3 +965,135 @@ main { position: relative; z-index: 1; }
   .contact-heading { font-size: clamp(48px, 10vw, 120px); }
   .nav-dropdown-menu { min-width: 160px; max-width: calc(100vw - 32px); }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOTION EXTRAS
+   Theme cross-fade, marquee pause, rule draw-in, drop caps,
+   ink-mark highlight, glossary popover. Each one is small;
+   together they make the site feel alive without drifting
+   into Webflow-template territory.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Theme cross-fade: extend the body transition (already set)
+   to the elements most visibly bound to theme tokens, so the
+   paper/blueprint/graphite swap fades instead of jumping. */
+.lab-card, .masthead, .hero, .scene-stage, .lab-fig,
+.btn-primary, .btn-pill, .btn-outline, .btn-dark,
+.theme-switcher .theme-btn, .nav-dropdown-menu, .nav-dropdown-toggle,
+hr.rule, hr.hair, .section-label .idx, .lab-metric, .project-receipts {
+  transition: background-color 280ms ease, color 280ms ease,
+              border-color 280ms ease, fill 280ms ease, opacity 280ms ease;
+}
+
+/* Logo carousel pauses on hover so a viewer can read individual logos. */
+.logo-marquee:hover .logo-track,
+.logo-marquee:focus-within .logo-track {
+  animation-play-state: paused;
+}
+
+/* Section rules animate left-to-right when they enter view. */
+hr.rule, hr.hair {
+  border: 0;
+  height: 1px;
+  background-color: currentColor;
+  color: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0.6;
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms,
+              background-color 280ms ease, color 280ms ease, opacity 280ms ease;
+}
+hr.rule { color: color-mix(in oklab, var(--ink) 28%, transparent); }
+hr.hair { color: color-mix(in oklab, var(--ink) 14%, transparent); }
+hr.rule.is-drawn, hr.hair.is-drawn {
+  transform: scaleX(1);
+}
+
+/* Drop-cap initials on lede paragraphs across the site. The
+   selector list covers every per-lab lede class without
+   forcing them all to share one class. */
+.lab-biz-line::first-letter,
+.af-lede::first-letter,
+.seg-lede::first-letter,
+.lr-lede::first-letter,
+.fs-lede::first-letter,
+.aw-lede::first-letter,
+.tu-lede::first-letter,
+.aj-lede::first-letter,
+.mp-lede::first-letter,
+.churn-lede::first-letter,
+.reco-lede::first-letter,
+.sk-lede::first-letter,
+.ab-lede::first-letter {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-style: normal;
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  margin: 0.05em 0.06em 0 0;
+  color: var(--ink);
+  /* The accent dot of the masthead lives in the typographic
+     period; the drop cap echoes that with a subtle shift. */
+}
+
+/* Ink-mark: a curated highlighter over a key phrase. The accent
+   bar slides in left-to-right when the mark enters the viewport. */
+.ink-mark {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--accent) 22%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 22%, transparent) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  background-position: 0 0;
+  padding: 0.05em 0.18em;
+  border-radius: 1px;
+  color: inherit;
+  transition: background-size 800ms cubic-bezier(0.22, 0.61, 0.36, 1) 60ms;
+}
+.ink-mark.is-drawn { background-size: 100% 100%; }
+
+/* Glossary footnote-style popover. Triggered by hovering or
+   focusing any [data-glossary] element. */
+[data-glossary] {
+  cursor: help;
+  border-bottom: 1px dotted color-mix(in oklab, var(--ink) 50%, transparent);
+}
+[data-glossary]:hover,
+[data-glossary]:focus-visible {
+  border-bottom-color: var(--accent);
+  outline: none;
+}
+.glossary-pop {
+  position: absolute;
+  pointer-events: none;
+  z-index: 200;
+  max-width: 280px;
+  padding: 10px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  box-shadow: 3px 3px 0 color-mix(in oklab, var(--ink) 14%, transparent);
+  font-family: 'Figtree', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+.glossary-pop.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Reduced motion: disable everything decorative. */
+@media (prefers-reduced-motion: reduce) {
+  hr.rule, hr.hair { transform: scaleX(1) !important; transition: none !important; }
+  .ink-mark { background-size: 100% 100% !important; transition: none !important; }
+  .glossary-pop { transition: none !important; }
+  .logo-track { animation: none !important; }
+}

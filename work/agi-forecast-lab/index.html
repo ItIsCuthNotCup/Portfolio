@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=19">
+  <link rel="stylesheet" href="/assets/css/main.css?v=20">
   <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=4">
 </head>
 <body>
@@ -69,7 +69,7 @@
     <span class="idx">FIG. 11</span>
     <span>The AGI horizon</span>
   </div>
-  <h1 class="serif big-display af-title">
+  <h1 class="serif big-display af-title" data-scramble data-scramble-duration="1200">
     The future is always<br>
     <span class="serif-italic" style="color:var(--accent)">twenty years out.</span>
   </h1>
@@ -77,7 +77,7 @@
     Every notable figure in AI has a public guess for when artificial
     general intelligence arrives. They have been making those guesses
     for seventy years. The average prediction has, almost without
-    exception, been about twenty years from now. Said in 1965. Said in
+    exception, been <mark class="ink-mark">about twenty years from now</mark>. Said in 1965. Said in
     1993. Said again last week.
   </p>
   <p class="af-kicker">
@@ -300,7 +300,7 @@
     <span>The jagged frontier</span>
   </div>
   <p class="af-note">
-    The 2023 ESPAI survey asked researchers when AI would reach
+    The 2023 <span data-glossary="Expert Survey on Progress in AI — the AI Impacts 2023 study (n=2,778 ML researchers). The largest formal expert survey on AGI timelines.">ESPAI</span> survey asked researchers when AI would reach
     human-level performance on specific tasks. The answer is a
     calendar, not a date. The cracks come first.
   </p>
@@ -550,7 +550,7 @@
       <p>
         For each prediction we record the year it was said, the year
         (or year range) it forecasted, the speaker's role at time, and
-        the concept used (AGI, HLMI, ASI, TAI, "powerful AI"). When a
+        the concept used (AGI, <span data-glossary="High-Level Machine Intelligence — AI that can do every cognitive task at human level. Common ESPAI / AI Impacts framing.">HLMI</span>, <span data-glossary="Artificial Super-Intelligence — AI that exceeds the best human at every task. Bostrom's framing.">ASI</span>, <span data-glossary="Transformative AI — AI with effects on the economy comparable to the Industrial Revolution. Open Philanthropy framing.">TAI</span>, "powerful AI"). When a
         person made multiple predictions across years, each is its own
         row. Definitions vary across speakers; concept is preserved per
         row rather than normalized.
@@ -608,7 +608,7 @@
   <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
 </div>
 
-<script src="/assets/js/main.js?v=10"></script>
+<script src="/assets/js/main.js?v=11"></script>
 <script src="/assets/js/agi-forecast-lab.js?v=4"></script>
 </body>
 </html>
