@@ -1034,45 +1034,91 @@
     const grid = document.getElementById('ev-small-multiples');
     if (!metaSvg || !grid) return;
 
-    // Meta chart: time to saturation
-    const metaW = 1100, metaH = 240, M = { t: 30, r: 40, b: 50, l: 60 };
-    // Build meta-trend from benchmarks: time from first entry to passing threshold
-    const metaPoints = data.benchmarks.map(b => {
-      const firstYear = parseInt(b.entries[0].date.slice(0, 4), 10);
-      const passIdx = b.entries.findIndex(e => e.score >= b.passing_threshold);
-      const passYear = passIdx >= 0 ? parseInt(b.entries[passIdx].date.slice(0, 4), 10) : null;
-      const timeToSat = passYear ? passYear - firstYear : null;
-      return { introduced: firstYear, time_to_saturation_years: timeToSat };
-    }).filter(p => p.time_to_saturation_years !== null)
-      .sort((a, b) => (a.introduced + a.time_to_saturation_years / 2) - (b.introduced + b.time_to_saturation_years / 2));
+    // Build a per-benchmark summary: when each test was introduced, when (if
+    // ever) it crossed its human-parity threshold, and whether it's still open.
+    const rows = data.benchmarks.map(b => {
+      const intro = new Date(b.entries[0].date + '-01').getTime();
+      const last = new Date(b.entries[b.entries.length - 1].date + '-01').getTime();
+      const crossed = b.entries.find(e => e.score >= b.passing_threshold);
+      const crossDate = crossed ? new Date(crossed.date + '-01').getTime() : null;
+      const lastScore = b.entries[b.entries.length - 1].score;
+      return { label: b.label, intro, last, crossDate, lastScore, threshold: b.passing_threshold, saturated: !!crossed };
+    }).sort((a, b) => a.intro - b.intro);
 
-    const metaX = makeScale([2019, 2026], [M.l, metaW - M.r]);
-    const metaY = makeScale([0, 5], [metaH - M.b, M.t]);
+    // Meta-chart: horizontal timeline, one row per benchmark.
+    const rowH = 22;
+    const metaW = 1100;
+    const metaH = 60 + rows.length * rowH;
+    metaSvg.setAttribute('viewBox', `0 0 ${metaW} ${metaH}`);
+    const M = { t: 36, r: 60, b: 28, l: 240 };
+    const xDomain = [new Date('2021-01').getTime(), new Date('2026-09').getTime()];
+    const xScale = makeScale(xDomain, [M.l, metaW - M.r]);
 
     metaSvg.innerHTML = '';
-    // Axes
-    for (let y = 2020; y <= 2026; y++) {
-      const x = metaX(y);
-      metaSvg.appendChild(svgEl('text', { x, y: metaH - M.b + 18, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
-    }
-    for (let t = 0; t <= 5; t++) {
-      const y = metaY(t);
-      metaSvg.appendChild(svgEl('line', { x1: M.l, x2: metaW - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.2 }));
-      metaSvg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = t + ' yr';
-    }
-    metaSvg.appendChild(svgEl('line', { x1: M.l, x2: metaW - M.r, y1: metaH - M.b, y2: metaH - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
-    metaSvg.appendChild(svgEl('line', { x1: M.l, x2: M.l, y1: M.t, y2: metaH - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
 
-    // Scatter points only — too few benchmarks for a meaningful continuous line
-    metaPoints.forEach(p => {
-      const cx = metaX(p.introduced + p.time_to_saturation_years / 2);
-      const cy = metaY(p.time_to_saturation_years);
-      metaSvg.appendChild(svgEl('circle', { cx, cy, r: 5, fill: 'var(--accent)', stroke: 'var(--paper)', 'stroke-width': 1.5 }));
+    // Year gridlines + ticks
+    for (let y = 2021; y <= 2026; y++) {
+      const x = xScale(new Date(y + '-01').getTime());
+      metaSvg.appendChild(svgEl('line', { x1: x, x2: x, y1: M.t - 10, y2: metaH - M.b, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.18 }));
+      metaSvg.appendChild(svgEl('text', { x, y: metaH - M.b + 16, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
+    }
+
+    // Title row
+    metaSvg.appendChild(svgEl('text', {
+      x: M.l, y: 18, fill: 'var(--ink-dim)', 'font-size': 10,
+      'font-family': 'DM Mono, monospace', 'letter-spacing': '0.12em'
+    })).textContent = 'BENCHMARK LIFESPAN — INTRODUCED → CROSSED HUMAN PARITY';
+    // Legend
+    const legendX = metaW - M.r - 280;
+    metaSvg.appendChild(svgEl('rect', { x: legendX, y: 12, width: 10, height: 6, fill: CHART.blue }));
+    metaSvg.appendChild(svgEl('text', { x: legendX + 14, y: 18, fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace' })).textContent = 'Open';
+    metaSvg.appendChild(svgEl('rect', { x: legendX + 70, y: 12, width: 10, height: 6, fill: 'var(--accent)' }));
+    metaSvg.appendChild(svgEl('text', { x: legendX + 84, y: 18, fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace' })).textContent = 'Saturated';
+    metaSvg.appendChild(svgEl('circle', { cx: legendX + 160, cy: 15, r: 4, fill: 'var(--paper)', stroke: 'var(--accent)', 'stroke-width': 2 }));
+    metaSvg.appendChild(svgEl('text', { x: legendX + 170, y: 18, fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace' })).textContent = 'Crossed parity';
+
+    // One row per benchmark
+    rows.forEach((r, i) => {
+      const y = M.t + i * rowH + rowH / 2;
+
+      // Benchmark label (left column)
+      metaSvg.appendChild(svgEl('text', {
+        x: M.l - 10, y: y + 4, 'text-anchor': 'end',
+        fill: 'var(--ink)', 'font-size': 10.5, 'font-family': 'DM Mono, monospace'
+      })).textContent = r.label;
+
+      // Lifespan bar — light track from intro to last data point
+      const x1 = xScale(r.intro);
+      const x2 = xScale(r.last);
+      metaSvg.appendChild(svgEl('rect', {
+        x: x1, y: y - 4, width: x2 - x1, height: 8, rx: 2,
+        fill: r.saturated ? 'var(--accent)' : CHART.blue, opacity: 0.28
+      }));
+
+      // Solid portion: from intro → crossing date (or full if still open)
+      if (r.saturated && r.crossDate) {
+        const xc = xScale(r.crossDate);
+        metaSvg.appendChild(svgEl('rect', {
+          x: x1, y: y - 4, width: xc - x1, height: 8, rx: 2,
+          fill: 'var(--accent)', opacity: 0.85
+        }));
+        // Threshold marker
+        metaSvg.appendChild(svgEl('circle', {
+          cx: xc, cy: y, r: 5, fill: 'var(--paper)',
+          stroke: 'var(--accent)', 'stroke-width': 2
+        }));
+      } else {
+        // Open benchmark — entire bar is solid blue with last-score note
+        metaSvg.appendChild(svgEl('rect', {
+          x: x1, y: y - 4, width: x2 - x1, height: 8, rx: 2,
+          fill: CHART.blue, opacity: 0.85
+        }));
+        metaSvg.appendChild(svgEl('text', {
+          x: x2 + 8, y: y + 4, fill: CHART.blue,
+          'font-size': 10, 'font-family': 'DM Mono, monospace', 'font-style': 'italic'
+        })).textContent = 'still open';
+      }
     });
-    // Annotation
-    const ann = svgEl('text', { x: M.l + 8, y: M.t + 14, fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'font-style': 'italic' });
-    ann.textContent = 'Each dot = one benchmark; lower = faster saturation';
-    metaSvg.appendChild(ann);
 
     // Small multiples
     function drawTiles(filter) {

@@ -378,9 +378,10 @@
     <span>Saturation Watch</span>
   </div>
   <p class="ev-note">
-    AI keeps beating the tests we give it. MMLU, HumanEval, GSM8K — all
-    saturated. But the harder tests, ARC-AGI-3, FrontierMath, Humanity's Last
-    Exam, are still mostly unsolved. Toggle to see which ones remain open.
+    Researchers design a hard test. Frontier models break it inside a year.
+    They build a harder one. Same thing. Each row below is one benchmark.
+    The bar runs from the day the test was first scored to today; the open
+    circle marks the day a model crossed human-parity.
   </p>
 
   <div class="ev-chart-controls mono" aria-label="Benchmark controls">
@@ -389,8 +390,22 @@
   </div>
 
   <div class="ev-meta-chart-wrap" id="ev-meta-chart-wrap">
-    <svg id="ev-meta-chart" viewBox="0 0 1100 240" preserveAspectRatio="xMidYMid meet"
-         role="img" aria-label="Time from introduction to benchmark saturation"></svg>
+    <svg id="ev-meta-chart" viewBox="0 0 1100 280" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Benchmark lifespan timeline — when each test was introduced and crossed human parity"></svg>
+  </div>
+
+  <div class="ev-readout">
+    <p class="mono ev-readout-label">What this means</p>
+    <p>
+      A short red bar means a benchmark fell quickly — the field invented it,
+      and within months a frontier model crossed human parity. A long blue
+      bar means the test is <em>still</em> beating frontier systems. Notice
+      the pattern: tests built in 2021 took two-to-three years to fall. Tests
+      built in 2024 are falling in under a year. This is "saturation watch" —
+      and the meta-trend is that the time between "we built a hard test" and
+      "the test got cracked" keeps shrinking. Below: each tile is a sparkline
+      of model scores over time. Dashed line = human baseline.
+    </p>
   </div>
 
   <div class="ev-small-multiples" id="ev-small-multiples">
@@ -749,6 +764,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/escape-velocity-lab.js?v=9"></script>
+<script src="/assets/js/escape-velocity-lab.js?v=10"></script>
 </body>
 </html>
