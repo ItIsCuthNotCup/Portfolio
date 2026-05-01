@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Means — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="Lloyd's algorithm, drawn live. Iteratively assign points to nearest centroid, recompute centroids, repeat until convergence.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="K-Means — Lloyd's algorithm, drawn live">
+  <meta property="og:description" content="Watch K-Means converge step by step. Three preset datasets including a deliberately broken concentric-rings case.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/kmeans-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label">
+    <span class="idx">FIG. 13 &middot; ATLAS</span>
+    <span>K-Means</span>
+  </div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">
+    Lloyd's algorithm,<br>
+    <span class="serif-italic" style="color:var(--accent)">drawn live.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Partition n points into k clusters by alternating: assign each point
+    to the nearest centroid, recompute centroids as the mean of their
+    members. <mark class="ink-mark">Fast, simple, sensitive to k</mark> &mdash; and the engine
+    behind almost every customer-segmentation deck you've ever seen.
+  </p>
+  <p class="mc-kicker">
+    Click <em>Run</em> to watch the algorithm converge. Click <em>Step</em>
+    to advance one iteration at a time. Try the rings preset to feel
+    where the model breaks &mdash; centroid-distance is not the right way to
+    cluster a doughnut. For a real-world case study, see the
+    <a href="/work/segmentation-lab/" style="border-bottom:1px solid">Customer Segmentation lab</a>
+    where this engine drives a campaign-ROI model.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; Lloyd's algorithm &middot; k-means++ seeding</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/kmeans-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">kmeans-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The algorithm, animated</span>
+  </div>
+  <p class="mc-note">
+    Centroids are seeded with k-means++ for stability. On Run, the
+    algorithm alternates assignment and update until the centroids stop
+    moving. The faint shading is the Voronoi partition &mdash; the region
+    of the canvas closest to each centroid.
+  </p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="km-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="K-Means clustering canvas"></svg>
+      <div class="mc-canvas-hint">Voronoi partition shaded</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill km-preset is-active" data-preset="blobs">Blobs</button>
+        <button type="button" class="mc-preset-pill km-preset" data-preset="uniform">Uniform</button>
+        <button type="button" class="mc-preset-pill km-preset" data-preset="rings">Rings</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">k (number of clusters)</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>k</span><span class="val" id="km-k-val">4</span></div>
+        <input type="range" id="km-k" min="2" max="8" step="1" value="4">
+      </div>
+      <div class="mc-buttons">
+        <button type="button" class="mc-btn primary" id="km-run">Run</button>
+        <button type="button" class="mc-btn" id="km-step">Step</button>
+        <button type="button" class="mc-btn" id="km-reset">Reset</button>
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">iteration</div><span class="value" id="km-iter">0</span></div>
+        <div class="mc-readout-cell"><div class="label">k</div><span class="value" id="km-k-readout">4</span></div>
+        <div class="mc-readout-cell"><div class="label">inertia</div><span class="value" id="km-inertia">—</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>How it works</span>
+  </div>
+  <div class="mc-prose">
+    <p>
+      Pick k starting centroids. For every point, find the nearest
+      centroid by Euclidean distance and assign it to that cluster.
+      Recompute each centroid as the mean of its assigned points. Repeat
+      until no point changes cluster (or a max-iteration cap is reached).
+    </p>
+    <p>
+      The objective being minimized is the within-cluster sum of squared
+      distances &mdash; the "inertia" readout in the panel. Each iteration
+      either lowers it or leaves it unchanged. The algorithm is
+      monotonic, fast, and beautifully simple. Its weaknesses come from
+      the simplicity, not despite it.
+    </p>
+  </div>
+
+  <details class="mc-math">
+    <summary>The math</summary>
+    <div class="mc-math-body">
+      <p>For points <span class="formula">x_1, …, x_n</span> and clusters <span class="formula">C_1, …, C_k</span>:</p>
+      <span class="formula formula-block">argmin_C Σ_i Σ_(x ∈ C_i) ‖x − μ_i‖²</span>
+      <p>where <span class="formula">μ_i</span> is the centroid of cluster <span class="formula">C_i</span>. The two-step iteration is:</p>
+      <span class="formula formula-block">Assign: C_i = { x : i = argmin_j ‖x − μ_j‖ }<br>Update: μ_i = (1 / |C_i|) Σ_(x ∈ C_i) x</span>
+      <p>
+        K-means++ initializes the first centroid at random and each
+        subsequent one with probability proportional to squared distance
+        from existing centroids. It converges to better local minima
+        than uniform random seeding, with the same iteration cost.
+      </p>
+    </div>
+  </details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Where it shines, where it breaks</span>
+  </div>
+  <div class="mc-grid-2">
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Spherical clusters with similar size</h3>
+      <p>
+        When clusters are roughly round, roughly equal in count, and
+        well-separated, k-means converges fast and finds them reliably.
+        That covers a surprising fraction of real customer segmentation
+        and topic-grouping problems.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Speed at scale</h3>
+      <p>
+        Mini-batch k-means scales to billions of points. Each iteration
+        is O(nk), and the algorithm typically converges in under fifty
+        iterations. It is the cluster-method-of-choice for production
+        pipelines because it gets out of the way fast.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Non-convex shapes</h3>
+      <p>
+        Try the rings preset. K-means slices the plane with straight
+        Voronoi boundaries; it cannot recognize that the inner ring and
+        outer ring are different. DBSCAN handles this case by following
+        density rather than centroid distance.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">k is your guess</h3>
+      <p>
+        Move the k slider through 2-3-4-5. Each value gives a perfectly
+        valid k-means solution. The algorithm has no opinion about which
+        is right. The elbow method, silhouette score, and gap statistic
+        try to answer that, none perfectly. DBSCAN's eps + minPts is a
+        different (also imperfect) framing of the same problem.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Trade-off scorecard</span>
+  </div>
+  <p class="mc-note">Directional, not exact. Mini-batch variants make k-means even faster on large data.</p>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- inference 0.85, accuracy 0.55, training 0.80, size 0.85 -->
+        <polygon points="100,32 144,100 100,154 32,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 85%"></span></span><span class="num">0.85</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 55%"></span></span><span class="num">0.55</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 80%"></span></span><span class="num">0.80</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 85%"></span></span><span class="num">0.85</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>In production</span>
+  </div>
+  <p class="mc-real">
+    <strong>The Customer Segmentation lab on this site.</strong>
+    K-Means at k=4 on log-transformed RFM features partitions a
+    one-million-transaction UK retail dataset into segments where the
+    top 21% of customers generate 64% of revenue. Same Lloyd's iteration
+    you see above &mdash; just on a wider feature space and more interesting
+    points.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Compare to</span>
+  </div>
+  <div class="mc-compare-row">
+    <div class="mc-compare-card is-stub">
+      <p class="name">DBSCAN</p>
+      <p class="note">Density-based clustering &middot; phase 3</p>
+    </div>
+    <a class="mc-compare-card" href="/work/segmentation-lab/">
+      <p class="name">Segmentation Lab</p>
+      <p class="note">K-Means on real RFM data &middot; FIG. 02</p>
+    </a>
+    <div class="mc-compare-card is-stub">
+      <p class="name">Isolation Forest</p>
+      <p class="note">For outliers, not clusters &middot; phase 3</p>
+    </div>
+  </div>
+
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/kmeans-lab.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Forest — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="A committee of decision trees. Bootstrapped samples, random features, averaged predictions. Famously hard to beat on tabular data.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Random Forest — a committee of decision trees">
+  <meta property="og:description" content="Hundreds of trees on bootstrap samples, averaged into a single boundary. Live demo with tree count and depth sliders.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/random-forest-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+  <style>
+    .rf-multiples {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .rf-mini-wrap { background: var(--paper); border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent); padding: 8px; }
+    .rf-mini-label { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
+    .rf-mini { width: 100%; height: auto; aspect-ratio: 4 / 3; }
+    @media (max-width: 720px) { .rf-multiples { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label">
+    <span class="idx">FIG. 13 &middot; ATLAS</span>
+    <span>Random Forest</span>
+  </div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">
+    A committee of<br>
+    <span class="serif-italic" style="color:var(--accent)">decision trees.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Hundreds of trees trained on bootstrapped samples and random feature
+    subsets, averaged into a single prediction. <mark class="ink-mark">Famously hard to beat on tabular data</mark>,
+    and forgiving of every kind of bad data hygiene.
+  </p>
+  <p class="mc-kicker">
+    The boundary you see at the top is the majority vote across N trees.
+    Underneath, the first five trees in the forest are drawn individually
+    so you can see how each one is wrong in its own way &mdash; and how
+    averaging that variety of wrongness produces a smooth right.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; bagged trees, mtry=1</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/random-forest-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">random-forest-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The forest, drawn whole</span>
+  </div>
+  <p class="mc-note">
+    Crank n_trees from 1 to 100. The boundary smooths from jagged to
+    confident. Push max_depth to 10 and watch each individual tree become
+    eager to memorize &mdash; the forest still smooths it out.
+  </p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="rf-boundary" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Random forest decision boundary"></svg>
+      <div class="mc-canvas-hint">averaged probability surface</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill rf-preset is-active" data-preset="moons">Moons</button>
+        <button type="button" class="mc-preset-pill rf-preset" data-preset="blobs">XOR blobs</button>
+        <button type="button" class="mc-preset-pill rf-preset" data-preset="spiral">Spiral</button>
+      </div>
+      <div class="mc-control-head" style="margin-top: 10px;">n_trees</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>trees</span><span class="val" id="rf-trees-val">30</span></div>
+        <input type="range" id="rf-trees" min="1" max="100" step="1" value="30">
+      </div>
+      <div class="mc-control-head" style="margin-top: 4px;">max_depth</div>
+      <div class="mc-field">
+        <div class="mc-field-label"><span>depth</span><span class="val" id="rf-depth-val">6</span></div>
+        <input type="range" id="rf-depth" min="1" max="10" step="1" value="6">
+      </div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">train accuracy</div><span class="value" id="rf-acc">—</span></div>
+      </div>
+    </aside>
+  </div>
+
+  <h3 class="serif" style="font-weight: 400; margin: 32px 0 8px;">First five trees in the forest</h3>
+  <p class="mc-note">
+    Each of these is one tree from the ensemble, trained on a different
+    bootstrap sample with a different random feature picked at each split.
+    No tree is great. The vote across all of them is.
+  </p>
+  <div class="rf-multiples" id="rf-mults"></div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>How it works</span>
+  </div>
+  <div class="mc-prose">
+    <p>
+      Train each tree on a bootstrap sample &mdash; a random selection of
+      training rows drawn with replacement, so some rows appear twice and
+      some not at all. At every split, restrict the candidate features
+      to a random subset (this is the "random" in random forest, beyond
+      bootstrapping). The two sources of randomness mean the trees
+      disagree, and disagreement is the engine of the ensemble.
+    </p>
+    <p>
+      For prediction, run a new point down every tree and take the
+      majority vote. The probability surface you see in the demo is the
+      fraction of trees that voted for class 1 at each grid cell. Where
+      the trees agree the surface is dark; where they're undecided the
+      shading is faint &mdash; that's the model's honest uncertainty.
+    </p>
+  </div>
+
+  <details class="mc-math">
+    <summary>The math</summary>
+    <div class="mc-math-body">
+      <p>For T trees voting on a point <span class="formula">x</span>:</p>
+      <span class="formula formula-block">f̂(x) = mode( T₁(x), T₂(x), …, T_T(x) )</span>
+      <p>For probabilities (when needed):</p>
+      <span class="formula formula-block">P̂(y=1 | x) = (1/T) Σ T_i(x)</span>
+      <p>
+        Each tree T_i is trained on a bootstrap sample
+        <span class="formula">D_i ∼ D</span> with feature bagging. The
+        out-of-bag (OOB) points &mdash; the rows not picked for D_i &mdash;
+        give an honest validation estimate at zero extra cost.
+      </p>
+    </div>
+  </details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Where it shines, where it breaks</span>
+  </div>
+  <div class="mc-grid-2">
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Tabular accuracy, almost free</h3>
+      <p>
+        Default settings on a clean tabular dataset routinely produce a
+        baseline that takes weeks of work to beat. Feature engineering
+        helps, hyperparameter tuning helps, but the floor is already
+        high.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Robust to messy data</h3>
+      <p>
+        Outliers, mixed scales, irrelevant features, missing values
+        (with simple imputation) &mdash; a random forest mostly shrugs.
+        It is the model that punishes preprocessing fragility least.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Inference cost at scale</h3>
+      <p>
+        100 trees, 10 levels deep each, run for every prediction. That's
+        fine for batch scoring. For real-time inference at high QPS,
+        consider gradient boosting on a single sequence or distill the
+        forest into a smaller model.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Lost interpretability</h3>
+      <p>
+        A single tree is a flowchart. A hundred trees averaged is a
+        weather pattern. Feature importance metrics (Gini, permutation)
+        give a directional read but not the per-prediction explanation
+        a regulator can follow.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Trade-off scorecard</span>
+  </div>
+  <p class="mc-note">Directional, not exact. Inference cost varies with tree count and depth.</p>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- inference 0.55, accuracy 0.85, training 0.55, size 0.30 -->
+        <polygon points="100,64 168,100 100,136 64,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 55%"></span></span><span class="num">0.55</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 85%"></span></span><span class="num">0.85</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 55%"></span></span><span class="num">0.55</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 30%"></span></span><span class="num">0.30</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>In production</span>
+  </div>
+  <p class="mc-real">
+    <strong>Microsoft Kinect's body-pose tracking.</strong>
+    The original Xbox 360 Kinect classified each pixel of an infrared
+    depth image into one of 31 body parts using a random forest of
+    three trees with 20 levels each &mdash; trained on a million
+    synthetic poses, evaluated at 200 FPS on a console GPU. Tabular
+    accuracy showing up in real-time computer vision.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Compare to</span>
+  </div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/decision-tree-lab/">
+      <p class="name">Decision Tree</p>
+      <p class="note">A single tree &middot; interpretable</p>
+    </a>
+    <div class="mc-compare-card is-stub">
+      <p class="name">Gradient Boosting</p>
+      <p class="note">Sequential trees &middot; phase 2</p>
+    </div>
+    <a class="mc-compare-card" href="/work/logistic-regression-lab/">
+      <p class="name">Logistic Regression</p>
+      <p class="note">Faster &middot; less accurate &middot; calibrated</p>
+    </a>
+  </div>
+
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/random-forest-lab.js?v=1"></script>
+</body>
+</html>

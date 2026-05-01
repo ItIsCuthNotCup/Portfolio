@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Tree — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="A flowchart that fits the data. Recursive axis-aligned splits, dual visualization of partition and tree, depth slider showing overfit and underfit.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Decision Tree — a flowchart that fits the data">
+  <meta property="og:description" content="Recursive splitting visualized two ways: the partition over the feature space, and the tree itself drawn alongside.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/decision-tree-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+  <style>
+    .dt-dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0 0;
+      padding: 20px;
+      border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+      background: var(--paper-2);
+    }
+    .dt-panel { background: var(--paper); border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent); }
+    .dt-panel-head {
+      font-family: 'DM Mono', ui-monospace, monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-dim); padding: 10px 14px;
+      border-bottom: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+    }
+    .dt-panel svg { width: 100%; height: auto; aspect-ratio: 4 / 3; display: block; }
+    .dt-controls {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .dt-dual { grid-template-columns: 1fr; }
+      .dt-controls { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label">
+    <span class="idx">FIG. 13 &middot; ATLAS</span>
+    <span>Decision Tree</span>
+  </div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">
+    A flowchart that<br>
+    <span class="serif-italic" style="color:var(--accent)">fits the data.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Recursive binary splits on the feature that best separates the target.
+    <mark class="ink-mark">Reads like a flowchart, handles mixed data without preprocessing</mark>, but
+    overfits without depth limits.
+  </p>
+  <p class="mc-kicker">
+    Two views of the same model. On the left: the feature space, partitioned
+    into rectangles. On the right: the tree itself, with split conditions
+    inside each interior node and class labels at the leaves. Move the depth
+    slider to feel the trade-off between underfit and overfit.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; recursive Gini-impurity splits</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/decision-tree-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">decision-tree-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The tree, drawn twice</span>
+  </div>
+  <p class="mc-note">
+    Watch how each split slices the feature space with one straight cut at a
+    time. Set depth = 1 for a stump (one cut). Crank to 10 to see the
+    overfit boundary &mdash; the tree memorizes individual points.
+  </p>
+  <div class="dt-dual">
+    <div class="dt-panel">
+      <div class="dt-panel-head">Feature space &middot; partitioned</div>
+      <svg id="dt-boundary" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Decision tree partition over 2D feature space"></svg>
+    </div>
+    <div class="dt-panel">
+      <div class="dt-panel-head">The tree itself</div>
+      <svg id="dt-tree" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Decision tree node diagram"></svg>
+    </div>
+    <div class="dt-controls">
+      <div>
+        <div class="mc-control-head">Preset dataset</div>
+        <div class="mc-preset-row">
+          <button type="button" class="mc-preset-pill dt-preset is-active" data-preset="blobs">XOR blobs</button>
+          <button type="button" class="mc-preset-pill dt-preset" data-preset="moons">Moons</button>
+          <button type="button" class="mc-preset-pill dt-preset" data-preset="spiral">Spiral</button>
+        </div>
+        <div class="mc-control-head" style="margin-top: 16px;">Max depth</div>
+        <div class="mc-field">
+          <div class="mc-field-label"><span>depth</span><span class="val" id="dt-depth-val">4</span></div>
+          <input type="range" id="dt-depth" min="1" max="10" step="1" value="4">
+        </div>
+      </div>
+      <div>
+        <div class="mc-control-head">Live model</div>
+        <div class="mc-readout">
+          <div class="mc-readout-cell"><div class="label">train accuracy</div><span class="value" id="dt-acc">—</span></div>
+          <div class="mc-readout-cell"><div class="label">leaves</div><span class="value" id="dt-leaves">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>How it works</span>
+  </div>
+  <div class="mc-prose">
+    <p>
+      Decision trees fit recursively. At each node, the algorithm tries every
+      feature and every possible threshold, picking the split that produces
+      the purest two children. "Purity" here is Gini impurity: the chance a
+      randomly drawn point would be misclassified if it picked the majority
+      label. The lower the better.
+    </p>
+    <p>
+      Splits are axis-aligned &mdash; always either "x &lt; threshold" or
+      "y &lt; threshold," never diagonal. That's why the partition map looks
+      like a quilt of rectangles. It's also why a single tree is interpretable:
+      the path from root to leaf is a list of inequalities you can read aloud.
+    </p>
+  </div>
+
+  <details class="mc-math">
+    <summary>The math</summary>
+    <div class="mc-math-body">
+      <p>For a node containing classes with proportions <span class="formula">p_k</span>, the Gini impurity is:</p>
+      <span class="formula formula-block">G = 1 − Σ p_k²</span>
+      <p>The algorithm picks the (feature, threshold) that minimizes the weighted sum of Gini for the two child nodes:</p>
+      <span class="formula formula-block">argmin_(f, t) [ (n_L / n) · G_L + (n_R / n) · G_R ]</span>
+      <p>
+        Recursion stops at <span class="formula">max_depth</span>, when a node
+        becomes pure, or when no split lowers impurity. Each leaf's prediction
+        is its majority class.
+      </p>
+    </div>
+  </details>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Where it shines, where it breaks</span>
+  </div>
+  <div class="mc-grid-2">
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Mixed-type tabular</h3>
+      <p>
+        Numerical features, categorical features, ordinal features, missing
+        values: a tree handles all of them without one-hot encoding,
+        scaling, or imputation. Real production data is messy. Trees are
+        the model that doesn't mind.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Audit-friendly rules</h3>
+      <p>
+        A regulated lender can't ship a neural network without an
+        interpretability layer. A pruned decision tree IS the interpretation.
+        Every prediction is a path of three to five rules that a compliance
+        officer can read.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Overfitting at depth</h3>
+      <p>
+        Crank the depth slider to 10 above. The boundary becomes a haze of
+        narrow rectangles, each carved out around a single training point.
+        Train accuracy climbs to 100%; test accuracy collapses. This is why
+        Random Forest and Gradient Boosting exist.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Diagonal boundaries</h3>
+      <p>
+        Try the spiral preset. Axis-aligned splits can only approximate a
+        diagonal with stair-steps. The tree gets there with enough depth, but
+        the staircase shape is a sign you're paying for the wrong kind of
+        decision surface.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Trade-off scorecard</span>
+  </div>
+  <p class="mc-note">Directional, not exact. Reflects shallow trees with reasonable depth limits.</p>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- inference 0.85, accuracy 0.70, training 0.85, size 0.80 -->
+        <polygon points="100,32 156,100 100,164 36,100" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 85%"></span></span><span class="num">0.85</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 70%"></span></span><span class="num">0.70</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 85%"></span></span><span class="num">0.85</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 80%"></span></span><span class="num">0.80</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>In production</span>
+  </div>
+  <p class="mc-real">
+    <strong>Credit scoring at FICO and the German credit bureaus.</strong>
+    Pruned, hand-audited decision trees underwrite the
+    interpretability requirements that regulated lending demands. The
+    same data pumped through gradient boosting would score better, but a
+    tree's path-to-leaf is the explanation a regulator can read aloud.
+  </p>
+</section>
+
+<hr class="hair">
+
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Compare to</span>
+  </div>
+  <div class="mc-compare-row">
+    <a class="mc-compare-card" href="/work/random-forest-lab/">
+      <p class="name">Random Forest</p>
+      <p class="note">Many trees, averaged &middot; better accuracy</p>
+    </a>
+    <div class="mc-compare-card is-stub">
+      <p class="name">Gradient Boosting</p>
+      <p class="note">Trees, sequentially &middot; phase 2</p>
+    </div>
+    <a class="mc-compare-card" href="/work/logistic-regression-lab/">
+      <p class="name">Logistic Regression</p>
+      <p class="note">Linear, also interpretable</p>
+    </a>
+  </div>
+
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/decision-tree-lab.js?v=1"></script>
+</body>
+</html>

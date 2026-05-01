@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Regression — Model Atlas — Jake Cuth.</title>
+  <meta name="description" content="The line of best fit, with receipts. A live, interactive 2D linear regression destination from the Model Atlas.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Linear Regression — the line of best fit, with receipts">
+  <meta property="og:description" content="A live closed-form OLS regression. Click to add points, drag to move. Watch the line refit and R² update in real time.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/linear-regression-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=22">
+  <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> · No. <span id="masthead-issue">04</span> · <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" class="active" aria-current="page" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="mc-main">
+
+<!-- ── Hero ─────────────────────────────────────────────────────── -->
+<section class="mc-hero">
+  <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
+  <div class="mono section-label">
+    <span class="idx">FIG. 13 &middot; ATLAS</span>
+    <span>Linear Regression</span>
+  </div>
+  <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">
+    The line of<br>
+    <span class="serif-italic" style="color:var(--accent)">best fit.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Closed-form least squares. Every output is a weighted sum of inputs
+    plus a bias. <mark class="ink-mark">The baseline every other regressor is measured against</mark> &mdash;
+    and often the right answer.
+  </p>
+  <p class="mc-kicker">
+    Click anywhere on the canvas to add a point. Drag any point to move it.
+    The line refits via closed-form OLS on every change. Three preset
+    datasets demonstrate where the model shines and where it breaks.
+  </p>
+  <div class="mono mc-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; closed-form OLS</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/js/linear-regression-lab.js" target="_blank" rel="noopener" style="border-bottom:1px solid">linear-regression-lab.js &#8599;</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ── Demo ─────────────────────────────────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The fit, live</span>
+  </div>
+  <p class="mc-note">
+    Solid red line is the OLS fit. Faint dashed verticals are residuals
+    &mdash; the distances OLS minimizes. Try the <em>parabola</em> preset
+    to feel the model's primary failure mode.
+  </p>
+  <div class="mc-demo">
+    <figure class="mc-demo-canvas">
+      <svg id="lr-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Linear regression scatter and fit"></svg>
+      <div class="mc-canvas-hint" id="lr-hint">click to add &middot; drag to move</div>
+    </figure>
+    <aside class="mc-controls">
+      <div class="mc-control-head">Preset dataset</div>
+      <div class="mc-preset-row">
+        <button type="button" class="mc-preset-pill lr-preset is-active" data-preset="linear">Clean</button>
+        <button type="button" class="mc-preset-pill lr-preset" data-preset="noisy">Noisy</button>
+        <button type="button" class="mc-preset-pill lr-preset" data-preset="parabola">Parabola</button>
+      </div>
+      <div class="mc-buttons">
+        <button type="button" class="mc-btn" id="lr-clear">Clear canvas</button>
+      </div>
+
+      <div class="mc-control-head" style="margin-top: 8px;">Live fit</div>
+      <div class="mc-readout">
+        <div class="mc-readout-cell"><div class="label">slope</div><span class="value" id="lr-slope">—</span></div>
+        <div class="mc-readout-cell"><div class="label">intercept</div><span class="value" id="lr-intercept">—</span></div>
+        <div class="mc-readout-cell"><div class="label">R²</div><span class="value" id="lr-r2">—</span></div>
+        <div class="mc-readout-cell"><div class="label">RMSE</div><span class="value" id="lr-rmse">—</span></div>
+        <div class="mc-readout-cell"><div class="label">points</div><span class="value" id="lr-n">0</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ── How it works ────────────────────────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>How it works</span>
+  </div>
+  <div class="mc-prose">
+    <p>
+      Linear regression finds the line that minimizes the sum of squared
+      vertical distances from each point to the line. Those distances
+      are the dashed verticals you see in the demo &mdash; the
+      <em>residuals.</em> Squaring them weights large mistakes more than
+      small ones, which is why a single outlier can drag the whole line
+      off course.
+    </p>
+    <p>
+      The closed-form solution is a single matrix inversion. No gradient
+      descent, no learning rate, no training loop. On reasonably-sized
+      data it returns the optimal line in a fraction of a millisecond.
+      That speed is one of the reasons it is still the right answer
+      surprisingly often.
+    </p>
+  </div>
+
+  <details class="mc-math">
+    <summary>The math</summary>
+    <div class="mc-math-body">
+      <p>For inputs <span class="formula">X</span> and targets <span class="formula">y</span>, OLS solves:</p>
+      <span class="formula formula-block">β̂ = (XᵀX)⁻¹ Xᵀy</span>
+      <p>
+        In two dimensions with one feature, the slope and intercept
+        reduce to:
+      </p>
+      <span class="formula formula-block">m = (n·Σxy − Σx·Σy) / (n·Σx² − (Σx)²) &nbsp; &nbsp; b = (Σy − m·Σx) / n</span>
+      <p>
+        That's all the JS does on every drag, every click. The
+        <span class="formula">R²</span> readout is
+        <span class="formula">1 − SS_residuals / SS_total</span> &mdash; the
+        fraction of variance the line explains.
+      </p>
+    </div>
+  </details>
+</section>
+
+<hr class="hair">
+
+<!-- ── When it shines / when it fails ──────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Where it shines, where it breaks</span>
+  </div>
+
+  <div class="mc-grid-2">
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Calibrated baselines</h3>
+      <p>
+        Anywhere a small, fast, interpretable predictor is worth more
+        than two extra points of accuracy. Pricing models, capacity
+        forecasts, instrumented A/B baselines, anything where the
+        coefficient table itself is the deliverable.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag">Shines</div>
+      <h3 class="mc-block-title">Linear-ish phenomena</h3>
+      <p>
+        When the underlying relationship really is roughly linear (after
+        a sensible transform), no fancier model will beat OLS by enough
+        to justify the loss in interpretability and speed.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Non-linear truth</h3>
+      <p>
+        Try the parabola preset above. The best line through a curve is
+        always the wrong line through every part of the curve. The
+        residuals show a clear pattern &mdash; that pattern is the model
+        telling you to use something non-linear.
+      </p>
+    </div>
+    <div class="mc-block">
+      <div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div>
+      <h3 class="mc-block-title">Outlier domination</h3>
+      <p>
+        Drop a point in the corner of the canvas. The whole line tilts
+        toward it. Squaring the residuals means a single point ten units
+        away pulls the fit a hundred times harder than ten points one
+        unit away. Robust regression replaces the squared loss with
+        Huber or absolute loss to fix this.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ── Trade-off scorecard ─────────────────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Trade-off scorecard</span>
+  </div>
+  <p class="mc-note">
+    Directional, not exact. These reflect typical behavior on
+    typical-size tabular data; specific architectures move things.
+  </p>
+  <div class="mc-tradeoff">
+    <div class="mc-tradeoff-svg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,46 152,100 100,154 48,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <polygon points="100,73 126,100 100,127 74,100" fill="none" stroke="var(--ink-dim)" stroke-width="0.5" opacity="0.4"/>
+        <line x1="100" y1="20" x2="100" y2="180" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="var(--ink-dim)" stroke-width="0.4"/>
+        <!-- Linear regression: inference 0.95, accuracy 0.60, training 0.95, size 0.95 -->
+        <polygon points="100,24 168,100 100,168 24,100"
+                 fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+        <text x="100" y="14" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">INFERENCE</text>
+        <text x="190" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="end" fill="var(--ink-dim)">ACCURACY</text>
+        <text x="100" y="194" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="middle" fill="var(--ink-dim)">TRAINING</text>
+        <text x="10" y="103" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.16em" text-anchor="start" fill="var(--ink-dim)">SIZE</text>
+      </svg>
+    </div>
+    <ul class="mc-tradeoff-list">
+      <li><span class="axis">Inference</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+      <li><span class="axis">Accuracy</span><span class="bar"><span style="width: 60%"></span></span><span class="num">0.60</span></li>
+      <li><span class="axis">Training</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+      <li><span class="axis">Small size</span><span class="bar"><span style="width: 95%"></span></span><span class="num">0.95</span></li>
+    </ul>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- ── Real-world example ──────────────────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>In production</span>
+  </div>
+  <p class="mc-real">
+    <strong>Zillow's Zestimate (early versions).</strong>
+    Linear regression on hand-engineered features &mdash; square footage,
+    bedrooms, school ratings, nearby comps &mdash; was the entire engine
+    behind the first generations of automated home valuations. Modern
+    versions stack gradient boosting on top, but the linear baseline
+    still drives the residual analysis that catches model drift.
+  </p>
+</section>
+
+<hr class="hair">
+
+<!-- ── Compare to ──────────────────────────────────────────────── -->
+<section class="mc-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Compare to</span>
+  </div>
+  <div class="mc-compare-row">
+    <div class="mc-compare-card is-stub">
+      <p class="name">Ridge / Lasso</p>
+      <p class="note">Linear with regularization &middot; phase 3</p>
+    </div>
+    <a class="mc-compare-card" href="/work/random-forest-lab/">
+      <p class="name">Random Forest</p>
+      <p class="note">Non-linear &middot; tabular accuracy</p>
+    </a>
+    <a class="mc-compare-card" href="/work/decision-tree-lab/">
+      <p class="name">Decision Tree</p>
+      <p class="note">A single non-linear regressor</p>
+    </a>
+  </div>
+
+  <a href="/work/model-atlas-lab/" class="mc-back-cta">Try the wizard again &rarr;</a>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation" style="margin-top: 64px;">
+    <a href="/work/model-atlas-lab/">&larr; The Model Atlas</a>
+    <span>Atlas destination</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/linear-regression-lab.js?v=1"></script>
+</body>
+</html>

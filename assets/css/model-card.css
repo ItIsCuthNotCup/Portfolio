@@ -1,0 +1,447 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MODEL CARD — shared partial for every Model Atlas destination
+   Imported by linear-regression, decision-tree, random-forest,
+   kmeans, and the rest. Provides:
+     · breadcrumb back to the wizard
+     · trade-off scorecard radar (4 axes)
+     · "when it shines" / "when it fails" two-column grid
+     · expandable <details> math block
+     · "compare to" link row
+     · canvas + sliders demo frame
+   ═══════════════════════════════════════════════════════════════════ */
+
+.mc-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero / breadcrumb ────────────────────────────────────────────── */
+.mc-hero {
+  padding: 120px 48px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.mc-breadcrumb {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-decoration: none;
+  margin-bottom: 24px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.mc-breadcrumb:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.mc-title { margin-top: 22px; }
+.mc-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.mc-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.mc-dateline .label { color: var(--ink-dim); }
+.mc-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.mc-section {
+  padding: 60px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.mc-section .section-label { margin-bottom: 28px; }
+.mc-prose {
+  max-width: 64ch;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.mc-prose p + p { margin-top: 14px; }
+.mc-note {
+  font-size: 13px;
+  color: var(--ink-dim);
+  max-width: 64ch;
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+
+/* ── Demo frame ───────────────────────────────────────────────────── */
+.mc-demo {
+  margin: 24px 0 0;
+  padding: 20px;
+  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  background: var(--paper-2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 28px;
+  align-items: start;
+}
+.mc-demo-canvas {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  aspect-ratio: 4 / 3;
+  cursor: crosshair;
+  overflow: hidden;
+}
+.mc-demo-canvas svg, .mc-demo-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.mc-demo-canvas .mc-canvas-hint {
+  position: absolute;
+  inset: auto auto 12px 12px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  pointer-events: none;
+}
+.mc-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mc-control-head {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 4px;
+}
+.mc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mc-field-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+}
+.mc-field-label .val { color: var(--accent); }
+.mc-field input[type="range"] { width: 100%; accent-color: var(--accent); }
+.mc-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.mc-btn {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 8px 12px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+.mc-btn:hover { background: var(--ink); color: var(--paper); }
+.mc-btn.primary { background: var(--ink); color: var(--paper); }
+.mc-btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+.mc-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.mc-readout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 18px;
+  padding: 14px;
+  border: 1px dashed color-mix(in oklab, var(--ink) 18%, transparent);
+}
+.mc-readout-cell .label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.mc-readout-cell .value {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+  display: block;
+}
+.mc-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.mc-preset-pill {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border: 1px solid color-mix(in oklab, var(--ink) 24%, transparent);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.mc-preset-pill:hover { border-color: var(--accent); color: var(--accent); }
+.mc-preset-pill.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ── When-it-shines / fails grid ──────────────────────────────────── */
+.mc-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+.mc-block {
+  padding: 24px;
+  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  background: var(--paper-2);
+}
+.mc-block-tag {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.mc-block-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 22px;
+  line-height: 1.15;
+  margin: 0 0 10px;
+  font-weight: 400;
+}
+.mc-block p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ── Trade-off scorecard radar ────────────────────────────────────── */
+.mc-tradeoff {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.mc-tradeoff-svg svg { width: 100%; height: auto; max-width: 320px; }
+.mc-tradeoff-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.mc-tradeoff-list li {
+  display: grid;
+  grid-template-columns: 110px 1fr 36px;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.mc-tradeoff-list .axis {
+  text-transform: uppercase;
+  color: var(--ink);
+  letter-spacing: 0.16em;
+  font-size: 10px;
+}
+.mc-tradeoff-list .bar {
+  position: relative;
+  height: 8px;
+  background: color-mix(in oklab, var(--ink) 12%, transparent);
+}
+.mc-tradeoff-list .bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+}
+.mc-tradeoff-list .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-dim);
+}
+
+/* ── Math (expandable) ────────────────────────────────────────────── */
+.mc-math {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+}
+.mc-math summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mc-math summary::after {
+  content: '+';
+  font-size: 16px;
+  color: var(--accent);
+}
+.mc-math[open] summary::after { content: '−'; }
+.mc-math summary::-webkit-details-marker { display: none; }
+.mc-math-body {
+  padding: 0 18px 18px;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.mc-math-body code, .mc-math-body .formula {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: var(--paper-2);
+  padding: 2px 6px;
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  font-size: 14px;
+  display: inline-block;
+}
+.mc-math-body p { margin: 0 0 12px; }
+.mc-math-body .formula-block {
+  display: block;
+  padding: 16px 20px;
+  margin: 14px 0;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* ── Compare-to row ───────────────────────────────────────────────── */
+.mc-compare {
+  margin: 32px 0 0;
+  padding-top: 24px;
+  border-top: 1px dashed color-mix(in oklab, var(--ink) 18%, transparent);
+}
+.mc-compare-head {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.mc-compare-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.mc-compare-card {
+  flex: 1 1 220px;
+  min-width: 220px;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  background: var(--paper);
+  text-decoration: none;
+  color: inherit;
+  transition: background 200ms ease, color 200ms ease;
+}
+.mc-compare-card:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.mc-compare-card .name {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.1;
+  margin: 0 0 4px;
+}
+.mc-compare-card .note {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.mc-compare-card:hover .note { color: color-mix(in oklab, var(--paper) 70%, transparent); }
+.mc-compare-card.is-stub { opacity: 0.6; cursor: default; }
+
+/* ── Real-world / methodology ─────────────────────────────────────── */
+.mc-real {
+  font-style: italic;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 60ch;
+  margin: 0;
+}
+.mc-real strong {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ── Try-the-wizard footer button ─────────────────────────────────── */
+.mc-back-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink);
+  padding: 14px 22px;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  margin-top: 12px;
+  transition: background 200ms ease, color 200ms ease;
+}
+.mc-back-cta:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .mc-hero { padding: 100px 24px 32px; }
+  .mc-section { padding-left: 24px; padding-right: 24px; }
+  .mc-demo { grid-template-columns: 1fr; }
+  .mc-demo-canvas { aspect-ratio: 4 / 3; }
+  .mc-tradeoff { grid-template-columns: 1fr; }
+  .mc-tradeoff-list li { grid-template-columns: 90px 1fr 36px; }
+}
