@@ -15,6 +15,13 @@
   --accent:  oklch(0.58 0.19 28);
   --accent-2: oklch(0.42 0.10 240);  /* Deep editorial blue. Used only in jobs-lab for robotics axis. */
   --mark-bg: color-mix(in oklab, var(--accent) 35%, transparent);
+  /* Chart-series tokens — used by escape-velocity-lab and atlas
+     destinations. Defined per theme so charts read on light or dark. */
+  --chart-1: #264F73;  /* deep blue */
+  --chart-2: #7A6C8A;  /* dusty purple */
+  --chart-3: #B85C2E;  /* burnt orange */
+  --chart-4: #8B7032;  /* deep gold */
+  --chart-5: #8E3A3A;  /* deep red */
   --grain:   0.035;
 }
 [data-theme="blueprint"] {
@@ -26,19 +33,33 @@
   --accent:  oklch(0.48 0.12 230);
   --accent-2: oklch(0.55 0.14 25);
   --mark-bg: color-mix(in oklab, var(--accent-2) 38%, transparent);
+  --chart-1: #264F73;
+  --chart-2: #7A6C8A;
+  --chart-3: #B85C2E;
+  --chart-4: #8B7032;
+  --chart-5: #8E3A3A;
 }
 [data-theme="graphite"] {
   --paper:   #141311;
   --paper-2: #1C1A17;
   --ink:     #EEE8D8;
   --ink-soft:#D6CFBE;
-  --ink-dim: #8B8374;
+  /* Bumped from #8B8374 — was 4.4:1 against --paper at small sizes,
+     just under WCAG AA. New value clears 5.5:1. */
+  --ink-dim: #A09885;
   --rule:    #EEE8D8;
   --accent:  oklch(0.88 0.18 100);
   --accent-2: oklch(0.72 0.15 220);
   /* Deep red-brown mark in dark mode — readable cream text on top,
      distinguishable from the bright yellow accent used elsewhere. */
   --mark-bg: oklch(0.42 0.16 25 / 0.88);
+  /* Chart series re-mapped for dark — the lighter palette I was using
+     hardcoded across the JS now lives here. */
+  --chart-1: #5B9BD5;  /* sky blue */
+  --chart-2: #A89BB8;  /* lavender */
+  --chart-3: #FF6B3D;  /* bright orange */
+  --chart-4: #D4B970;  /* warm gold */
+  --chart-5: #C66E6E;  /* terra rose */
 }
 
 /* ── Reset & Base ───────────────────────────────────────────── */

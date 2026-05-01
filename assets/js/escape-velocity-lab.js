@@ -6,6 +6,21 @@
 (function() {
   'use strict';
 
+  // Chart series colors — read from CSS variables so they re-map per
+  // theme. var(--chart-N) is defined in main.css for paper / blueprint
+  // / graphite. The original JS hardcoded the dark-theme hex values,
+  // which broke chart contrast on the paper theme.
+  function chartColor(n) {
+    return getComputedStyle(document.documentElement).getPropertyValue('--chart-' + n).trim() || '#888';
+  }
+  const CHART = {
+    get blue()   { return chartColor(1); },
+    get purple() { return chartColor(2); },
+    get orange() { return chartColor(3); },
+    get gold()   { return chartColor(4); },
+    get rose()   { return chartColor(5); },
+  };
+
   // ── Data loading ────────────────────────────────────────────
   const DATA_PATHS = {
     compute: '/assets/data/escape-velocity/compute.json',
@@ -122,7 +137,7 @@
 
     const allModels = data.models;
     const RANGE_STARTS = { all: null, modern: 2010, recent: 2018, last5: 2021 };
-    const eraDotColors = { 'pre-dl': '#A89BB8', 'dl': '#5B9BD5', 'scaling': '#FF6B3D' };
+    const eraDotColors = { 'pre-dl': CHART.purple, 'dl': CHART.blue, 'scaling': CHART.orange };
     let currentRange = 'all';
     let currentEra = 'all';
     const curveOn = { moore: true, exp: true, super: false, fit: false };
@@ -256,7 +271,7 @@
       if (curveOn.exp) {
         plotCurve(
           yr => ay * Math.pow(2, (yr - ax) * 2),
-          '#5B9BD5', '4,3', 'AI exp. (6-mo doubling)',
+          CHART.blue, '4,3', 'AI exp. (6-mo doubling)',
           { labelBelow: true }
         );
       }
@@ -277,7 +292,7 @@
             logScaled += dt / dTi;
           }
           return ay * Math.pow(2, logScaled);
-        }, '#FF6B3D', '2,3', 'Super-exp. (doubling time shrinks)',
+        }, CHART.orange, '2,3', 'Super-exp. (doubling time shrinks)',
         { labelBelow: false });
       }
       // Best-fit through 2018+ frontier — the "what is the data ACTUALLY
@@ -290,27 +305,39 @@
           const fitStart = Math.max(xDomain[0], 2018);
           plotCurve(
             yr => Math.pow(10, fit.slope * yr + fit.intercept),
-            '#D4B970', '6,3', 'Best-fit (' + fit.doublingMonths.toFixed(1) + '-mo doubling)',
+            CHART.gold, '6,3', 'Best-fit (' + fit.doublingMonths.toFixed(1) + '-mo doubling)',
             { startYear: fitStart, labelBelow: true }
           );
         }
       }
 
       // ── Model dots ───────────────────────────────────────────
-      // When zoomed-in (not "all"), force every visible model to be labeled.
+      // Label-density rules:
+      //  - "all" view: only iconic milestones get labels (otherwise the
+      //    18 recent models stack on top of each other in the corner)
+      //  - any zoomed view: every visible model gets a label
+      const ICONIC = new Set([
+        'Perceptron', 'AlexNet', 'BERT-Large', 'AlphaFold2',
+        'GPT-3', 'GPT-4', 'GPT-5', 'GPT-5.5', 'Claude 4.7 Opus'
+      ]);
       const labelEvery = currentRange !== 'all';
       const placed = [];
-      const labelW = 70, labelH = 14;
+      const labelH = 14;
 
       // Sort by flop ascending so earlier (lower) labels get placed first;
       // helps the higher-flop models steer clear of them.
       const drawn = visible.slice().sort((a, b) => a.flop - b.flop);
 
+      // Width estimate for collision math — a rough char-width heuristic
+      // since we can't measure the SVG text before painting.
+      function estimateWidth(s) { return Math.min(140, s.length * 6.4); }
+
       drawn.forEach(m => {
         const cx = xScale(m.year), cy = yScale(m.flop);
         const isEraActive = currentEra === 'all' || m.era === currentEra;
         const fill = eraDotColors[m.era] || '#999';
-        const dotR = m.label || labelEvery ? 5 : 3.5;
+        const willLabel = isEraActive && (labelEvery ? true : (m.label && ICONIC.has(m.name)));
+        const dotR = willLabel ? 5 : 3.5;
         const circle = svgEl('circle', {
           cx, cy, r: dotR, fill,
           stroke: 'var(--paper)', 'stroke-width': 1.4,
@@ -324,18 +351,28 @@
         circle.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(circle);
 
-        if ((m.label || labelEvery) && isEraActive) {
-          // Try several offset candidates to avoid overlap with already-placed labels.
+        if (willLabel) {
+          // 16 candidate offsets — 4 directions × 4 distances.
+          // Larger offsets get a leader-line so the dot↔label connection is clear.
           const candidates = [
-            { dx: 8, dy: -6, anchor: 'start' },   // upper-right
-            { dx: 8, dy: 14, anchor: 'start' },   // lower-right
-            { dx: -8, dy: -6, anchor: 'end' },    // upper-left
-            { dx: -8, dy: 14, anchor: 'end' },    // lower-left
-            { dx: 8, dy: -22, anchor: 'start' },  // higher upper-right
-            { dx: 8, dy: 30, anchor: 'start' },   // lower lower-right
-            { dx: -8, dy: -22, anchor: 'end' },
-            { dx: -8, dy: 30, anchor: 'end' },
+            { dx: 9,  dy: -7,  anchor: 'start' },
+            { dx: 9,  dy: 16,  anchor: 'start' },
+            { dx: -9, dy: -7,  anchor: 'end' },
+            { dx: -9, dy: 16,  anchor: 'end' },
+            { dx: 9,  dy: -24, anchor: 'start' },
+            { dx: 9,  dy: 32,  anchor: 'start' },
+            { dx: -9, dy: -24, anchor: 'end' },
+            { dx: -9, dy: 32,  anchor: 'end' },
+            { dx: 9,  dy: -42, anchor: 'start' },
+            { dx: 9,  dy: 50,  anchor: 'start' },
+            { dx: -9, dy: -42, anchor: 'end' },
+            { dx: -9, dy: 50,  anchor: 'end' },
+            { dx: 9,  dy: -60, anchor: 'start' },
+            { dx: 9,  dy: 68,  anchor: 'start' },
+            { dx: -9, dy: -60, anchor: 'end' },
+            { dx: -9, dy: 68,  anchor: 'end' },
           ];
+          const labelW = estimateWidth(m.name);
           let chosen = candidates[0];
           let bestOverlap = Infinity;
           for (const c of candidates) {
@@ -352,7 +389,21 @@
           }
           const lblX = cx + chosen.dx;
           const lblY = cy + chosen.dy;
-          const lbl = svgEl('text', { x: lblX, y: lblY, 'text-anchor': chosen.anchor, fill: 'var(--ink)', 'font-size': 10.5, 'font-family': 'DM Mono, monospace', 'data-label': '1' });
+          // Draw a faint leader line if the label has been pushed far from the dot.
+          const dist = Math.abs(chosen.dy);
+          if (dist > 24) {
+            const lineEndX = cx + (chosen.anchor === 'end' ? -2 : 2);
+            const lineEndY = lblY - 3;
+            svg.appendChild(svgEl('line', {
+              x1: cx, y1: cy, x2: lineEndX, y2: lineEndY,
+              stroke: 'var(--ink-soft)', 'stroke-width': 0.6, opacity: 0.5
+            }));
+          }
+          const lbl = svgEl('text', {
+            x: lblX, y: lblY, 'text-anchor': chosen.anchor,
+            fill: 'var(--ink)', 'font-size': 10.5,
+            'font-family': 'DM Mono, monospace', 'data-label': '1'
+          });
           lbl.textContent = m.name;
           svg.appendChild(lbl);
           const x0 = cx + chosen.dx + (chosen.anchor === 'end' ? -labelW : 0);
@@ -455,7 +506,7 @@
           const y = yScale(m.compute_flop);
           d += (i ? 'L' : 'M') + x + ',' + y;
         });
-        svg.appendChild(svgEl('path', { d, stroke: '#5B9BD5', 'stroke-width': 2.5, fill: 'none' }));
+        svg.appendChild(svgEl('path', { d, stroke: CHART.blue, 'stroke-width': 2.5, fill: 'none' }));
       }
 
       // All milestones as scatter points + labels
@@ -465,7 +516,7 @@
         const cx = xScale(new Date(m.year + '-06').getTime());
         const cy = yScale(m.compute_flop);
         const isFrontier = m.compute_flop >= 1e23;
-        const c = svgEl('circle', { cx, cy, r: isFrontier ? 5 : 4, fill: isFrontier ? '#5B9BD5' : '#A89BB8', stroke: 'var(--paper)', 'stroke-width': 1.5 });
+        const c = svgEl('circle', { cx, cy, r: isFrontier ? 5 : 4, fill: isFrontier ? CHART.blue : CHART.purple, stroke: 'var(--paper)', 'stroke-width': 1.5 });
         c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${m.model}</div><div class="tt-meta">${isFrontier ? 'Frontier' : 'Efficiency'} &middot; ${formatNumber(m.compute_flop)} FLOP</div>`, e.offsetX, e.offsetY));
         c.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(c);
@@ -519,7 +570,7 @@
           const y = yScale(Math.min(p.val, yDomain[1]));
           d += (i ? 'L' : 'M') + x + ',' + y;
         });
-        const stroke = view === 'combined' ? 'var(--accent)' : '#D4B970';
+        const stroke = view === 'combined' ? 'var(--accent)' : CHART.gold;
         svg.appendChild(svgEl('path', { d, stroke, 'stroke-width': 2.5, fill: 'none', 'stroke-dasharray': view === 'separate' ? '6,4' : 'none' }));
       }
 
@@ -527,11 +578,11 @@
       const lbls = svgEl('g', { id: 'ev-eff-labels' });
       if (view === 'separate') {
         const lastFrontier = frontierMs[frontierMs.length - 1];
-        const t1 = svgEl('text', { x: W - M.r - 10, y: yScale(lastFrontier.compute_flop) - 10, 'text-anchor': 'end', fill: '#5B9BD5', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
+        const t1 = svgEl('text', { x: W - M.r - 10, y: yScale(lastFrontier.compute_flop) - 10, 'text-anchor': 'end', fill: CHART.blue, 'font-size': 10, 'font-family': 'DM Mono, monospace' });
         t1.textContent = 'Raw compute';
         lbls.appendChild(t1);
         const effY = Math.min(lastFrontier.compute_flop * Math.pow(2, (frontierMs.length - 1) * 1.5), yDomain[1] * 0.9);
-        const t2 = svgEl('text', { x: W - M.r - 10, y: yScale(effY) - 10, 'text-anchor': 'end', fill: '#D4B970', 'font-size': 10, 'font-family': 'DM Mono, monospace' });
+        const t2 = svgEl('text', { x: W - M.r - 10, y: yScale(effY) - 10, 'text-anchor': 'end', fill: CHART.gold, 'font-size': 10, 'font-family': 'DM Mono, monospace' });
         t2.textContent = 'Effective compute';
         lbls.appendChild(t2);
       } else {
@@ -906,9 +957,9 @@
         scores.forEach((s, i) => {
           bd += (i ? 'L' : 'M') + bx(i) + ',' + by(s.score);
         });
-        tileSvg.appendChild(svgEl('path', { d: bd, stroke: saturated ? 'var(--accent)' : '#5B9BD5', 'stroke-width': 2, fill: 'none' }));
+        tileSvg.appendChild(svgEl('path', { d: bd, stroke: saturated ? 'var(--accent)' : CHART.blue, 'stroke-width': 2, fill: 'none' }));
         scores.forEach((s, i) => {
-          tileSvg.appendChild(svgEl('circle', { cx: bx(i), cy: by(s.score), r: 2.5, fill: saturated ? 'var(--accent)' : '#5B9BD5' }));
+          tileSvg.appendChild(svgEl('circle', { cx: bx(i), cy: by(s.score), r: 2.5, fill: saturated ? 'var(--accent)' : CHART.blue }));
         });
 
         // Current score label
@@ -948,7 +999,7 @@
     const xScale = makeScale(xDomain, [M.l, W - M.r]);
     const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
 
-    const colors = { data: '#5B9BD5', power: '#A89BB8', duration: '#D4B970', cost: '#C66E6E' };
+    const colors = { data: CHART.blue, power: CHART.purple, duration: CHART.gold, cost: CHART.rose };
     const currentVals = { data: 15, power: 100, duration: 6, cost: 0.5 };
     const ceilingVals = { data: 300, power: 10000, duration: 9, cost: 100 };
 
