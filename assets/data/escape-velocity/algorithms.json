@@ -10,43 +10,32 @@
     "note": "Compute-equivalent efficiency gains for pre-training. Doubling intervals with 95% CIs."
   },
   "domains": [
-    {
-      "id": "llm",
-      "label": "Language Models",
-      "doubling_months": 8,
-      "ci_low": 5,
-      "ci_high": 14,
-      "source": "Ho et al. (2024)"
-    },
-    {
-      "id": "vision",
-      "label": "ImageNet Classification",
-      "doubling_months": 9,
-      "ci_low": 6,
-      "ci_high": 16,
-      "source": "Erdil & Besiroglu"
-    },
-    {
-      "id": "early",
-      "label": "Neural Networks (Hernandez & Brown)",
-      "doubling_months": 16,
-      "ci_low": 10,
-      "ci_high": 28,
-      "source": "Hernandez & Brown (2020)"
-    }
+    { "id": "llm", "label": "Language Models", "doubling_months": 8, "ci_low": 5, "ci_high": 14, "source": "Ho et al. (2024)" },
+    { "id": "vision", "label": "ImageNet Classification", "doubling_months": 9, "ci_low": 6, "ci_high": 16, "source": "Erdil & Besiroglu" },
+    { "id": "early", "label": "Neural Networks (Hernandez & Brown)", "doubling_months": 16, "ci_low": 10, "ci_high": 28, "source": "Hernandez & Brown (2020)" }
   ],
-  "milestones": [
-    { "year": 2020, "model": "GPT-3", "params_b": 175, "mmlu": 43.9, "compute_flop": 3.1e23, "era": "baseline" },
-    { "year": 2021, "model": "Gopher", "params_b": 280, "mmlu": 60.0, "compute_flop": 6.3e23, "era": "scale" },
-    { "year": 2022, "model": "PaLM-540B", "params_b": 540, "mmlu": 69.3, "compute_flop": 2.5e24, "era": "scale" },
-    { "year": 2022, "model": "Chinchilla", "params_b": 70, "mmlu": 67.5, "compute_flop": 5.8e23, "era": "efficiency" },
-    { "year": 2023, "model": "Llama 2 70B", "params_b": 70, "mmlu": 69.8, "compute_flop": 1.7e24, "era": "efficiency" },
-    { "year": 2024, "model": "Phi-3-mini", "params_b": 3.8, "mmlu": 61.5, "compute_flop": 3.8e21, "era": "efficiency" },
-    { "year": 2024, "model": "Llama 3.1 8B", "params_b": 8, "mmlu": 66.5, "compute_flop": 8.0e21, "era": "efficiency" },
-    { "year": 2024, "model": "GPT-4o mini", "params_b": 8, "mmlu": 70.0, "compute_flop": 1.0e22, "era": "efficiency" }
+  "frontier": [
+    { "date": "2020-06", "model": "GPT-3", "compute_flop": 3.1e23 },
+    { "date": "2021-12", "model": "Gopher", "compute_flop": 6.3e23 },
+    { "date": "2022-04", "model": "PaLM-540B", "compute_flop": 2.5e24 },
+    { "date": "2023-03", "model": "GPT-4", "compute_flop": 2.0e25 },
+    { "date": "2024-05", "model": "GPT-4o", "compute_flop": 4.0e25 },
+    { "date": "2024-12", "model": "Gemini 2.0 Ultra", "compute_flop": 1.5e26 },
+    { "date": "2025-08", "model": "GPT-5", "compute_flop": 1.0e27 },
+    { "date": "2026-04", "model": "Claude 4.7 Opus", "compute_flop": 3.0e27 },
+    { "date": "2026-05", "model": "GPT-5.5", "compute_flop": 5.0e27 }
+  ],
+  "small_efficient": [
+    { "date": "2022-04", "model": "Chinchilla 70B", "params_b": 70, "mmlu": 67.5, "compute_flop": 5.8e23, "note": "Matches PaLM-540B at 1/8 the params" },
+    { "date": "2024-04", "model": "Phi-3-mini", "params_b": 3.8, "mmlu": 69.0, "compute_flop": 3.8e21, "note": "Matches PaLM-540B (69.3% MMLU) at 1/142 the params" },
+    { "date": "2024-08", "model": "Llama 3.1 8B", "params_b": 8, "mmlu": 73.0, "compute_flop": 8.0e21, "note": "Beats GPT-3.5 on MMLU at 1/22 the params" },
+    { "date": "2024-08", "model": "GPT-4o mini", "params_b": 8, "mmlu": 82.0, "compute_flop": 1.0e22, "note": "Matches original GPT-4 at ~1/200 the cost" }
   ],
   "effective_compute": {
     "note": "Raw compute × algorithmic efficiency multiplier. Both trends multiply.",
+    "anchor_date": "2020-06",
+    "anchor_efficiency": 1.0,
+    "doubling_months_efficiency": 8,
     "combined_doubling_months_approx": 3.5
   },
   "caveats": [

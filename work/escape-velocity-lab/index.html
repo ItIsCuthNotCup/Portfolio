@@ -253,6 +253,21 @@
     <div id="ev-tooltip-efficiency" class="ev-tooltip mono" hidden></div>
   </div>
 
+  <div class="ev-readout">
+    <p class="mono ev-readout-label">What this means</p>
+    <p>
+      Two curves are climbing at once. The blue line is <em>raw compute</em> — the
+      total FLOP poured into a frontier training run, doubling every ~6 months.
+      The gold dashed line is <em>algorithmic efficiency</em> — the same answer
+      for fewer FLOP because the code got smarter, doubling every ~8 months.
+      Click "Combined" and the chart shows their product: <strong>effective
+      compute</strong>, doubling every ~3.5 months. That is why Phi-3-mini
+      matches the 2022 PaLM-540B benchmark at <strong>1/142 the parameters</strong>,
+      and why GPT-4-level intelligence costs 100&times; less than it did
+      18 months ago.
+    </p>
+  </div>
+
   <div class="ev-chart-callout mono">
     <span class="ev-callout-stat">~8 months</span>
     <span>Pre-training compute efficiency doubling time for LLMs (Ho et al., 2024)</span>
@@ -331,6 +346,21 @@
     <svg id="ev-cost" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Cost per unit capability over time, animated Pareto frontier"></svg>
     <div id="ev-tooltip-cost" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-readout">
+    <p class="mono ev-readout-label">What this means</p>
+    <p>
+      Each dot is the cheapest model on the market that hits a given quality
+      bar. In 2023, GPT-4 cost $36 per million tokens — the equivalent of
+      <strong>$13/hr</strong> if you ran it as a knowledge worker at 100
+      tokens per second. By April 2026 the same quality runs at $0.18 per
+      million tokens — about <strong>$0.06/hr</strong>, 100&times; below US
+      federal minimum wage. Toggle "Human-labor-equivalent cost" to put the
+      y-axis in dollars-per-hour. The dashed rose line is $7.25/hr — the
+      US minimum. Frontier intelligence crossed that line at the end of 2024
+      and is still falling.
+    </p>
   </div>
 
   <div class="ev-chart-callout mono">
@@ -719,6 +749,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/escape-velocity-lab.js?v=7"></script>
+<script src="/assets/js/escape-velocity-lab.js?v=8"></script>
 </body>
 </html>

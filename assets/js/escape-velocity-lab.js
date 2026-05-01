@@ -491,128 +491,181 @@
     const wrap = document.getElementById('ev-efficiency-wrap');
     const tip = document.getElementById('ev-tooltip-efficiency');
     const showTip = setupTooltip(wrap, tip);
-    const W = 1100, H = 480, M = { t: 30, r: 40, b: 50, l: 70 };
+    const W = 1100, H = 480, M = { t: 30, r: 90, b: 50, l: 80 };
 
-    const milestones = data.milestones;
-    const years = milestones.map(d => new Date(d.year + '-06').getTime());
-    const xDomain = [Math.min(...years), Math.max(...years) + 1.5 * 365 * 24 * 3600 * 1000];
-    const yDomain = [1e20, 1e25];
+    // Frontier raw compute over time (post-GPT-3 only — the era where the
+    // efficiency curve is anchored).
+    const frontier = data.frontier || [];
+    const eff = data.effective_compute || { anchor_date: '2020-06', anchor_efficiency: 1.0, doubling_months_efficiency: 8 };
+    const anchorMs = new Date(eff.anchor_date).getTime();
+    const anchorEff = eff.anchor_efficiency || 1.0;
+    const dEff = eff.doubling_months_efficiency || 8;
+
+    // Anchor compute = the frontier model on the anchor date (GPT-3).
+    const anchorModel = frontier.find(f => f.date === eff.anchor_date) || frontier[0];
+    const anchorCompute = anchorModel.compute_flop;
+
+    // Domain: from anchor to ~mid-2026, log-y from anchor compute to 1e29
+    const xDomain = [anchorMs, new Date('2026-09').getTime()];
+    const yDomain = [anchorCompute / 3, 1e30];
     const xScale = makeScale(xDomain, [M.l, W - M.r]);
     const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
+
+    // Efficiency multiplier as a function of time (years since anchor).
+    // 8-month doubling → factor 2^(yearsSince * 12 / 8) = 2^(yearsSince * 1.5)
+    function efficiencyAt(ms) {
+      const years = (ms - anchorMs) / (365.25 * 24 * 3600 * 1000);
+      return anchorEff * Math.pow(2, years * 12 / dEff);
+    }
+
+    function rawAt(ms) {
+      // Linear interpolation in log space across frontier points
+      if (ms <= new Date(frontier[0].date).getTime()) return frontier[0].compute_flop;
+      if (ms >= new Date(frontier[frontier.length - 1].date).getTime()) return frontier[frontier.length - 1].compute_flop;
+      for (let i = 0; i < frontier.length - 1; i++) {
+        const a = new Date(frontier[i].date).getTime();
+        const b = new Date(frontier[i + 1].date).getTime();
+        if (ms >= a && ms <= b) {
+          const t = (ms - a) / (b - a);
+          const lo = Math.log10(frontier[i].compute_flop);
+          const hi = Math.log10(frontier[i + 1].compute_flop);
+          return Math.pow(10, lo + (hi - lo) * t);
+        }
+      }
+      return frontier[frontier.length - 1].compute_flop;
+    }
 
     function draw(view) {
       svg.innerHTML = '';
 
-      // Grid
+      // Y grid
       niceLogTicks(yDomain[0], yDomain[1]).forEach(t => {
         const y = yScale(t);
-        svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.3 }));
+        svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.25 }));
         svg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = formatNumber(t);
       });
-
       // X ticks
       for (let y = 2020; y <= 2026; y++) {
         const x = xScale(new Date(y + '-01').getTime());
+        svg.appendChild(svgEl('line', { x1: x, x2: x, y1: M.t, y2: H - M.b, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.18 }));
         svg.appendChild(svgEl('text', { x, y: H - M.b + 18, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
       }
-
       svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
       svg.appendChild(svgEl('line', { x1: M.l, x2: M.l, y1: M.t, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
 
-      // Frontier raw compute line (connected, excludes small efficiency models)
-      const frontierMs = milestones.filter(m => m.compute_flop >= 1e23);
-      if (view === 'separate' || view === 'combined') {
-        let d = '';
-        frontierMs.forEach((m, i) => {
-          const x = xScale(new Date(m.year + '-06').getTime());
-          const y = yScale(m.compute_flop);
-          d += (i ? 'L' : 'M') + x + ',' + y;
-        });
-        svg.appendChild(svgEl('path', { d, stroke: CHART.blue, 'stroke-width': 2.5, fill: 'none' }));
+      // ── Build smooth curves through the time domain ──────────
+      const samples = 60;
+      const dx = (xDomain[1] - xDomain[0]) / samples;
+      const rawPath = [];
+      const effPath = [];   // efficiency multiplier × anchorCompute (so it's plotted on the same FLOP axis)
+      const sumPath = [];   // raw × efficiency = effective compute
+      for (let i = 0; i <= samples; i++) {
+        const ms = xDomain[0] + i * dx;
+        const r = rawAt(ms);
+        const e = efficiencyAt(ms);
+        rawPath.push({ x: xScale(ms), y: yScale(Math.min(r, yDomain[1])) });
+        // Anchor the efficiency-only line at anchorCompute so both curves
+        // start at the same point and the reader sees them diverge.
+        const effPlotted = anchorCompute * e;
+        effPath.push({ x: xScale(ms), y: yScale(Math.min(effPlotted, yDomain[1])) });
+        sumPath.push({ x: xScale(ms), y: yScale(Math.min(r * e, yDomain[1])) });
+      }
+      function pathStr(arr) {
+        return arr.map((p, i) => (i ? 'L' : 'M') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join('');
       }
 
-      // All milestones as scatter points + labels
-      const placedLabels = [];
-      const labW = 90, labH = 13;
-      milestones.forEach(m => {
-        const cx = xScale(new Date(m.year + '-06').getTime());
+      // ── Curves ───────────────────────────────────────────────
+      // Always draw raw compute
+      svg.appendChild(svgEl('path', { d: pathStr(rawPath), stroke: CHART.blue, 'stroke-width': 2.5, fill: 'none', opacity: 0.95 }));
+      if (view === 'separate') {
+        svg.appendChild(svgEl('path', { d: pathStr(effPath), stroke: CHART.gold, 'stroke-width': 2.5, fill: 'none', 'stroke-dasharray': '6,4', opacity: 0.95 }));
+      } else {
+        svg.appendChild(svgEl('path', { d: pathStr(sumPath), stroke: 'var(--accent)', 'stroke-width': 3, fill: 'none', opacity: 0.95 }));
+      }
+
+      // ── Frontier dots + labels ───────────────────────────────
+      const placed = [];
+      const labW = 110, labH = 13;
+      frontier.forEach(m => {
+        const ms = new Date(m.date).getTime();
+        if (ms < xDomain[0] || ms > xDomain[1]) return;
+        const cx = xScale(ms);
         const cy = yScale(m.compute_flop);
-        const isFrontier = m.compute_flop >= 1e23;
-        const c = svgEl('circle', { cx, cy, r: isFrontier ? 5 : 4, fill: isFrontier ? CHART.blue : CHART.purple, stroke: 'var(--paper)', 'stroke-width': 1.5 });
-        c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${m.model}</div><div class="tt-meta">${isFrontier ? 'Frontier' : 'Efficiency'} &middot; ${formatNumber(m.compute_flop)} FLOP</div>`, e.offsetX, e.offsetY));
+        const c = svgEl('circle', { cx, cy, r: 5, fill: CHART.blue, stroke: 'var(--paper)', 'stroke-width': 1.5 });
+        c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${m.model}</div><div class="tt-meta">${m.date} &middot; ${formatNumber(m.compute_flop)} FLOP</div>`, e.offsetX, e.offsetY));
         c.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(c);
 
-        // Label every milestone — this chart only has ~8 of them so layout is easy.
         const candidates = [
-          { dx: 9, dy: -7, anchor: 'start' },
-          { dx: 9, dy: 14, anchor: 'start' },
-          { dx: -9, dy: -7, anchor: 'end' },
-          { dx: -9, dy: 14, anchor: 'end' },
-          { dx: 9, dy: -22, anchor: 'start' },
-          { dx: 9, dy: 28, anchor: 'start' },
+          { dx: 8, dy: -7, anchor: 'start' },
+          { dx: 8, dy: 14, anchor: 'start' },
+          { dx: -8, dy: -7, anchor: 'end' },
+          { dx: -8, dy: 14, anchor: 'end' },
+          { dx: 8, dy: -22, anchor: 'start' },
+          { dx: 8, dy: 28, anchor: 'start' },
         ];
         let chosen = candidates[0];
         let bestOverlap = Infinity;
         for (const cand of candidates) {
           const x0 = cx + cand.dx + (cand.anchor === 'end' ? -labW : 0);
           const y0 = cy + cand.dy - labH;
-          if (x0 < M.l - 4 || x0 + labW > W - M.r + 60) continue;
+          if (x0 < M.l - 4 || x0 + labW > W - M.r + 80) continue;
           if (y0 < M.t - 4 || y0 > H - M.b) continue;
-          const overlap = placedLabels.reduce((s, p) => {
-            const dx = Math.max(0, Math.min(x0 + labW, p.x0 + labW) - Math.max(x0, p.x0));
-            const dy = Math.max(0, Math.min(y0 + labH, p.y0 + labH) - Math.max(y0, p.y0));
-            return s + dx * dy;
+          const overlap = placed.reduce((s, p) => {
+            const ox = Math.max(0, Math.min(x0 + labW, p.x0 + labW) - Math.max(x0, p.x0));
+            const oy = Math.max(0, Math.min(y0 + labH, p.y0 + labH) - Math.max(y0, p.y0));
+            return s + ox * oy;
           }, 0);
           if (overlap < bestOverlap) { bestOverlap = overlap; chosen = cand; if (overlap === 0) break; }
         }
         const lbl = svgEl('text', {
           x: cx + chosen.dx, y: cy + chosen.dy,
           'text-anchor': chosen.anchor,
-          fill: isFrontier ? 'var(--ink)' : 'var(--ink-soft)',
+          fill: 'var(--ink)',
           'font-size': 10, 'font-family': 'DM Mono, monospace'
         });
         lbl.textContent = m.model;
         svg.appendChild(lbl);
-        placedLabels.push({
-          x0: cx + chosen.dx + (chosen.anchor === 'end' ? -labW : 0),
-          y0: cy + chosen.dy - labH,
-        });
+        placed.push({ x0: cx + chosen.dx + (chosen.anchor === 'end' ? -labW : 0), y0: cy + chosen.dy - labH });
       });
 
-      // Efficiency multiplier line (synthetic, based on frontier trajectory)
-      if (view === 'separate' || view === 'combined') {
-        const effData = frontierMs.map((m, i) => ({
-          year: m.year,
-          val: m.compute_flop * Math.pow(2, i * 1.5)
-        }));
-        let d = '';
-        effData.forEach((p, i) => {
-          const x = xScale(new Date(p.year + '-06').getTime());
-          const y = yScale(Math.min(p.val, yDomain[1]));
-          d += (i ? 'L' : 'M') + x + ',' + y;
+      // ── Curve labels (right edge) ────────────────────────────
+      function rightLabel(yRaw, color, text) {
+        const yClamp = Math.max(M.t + 8, Math.min(H - M.b - 4, yRaw));
+        const t = svgEl('text', {
+          x: W - M.r + 6, y: yClamp + 4, 'text-anchor': 'start',
+          fill: color, 'font-size': 11, 'font-family': 'DM Mono, monospace',
+          'font-style': 'italic', 'font-weight': 500
         });
-        const stroke = view === 'combined' ? 'var(--accent)' : CHART.gold;
-        svg.appendChild(svgEl('path', { d, stroke, 'stroke-width': 2.5, fill: 'none', 'stroke-dasharray': view === 'separate' ? '6,4' : 'none' }));
+        t.textContent = text;
+        svg.appendChild(t);
+      }
+      const lastRaw = rawPath[rawPath.length - 1];
+      const lastEff = effPath[effPath.length - 1];
+      const lastSum = sumPath[sumPath.length - 1];
+      rightLabel(lastRaw.y, CHART.blue, 'Raw compute');
+      if (view === 'separate') {
+        rightLabel(lastEff.y, CHART.gold, 'Algorithmic efficiency');
+      } else {
+        rightLabel(lastSum.y, 'var(--accent)', 'Effective (raw × efficiency)');
       }
 
-      // Labels
-      const lbls = svgEl('g', { id: 'ev-eff-labels' });
-      if (view === 'separate') {
-        const lastFrontier = frontierMs[frontierMs.length - 1];
-        const t1 = svgEl('text', { x: W - M.r - 10, y: yScale(lastFrontier.compute_flop) - 10, 'text-anchor': 'end', fill: CHART.blue, 'font-size': 10, 'font-family': 'DM Mono, monospace' });
-        t1.textContent = 'Raw compute';
-        lbls.appendChild(t1);
-        const effY = Math.min(lastFrontier.compute_flop * Math.pow(2, (frontierMs.length - 1) * 1.5), yDomain[1] * 0.9);
-        const t2 = svgEl('text', { x: W - M.r - 10, y: yScale(effY) - 10, 'text-anchor': 'end', fill: CHART.gold, 'font-size': 10, 'font-family': 'DM Mono, monospace' });
-        t2.textContent = 'Effective compute';
-        lbls.appendChild(t2);
-      } else {
-        const t = svgEl('text', { x: W - M.r - 10, y: M.t + 20, 'text-anchor': 'end', fill: 'var(--accent)', 'font-size': 11, 'font-family': 'DM Mono, monospace', 'font-weight': 500 });
-        t.textContent = 'Combined: doubling every ~3.5 months';
-        lbls.appendChild(t);
+      // ── Combined view: show doubling-time annotation in upper-left ──
+      if (view === 'combined') {
+        const annot = svgEl('text', {
+          x: M.l + 10, y: M.t + 18,
+          fill: 'var(--accent)', 'font-size': 12, 'font-family': 'DM Mono, monospace',
+          'font-weight': 500
+        });
+        annot.textContent = 'Effective compute doubles every ~3.5 months';
+        svg.appendChild(annot);
+        const sub = svgEl('text', {
+          x: M.l + 10, y: M.t + 34,
+          fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace'
+        });
+        sub.textContent = '6-mo compute doubling × 8-mo algorithm doubling = combined exponent';
+        svg.appendChild(sub);
       }
-      svg.appendChild(lbls);
     }
 
     draw('separate');
@@ -798,44 +851,85 @@
     const wrap = document.getElementById('ev-cost-wrap');
     const tip = document.getElementById('ev-tooltip-cost');
     const showTip = setupTooltip(wrap, tip);
-    const W = 1100, H = 520, M = { t: 40, r: 50, b: 60, l: 80 };
+    const W = 1100, H = 520, M = { t: 40, r: 60, b: 60, l: 90 };
 
     const frontier = data.pareto_frontier;
-    const dates = frontier.map(d => new Date(d.date).getTime());
     const xDomain = [new Date('2022-06').getTime(), new Date('2026-06').getTime()];
-    const yDomain = [0.1, 50];
     const xScale = makeScale(xDomain, [M.l, W - M.r]);
-    const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
+
+    // Token mode: $/Mtok directly. Labor mode: hourly cost at 100 tok/s
+    // (see deeplearning.ai math used in the data file).
+    //   100 tok/s × 3600 s/hr = 360,000 tok/hr
+    //   hourly_cost = price_per_mtok × 360_000 / 1_000_000 = price_per_mtok × 0.36
+    const TOK_PER_SEC = 100;
+    const TOK_PER_HR = TOK_PER_SEC * 3600;
+    const PRICE_TO_HOURLY = TOK_PER_HR / 1e6; // 0.36
+    const minWage = (data.labor_equivalent && data.labor_equivalent.min_wage_us) || 7.25;
 
     let currentFrame = frontier.length - 1;
+    let currentView = 'tokens';
     let playing = false;
     let playInterval;
+
+    function priceFor(p) {
+      return currentView === 'labor' ? p.price_per_mtok * PRICE_TO_HOURLY : p.price_per_mtok;
+    }
+    function fmtPrice(v) {
+      if (currentView === 'labor') {
+        if (v >= 1) return '$' + v.toFixed(2) + '/hr';
+        if (v >= 0.01) return '$' + v.toFixed(2) + '/hr';
+        return '$' + v.toFixed(3) + '/hr';
+      }
+      if (v >= 1) return '$' + v;
+      if (v >= 0.1) return '$' + v.toFixed(2);
+      return '$' + v.toFixed(2);
+    }
 
     function draw(frame) {
       svg.innerHTML = '';
       const visible = frontier.slice(0, frame + 1);
 
+      // Y domain depends on view (tokens 0.1–50 $/Mtok, labor 0.003–18 $/hr)
+      const yDomain = currentView === 'labor'
+        ? [Math.max(0.001, 0.1 * PRICE_TO_HOURLY), 50 * PRICE_TO_HOURLY]
+        : [0.1, 50];
+      const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
+
       // Grid
       niceLogTicks(yDomain[0], yDomain[1]).forEach(t => {
         const y = yScale(t);
         svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.3 }));
-        svg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = '$' + t;
+        svg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = fmtPrice(t);
       });
 
       // X ticks
       for (let y = 2022; y <= 2026; y++) {
         const x = xScale(new Date(y + '-01').getTime());
+        svg.appendChild(svgEl('line', { x1: x, x2: x, y1: M.t, y2: H - M.b, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.18 }));
         svg.appendChild(svgEl('text', { x, y: H - M.b + 18, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
       }
 
       svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
       svg.appendChild(svgEl('line', { x1: M.l, x2: M.l, y1: M.t, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
 
+      // Min-wage reference line in labor view
+      if (currentView === 'labor' && minWage >= yDomain[0] && minWage <= yDomain[1]) {
+        const yw = yScale(minWage);
+        svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: yw, y2: yw, stroke: CHART.rose, 'stroke-width': 1, 'stroke-dasharray': '6,4', opacity: 0.7 }));
+        const wlbl = svgEl('text', {
+          x: W - M.r - 8, y: yw - 6, 'text-anchor': 'end',
+          fill: CHART.rose, 'font-size': 10, 'font-family': 'DM Mono, monospace',
+          'font-style': 'italic'
+        });
+        wlbl.textContent = 'US federal min wage ($' + minWage.toFixed(2) + '/hr)';
+        svg.appendChild(wlbl);
+      }
+
       // Pareto frontier line
       let d = '';
       visible.forEach((p, i) => {
         const x = xScale(new Date(p.date).getTime());
-        const y = yScale(p.price_per_mtok);
+        const y = yScale(priceFor(p));
         d += (i ? 'L' : 'M') + x + ',' + y;
       });
       svg.appendChild(svgEl('path', { d, stroke: 'var(--accent)', 'stroke-width': 2.5, fill: 'none' }));
@@ -843,24 +937,38 @@
       // Points
       visible.forEach(p => {
         const cx = xScale(new Date(p.date).getTime());
-        const cy = yScale(p.price_per_mtok);
+        const cy = yScale(priceFor(p));
         const c = svgEl('circle', { cx, cy, r: 5, fill: 'var(--accent)', stroke: 'var(--paper)', 'stroke-width': 1.5 });
-        c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${p.model}</div><div class="tt-meta">${p.date} &middot; $${p.price_per_mtok}/Mtok</div>`, e.offsetX, e.offsetY));
+        const ttPrice = currentView === 'labor'
+          ? fmtPrice(priceFor(p)) + ' equiv. labor'
+          : '$' + p.price_per_mtok + '/Mtok';
+        c.addEventListener('mouseenter', e => showTip(`<div class="tt-name">${p.model}</div><div class="tt-meta">${p.date} &middot; ${ttPrice}</div>`, e.offsetX, e.offsetY));
         c.addEventListener('mouseleave', () => hideTooltip(tip));
         svg.appendChild(c);
       });
 
-      // Current year label
+      // Current frame label
       if (visible.length > 0) {
         const last = visible[visible.length - 1];
         const lx = xScale(new Date(last.date).getTime());
-        const ly = yScale(last.price_per_mtok);
+        const ly = yScale(priceFor(last));
         const lblAnchor = lx > W - M.r - 40 ? 'end' : 'start';
         const lblOffset = lx > W - M.r - 40 ? -10 : 10;
         const lbl = svgEl('text', { x: lx + lblOffset, y: ly - 10, 'text-anchor': lblAnchor, fill: 'var(--accent)', 'font-size': 12, 'font-family': 'DM Mono, monospace', 'font-weight': 500 });
         lbl.textContent = last.date.slice(0, 4);
         svg.appendChild(lbl);
       }
+
+      // Y-axis title
+      const yTitle = svgEl('text', {
+        x: M.l - 60, y: M.t - 12, 'text-anchor': 'start',
+        fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+        'letter-spacing': '0.1em'
+      });
+      yTitle.textContent = currentView === 'labor'
+        ? 'Hourly cost @ 100 tok/s (US$)'
+        : 'Price per million tokens (US$)';
+      svg.appendChild(yTitle);
     }
 
     draw(currentFrame);
@@ -895,6 +1003,16 @@
           }
         }, 600);
       }
+    });
+
+    // View toggle: tokens vs labor-equivalent
+    document.querySelectorAll('[data-cost-view]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-cost-view]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentView = btn.dataset.costView;
+        draw(currentFrame);
+      });
     });
   }
 
