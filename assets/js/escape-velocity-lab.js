@@ -118,139 +118,266 @@
     const wrap = document.getElementById('ev-compute-wrap');
     const tip = document.getElementById('ev-tooltip-compute');
     const showTip = setupTooltip(wrap, tip);
-    const W = 1100, H = 520, M = { t: 30, r: 40, b: 50, l: 70 };
-    const w = W - M.l - M.r, h = H - M.t - M.b;
+    const W = 1100, H = 520, M = { t: 30, r: 60, b: 50, l: 76 };
 
-    const models = data.models;
-    const years = models.map(d => d.year);
-    const flops = models.map(d => d.flop);
-    const xDomain = [Math.min(...years) - 2, Math.max(...years) + 1];
-    const yDomain = [Math.pow(10, Math.floor(Math.log10(Math.min(...flops)))), Math.pow(10, Math.ceil(Math.log10(Math.max(...flops))))];
-    const xScale = makeScale(xDomain, [M.l, W - M.r]);
-    const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
-
-    svg.innerHTML = '';
-
-    // Grid lines
-    niceLogTicks(yDomain[0], yDomain[1]).forEach(t => {
-      const y = yScale(t);
-      svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.3 }));
-      svg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = formatNumber(t);
-    });
-
-    // X axis ticks
-    for (let y = Math.ceil(xDomain[0] / 10) * 10; y <= xDomain[1]; y += 10) {
-      const x = xScale(y);
-      svg.appendChild(svgEl('line', { x1: x, x2: x, y1: M.t, y2: H - M.b, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.2 }));
-      svg.appendChild(svgEl('text', { x: x, y: H - M.b + 18, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
-    }
-
-    // Axis lines
-    svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
-    svg.appendChild(svgEl('line', { x1: M.l, x2: M.l, y1: M.t, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
-
-    // Era backgrounds
-    const eraColors = { 'pre-dl': 'transparent', 'dl': 'rgba(38,79,115,0.04)', 'scaling': 'rgba(224,78,26,0.04)' };
-    data.eras.forEach(e => {
-      const x1 = xScale(e.start), x2 = xScale(Math.min(e.end, xDomain[1]));
-      if (x2 > x1) {
-        svg.appendChild(svgEl('rect', { x: x1, y: M.t, width: x2 - x1, height: h, fill: eraColors[e.id] || 'transparent' }));
-      }
-    });
-
-    // Moore's Law line
-    function drawMoore() {
-      const moore = data.moores_law;
-      const path = svgEl('path', { stroke: 'var(--ink-dim)', 'stroke-width': 1.5, 'stroke-dasharray': '6,4', fill: 'none' });
-      let d = '';
-      for (let y = moore.start_year; y <= xDomain[1]; y += 2) {
-        const yearsSince = y - moore.start_year;
-        const flop = moore.start_flop * Math.pow(2, yearsSince / (moore.doubling_months / 12));
-        const px = xScale(y), py = yScale(flop);
-        d += (d ? 'L' : 'M') + px + ',' + py;
-      }
-      path.setAttribute('d', d);
-      path.id = 'ev-moore-line';
-      svg.appendChild(path);
-      // Label
-      const lastX = xScale(xDomain[1]);
-      const lastY = yScale(moore.start_flop * Math.pow(2, (xDomain[1] - moore.start_year) / 2));
-      const txt = svgEl('text', { x: lastX - 6, y: lastY - 6, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'font-style': 'italic' });
-      txt.textContent = "Moore's Law";
-      txt.id = 'ev-moore-label';
-      svg.appendChild(txt);
-    }
-    drawMoore();
-
-    // Model dots
+    const allModels = data.models;
+    const RANGE_STARTS = { all: null, modern: 2010, recent: 2018, last5: 2021 };
     const eraDotColors = { 'pre-dl': '#A89BB8', 'dl': '#5B9BD5', 'scaling': '#FF6B3D' };
-    models.forEach(m => {
-      const cx = xScale(m.year), cy = yScale(m.flop);
-      const circle = svgEl('circle', { cx, cy, r: m.label ? 5 : 3.5, fill: eraDotColors[m.era] || '#999', stroke: 'var(--paper)', 'stroke-width': 1.5, 'data-model': m.name });
-      circle.style.cursor = 'pointer';
-      circle.addEventListener('mouseenter', e => {
-        showTip(`<div class="tt-name">${m.name}</div><div class="tt-meta">${m.year} &middot; ${formatNumber(m.flop)} FLOP</div>`, e.offsetX, e.offsetY);
-      });
-      circle.addEventListener('mouseleave', () => hideTooltip(tip));
-      svg.appendChild(circle);
+    let currentRange = 'all';
+    let currentEra = 'all';
+    const curveOn = { moore: true, exp: true, super: false, fit: false };
 
-      if (m.label) {
-        const lblX = cx + 8;
-        const anchor = lblX > W - M.r - 60 ? 'end' : 'start';
-        const offsetX = lblX > W - M.r - 60 ? -10 : 10;
-        // Simple collision avoidance: stagger labels that are close horizontally
-        let lblY = cy - 10;
-        const placedLabels = Array.from(svg.querySelectorAll('text')).filter(t => t.getAttribute('data-label'));
-        const tooClose = placedLabels.filter(t => {
-          const tx = parseFloat(t.getAttribute('x'));
-          return Math.abs(tx - (cx + offsetX)) < 50;
-        });
-        if (tooClose.length > 0) {
-          // Offset downward based on how many nearby labels exist
-          lblY = cy + 12 + tooClose.length * 14;
-        }
-        const lbl = svgEl('text', { x: cx + offsetX, y: lblY, 'text-anchor': anchor, fill: 'var(--ink)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'data-label': '1' });
-        lbl.textContent = m.name;
-        svg.appendChild(lbl);
+    // Best-fit (least-squares) on log10(flop) vs year, for the recent-era data only.
+    // The user's question is "is recent growth tracking exponential or super-exponential?"
+    // so we fit on 2018+ frontier models — those that drive the current scaling debate.
+    function bestFit(modelsForFit) {
+      if (modelsForFit.length < 2) return null;
+      let sx = 0, sy = 0, sxx = 0, sxy = 0;
+      const n = modelsForFit.length;
+      modelsForFit.forEach(m => {
+        const x = m.year, y = Math.log10(m.flop);
+        sx += x; sy += y; sxx += x * x; sxy += x * y;
+      });
+      const slope = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+      const intercept = (sy - slope * sx) / n;
+      const doublingYears = Math.log10(2) / slope;
+      return { slope, intercept, doublingYears, doublingMonths: doublingYears * 12 };
+    }
+
+    function draw() {
+      svg.innerHTML = '';
+
+      const startYear = RANGE_STARTS[currentRange];
+      const visible = startYear === null ? allModels : allModels.filter(m => m.year >= startYear);
+      if (visible.length === 0) return;
+
+      const years = visible.map(d => d.year);
+      const flops = visible.map(d => d.flop);
+      const xPad = currentRange === 'all' ? 2 : 0.5;
+      const xDomain = [Math.min(...years) - xPad, Math.max(...years) + xPad];
+      const minPow = Math.floor(Math.log10(Math.min(...flops)));
+      const maxPow = Math.ceil(Math.log10(Math.max(...flops)));
+      const yDomain = [Math.pow(10, minPow - 0.2), Math.pow(10, maxPow + 0.4)];
+      const xScale = makeScale(xDomain, [M.l, W - M.r]);
+      const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
+
+      // ── Grid + axes ──────────────────────────────────────────
+      niceLogTicks(yDomain[0], yDomain[1]).forEach(t => {
+        const y = yScale(t);
+        svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: y, y2: y, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.25 }));
+        svg.appendChild(svgEl('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = formatNumber(t);
+      });
+      const xTickStep = currentRange === 'all' ? 10 : currentRange === 'modern' ? 2 : 1;
+      const xTickStart = Math.ceil(xDomain[0] / xTickStep) * xTickStep;
+      for (let y = xTickStart; y <= xDomain[1]; y += xTickStep) {
+        const x = xScale(y);
+        svg.appendChild(svgEl('line', { x1: x, x2: x, y1: M.t, y2: H - M.b, stroke: 'var(--ink-dim)', 'stroke-width': 0.5, opacity: 0.18 }));
+        svg.appendChild(svgEl('text', { x, y: H - M.b + 18, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace' })).textContent = y;
       }
-    });
+      svg.appendChild(svgEl('line', { x1: M.l, x2: W - M.r, y1: H - M.b, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
+      svg.appendChild(svgEl('line', { x1: M.l, x2: M.l, y1: M.t, y2: H - M.b, stroke: 'var(--ink)', 'stroke-width': 1 }));
 
-    // Era toggle
-    document.querySelectorAll('[data-era]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-era]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const era = btn.dataset.era;
-        svg.querySelectorAll('circle').forEach(c => {
-          const name = c.getAttribute('data-model');
-          const model = models.find(m => m.name === name);
-          if (!model) return;
-          c.style.opacity = (era === 'all' || model.era === era) ? 1 : 0.15;
-        });
+      // ── Era backgrounds (subtle) ─────────────────────────────
+      const eraBg = { 'pre-dl': 'transparent', 'dl': 'rgba(91,155,213,0.05)', 'scaling': 'rgba(255,107,61,0.05)' };
+      data.eras.forEach(e => {
+        const x1 = xScale(Math.max(e.start, xDomain[0]));
+        const x2 = xScale(Math.min(e.end, xDomain[1]));
+        if (x2 > x1) {
+          svg.appendChild(svgEl('rect', { x: x1, y: M.t, width: x2 - x1, height: H - M.t - M.b, fill: eraBg[e.id] || 'transparent' }));
+        }
       });
+
+      // ── Reference curves ─────────────────────────────────────
+      // All anchored to the earliest visible frontier model so they're comparable.
+      const anchor = visible[0];
+      const ax = anchor.year, ay = anchor.flop;
+
+      function plotCurve(fn, color, dash, label, alignBelow) {
+        const path = svgEl('path', { stroke: color, 'stroke-width': 1.6, 'stroke-dasharray': dash, fill: 'none', opacity: 0.85 });
+        let d = '';
+        const step = (xDomain[1] - xDomain[0]) / 120;
+        for (let yr = xDomain[0]; yr <= xDomain[1]; yr += step) {
+          const flop = fn(yr);
+          if (flop <= 0 || !isFinite(flop)) continue;
+          // Don't draw above plot area
+          const py = yScale(Math.min(flop, yDomain[1] * 5));
+          if (py < M.t - 20) continue;
+          const px = xScale(yr);
+          d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + py.toFixed(1);
+        }
+        path.setAttribute('d', d);
+        svg.appendChild(path);
+        // Label at the right edge
+        const lastFlop = fn(xDomain[1]);
+        if (lastFlop > 0 && isFinite(lastFlop)) {
+          const ly = Math.max(M.t + 12, Math.min(H - M.b - 4, yScale(Math.min(lastFlop, yDomain[1])) + (alignBelow ? 14 : -6)));
+          const lx = W - M.r - 4;
+          const lbl = svgEl('text', { x: lx, y: ly, 'text-anchor': 'end', fill: color, 'font-size': 10, 'font-family': 'DM Mono, monospace', 'font-style': 'italic', opacity: 0.95 });
+          lbl.textContent = label;
+          svg.appendChild(lbl);
+        }
+      }
+
+      // Moore's Law (2-yr doubling, anchored to its own start)
+      if (curveOn.moore) {
+        const moore = data.moores_law;
+        plotCurve(
+          yr => moore.start_flop * Math.pow(2, (yr - moore.start_year) / 2),
+          'var(--ink-dim)', '5,4', "Moore's Law (2y)", false
+        );
+      }
+      // AI exponential — 6-month doubling, anchored to first visible frontier model
+      if (curveOn.exp) {
+        plotCurve(
+          yr => ay * Math.pow(2, (yr - ax) * 2),
+          '#5B9BD5', '4,3', 'AI exp. (6-mo)', true
+        );
+      }
+      // Super-exponential — doubling time itself shrinks (Kurzweil-flavored).
+      // Effective doubling shrinks from 12mo → 4mo over the visible range.
+      if (curveOn.super) {
+        const yrRange = xDomain[1] - xDomain[0];
+        plotCurve(yr => {
+          const t = yr - ax;
+          // doubling time decays linearly from 1.0 yr to 0.33 yr across 8 years
+          const dT = Math.max(0.33, 1.0 - (t / 8) * 0.67);
+          // integrate: log2(flop/ay) = ∫ dt/dT(t)
+          // approximate via small steps
+          let logScaled = 0;
+          const steps = Math.max(1, Math.round(t * 10));
+          const dt = t / steps;
+          for (let i = 0; i < steps; i++) {
+            const ti = i * dt;
+            const dTi = Math.max(0.33, 1.0 - (ti / 8) * 0.67);
+            logScaled += dt / dTi;
+          }
+          return ay * Math.pow(2, logScaled);
+        }, '#FF6B3D', '2,3', 'Super-exp.', false);
+      }
+      // Best-fit through 2018+ frontier — the "what is the data actually doing right now?" line.
+      if (curveOn.fit) {
+        const recentFrontier = allModels.filter(m => m.year >= 2018 && m.flop >= 1e22);
+        const fit = bestFit(recentFrontier);
+        if (fit) {
+          plotCurve(
+            yr => Math.pow(10, fit.slope * yr + fit.intercept),
+            '#D4B970', '6,3', 'Fit (' + fit.doublingMonths.toFixed(1) + ' mo)', true
+          );
+        }
+      }
+
+      // ── Model dots ───────────────────────────────────────────
+      // When zoomed-in (not "all"), force every visible model to be labeled.
+      const labelEvery = currentRange !== 'all';
+      const placed = [];
+      const labelW = 70, labelH = 14;
+
+      // Sort by flop ascending so earlier (lower) labels get placed first;
+      // helps the higher-flop models steer clear of them.
+      const drawn = visible.slice().sort((a, b) => a.flop - b.flop);
+
+      drawn.forEach(m => {
+        const cx = xScale(m.year), cy = yScale(m.flop);
+        const isEraActive = currentEra === 'all' || m.era === currentEra;
+        const fill = eraDotColors[m.era] || '#999';
+        const dotR = m.label || labelEvery ? 5 : 3.5;
+        const circle = svgEl('circle', {
+          cx, cy, r: dotR, fill,
+          stroke: 'var(--paper)', 'stroke-width': 1.4,
+          'data-model': m.name,
+          opacity: isEraActive ? 0.95 : 0.18
+        });
+        circle.style.cursor = 'pointer';
+        circle.addEventListener('mouseenter', e => {
+          showTip(`<div class="tt-name">${m.name}</div><div class="tt-meta">${m.year} &middot; ${formatNumber(m.flop)} FLOP</div>`, e.offsetX, e.offsetY);
+        });
+        circle.addEventListener('mouseleave', () => hideTooltip(tip));
+        svg.appendChild(circle);
+
+        if ((m.label || labelEvery) && isEraActive) {
+          // Try several offset candidates to avoid overlap with already-placed labels.
+          const candidates = [
+            { dx: 8, dy: -6, anchor: 'start' },   // upper-right
+            { dx: 8, dy: 14, anchor: 'start' },   // lower-right
+            { dx: -8, dy: -6, anchor: 'end' },    // upper-left
+            { dx: -8, dy: 14, anchor: 'end' },    // lower-left
+            { dx: 8, dy: -22, anchor: 'start' },  // higher upper-right
+            { dx: 8, dy: 30, anchor: 'start' },   // lower lower-right
+            { dx: -8, dy: -22, anchor: 'end' },
+            { dx: -8, dy: 30, anchor: 'end' },
+          ];
+          let chosen = candidates[0];
+          let bestOverlap = Infinity;
+          for (const c of candidates) {
+            const x0 = cx + c.dx + (c.anchor === 'end' ? -labelW : 0);
+            const y0 = cy + c.dy - labelH;
+            // Skip candidates outside the plot
+            if (x0 < M.l || x0 + labelW > W - M.r + 50 || y0 < M.t || y0 > H - M.b) continue;
+            const overlap = placed.reduce((sum, p) => {
+              const dx = Math.max(0, Math.min(x0 + labelW, p.x0 + labelW) - Math.max(x0, p.x0));
+              const dy = Math.max(0, Math.min(y0 + labelH, p.y0 + labelH) - Math.max(y0, p.y0));
+              return sum + dx * dy;
+            }, 0);
+            if (overlap < bestOverlap) { bestOverlap = overlap; chosen = c; if (overlap === 0) break; }
+          }
+          const lblX = cx + chosen.dx;
+          const lblY = cy + chosen.dy;
+          const lbl = svgEl('text', { x: lblX, y: lblY, 'text-anchor': chosen.anchor, fill: 'var(--ink)', 'font-size': 10.5, 'font-family': 'DM Mono, monospace', 'data-label': '1' });
+          lbl.textContent = m.name;
+          svg.appendChild(lbl);
+          const x0 = cx + chosen.dx + (chosen.anchor === 'end' ? -labelW : 0);
+          const y0 = cy + chosen.dy - labelH;
+          placed.push({ x0, y0 });
+        }
+      });
+    }
+
+    // ── Wire up controls (idempotent — replace listeners on each init) ──
+    function bindOnce(selector, eventType, handler) {
+      document.querySelectorAll(selector).forEach(el => {
+        const key = '__ev_bound_' + eventType;
+        if (el[key]) el.removeEventListener(eventType, el[key]);
+        el[key] = handler;
+        el.addEventListener(eventType, handler);
+      });
+    }
+
+    bindOnce('[data-range]', 'click', function (e) {
+      const btn = e.currentTarget;
+      document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentRange = btn.dataset.range;
+      draw();
+    });
+    bindOnce('[data-era]', 'click', function (e) {
+      const btn = e.currentTarget;
+      document.querySelectorAll('[data-era]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentEra = btn.dataset.era;
+      draw();
+    });
+    bindOnce('[data-curve]', 'click', function (e) {
+      const btn = e.currentTarget;
+      const next = btn.dataset.active !== 'true';
+      btn.dataset.active = String(next);
+      btn.classList.toggle('active', next);
+      curveOn[btn.dataset.curve] = next;
+      draw();
     });
 
-    // Moore toggle
-    const mooreBtn = document.getElementById('ev-toggle-moore');
-    mooreBtn.addEventListener('click', () => {
-      const active = mooreBtn.dataset.active === 'true';
-      mooreBtn.dataset.active = String(!active);
-      mooreBtn.classList.toggle('active');
-      const line = document.getElementById('ev-moore-line');
-      const label = document.getElementById('ev-moore-label');
-      if (line) line.style.opacity = active ? 0 : 1;
-      if (label) label.style.opacity = active ? 0 : 1;
-    });
-
-    // Counterpoint toggle
+    // Counterpoint toggle (existing behavior)
     const cpBtn = document.getElementById('ev-toggle-counter-compute');
     const cpEl = document.getElementById('ev-counterpoint-compute');
-    cpBtn.addEventListener('click', () => {
-      const active = cpBtn.dataset.active === 'true';
-      cpBtn.dataset.active = String(!active);
-      cpBtn.classList.toggle('active');
-      cpEl.dataset.open = String(!active);
-    });
+    if (cpBtn && cpEl) {
+      cpBtn.addEventListener('click', () => {
+        const active = cpBtn.dataset.active === 'true';
+        cpBtn.dataset.active = String(!active);
+        cpBtn.classList.toggle('active');
+        cpEl.dataset.open = String(!active);
+      });
+    }
+
+    draw();
   }
 
   // ── Chart 2: Algorithmic Efficiency ─────────────────────────

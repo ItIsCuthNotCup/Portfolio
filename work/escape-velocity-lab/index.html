@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=22">
-  <link rel="stylesheet" href="/assets/css/escape-velocity-lab.css?v=3">
+  <link rel="stylesheet" href="/assets/css/escape-velocity-lab.css?v=4">
 </head>
 <body>
 
@@ -154,23 +154,37 @@
     <span>The Curve That Won't Quit</span>
   </div>
   <p class="ev-note">
-    Frontier training compute, 1950–2026. Toggle eras to see the doubling time
-    compress from ~24 months to ~5.2 months. The Moore's Law overlay is dashed
-    for reference.
+    Frontier training compute, 1950–2026. Zoom to Recent to read the
+    individual labels. Toggle the reference curves to see whether
+    we're tracking ordinary exponential, super-exponential, or
+    something steeper still.
   </p>
 
   <div class="ev-chart-controls mono" aria-label="Compute chart controls">
-    <span class="ev-filter-label">Era</span>
-    <button type="button" class="ev-pill active" data-era="all">All (1950–2026)</button>
+    <span class="ev-filter-label">Range</span>
+    <button type="button" class="ev-pill active" data-range="all">All (1957–2026)</button>
+    <button type="button" class="ev-pill" data-range="modern">Modern (2010+)</button>
+    <button type="button" class="ev-pill" data-range="recent">Recent (2018+)</button>
+    <button type="button" class="ev-pill" data-range="last5">Last 5y (2021+)</button>
+  </div>
+
+  <div class="ev-chart-controls mono" aria-label="Reference curves">
+    <span class="ev-filter-label">Reference</span>
+    <button type="button" class="ev-pill ev-pill-toggle active" data-curve="moore" data-active="true">Moore's Law (2-yr)</button>
+    <button type="button" class="ev-pill ev-pill-toggle active" data-curve="exp" data-active="true">AI exponential (6-mo)</button>
+    <button type="button" class="ev-pill ev-pill-toggle" data-curve="super" data-active="false">Super-exponential</button>
+    <button type="button" class="ev-pill ev-pill-toggle" data-curve="fit" data-active="false">Best-fit to data</button>
+  </div>
+
+  <div class="ev-chart-controls mono" aria-label="Era filter">
+    <span class="ev-filter-label">Era highlight</span>
+    <button type="button" class="ev-pill active" data-era="all">All eras</button>
     <button type="button" class="ev-pill" data-era="pre-dl">Pre-DL</button>
     <button type="button" class="ev-pill" data-era="dl">DL Era</button>
     <button type="button" class="ev-pill" data-era="scaling">Scaling Era</button>
     <span class="ev-filter-divider"></span>
-    <button type="button" class="ev-pill ev-pill-toggle active" id="ev-toggle-moore" data-active="true">Show Moore's Law</button>
-    <span class="ev-filter-divider"></span>
-    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-compute" data-active="false">Show counterpoint</button>
-    <span class="ev-filter-divider"></span>
-    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-horizon" data-active="false">Show caveats</button>
+    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-compute" data-active="false">Counterpoint</button>
+    <button type="button" class="ev-pill ev-pill-toggle" id="ev-toggle-counter-horizon" data-active="false">Caveats</button>
   </div>
 
   <div class="ev-chart-wrap" id="ev-compute-wrap">
@@ -689,6 +703,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/escape-velocity-lab.js?v=2"></script>
+<script src="/assets/js/escape-velocity-lab.js?v=3"></script>
 </body>
 </html>

@@ -10,31 +10,139 @@
     "note": "Task-completion horizon at 50% reliability for software tasks. Minutes of human-equivalent work."
   },
   "trends": [
-    { "id": "long", "label": "2019–2026 trend", "doubling_months": 7, "r_squared": 0.83, "color": "primary" },
-    { "id": "fast", "label": "2024–2026 trend", "doubling_months": 4, "r_squared": 0.91, "color": "accent" }
+    {
+      "id": "long",
+      "label": "2019\u20132026 trend",
+      "doubling_months": 7,
+      "r_squared": 0.83,
+      "color": "primary"
+    },
+    {
+      "id": "fast",
+      "label": "2024\u20132026 trend",
+      "doubling_months": 4,
+      "r_squared": 0.91,
+      "color": "accent"
+    }
   ],
   "data": [
-    { "date": "2019-06", "model": "GPT-2", "horizon_minutes": 0.5, "source": "METR retroactive" },
-    { "date": "2020-06", "model": "GPT-3", "horizon_minutes": 1.0, "source": "METR retroactive" },
-    { "date": "2021-06", "model": "Codex", "horizon_minutes": 2.0, "source": "METR retroactive" },
-    { "date": "2022-03", "model": "GPT-3.5", "horizon_minutes": 4.0, "source": "METR retroactive" },
-    { "date": "2023-03", "model": "GPT-4", "horizon_minutes": 8.0, "source": "METR" },
-    { "date": "2023-09", "model": "GPT-4 + tools", "horizon_minutes": 12.0, "source": "METR" },
-    { "date": "2024-03", "model": "Claude 3 Opus", "horizon_minutes": 20.0, "source": "METR" },
-    { "date": "2024-09", "model": "o1-preview", "horizon_minutes": 35.0, "source": "METR" },
-    { "date": "2025-01", "model": "Claude 3.7 Sonnet", "horizon_minutes": 50.0, "source": "METR" },
-    { "date": "2025-03", "model": "o3", "horizon_minutes": 110.0, "source": "METR" },
-    { "date": "2025-09", "model": "Claude 4 Opus", "horizon_minutes": 180.0, "source": "METR" },
-    { "date": "2026-01", "model": "GPT-5", "horizon_minutes": 280.0, "source": "METR" },
-    { "date": "2026-03", "model": "Claude 4.7 Opus", "horizon_minutes": 420.0, "source": "METR" }
+    {
+      "date": "2019-06",
+      "model": "GPT-2",
+      "horizon_minutes": 0.5,
+      "source": "METR retroactive"
+    },
+    {
+      "date": "2020-06",
+      "model": "GPT-3",
+      "horizon_minutes": 1.0,
+      "source": "METR retroactive"
+    },
+    {
+      "date": "2021-06",
+      "model": "Codex",
+      "horizon_minutes": 2.0,
+      "source": "METR retroactive"
+    },
+    {
+      "date": "2022-03",
+      "model": "GPT-3.5",
+      "horizon_minutes": 4.0,
+      "source": "METR retroactive"
+    },
+    {
+      "date": "2023-03",
+      "model": "GPT-4",
+      "horizon_minutes": 8.0,
+      "source": "METR"
+    },
+    {
+      "date": "2023-09",
+      "model": "GPT-4 + tools",
+      "horizon_minutes": 12.0,
+      "source": "METR"
+    },
+    {
+      "date": "2024-03",
+      "model": "Claude 3 Opus",
+      "horizon_minutes": 20.0,
+      "source": "METR"
+    },
+    {
+      "date": "2024-09",
+      "model": "o1-preview",
+      "horizon_minutes": 35.0,
+      "source": "METR"
+    },
+    {
+      "date": "2025-01",
+      "model": "Claude 3.7 Sonnet",
+      "horizon_minutes": 50.0,
+      "source": "METR"
+    },
+    {
+      "date": "2025-03",
+      "model": "o3",
+      "horizon_minutes": 110.0,
+      "source": "METR"
+    },
+    {
+      "date": "2025-09",
+      "model": "Claude 4 Opus",
+      "horizon_minutes": 180.0,
+      "source": "METR"
+    },
+    {
+      "date": "2026-01",
+      "model": "GPT-5",
+      "horizon_minutes": 280.0,
+      "source": "METR"
+    },
+    {
+      "date": "2026-03",
+      "model": "Claude 4.7 Opus",
+      "horizon_minutes": 420.0,
+      "source": "METR"
+    },
+    {
+      "date": "2026-04",
+      "model": "GPT-5.5",
+      "horizon_minutes": 600.0,
+      "verification": "METR estimated",
+      "confidence": "medium"
+    }
   ],
   "milestones": [
-    { "minutes": 1, "label": "1 minute", "type": "reference" },
-    { "minutes": 10, "label": "10 minutes", "type": "reference" },
-    { "minutes": 60, "label": "1 hour", "type": "milestone" },
-    { "minutes": 480, "label": "1 workday", "type": "milestone" },
-    { "minutes": 2400, "label": "1 workweek", "type": "extrapolation" },
-    { "minutes": 9600, "label": "1 workmonth", "type": "extrapolation" }
+    {
+      "minutes": 1,
+      "label": "1 minute",
+      "type": "reference"
+    },
+    {
+      "minutes": 10,
+      "label": "10 minutes",
+      "type": "reference"
+    },
+    {
+      "minutes": 60,
+      "label": "1 hour",
+      "type": "milestone"
+    },
+    {
+      "minutes": 480,
+      "label": "1 workday",
+      "type": "milestone"
+    },
+    {
+      "minutes": 2400,
+      "label": "1 workweek",
+      "type": "extrapolation"
+    },
+    {
+      "minutes": 9600,
+      "label": "1 workmonth",
+      "type": "extrapolation"
+    }
   ],
   "extrapolation": {
     "long_trend": {
