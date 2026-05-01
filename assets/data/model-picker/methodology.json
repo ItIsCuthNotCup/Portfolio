@@ -1,7 +1,7 @@
 {
-  "model_count": "12 (stub)",
-  "last_refresh": "2026-04-26T00:00:00+00:00",
-  "last_refresh_human": "Stub data — not yet refreshed",
+  "model_count": 371,
+  "last_refresh": "2026-05-01T23:32:16+00:00",
+  "last_refresh_human": "May 01, 2026 \u00b7 23:32 UTC",
   "embedding_model": "google/gemini-embedding-2-preview",
   "generation_model": "google/gemini-2.0-flash-001",
   "avg_cost_per_query": "0.02",
