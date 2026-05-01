@@ -629,25 +629,34 @@
         placed.push({ x0: cx + chosen.dx + (chosen.anchor === 'end' ? -labW : 0), y0: cy + chosen.dy - labH });
       });
 
-      // ── Curve labels (right edge) ────────────────────────────
-      function rightLabel(yRaw, color, text) {
-        const yClamp = Math.max(M.t + 8, Math.min(H - M.b - 4, yRaw));
+      // ── Curve labels — placed at a fraction along the curve, well left
+      // of the dense right-edge dot cluster, with a paper knockout rect.
+      function curveLabel(arr, color, text, fraction, offsetY) {
+        const idx = Math.max(0, Math.min(arr.length - 1, Math.round(arr.length * fraction)));
+        const p = arr[idx];
+        const labelX = Math.min(W - M.r - 4, p.x + 6);
+        const labelY = Math.max(M.t + 12, Math.min(H - M.b - 6, p.y + offsetY));
+        const textW = text.length * 6.4;
+        const bg = svgEl('rect', {
+          x: labelX - 2, y: labelY - 10, width: textW + 4, height: 13,
+          fill: 'var(--paper)', opacity: 0.82
+        });
+        svg.appendChild(bg);
         const t = svgEl('text', {
-          x: W - M.r + 6, y: yClamp + 4, 'text-anchor': 'start',
+          x: labelX, y: labelY, 'text-anchor': 'start',
           fill: color, 'font-size': 11, 'font-family': 'DM Mono, monospace',
           'font-style': 'italic', 'font-weight': 500
         });
         t.textContent = text;
         svg.appendChild(t);
       }
-      const lastRaw = rawPath[rawPath.length - 1];
-      const lastEff = effPath[effPath.length - 1];
-      const lastSum = sumPath[sumPath.length - 1];
-      rightLabel(lastRaw.y, CHART.blue, 'Raw compute');
+      // Raw compute: label below the curve mid-path so it stays clear of
+      // the dense top-right model labels.
+      curveLabel(rawPath, CHART.blue, 'Raw compute', 0.45, 18);
       if (view === 'separate') {
-        rightLabel(lastEff.y, CHART.gold, 'Algorithmic efficiency');
+        curveLabel(effPath, CHART.gold, 'Algorithmic efficiency', 0.6, -8);
       } else {
-        rightLabel(lastSum.y, 'var(--accent)', 'Effective (raw × efficiency)');
+        curveLabel(sumPath, 'var(--accent)', 'Effective (raw × efficiency)', 0.55, -8);
       }
 
       // ── Combined view: show doubling-time annotation in upper-left ──
