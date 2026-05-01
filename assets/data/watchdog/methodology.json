@@ -1,10 +1,10 @@
 {
-  "days_tracked": 30,
+  "days_tracked": 29,
   "videos_per_pull": 50,
   "region": "US",
-  "last_refresh": "2026-04-29T21:27:39+00:00",
-  "last_refresh_human": "Stub data \u2014 not yet refreshed",
+  "last_refresh": "2026-05-01T11:56:02+00:00",
+  "last_refresh_human": "May 01, 2026 \u00b7 11:56 UTC",
   "api_quota_per_day": 10,
   "api_quota_limit": 10000,
-  "source": "Stub. Real cron pulls from YouTube Data API v3."
+  "source": "YouTube Data API v3 \u00b7 /videos.list \u00b7 chart=mostPopular"
 }
