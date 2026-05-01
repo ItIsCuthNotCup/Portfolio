@@ -131,9 +131,10 @@
       placed.push({ x0: cx + chosen.dx + (chosen.anchor === 'end' ? -labW : 0), y0: cy + chosen.dy - labH });
     });
 
-    // Y title
-    svg.appendChild(svgEl('text', { x: M.l - 60, y: M.t - 14, 'text-anchor': 'start', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'letter-spacing': '0.10em' })).textContent = 'PRETRAINING LOSS (LOG)';
-    svg.appendChild(svgEl('text', { x: (M.l + W - M.r) / 2, y: H - 14, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'letter-spacing': '0.10em' })).textContent = 'TRAINING COMPUTE — FLOPS (LOG)';
+    // Y + X axis titles + source
+    svg.appendChild(svgEl('text', { x: M.l - 60, y: M.t - 14, 'text-anchor': 'start', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'letter-spacing': '0.10em' })).textContent = 'PRETRAINING LOSS (CROSS-ENTROPY, LOG)';
+    svg.appendChild(svgEl('text', { x: (M.l + W - M.r) / 2, y: H - 14, 'text-anchor': 'middle', fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace', 'letter-spacing': '0.10em' })).textContent = 'TRAINING COMPUTE — 10^X FLOP (LOG)';
+    svg.appendChild(svgEl('text', { x: W - M.r, y: H - 14, 'text-anchor': 'end', fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace', 'font-style': 'italic' })).textContent = 'Sources: Kaplan 2020, Hoffmann 2022, Epoch AI';
   }
 
   // ── Training stack grid ─────────────────────────────────────

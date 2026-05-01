@@ -440,7 +440,7 @@
       const xEnd = xScale(it.ppt);
       svg.appendChild(svgEl('rect', {
         x: M.l, y: cy - barH / 2, width: xEnd - M.l, height: barH,
-        fill: it.label.startsWith('Sum') ? 'var(--accent)' : CHART.blue, opacity: 0.78
+        fill: CHART.blue, opacity: 0.78
       }));
       svg.appendChild(svgEl('text', {
         x: xEnd + 8, y: cy + 4, 'text-anchor': 'start',

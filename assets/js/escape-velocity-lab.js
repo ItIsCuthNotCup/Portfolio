@@ -456,6 +456,23 @@
           placed.push({ x0, y0 });
         }
       });
+
+      // ── Axis titles + source citation ─────────────────────────────
+      svg.appendChild(svgEl('text', {
+        x: M.l - 60, y: M.t - 14, 'text-anchor': 'start',
+        fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+        'letter-spacing': '0.10em'
+      })).textContent = 'TRAINING COMPUTE — FLOP (LOG SCALE)';
+      svg.appendChild(svgEl('text', {
+        x: (M.l + W - M.r) / 2, y: H - 14, 'text-anchor': 'middle',
+        fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+        'letter-spacing': '0.10em'
+      })).textContent = 'YEAR';
+      svg.appendChild(svgEl('text', {
+        x: W - M.r, y: M.t - 14, 'text-anchor': 'end',
+        fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace',
+        'font-style': 'italic'
+      })).textContent = 'Source: Epoch AI notable models (2024)';
     }
 
     // ── Wire up controls (idempotent — replace listeners on each init) ──
@@ -849,6 +866,23 @@
       });
       handle.addEventListener('pointerup', () => { dragging = false; handle.style.cursor = 'grab'; });
       handle.addEventListener('pointerleave', () => { if (!dragging) handle.style.cursor = 'grab'; });
+
+      // ── Axis titles + source ─────────────────────────────────────
+      svg.appendChild(svgEl('text', {
+        x: M.l - 60, y: M.t - 14, 'text-anchor': 'start',
+        fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+        'letter-spacing': '0.10em'
+      })).textContent = 'TASK LENGTH AT 50% RELIABILITY (MIN, LOG)';
+      svg.appendChild(svgEl('text', {
+        x: (M.l + W - M.r) / 2, y: H - 14, 'text-anchor': 'middle',
+        fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+        'letter-spacing': '0.10em'
+      })).textContent = 'YEAR';
+      svg.appendChild(svgEl('text', {
+        x: W - M.r, y: M.t - 14, 'text-anchor': 'end',
+        fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace',
+        'font-style': 'italic'
+      })).textContent = 'Source: METR (Kwa et al., arXiv:2503.14499)';
     }
 
     draw();

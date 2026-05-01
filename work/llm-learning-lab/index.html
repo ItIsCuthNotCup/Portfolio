@@ -190,10 +190,14 @@
   <div class="llm-readout">
     <p class="mono llm-readout-label">Why it matters</p>
     <p>
-      <strong>Math:</strong> GPT-2 splits long numbers into 3-digit chunks.
-      Multi-digit arithmetic gets harder as a result. GPT-4 keeps longer
-      runs together. <strong>Code:</strong> doubling the vocabulary roughly
-      halves the token count for source code, lowering inference cost.
+      <strong>Math:</strong> GPT-2 splits "1234567890" into <em>123 / 45 /
+      678 / 90</em> — irregular, with a 2-digit chunk wedged between 3-digit
+      ones. GPT-4 produces clean three-digit groups <em>(123 / 456 / 789 /
+      0)</em>. Both still split numbers more than humans would, which is one
+      reason multi-digit arithmetic is a recurring failure mode. (Verified
+      against tiktoken <code>gpt2</code> and <code>cl100k_base</code>.)
+      <strong>Code:</strong> doubling the vocabulary roughly halves the
+      token count for source code, lowering inference cost.
       <strong>Multilingual fairness:</strong> a small English-leaning
       vocab can turn one Korean character into 4–6 tokens, making
       non-English inference systematically more expensive.
@@ -504,6 +508,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/llm-learning-lab.js?v=1"></script>
+<script src="/assets/js/llm-learning-lab.js?v=3"></script>
 </body>
 </html>

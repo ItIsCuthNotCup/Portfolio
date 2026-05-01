@@ -122,7 +122,7 @@
     "examples": [
       { "text": "The quick brown fox", "gpt2_tokens": ["The", " quick", " brown", " fox"], "gpt2_ids": [464, 2068, 7586, 21831], "gpt4_tokens": ["The", " quick", " brown", " fox"], "gpt4_ids": [791, 4062, 14198, 39935] },
       { "text": "Hello, world!",       "gpt2_tokens": ["Hello", ",", " world", "!"], "gpt2_ids": [15496, 11, 995, 0], "gpt4_tokens": ["Hello", ",", " world", "!"], "gpt4_ids": [9906, 11, 1917, 0] },
-      { "text": "1234567890",          "gpt2_tokens": ["123", "456", "789", "0"], "gpt2_ids": [10163, 29228, 40417, 15], "gpt4_tokens": ["12345", "67890"], "gpt4_ids": [49882, 25208] }
+      { "text": "1234567890",          "gpt2_tokens": ["123", "45", "678", "90"], "gpt2_ids": [10163, 2231, 30924, 3829], "gpt4_tokens": ["123", "456", "789", "0"], "gpt4_ids": [4513, 10961, 16474, 15] }
     ],
     "why_it_matters": [
       "Math: GPT-2 splits numbers into 3-digit chunks, hurting multi-digit arithmetic. GPT-4 keeps longer chunks together.",

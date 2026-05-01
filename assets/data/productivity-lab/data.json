@@ -147,11 +147,10 @@
     "_meta": "Estimates of mismeasurement that could close the post-2004 gap. Most are an order of magnitude smaller than needed.",
     "needed_ppt": 1.3,
     "estimates": [
-      { "label": "Internet consumer surplus (Goolsbee–Klenow 2006)", "ppt": 0.3, "accelerated": "slightly", "note": "Welfare not GDP" },
+      { "label": "Internet consumer surplus (Goolsbee–Klenow 2006)", "ppt": 0.3, "accelerated": "slightly", "note": "Welfare gain, not GDP — does not literally add" },
       { "label": "Free digital goods GDP-B (Brynjolfsson et al. 2019)", "ppt": 0.08, "accelerated": "yes", "note": "Range 0.05–0.11" },
       { "label": "Creative destruction imputation (Aghion et al. 2019)", "ppt": 0.5, "accelerated": "marginally", "note": "AER 2019" },
-      { "label": "Intangible capital reclassification (CHS)", "ppt": 0.15, "accelerated": "no", "note": "Mostly shifts TFP→capital" },
-      { "label": "Sum of all credible estimates", "ppt": 0.7, "accelerated": "no", "note": "Still well short of 1.3 ppt needed" }
+      { "label": "Intangible capital reclassification (CHS)", "ppt": 0.15, "accelerated": "no", "note": "Mostly shifts TFP→capital, not net new growth" }
     ],
     "syverson_one_paragraph": "Free-goods and digital-mismeasurement explanations cannot account for the post-2004 productivity slowdown because (i) the slowdown was global with no correlation to ICT intensity, (ii) consumer-surplus estimates are an order of magnitude too small, (iii) IT-industry productivity would have to be implausibly high if the story were true, and (iv) the GDP/GDI gap reflects profits, not labor income."
   },
@@ -229,9 +228,9 @@
     { "label": "Years of data", "value": "78", "sub": "1947 → 2025" },
     { "label": "1947–1973 trend", "value": "2.9%", "sub": "labor productivity / yr" },
     { "label": "Post-2004 trend", "value": "1.3%", "sub": "labor productivity / yr" },
-    { "label": "TFP gap to explain", "value": "0.7 ppt", "sub": "1.3% (2007–19) vs 1.9% (postwar)" },
-    { "label": "Mismeasurement estimates", "value": "~0.7 ppt", "sub": "all sources combined" },
-    { "label": "Gap they fail to close", "value": "~0.6 ppt", "sub": "Syverson 2017" },
+    { "label": "TFP gap to explain", "value": "1.3 ppt", "sub": "0.6% (2007–19) vs 1.9% (postwar)" },
+    { "label": "Mismeasurement estimates", "value": "~0.7 ppt", "sub": "post-2004-relevant net contribution" },
+    { "label": "Residual gap", "value": "~0.6 ppt", "sub": "what mismeasurement can't close" },
     { "label": "Federal Register 2024", "value": "106,109", "sub": "pages, record high" },
     { "label": "RegData restrictions 2019", "value": "1.08M", "sub": "vs 0.40M in 1970" },
     { "label": "AI users H2 2024", "value": "26.4%", "sub": "of U.S. workers (BBD 2025)" },

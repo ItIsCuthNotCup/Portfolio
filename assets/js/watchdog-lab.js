@@ -251,6 +251,10 @@
     }
 
     let svg = '';
+    // Axis titles + source
+    svg += `<text class="label" x="${m.l + iw/2}" y="10" text-anchor="middle" font-family="DM Mono" font-size="9" fill="var(--ink-dim)" letter-spacing="0.10em" style="text-transform:uppercase">HOUR OF DAY (ET)</text>`;
+    svg += `<text class="label" x="14" y="${m.t + ih/2}" text-anchor="middle" font-family="DM Mono" font-size="9" fill="var(--ink-dim)" letter-spacing="0.10em" style="text-transform:uppercase" transform="rotate(-90 14 ${m.t + ih/2})">DAY OF WEEK</text>`;
+    svg += `<text class="label" x="${w - m.r}" y="10" text-anchor="end" font-family="DM Mono" font-size="8.5" fill="var(--ink-dim)" font-style="italic">Source: YouTube Data API (US, 30-day rolling)</text>`;
     // Hour labels (every 3 hours)
     for (let h = 0; h <= 24; h += 3) {
       const x = m.l + h * cw;
@@ -277,7 +281,7 @@
         const t = i / 5;
         swatches.push(`<span class="sw" style="background:${color(t)}"></span>`);
       }
-      $heatLeg.innerHTML = `<span>Less</span><span class="swatches">${swatches.join('')}</span><span>More</span>`;
+      $heatLeg.innerHTML = `<span>Fewer trending uploads</span><span class="swatches">${swatches.join('')}</span><span>More trending uploads</span>`;
     }
   }
 

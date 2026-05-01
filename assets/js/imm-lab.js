@@ -519,6 +519,9 @@
       const STEP = totalBudget * 0.005;
       const MAX_ITER = 200;
       function mroasAt(id, x) {
+        // Marginal return per marginal SPEND dollar at weekly spend `x`.
+        // Hill derivative gives ∂r/∂adstocked; geometric adstock chain-
+        // rule factor 1/(1-λ) converts that to ∂r/∂spend.
         const samples = model.posteriors[id];
         let sum = 0;
         for (let i = 0; i < samples.length; i++) {
@@ -526,7 +529,8 @@
           const xa = steadyState(x, p.lambda);
           const xs = Math.pow(xa, p.s);
           const ks = Math.pow(p.kappa, p.s);
-          sum += p.alpha * p.s * ks * Math.pow(xa, p.s - 1) / Math.pow(ks + xs, 2);
+          const mHill = p.alpha * p.s * ks * Math.pow(xa, p.s - 1) / Math.pow(ks + xs, 2);
+          sum += mHill / Math.max(1e-9, 1 - p.lambda);
         }
         return sum / samples.length;
       }

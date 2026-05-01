@@ -125,11 +125,22 @@ function hill(x, alpha, kappa, s) {
 }
 
 function mHill(x, alpha, kappa, s) {
-  // dr/dx for Hill — used for marginal ROAS
+  // dr/dx for the Hill function only — used inside mROAS once the
+  // adstock chain-rule factor 1/(1-λ) is applied externally.
   if (x <= 0) return 0;
   const xs = Math.pow(x, s);
   const ks = Math.pow(kappa, s);
   return alpha * s * ks * Math.pow(x, s - 1) / Math.pow(ks + xs, 2);
+}
+
+function mROAS(spend_mean, alpha, kappa, s, lambda) {
+  // Marginal return on a marginal SPEND dollar at the panel's mean
+  // adstocked level. With geometric adstock at decay λ, one extra
+  // spend dollar in week t increases adstocked spend by 1/(1-λ)
+  // across the future (geometric series), so the chain rule gives:
+  //     dr/d_spend = mHill(adstocked, α, κ, s) × 1/(1-λ)
+  // We pass in the panel mean adstocked spend as `spend_mean` here.
+  return mHill(spend_mean, alpha, kappa, s) / Math.max(1e-9, 1 - lambda);
 }
 
 // ── Run the simulation ─────────────────────────────────────────────────────
@@ -210,7 +221,7 @@ const channelSummary = CHANNELS.map(c => {
   const meanSpend = totalSpend / N_WEEKS;
   const meanAdstocked = channelAdstocked[c.id].reduce((a, b) => a + b, 0) / N_WEEKS;
   const roas = totalContrib / totalSpend;
-  const mroas = mHill(meanAdstocked, c.alpha, c.kappa, c.s);
+  const mroas = mROAS(meanAdstocked, c.alpha, c.kappa, c.s, c.lambda);
   return {
     id: c.id,
     label: c.label,
@@ -299,7 +310,7 @@ const contributionSummary = CHANNELS.map(c => {
       tc += hill(channelAdstocked[c.id][t], p.alpha, p.kappa, p.s);
     }
     totalContribs.push(tc);
-    mroasAtCurrent.push(mHill(meanAdstocked, p.alpha, p.kappa, p.s));
+    mroasAtCurrent.push(mROAS(meanAdstocked, p.alpha, p.kappa, p.s, p.lambda));
   });
   totalContribs.sort((a, b) => a - b);
   mroasAtCurrent.sort((a, b) => a - b);

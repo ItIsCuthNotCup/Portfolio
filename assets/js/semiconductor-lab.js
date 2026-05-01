@@ -439,6 +439,18 @@
 
     svg.innerHTML = '';
 
+    // Y-axis title + source
+    svg.appendChild(svgEl('text', {
+      x: M.l - 60, y: M.t - 14, 'text-anchor': 'start',
+      fill: 'var(--ink-dim)', 'font-size': 10, 'font-family': 'DM Mono, monospace',
+      'letter-spacing': '0.10em'
+    })).textContent = 'HERFINDAHL–HIRSCHMAN INDEX (0–10,000)';
+    svg.appendChild(svgEl('text', {
+      x: W - M.r, y: M.t - 14, 'text-anchor': 'end',
+      fill: 'var(--ink-dim)', 'font-size': 9, 'font-family': 'DM Mono, monospace',
+      'font-style': 'italic'
+    })).textContent = 'Source: industry market-share reports (Knometa, TrendForce, IDC)';
+
     // Threshold line at 2500 (high concentration)
     const thresholdY = H - M.b - hhiScale(2500);
     svg.appendChild(svgEl('line', {

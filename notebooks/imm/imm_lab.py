@@ -372,7 +372,10 @@ def export_model_json(df: pd.DataFrame, fit_result: dict[str, Any]) -> None:
             tc = float(hill(adstocked, p["alpha"], p["kappa"], p["s"]).sum())
             xs = mean_adstocked ** p["s"]
             ks = p["kappa"] ** p["s"]
-            mr = p["alpha"] * p["s"] * ks * (mean_adstocked ** (p["s"] - 1)) / ((ks + xs) ** 2)
+            # mHill (∂r/∂adstocked) × adstock chain-rule factor 1/(1-λ)
+            # to turn it into the marginal return per marginal SPEND $
+            m_hill = p["alpha"] * p["s"] * ks * (mean_adstocked ** (p["s"] - 1)) / ((ks + xs) ** 2)
+            mr = m_hill / max(1e-9, 1 - p["lambda"])
             contribs.append(tc)
             mroas.append(mr)
         contribs.sort()
