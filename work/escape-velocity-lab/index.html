@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=23">
-  <link rel="stylesheet" href="/assets/css/escape-velocity-lab.css?v=5">
+  <link rel="stylesheet" href="/assets/css/escape-velocity-lab.css?v=6">
 </head>
 <body>
 
@@ -166,6 +166,7 @@
     <button type="button" class="ev-pill" data-range="modern">Modern (2010+)</button>
     <button type="button" class="ev-pill" data-range="recent">Recent (2018+)</button>
     <button type="button" class="ev-pill" data-range="last5">Last 5y (2021+)</button>
+    <button type="button" class="ev-pill" data-range="last3">Last 3y (2023+)</button>
   </div>
 
   <div class="ev-chart-controls mono" aria-label="Reference curves">
@@ -194,6 +195,21 @@
       <text id="ev-moore-label" x="0" y="0" text-anchor="end" fill="var(--ink-dim)" font-size="10" font-family="DM Mono, monospace" font-style="italic"></text>
     </svg>
     <div id="ev-tooltip-compute" class="ev-tooltip mono" hidden></div>
+  </div>
+
+  <div class="ev-readout">
+    <p class="mono ev-readout-label">What this means</p>
+    <p>
+      The y-axis is logarithmic. Each gridline up means <em>10&times; more
+      compute</em>, not 10 more units. A straight line on this chart is already
+      exponential growth. A curve that bends <em>upward</em> on a log chart is
+      the rare thing — super-exponential. Today's frontier doubles every
+      <strong>~6 months</strong>; Moore's Law for transistors took
+      <strong>~24 months</strong>. The orange "super-exp" line shows what the
+      next decade looks like if the doubling time itself keeps shrinking.
+      The data is currently tracking the blue 6-month line — fast, but not
+      yet bending above it.
+    </p>
   </div>
 
   <div class="ev-counterpoint" id="ev-counterpoint-compute" data-open="false">
@@ -703,6 +719,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/escape-velocity-lab.js?v=6"></script>
+<script src="/assets/js/escape-velocity-lab.js?v=7"></script>
 </body>
 </html>

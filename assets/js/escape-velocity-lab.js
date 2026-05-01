@@ -136,7 +136,7 @@
     const W = 1100, H = 520, M = { t: 30, r: 60, b: 50, l: 76 };
 
     const allModels = data.models;
-    const RANGE_STARTS = { all: null, modern: 2010, recent: 2018, last5: 2021 };
+    const RANGE_STARTS = { all: null, modern: 2010, recent: 2018, last5: 2021, last3: 2023 };
     const eraDotColors = { 'pre-dl': CHART.purple, 'dl': CHART.blue, 'scaling': CHART.orange };
     let currentRange = 'all';
     let currentEra = 'all';
@@ -218,6 +218,7 @@
         const path = svgEl('path', { stroke: color, 'stroke-width': 1.8, 'stroke-dasharray': dash, fill: 'none', opacity: 0.9 });
         let d = '';
         const step = Math.max(0.05, (endYear - startYear) / 120);
+        const points = [];
         let lastValidPx = null, lastValidPy = null;
         for (let yr = startYear; yr <= endYear; yr += step) {
           const flop = fn(yr);
@@ -230,23 +231,38 @@
             // Cap exactly at the boundary
             const clampPy = Math.max(M.t, Math.min(H - M.b, py));
             d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + clampPy.toFixed(1);
+            points.push({ px, py: clampPy });
             lastValidPx = px; lastValidPy = clampPy;
             // Once curve hits the top, stop drawing further
             if (flop >= yDomain[1]) break;
           } else {
             d += (d ? 'L' : 'M') + px.toFixed(1) + ',' + py.toFixed(1);
+            points.push({ px, py });
             lastValidPx = px; lastValidPy = py;
           }
         }
         path.setAttribute('d', d);
         svg.appendChild(path);
-        // Label near where the curve exits the plot
-        if (lastValidPx !== null) {
-          const labelX = Math.min(W - M.r - 4, lastValidPx + 4);
-          const labelY = Math.max(M.t + 12, Math.min(H - M.b - 4, lastValidPy + (opts.labelBelow ? 14 : -6)));
+        // Label placed along the curve (away from the dense top-right
+        // cluster of model dots). Default anchor is 40% along the visible
+        // path; opts.labelAt overrides per-curve.
+        if (points.length > 1) {
+          const fraction = opts.labelAt !== undefined ? opts.labelAt : 0.4;
+          const idx = Math.max(1, Math.min(points.length - 2, Math.round(points.length * fraction)));
+          const p = points[idx];
+          const labelOffsetY = opts.labelBelow ? 14 : -6;
+          const labelX = Math.max(M.l + 4, Math.min(W - M.r - 4, p.px + 6));
+          const labelY = Math.max(M.t + 12, Math.min(H - M.b - 4, p.py + labelOffsetY));
+          // Knockout rect so the label reads against the gridline tinting
+          const textW = label.length * 5.8;
+          const bg = svgEl('rect', {
+            x: labelX - 2, y: labelY - 9, width: textW + 4, height: 12,
+            fill: 'var(--paper)', opacity: 0.78
+          });
+          svg.appendChild(bg);
           const lbl = svgEl('text', {
             x: labelX, y: labelY,
-            'text-anchor': labelX >= W - M.r - 8 ? 'end' : 'start',
+            'text-anchor': 'start',
             fill: color, 'font-size': 10.5, 'font-family': 'DM Mono, monospace',
             'font-style': 'italic', opacity: 0.95
           });
@@ -263,7 +279,7 @@
         plotCurve(
           yr => moore.start_flop * Math.pow(2, (yr - moore.start_year) / 2),
           'var(--ink-dim)', '5,4', "Moore's Law (2y doubling)",
-          { startYear: Math.max(xDomain[0], moore.start_year), labelBelow: false }
+          { startYear: Math.max(xDomain[0], moore.start_year), labelBelow: true, labelAt: 0.55 }
         );
       }
       // AI exponential — 6-month doubling, anchored at GPT-3 (2020).
@@ -272,28 +288,34 @@
         plotCurve(
           yr => ay * Math.pow(2, (yr - ax) * 2),
           CHART.blue, '4,3', 'AI exp. (6-mo doubling)',
-          { labelBelow: true }
+          { labelBelow: true, labelAt: 0.35 }
         );
       }
-      // Super-exponential — doubling time itself shrinks from 9mo to 3mo
-      // across the visible projection horizon. Anchored at GPT-3, forward only.
+      // Super-exponential — doubling time STARTS at 6 months (matching the
+      // exp curve at the anchor) and SHRINKS toward 3 months. This guarantees
+      // super-exp ≥ exp at every t≥0, with strict inequality after t=0 — the
+      // visual story the reader expects ("super > regular"). Anchored at
+      // GPT-3, forward only.
       if (curveOn.super) {
         plotCurve(yr => {
           const t = yr - ax;
           if (t < 0) return ay;
-          // doubling time shrinks: dT(t) = max(0.25, 0.75 - 0.05*t)
-          // integrate log2-growth = ∫ dt/dT(t)
+          // dT(t) = max(0.25, 0.5 - 0.04*t)
+          //   t=0  → 6.0 mo (matches exp)
+          //   t=2  → 5.0 mo
+          //   t=5  → 3.6 mo
+          //   t≥6.25 → 3.0 mo (floor)
           let logScaled = 0;
           const steps = Math.max(1, Math.round(t * 12));
           const dt = t / steps;
           for (let i = 0; i < steps; i++) {
             const ti = i * dt;
-            const dTi = Math.max(0.25, 0.75 - 0.05 * ti);
+            const dTi = Math.max(0.25, 0.5 - 0.04 * ti);
             logScaled += dt / dTi;
           }
           return ay * Math.pow(2, logScaled);
-        }, CHART.orange, '2,3', 'Super-exp. (doubling time shrinks)',
-        { labelBelow: false });
+        }, CHART.orange, '2,3', 'Super-exp. (doubling shrinks 6mo→3mo)',
+        { labelBelow: false, labelAt: 0.6 });
       }
       // Best-fit through 2018+ frontier — the "what is the data ACTUALLY
       // doing right now?" line. Drawn through the data's own range so the
@@ -306,7 +328,7 @@
           plotCurve(
             yr => Math.pow(10, fit.slope * yr + fit.intercept),
             CHART.gold, '6,3', 'Best-fit (' + fit.doublingMonths.toFixed(1) + '-mo doubling)',
-            { startYear: fitStart, labelBelow: true }
+            { startYear: fitStart, labelBelow: true, labelAt: 0.45 }
           );
         }
       }
