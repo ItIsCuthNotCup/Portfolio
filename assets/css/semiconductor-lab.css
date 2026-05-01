@@ -1,0 +1,590 @@
+/* ═══════════════════════════════════════════════════════════
+   SEMICONDUCTOR CARTOGRAPHY — TEST. 02
+   Supply-chain map, flow diagram, and chokepoint dashboard.
+   ═══════════════════════════════════════════════════════════ */
+
+.sc-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.sc-hero {
+  padding: 120px 48px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.sc-title { margin-top: 22px; }
+.sc-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.sc-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.sc-dateline .label { color: var(--ink-dim); }
+.sc-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ───────────────────────────────────────── */
+.sc-section {
+  padding: 80px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.sc-section .section-label { margin-bottom: 28px; }
+.sc-prose { max-width: 760px; }
+.sc-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.sc-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 24px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.sc-note {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+.sc-callout {
+  margin-top: 32px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  max-width: 720px;
+}
+.sc-callout strong {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ── Chart controls ────────────────────────────────────────── */
+.sc-chart-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.sc-filter-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 10px;
+}
+.sc-filter-divider {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: var(--ink-dim);
+  margin: 0 8px;
+  opacity: 0.4;
+}
+.sc-pill {
+  background: transparent;
+  border: 1px solid var(--ink-dim);
+  color: var(--ink-soft);
+  padding: 8px 14px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.14s;
+  min-height: 40px;
+  min-width: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+.sc-pill:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.sc-pill.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.sc-pill-toggle[data-active="false"] {
+  opacity: 0.5;
+}
+
+/* ── Chart wraps ───────────────────────────────────────────── */
+.sc-chart-wrap {
+  position: relative;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  margin-bottom: 18px;
+}
+.sc-chart-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--paper);
+}
+
+/* ── Tooltips ──────────────────────────────────────────────── */
+.sc-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 14px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.55;
+  max-width: 320px;
+  z-index: 50;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+}
+
+/* ── Map-specific styles ───────────────────────────────────── */
+.sc-map-continent {
+  fill: color-mix(in oklab, var(--ink) 6%, transparent);
+  stroke: color-mix(in oklab, var(--ink) 14%, transparent);
+  stroke-width: 1;
+}
+.sc-map-node {
+  cursor: pointer;
+  transition: r 0.15s;
+}
+.sc-map-node:hover {
+  stroke-width: 3;
+}
+.sc-map-flow {
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.sc-map-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: var(--ink);
+  pointer-events: none;
+}
+.sc-map-legend {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+
+/* ── Flow diagram styles ───────────────────────────────────── */
+.sc-flow-layer-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--ink-dim);
+}
+.sc-flow-node {
+  cursor: pointer;
+}
+.sc-flow-connector {
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+.sc-flow-node-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+/* ── Chokepoint stat grid ──────────────────────────────────── */
+.sc-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin-bottom: 48px;
+}
+.sc-stat-card {
+  background: var(--paper);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sc-stat-metric {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.sc-stat-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.sc-stat-leader {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+.sc-stat-risk {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* ── HHI bar chart ─────────────────────────────────────────── */
+.sc-hhi-wrap {
+  margin-bottom: 48px;
+}
+.sc-hhi-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.sc-hhi-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+/* ── Plain-language readout ────────────────────────────────── */
+.sc-readout {
+  max-width: 760px;
+  padding: 18px 22px;
+  border-left: 2px solid var(--accent);
+  background: var(--paper-2);
+  margin: 18px 0 22px;
+}
+.sc-readout-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.sc-readout p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.sc-readout em {
+  font-style: italic;
+  color: var(--ink);
+}
+.sc-readout strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── Synthesis widget ──────────────────────────────────────── */
+.sc-synthesis {
+  max-width: 900px;
+  margin-bottom: 48px;
+}
+.sc-synthesis-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid var(--ink);
+}
+.sc-syn-tab {
+  background: transparent;
+  border: 1px solid var(--ink-dim);
+  border-bottom: none;
+  color: var(--ink-soft);
+  padding: 12px 20px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.14s;
+  margin-right: -1px;
+}
+.sc-syn-tab:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.sc-syn-tab.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.sc-synthesis-panels {
+  border: 1px solid var(--ink);
+  border-top: none;
+  padding: 28px 32px;
+  background: var(--paper);
+}
+.sc-syn-panel {
+  display: none;
+}
+.sc-syn-panel.active {
+  display: block;
+}
+.sc-syn-panel p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* ── Receipts ──────────────────────────────────────────────── */
+.sc-receipts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+}
+.sc-receipt {
+  background: var(--paper);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sc-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.sc-receipt-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.sc-receipt-value .small {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+
+/* ── Colophon section ──────────────────────────────────────── */
+.sc-colophon-section {
+  padding-bottom: 48px;
+}
+
+/* ── Kimi attribution banner ───────────────────────────────── */
+.sc-kimi-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 48px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.sc-kimi-banner strong {
+  color: var(--accent);
+  font-weight: 500;
+}
+.sc-kimi-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  flex-shrink: 0;
+}
+.sc-kimi-right {
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .sc-hero,
+  .sc-section {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .sc-dateline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sc-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sc-receipts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .sc-chart-wrap svg {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sc-receipts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sc-chart-wrap svg {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 720px) {
+  .sc-hero,
+  .sc-section {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  .sc-hero {
+    padding-top: 100px;
+  }
+  .sc-dateline {
+    grid-template-columns: 1fr;
+  }
+  .sc-chart-controls {
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .sc-chart-wrap svg {
+    min-height: 280px;
+  }
+  .sc-stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .sc-receipts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sc-receipt-value {
+    font-size: 18px;
+  }
+  .sc-synthesis-tabs {
+    flex-direction: column;
+  }
+  .sc-syn-tab {
+    border-bottom: 1px solid var(--ink-dim);
+    margin-right: 0;
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  .sc-syn-tab.active {
+    border-bottom-color: var(--ink);
+  }
+  .sc-synthesis-panels {
+    padding: 20px 20px;
+  }
+  .sc-syn-panel p {
+    font-size: 16px;
+  }
+  .sc-kimi-banner {
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    gap: 6px;
+  }
+  .sc-kimi-right {
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
+/* ── Methodology grid (matches existing labs) ──────────────── */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 48px;
+  max-width: 1100px;
+  margin-bottom: 48px;
+}
+.method-grid p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.method-grid a { color: var(--ink); }
+.method-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ── Lab nav & CTAs (from existing labs) ───────────────────── */
+.lab-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: 32px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.lab-nav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.lab-nav a:hover { border-bottom-color: var(--ink); }
+.method-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 720px) {
+  .method-grid { grid-template-columns: 1fr; gap: 28px; }
+  .lab-nav { flex-direction: column; gap: 8px; align-items: flex-start; }
+}

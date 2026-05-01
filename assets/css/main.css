@@ -1270,6 +1270,15 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   background: var(--ink);
 }
 
+/* Logo carousel: the graphite theme had invert(1) to flip dark PNGs to
+   white on the old charcoal background. With paper-light graphite, that
+   inversion turns the logos white-on-cream and they vanish. Drop the
+   invert and bump opacity so they read as solid-ink silhouettes. */
+[data-theme="graphite"] .logo-track img {
+  filter: grayscale(1) brightness(0) !important;
+  opacity: 0.55 !important;
+}
+
 /* Selection */
 [data-theme="graphite"] ::selection {
   background: var(--ink);
