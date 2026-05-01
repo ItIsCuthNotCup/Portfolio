@@ -87,8 +87,9 @@
   <p class="lab-biz-line">
     A Bayesian Marketing Mix Model for a creator-driven D2C brand. Eight
     channels, 104 weeks of synthetic-but-realistic weekly data, full
-    posterior credible intervals on every channel coefficient, ground-truth
-    recovered within 90% CI.
+    posterior credible intervals on every channel coefficient. Ground-truth
+    coverage is <span id="imm-coverage-text">at expected 90% rate</span> —
+    the channel-by-channel breakdown is below in &sect; VI.
   </p>
   <p class="imm-kicker">
     A creator partnership runs in March. Sales lift in April. Was it the
@@ -318,12 +319,22 @@
   </div>
   <p class="imm-prose">
     Because the data is synthetic, the channel coefficients used to generate
-    it are known. Each posterior 90% CI should contain its true value. Below,
-    each row shows the ground-truth &alpha; (max contribution) for the channel,
-    its posterior mean, and the 90% credible interval. All eight channels
-    recover within the interval &mdash; the necessary-but-not-sufficient
-    validity check for any MMM build.
+    it are known. At a nominal 90% credible interval, expected coverage on
+    8 channels is 7.2 &mdash; <em>over</em>-coverage at exactly 8/8 would
+    suggest the priors are too wide or the CIs over-inflated. Below, each
+    row shows the ground-truth &alpha; (max contribution), the posterior
+    mean, and the 90% credible interval. The recovery count is rendered
+    live from the model.json that ships with the page; if you re-run the
+    notebook the count below updates automatically.
   </p>
+
+  <div class="imm-callout" id="imm-recovery-callout">
+    <div class="mono imm-callout-label">Recovery summary</div>
+    <p>
+      <strong id="imm-recovery-headline">Loading&hellip;</strong>
+      <span id="imm-recovery-detail" style="display:block; margin-top:6px; color:var(--ink-soft); font-size:14px;"></span>
+    </p>
+  </div>
 
   <div class="imm-table-wrap" id="imm-recovery-table"></div>
 </section>
@@ -345,8 +356,10 @@
         (&alpha;<sub>c</sub>, &kappa;<sub>c</sub>, s<sub>c</sub>) and geometric
         adstock decay &lambda;<sub>c</sub> are documented constants used to
         generate the panel. The model is then asked to recover them from
-        revenue alone. Specific values: see
-        <code>notebooks/imm/generate_synth.js</code> top of file.
+        revenue alone. At a nominal 90% credible interval, expected coverage
+        on 8 channels is 7.2 &mdash; observed coverage is rendered live in
+        &sect; VI. Specific values: see <code>notebooks/imm/imm_lab.py</code>
+        and <code>notebooks/imm/generate_synth.js</code>.
       </p>
     </div>
     <div>
@@ -444,6 +457,6 @@
 </div>
 
 <script src="/assets/js/main.js?v=12"></script>
-<script src="/assets/js/imm-lab.js?v=1"></script>
+<script src="/assets/js/imm-lab.js?v=2"></script>
 </body>
 </html>
