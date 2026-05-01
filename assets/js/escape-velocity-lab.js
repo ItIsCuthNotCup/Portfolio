@@ -202,6 +202,29 @@
         }
       });
 
+      // ── Inline legend (top-left, inside plot area) ───────────
+      // Three era colors are encoded on the dots — readers shouldn't have to
+      // scroll back to the filter pills to decode them.
+      const legendItems = [
+        { color: eraDotColors['pre-dl'], label: 'Pre-DL' },
+        { color: eraDotColors['dl'], label: 'DL Era' },
+        { color: eraDotColors['scaling'], label: 'Scaling Era' },
+      ];
+      const legG = svgEl('g', { id: 'ev-compute-legend' });
+      let legX = M.l + 10;
+      const legY = M.t + 14;
+      legendItems.forEach(item => {
+        legG.appendChild(svgEl('circle', { cx: legX + 4, cy: legY, r: 4, fill: item.color, stroke: 'var(--paper)', 'stroke-width': 1 }));
+        const t = svgEl('text', {
+          x: legX + 12, y: legY + 4, fill: 'var(--ink-soft)',
+          'font-size': 10, 'font-family': 'DM Mono, monospace'
+        });
+        t.textContent = item.label;
+        legG.appendChild(t);
+        legX += 16 + item.label.length * 6.4;
+      });
+      svg.appendChild(legG);
+
       // ── Reference curves ─────────────────────────────────────
       // AI growth-rate curves anchor at GPT-3 (2020, 3.1e23 FLOP) — the start of
       // the modern scaling era. Drawn FORWARD ONLY from that anchor, so the

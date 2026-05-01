@@ -496,19 +496,28 @@
       bayes:    { numerical: 1, categorical: 2, text: 2, image: 0, 'time-series': 0, mixed: 1 },
       neural:   { numerical: 2, categorical: 1, text: 2, image: 2, 'time-series': 2, mixed: 1 },
     };
-    const cellW = 60, cellH = 30, padL = 130, padT = 30;
+    const cellW = 60, cellH = 30, padL = 150, padT = 60;
     const W = padL + shapes.length * cellW + 10;
     const H = padT + families.length * cellH + 10;
     let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" class="ma-svg">';
-    // Column headers (rotated 30°)
+    // Legend in the empty top-left corner where row labels meet column headers
+    svg += '<text x="6" y="14" font-family="DM Mono,monospace" font-size="9" ' +
+           'fill="var(--ink-dim)" letter-spacing="0.06em">FIT</text>';
+    svg += '<text x="6" y="28" font-family="DM Mono,monospace" font-size="11" fill="var(--accent)">●</text>' +
+           '<text x="20" y="28" font-family="DM Mono,monospace" font-size="9" fill="var(--ink-soft)">strong</text>';
+    svg += '<text x="64" y="28" font-family="DM Mono,monospace" font-size="11" fill="var(--accent)">○</text>' +
+           '<text x="78" y="28" font-family="DM Mono,monospace" font-size="9" fill="var(--ink-soft)">workable</text>';
+    svg += '<text x="6" y="44" font-family="DM Mono,monospace" font-size="11" fill="var(--ink-dim)">·</text>' +
+           '<text x="20" y="44" font-family="DM Mono,monospace" font-size="9" fill="var(--ink-soft)">poor</text>';
+    // Column headers — gentler rotation, more headroom
     shapes.forEach(function (s, j) {
       const x = padL + j * cellW + cellW / 2;
       const isActive = mode === s;
-      svg += '<text x="' + x + '" y="' + (padT - 8) + '" font-family="DM Mono,monospace" font-size="10" ' +
+      svg += '<text x="' + x + '" y="' + (padT - 12) + '" font-family="DM Mono,monospace" font-size="10" ' +
              'fill="' + (isActive ? 'var(--accent)' : 'var(--ink)') + '" text-anchor="middle" ' +
-             'transform="rotate(-25 ' + x + ' ' + (padT - 8) + ')">' + s + '</text>';
+             'transform="rotate(-15 ' + x + ' ' + (padT - 12) + ')">' + s + '</text>';
     });
-    // Row headers + cells
+    // Row headers + cells — single encoding (glyph at full opacity, no tile fill)
     families.forEach(function (fam, i) {
       svg += '<text x="' + (padL - 10) + '" y="' + (padT + i * cellH + cellH / 2 + 4) + '" ' +
              'font-family="DM Mono,monospace" font-size="11" fill="var(--ink)" text-anchor="end">' + fam.label + '</text>';
@@ -517,17 +526,18 @@
         const isActive = mode === s;
         const x = padL + j * cellW;
         const y = padT + i * cellH;
-        const fill = score === 2
-          ? 'color-mix(in oklab, var(--accent) 55%, transparent)'
-          : score === 1
-            ? 'color-mix(in oklab, var(--accent) 22%, transparent)'
-            : 'transparent';
+        // Cell border only; the score is encoded entirely by the glyph below.
+        // Active column gets a stronger border so the user can see the
+        // currently-selected shape without re-encoding via fill opacity.
         svg += '<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="' + (cellW - 4) + '" height="' + (cellH - 4) + '" ' +
-               'fill="' + fill + '" stroke="' + (isActive ? 'var(--accent)' : 'var(--ink-dim)') + '" ' +
+               'fill="' + (isActive ? 'color-mix(in oklab, var(--accent) 8%, transparent)' : 'transparent') + '" ' +
+               'stroke="' + (isActive ? 'var(--accent)' : 'var(--ink-dim)') + '" ' +
                'stroke-width="' + (isActive ? 1.4 : 0.4) + '"/>';
         const symbol = score === 2 ? '●' : score === 1 ? '○' : '·';
+        const symColor = score === 0 ? 'var(--ink-dim)' : 'var(--accent)';
+        const symSize = score === 0 ? 16 : 14;
         svg += '<text x="' + (x + cellW / 2) + '" y="' + (y + cellH / 2 + 5) + '" ' +
-               'font-family="DM Mono,monospace" font-size="14" fill="var(--ink)" text-anchor="middle" opacity="0.7">' + symbol + '</text>';
+               'font-family="DM Mono,monospace" font-size="' + symSize + '" fill="' + symColor + '" text-anchor="middle">' + symbol + '</text>';
       });
     });
     svg += '</svg>';
