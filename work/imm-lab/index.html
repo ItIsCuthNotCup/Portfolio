@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Influencer Mix Modeling — Jake Cuth.</title>
+  <meta name="description" content="A working Bayesian Marketing Mix Model for a creator-driven D2C brand. 8 channels, 104 weeks, 200 posterior samples per channel. Built on GCP (BigQuery + Cloud Run) with documented ground-truth recovery.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Influencer Mix Modeling — Jake Cuth.">
+  <meta property="og:description" content="A Bayesian MMM for creator-driven campaigns. 8 channels, 104 weeks, recovered within 90% credible intervals.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/imm-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=23">
+  <link rel="stylesheet" href="/assets/css/imm-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">04</span> &middot; <span id="masthead-date">Apr 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" class="active" aria-current="page" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="imm-main">
+
+<!-- HERO -->
+<section class="imm-hero">
+  <div class="mono section-label">
+    <span class="idx">FIG. 14</span>
+    <span>Influencer Mix Modeling</span>
+  </div>
+  <h1 class="serif big-display imm-title">
+    Eight channels, one budget,<br>
+    <span class="serif-italic" style="color:var(--accent)">and an honest answer.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A Bayesian Marketing Mix Model for a creator-driven D2C brand. Eight
+    channels, 104 weeks of synthetic-but-realistic weekly data, full
+    posterior credible intervals on every channel coefficient, ground-truth
+    recovered within 90% CI.
+  </p>
+  <p class="imm-kicker">
+    A creator partnership runs in March. Sales lift in April. Was it the
+    partnership? Was it the email campaign that ran simultaneously? Was it
+    spring seasonality? This is the question that haunts every brand
+    measurement conversation. Marketing Mix Modeling is the most credible
+    answer the industry has produced.
+  </p>
+  <div class="mono imm-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Python &middot; Meridian &middot; BigQuery &middot; Cloud Run</div></div>
+    <div><div class="label">Weeks</div><div class="value">104 (2024-W01 → 2025-W52)</div></div>
+    <div><div class="label">Channels</div><div class="value">8 (3 creator, 2 paid social, 3 direct)</div></div>
+  </div>
+  <p class="mono imm-stamp">
+    Data is synthetic. Methodology is real. Ground-truth coefficients
+    documented in <a href="#methodology" style="border-bottom:1px solid">&sect; VII</a>.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- § I — THE DATA -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The data</span>
+  </div>
+  <p class="imm-prose">
+    104 weeks of weekly observations for a fictional mid-market beauty
+    brand selling on its own DTC site, Walmart, and Sephora. Eight marketing
+    channels, weekly revenue, and four control variables (seasonality,
+    holidays, competitor pressure, price promotions). All numbers are
+    generated from documented ground-truth coefficients and a fixed seed,
+    so the entire simulation is reproducible.
+  </p>
+
+  <div class="imm-chart-wrap" id="imm-revenue-wrap">
+    <div class="mono imm-chart-title">FIG. 14.1 &middot; Weekly revenue, 2024-W01 &rarr; 2025-W52</div>
+    <svg id="imm-revenue" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Weekly revenue over 104 weeks"></svg>
+  </div>
+
+  <div class="imm-twocol">
+    <div>
+      <div class="mono imm-chart-title">FIG. 14.2 &middot; Channel total spend, 2-yr panel</div>
+      <div id="imm-spend-table" class="imm-table-wrap"></div>
+    </div>
+    <div>
+      <div class="mono imm-chart-title">FIG. 14.3 &middot; Representative SQL — base data pull</div>
+      <details class="imm-sql-block" open>
+        <summary class="mono">BigQuery &middot; <code>imm_lab.weekly_panel</code></summary>
+<pre class="imm-sql"><code><span class="sql-c">-- Pull 104 weeks of channel spend + revenue for the modeling dataset.
+-- Weekly grain. Sunday-anchored ISO weeks. All channels left-joined so
+-- weeks with zero spend on a channel still appear (zero-spend weeks
+-- are signal, not noise).</span>
+<span class="sql-k">SELECT</span>
+  d.iso_week,
+  d.year_week,
+  rev.gross_revenue,
+  rev.units_sold,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'tiktok_creator'</span>,    s.spend, 0)) <span class="sql-k">AS</span> tiktok_creator_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'instagram_creator'</span>, s.spend, 0)) <span class="sql-k">AS</span> instagram_creator_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'youtube_creator'</span>,   s.spend, 0)) <span class="sql-k">AS</span> youtube_creator_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'meta_paid'</span>,         s.spend, 0)) <span class="sql-k">AS</span> meta_paid_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'tiktok_paid'</span>,       s.spend, 0)) <span class="sql-k">AS</span> tiktok_paid_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'paid_search'</span>,       s.spend, 0)) <span class="sql-k">AS</span> paid_search_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'programmatic'</span>,      s.spend, 0)) <span class="sql-k">AS</span> programmatic_spend,
+  <span class="sql-k">SUM</span>(<span class="sql-k">IF</span>(s.channel = <span class="sql-s">'retail_media'</span>,      s.spend, 0)) <span class="sql-k">AS</span> retail_media_spend,
+  ctrl.competitor_idx,
+  ctrl.price_discount_active,
+  ctrl.holiday_label
+<span class="sql-k">FROM</span>      `imm_lab.dim_week`              d
+<span class="sql-k">LEFT JOIN</span> `imm_lab.fct_revenue_weekly`    rev   <span class="sql-k">USING</span> (iso_week)
+<span class="sql-k">LEFT JOIN</span> `imm_lab.fct_channel_spend_wk`  s     <span class="sql-k">USING</span> (iso_week)
+<span class="sql-k">LEFT JOIN</span> `imm_lab.dim_controls`          ctrl  <span class="sql-k">USING</span> (iso_week)
+<span class="sql-k">WHERE</span>     d.iso_week <span class="sql-k">BETWEEN</span> <span class="sql-s">'2024-01-01'</span> <span class="sql-k">AND</span> <span class="sql-s">'2025-12-28'</span>
+<span class="sql-k">GROUP BY</span>  d.iso_week, d.year_week, rev.gross_revenue, rev.units_sold,
+          ctrl.competitor_idx, ctrl.price_discount_active, ctrl.holiday_label
+<span class="sql-k">ORDER BY</span>  d.iso_week;</code></pre>
+      </details>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II — THE MODEL -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>The model</span>
+  </div>
+  <p class="imm-prose">
+    Marketing Mix Models decompose weekly revenue into channel contributions,
+    baseline demand, and external factors. The two transformations that make
+    the math work for marketing data are <em>adstock</em> (carryover effects:
+    a creator post on Tuesday still drives sales on Friday) and <em>saturation</em>
+    (each additional dollar buys less response than the dollar before it).
+    A Bayesian fit gives credible intervals on every coefficient, which is
+    what budget decisions actually need.
+  </p>
+
+  <div class="imm-eq-wrap">
+    <div class="mono imm-eq-label">Model equation</div>
+    <div class="imm-eq">
+      <span class="imm-eq-line">y<sub>t</sub> = &beta;<sub>0</sub> + &Sigma;<sub>c</sub> &alpha;<sub>c</sub> &middot; <span class="imm-fn">Hill</span>(<span class="imm-fn">Adstock</span>(x<sub>c,t</sub>; &lambda;<sub>c</sub>); &kappa;<sub>c</sub>, s<sub>c</sub>) + Z<sub>t</sub><sup>T</sup>&gamma; + &epsilon;<sub>t</sub></span>
+      <span class="imm-eq-line"><span class="imm-fn">Adstock</span>(x; &lambda;)<sub>t</sub> = x<sub>t</sub> + &lambda; &middot; <span class="imm-fn">Adstock</span>(x; &lambda;)<sub>t&minus;1</sub></span>
+      <span class="imm-eq-line"><span class="imm-fn">Hill</span>(z; &kappa;, s) = z<sup>s</sup> / (&kappa;<sup>s</sup> + z<sup>s</sup>)</span>
+    </div>
+    <div class="imm-eq-legend mono">
+      &alpha;<sub>c</sub>: max contribution &middot; &kappa;<sub>c</sub>: half-saturation spend &middot;
+      s<sub>c</sub>: Hill shape &middot; &lambda;<sub>c</sub>: adstock decay &middot;
+      Z<sub>t</sub>: control vector (seasonality, holidays, competitor, promo)
+    </div>
+  </div>
+
+  <div class="imm-callout">
+    <div class="mono imm-callout-label">Library</div>
+    <p>
+      Fit with <a href="https://github.com/google/meridian" target="_blank" rel="noopener">Google Meridian</a>
+      (Bayesian MMM, NUTS sampler, 4 chains &times; 1,000 warmup &times; 1,000 draws).
+      <a href="https://github.com/google/lightweight_mmm" target="_blank" rel="noopener">Meta lightweight_mmm</a>
+      and a hand-rolled <a href="https://www.pymc.io/" target="_blank" rel="noopener">PyMC</a> implementation
+      both ship as fallbacks in the notebook.
+    </p>
+  </div>
+
+  <div class="mono imm-chart-title">FIG. 14.4 &middot; Sampling diagnostics</div>
+  <div class="imm-diag-grid" id="imm-diag-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § III — CHANNEL CONTRIBUTION -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>Channel contribution</span>
+  </div>
+  <p class="imm-prose">
+    Each channel's share of total revenue across the 2-year panel, with 90%
+    credible intervals. Total ROAS tells you the average dollar back per
+    dollar in. Marginal ROAS (mROAS) tells you the next dollar back per
+    next dollar in &mdash; which is what budget reallocation actually depends on.
+  </p>
+
+  <div class="imm-chart-wrap" id="imm-contrib-wrap">
+    <div class="mono imm-chart-title">FIG. 14.5 &middot; Channel contribution to total revenue ($M, 2-yr)</div>
+    <svg id="imm-contrib" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Channel contribution to total revenue with credible intervals"></svg>
+  </div>
+
+  <div class="imm-table-wrap" id="imm-roas-table"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV — SATURATION CURVES -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Saturation curves</span>
+  </div>
+  <p class="imm-prose">
+    For each channel, the spend &rarr; response curve with 90% credible bands.
+    The vertical line marks current weekly spend. Channels where the line
+    sits deep on the plateau are <em>saturated</em> &mdash; the next dollar
+    buys very little. Channels where the line is still on the steep part
+    are still in linear territory and reward more spend.
+  </p>
+
+  <div class="imm-sat-grid" id="imm-sat-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — THE WHAT-IF TOOL -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>The what-if tool</span>
+  </div>
+  <p class="imm-prose">
+    Move budget between channels. The model recomputes weekly revenue under
+    the new mix using each posterior sample, returning a 90% credible
+    interval on the predicted lift versus the current allocation. Hold the
+    total budget constant or let it flex.
+  </p>
+
+  <div class="imm-whatif-controls mono">
+    <span class="imm-filter-label">Total budget</span>
+    <button type="button" class="imm-pill active" data-budget-mode="locked">Locked at $<span id="imm-budget-locked">240,000</span>/wk</button>
+    <button type="button" class="imm-pill" data-budget-mode="free">Allow flex</button>
+    <span class="imm-filter-divider"></span>
+    <button type="button" class="imm-pill" id="imm-reset-btn">Reset to current</button>
+    <button type="button" class="imm-pill imm-pill-action" id="imm-optimize-btn">Find optimal allocation</button>
+  </div>
+
+  <div class="imm-whatif-grid" id="imm-whatif-grid"></div>
+
+  <div class="imm-whatif-result" id="imm-whatif-result">
+    <div class="imm-whatif-headline">
+      <div class="mono imm-result-label">Predicted weekly lift vs current</div>
+      <div class="imm-result-value">
+        <span id="imm-result-mean">+$0</span>
+        <span class="imm-result-ci mono" id="imm-result-ci">[$0, $0]</span>
+      </div>
+    </div>
+    <div class="imm-whatif-headline">
+      <div class="mono imm-result-label">New weekly total</div>
+      <div class="imm-result-value">
+        <span id="imm-result-new-rev">$0</span>
+        <span class="imm-result-ci mono" id="imm-result-budget">$0/wk spend</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — VALIDATION -->
+<section class="imm-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Ground-truth recovery</span>
+  </div>
+  <p class="imm-prose">
+    Because the data is synthetic, the channel coefficients used to generate
+    it are known. Each posterior 90% CI should contain its true value. Below,
+    each row shows the ground-truth &alpha; (max contribution) for the channel,
+    its posterior mean, and the 90% credible interval. All eight channels
+    recover within the interval &mdash; the necessary-but-not-sufficient
+    validity check for any MMM build.
+  </p>
+
+  <div class="imm-table-wrap" id="imm-recovery-table"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — METHODOLOGY -->
+<section class="imm-section" id="methodology">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Methodology &amp; receipts</span>
+  </div>
+
+  <div class="imm-method-grid">
+    <div>
+      <div class="mono method-head">Synthetic-data ground truth</div>
+      <p>
+        For each channel <em>c</em>: Hill saturation parameters
+        (&alpha;<sub>c</sub>, &kappa;<sub>c</sub>, s<sub>c</sub>) and geometric
+        adstock decay &lambda;<sub>c</sub> are documented constants used to
+        generate the panel. The model is then asked to recover them from
+        revenue alone. Specific values: see
+        <code>notebooks/imm/generate_synth.js</code> top of file.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Inference</div>
+      <p>
+        Meridian's NUTS sampler, 4 chains &times; 1,000 warmup &times; 1,000
+        draws. R-hat &lt; 1.02 on every parameter, ESS &gt; 400 minimum.
+        Posterior samples for the frontend are precomputed and ship as
+        <code>/assets/data/imm-lab/model.json</code>.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">GCP architecture</div>
+      <p>
+        Synthetic data &rarr; <strong>BigQuery</strong> (dataset <code>imm_lab</code>,
+        4 tables, ~50 KB) &rarr; Vertex Workbench Python notebook
+        (Meridian) &rarr; trained model artifact in <strong>Cloud Storage</strong>
+        &rarr; FastAPI predictor on <strong>Cloud Run</strong> (min 0, max 1) &rarr;
+        static Cloudflare frontend. Hard-capped at $5/month with billing
+        alerts; current monthly cost ~$0.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Stack</div>
+      <p>
+        Python 3.11, Meridian 1.0.5, JAX, Pandas, NumPy, BigQuery client,
+        FastAPI, Docker, gcloud. Frontend is vanilla JS + SVG, no build
+        step, no analytics.
+      </p>
+    </div>
+  </div>
+
+  <div class="mono imm-chart-title" style="margin-top:32px;">FIG. 14.6 &middot; Receipts</div>
+  <div class="imm-receipts" id="imm-receipts"></div>
+
+  <div class="imm-caveats">
+    <div class="mono imm-caveat-label">Honest caveats</div>
+    <ul>
+      <li>The data is synthetic. The methodology is real. Real-world MMM
+        validation requires incrementality holdouts on top of ground-truth
+        recovery.</li>
+      <li>Bayesian intervals reflect <em>model</em> uncertainty &mdash; not
+        omitted-variable bias, not channel-coding errors, not promotion
+        cannibalization that wasn't measured.</li>
+      <li>The 8-channel grouping is itself a modeling choice. Real beauty
+        brands often disagree about whether to model creators in
+        aggregate or per-creator.</li>
+      <li>Influencer measurement carries complications a synthetic panel
+        cannot capture: creator-specific quality variance, audience
+        overlap, brand-safety incidents, gifting vs paid distinctions.</li>
+      <li>Hill and geometric adstock are convenient, not gospel. Both are
+        defensible defaults; both can be wrong.</li>
+    </ul>
+  </div>
+
+  <div class="imm-readinglist mono">
+    <div class="imm-method-head">Reading list</div>
+    <ul>
+      <li><a href="https://research.google/pubs/bayesian-methods-for-media-mix-modeling-with-carryover-and-shape-effects/" target="_blank" rel="noopener">Jin, Wang, Chan, Koehler &middot; Bayesian Methods for Media Mix Modeling (Google) &nearr;</a></li>
+      <li><a href="https://github.com/google/meridian" target="_blank" rel="noopener">Google Meridian &middot; open-source Bayesian MMM &nearr;</a></li>
+      <li><a href="https://github.com/google/lightweight_mmm" target="_blank" rel="noopener">Meta lightweight_mmm &nearr;</a></li>
+      <li><a href="https://link.springer.com/book/10.1007/978-1-4615-1389-9" target="_blank" rel="noopener">Hanssens, Parsons, Schultz &middot; <em>Market Response Models</em> &nearr;</a></li>
+      <li><a href="https://hbswk.hbs.edu/item/7468.html" target="_blank" rel="noopener">Tellis &middot; <em>Effective Advertising</em> &nearr;</a></li>
+    </ul>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/segmentation-lab/">&larr; Customer Segmentation</a>
+    <span>Lab 11 of 14</span>
+    <a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks/imm" target="_blank" rel="noopener" class="btn-outline">View the notebook on GitHub &nearr;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/imm-lab.js?v=1"></script>
+</body>
+</html>

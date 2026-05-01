@@ -1,0 +1,616 @@
+/* ── Influencer Mix Modeling Lab ───────────────────────────── */
+
+.imm-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 0 64px;
+}
+
+.imm-section {
+  padding: 56px 56px 48px;
+}
+.imm-hero {
+  padding: 100px 56px 48px;
+}
+
+.imm-title {
+  margin: 12px 0 18px;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.imm-kicker {
+  font-family: "Newsreader", serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 18px 0 22px;
+  max-width: 70ch;
+}
+
+.imm-prose {
+  font-family: "Newsreader", serif;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 72ch;
+  margin: 8px 0 28px;
+}
+
+.imm-dateline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin: 22px 0 12px;
+}
+.imm-dateline > div {
+  background: var(--paper);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.imm-dateline .label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.imm-dateline .value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+.imm-stamp {
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 14px;
+}
+
+/* ── Chart wrappers ─────────────────────────────────────────── */
+.imm-chart-wrap {
+  margin: 18px 0 22px;
+}
+.imm-chart-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+}
+.imm-chart-wrap svg,
+.imm-sat-tile svg,
+.imm-whatif-tile svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.imm-chart-wrap svg {
+  background: var(--paper);
+  border: 1px solid var(--ink-dim);
+}
+
+/* ── Two-column layout for data section ─────────────────────── */
+.imm-twocol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+/* ── Tables ─────────────────────────────────────────────────── */
+.imm-table-wrap {
+  margin: 14px 0 18px;
+  border: 1px solid var(--ink-dim);
+  background: var(--paper);
+}
+.imm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+}
+.imm-table th,
+.imm-table td {
+  padding: 8px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--ink-dim);
+}
+.imm-table th {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 400;
+  text-align: right;
+  background: var(--paper-2);
+}
+.imm-table th:first-child,
+.imm-table td:first-child {
+  text-align: left;
+}
+.imm-table tr:last-child td { border-bottom: 0; }
+.imm-table .ci {
+  color: var(--ink-soft);
+  font-size: 10px;
+}
+.imm-table tbody tr:hover {
+  background: color-mix(in oklab, var(--accent) 6%, transparent);
+}
+
+/* ── SQL code block ─────────────────────────────────────────── */
+.imm-sql-block {
+  background: var(--paper-2);
+  border: 1px solid var(--ink-dim);
+  margin-top: 10px;
+}
+.imm-sql-block summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--ink-dim);
+  list-style: none;
+}
+.imm-sql-block summary::-webkit-details-marker { display: none; }
+.imm-sql-block summary code {
+  color: var(--accent);
+  font-family: "DM Mono", ui-monospace, monospace;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.imm-sql-block[open] summary {
+  color: var(--ink);
+}
+.imm-sql {
+  margin: 0;
+  padding: 14px 18px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-x: auto;
+  background: var(--paper);
+}
+.imm-sql .sql-k { color: var(--accent); }
+.imm-sql .sql-s { color: #b08a3d; }
+[data-theme="graphite"] .imm-sql .sql-s { color: #d4b970; }
+.imm-sql .sql-c { color: var(--ink-dim); font-style: italic; }
+
+/* ── Equation block ─────────────────────────────────────────── */
+.imm-eq-wrap {
+  border: 1px solid var(--ink-dim);
+  background: var(--paper-2);
+  padding: 22px 28px;
+  margin: 18px 0;
+}
+.imm-eq-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.imm-eq {
+  font-family: "Newsreader", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.imm-eq-line {
+  font-style: italic;
+}
+.imm-eq .imm-fn {
+  font-style: normal;
+  color: var(--accent);
+}
+.imm-eq-legend {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin-top: 14px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Callout ────────────────────────────────────────────────── */
+.imm-callout {
+  border-left: 2px solid var(--accent);
+  background: var(--paper-2);
+  padding: 16px 22px;
+  margin: 16px 0 22px;
+  max-width: 760px;
+}
+.imm-callout-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.imm-callout p {
+  font-family: "Newsreader", serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+.imm-callout a {
+  border-bottom: 1px solid var(--ink-dim);
+}
+
+/* ── Diagnostics ────────────────────────────────────────────── */
+.imm-diag-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin: 14px 0 22px;
+}
+.imm-diag-tile {
+  background: var(--paper);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.imm-diag-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.imm-diag-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.imm-diag-sub {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+/* ── Saturation curve grid ──────────────────────────────────── */
+.imm-sat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.imm-sat-tile {
+  border: 1px solid var(--ink-dim);
+  background: var(--paper);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.imm-sat-name {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.imm-sat-meta {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9.5px;
+  color: var(--ink-dim);
+  display: flex;
+  justify-content: space-between;
+}
+.imm-sat-status {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.imm-sat-status.linear     { color: var(--accent); }
+.imm-sat-status.bending    { color: #d4b970; }
+.imm-sat-status.saturated  { color: var(--ink-dim); }
+
+/* ── What-if controls + grid ───────────────────────────────── */
+.imm-whatif-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 18px;
+  border: 1px solid var(--ink-dim);
+  background: var(--paper-2);
+  margin: 18px 0 14px;
+}
+.imm-filter-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 6px;
+}
+.imm-filter-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--ink-dim);
+  margin: 0 4px;
+}
+.imm-pill {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border: 1px solid var(--ink-dim);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.imm-pill:hover { color: var(--ink); border-color: var(--ink); }
+.imm-pill.active {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+}
+.imm-pill-action {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.imm-pill-action:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.imm-whatif-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+}
+.imm-whatif-tile {
+  background: var(--paper);
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 130px 1fr 90px;
+  gap: 14px;
+  align-items: center;
+}
+.imm-whatif-name {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.imm-whatif-name .sub {
+  font-size: 9px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+}
+.imm-whatif-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--ink-dim);
+  border-radius: 0;
+  outline: none;
+}
+.imm-whatif-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  cursor: pointer;
+}
+.imm-whatif-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  cursor: pointer;
+}
+.imm-whatif-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--ink);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.imm-whatif-delta {
+  font-size: 9.5px;
+  color: var(--ink-dim);
+}
+.imm-whatif-delta.up   { color: var(--accent); }
+.imm-whatif-delta.down { color: #c66e6e; }
+
+.imm-whatif-result {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin-top: 18px;
+}
+.imm-whatif-headline {
+  background: var(--paper);
+  padding: 22px 28px;
+}
+.imm-result-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.imm-result-value {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+#imm-result-mean,
+#imm-result-new-rev {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--ink);
+}
+#imm-result-mean.up { color: var(--accent); }
+#imm-result-mean.down { color: #c66e6e; }
+.imm-result-ci {
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+/* ── Receipts ───────────────────────────────────────────────── */
+.imm-receipts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--ink-dim);
+  border: 1px solid var(--ink-dim);
+  margin: 14px 0 22px;
+}
+.imm-receipt {
+  background: var(--paper);
+  padding: 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.imm-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.imm-receipt-value {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.imm-receipt-sub {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+/* ── Methodology grid ───────────────────────────────────────── */
+.imm-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 36px;
+  margin-top: 14px;
+}
+.imm-method-grid .method-head,
+.imm-method-head {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.imm-method-grid p {
+  font-family: "Newsreader", serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.imm-method-grid code {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  color: var(--accent);
+}
+
+.imm-caveats {
+  margin-top: 28px;
+  border-top: 1px solid var(--ink-dim);
+  padding-top: 22px;
+}
+.imm-caveat-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.imm-caveats ul {
+  margin: 0;
+  padding-left: 22px;
+  list-style: square;
+}
+.imm-caveats li {
+  font-family: "Newsreader", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.imm-caveats em { font-style: italic; }
+
+.imm-readinglist {
+  margin-top: 22px;
+}
+.imm-readinglist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.imm-readinglist li {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.imm-readinglist a {
+  border-bottom: 1px solid var(--ink-dim);
+  color: var(--ink-soft);
+}
+.imm-readinglist a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .imm-section { padding: 48px 36px; }
+  .imm-hero { padding: 88px 36px 40px; }
+  .imm-twocol { grid-template-columns: 1fr; }
+  .imm-sat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .imm-receipts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .imm-diag-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .imm-whatif-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .imm-section { padding: 36px 20px; }
+  .imm-hero { padding: 72px 20px 32px; }
+  .imm-dateline { grid-template-columns: 1fr 1fr; }
+  .imm-method-grid { grid-template-columns: 1fr; }
+  .imm-sat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .imm-receipts { grid-template-columns: 1fr 1fr; }
+  .imm-diag-grid { grid-template-columns: 1fr 1fr; }
+  .imm-whatif-tile { grid-template-columns: 1fr; gap: 8px; }
+  .imm-whatif-result { grid-template-columns: 1fr; }
+  .imm-whatif-controls { gap: 6px; }
+  .imm-whatif-controls .imm-pill { font-size: 9.5px; padding: 5px 9px; }
+  #imm-result-mean, #imm-result-new-rev { font-size: 24px; }
+}

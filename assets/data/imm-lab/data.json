@@ -1,0 +1,1941 @@
+{
+  "_meta": {
+    "title": "IMM Lab — Synthetic Weekly Marketing Data",
+    "seed": 42,
+    "weeks": 104,
+    "channels": [
+      "tiktok_creator",
+      "instagram_creator",
+      "youtube_creator",
+      "meta_paid",
+      "tiktok_paid",
+      "paid_search",
+      "programmatic",
+      "retail_media"
+    ],
+    "generated_by": "notebooks/imm/generate_synth.js",
+    "note": "Synthetic D2C beauty-brand panel. See methodology for ground-truth coefficients."
+  },
+  "channels": [
+    {
+      "id": "tiktok_creator",
+      "label": "TikTok creators"
+    },
+    {
+      "id": "instagram_creator",
+      "label": "Instagram creators"
+    },
+    {
+      "id": "youtube_creator",
+      "label": "YouTube creators"
+    },
+    {
+      "id": "meta_paid",
+      "label": "Meta paid social"
+    },
+    {
+      "id": "tiktok_paid",
+      "label": "TikTok paid social"
+    },
+    {
+      "id": "paid_search",
+      "label": "Paid search"
+    },
+    {
+      "id": "programmatic",
+      "label": "Programmatic display"
+    },
+    {
+      "id": "retail_media",
+      "label": "Retail media"
+    }
+  ],
+  "weeks": [
+    {
+      "week": "2024-W01",
+      "week_idx": 0,
+      "revenue": 353679,
+      "competitor_idx": 0.985,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20697,
+        "instagram_creator": 27236,
+        "youtube_creator": 18563,
+        "meta_paid": 43486,
+        "tiktok_paid": 30146,
+        "paid_search": 40923,
+        "programmatic": 20148,
+        "retail_media": 33485
+      }
+    },
+    {
+      "week": "2024-W02",
+      "week_idx": 1,
+      "revenue": 444755,
+      "competitor_idx": 0.959,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23771,
+        "instagram_creator": 28637,
+        "youtube_creator": 22627,
+        "meta_paid": 46771,
+        "tiktok_paid": 45928,
+        "paid_search": 35408,
+        "programmatic": 27178,
+        "retail_media": 24833
+      }
+    },
+    {
+      "week": "2024-W03",
+      "week_idx": 2,
+      "revenue": 452930,
+      "competitor_idx": 0.945,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 16713,
+        "instagram_creator": 34510,
+        "youtube_creator": 19072,
+        "meta_paid": 39035,
+        "tiktok_paid": 31097,
+        "paid_search": 36743,
+        "programmatic": 19099,
+        "retail_media": 24946
+      }
+    },
+    {
+      "week": "2024-W04",
+      "week_idx": 3,
+      "revenue": 471737,
+      "competitor_idx": 0.898,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19866,
+        "instagram_creator": 23026,
+        "youtube_creator": 25465,
+        "meta_paid": 44995,
+        "tiktok_paid": 37976,
+        "paid_search": 39131,
+        "programmatic": 21337,
+        "retail_media": 21691
+      }
+    },
+    {
+      "week": "2024-W05",
+      "week_idx": 4,
+      "revenue": 510951,
+      "competitor_idx": 0.898,
+      "price_discount": 0,
+      "holiday": "Valentine's",
+      "spend": {
+        "tiktok_creator": 22618,
+        "instagram_creator": 42979,
+        "youtube_creator": 18724,
+        "meta_paid": 45362,
+        "tiktok_paid": 25284,
+        "paid_search": 45527,
+        "programmatic": 23389,
+        "retail_media": 29699
+      }
+    },
+    {
+      "week": "2024-W06",
+      "week_idx": 5,
+      "revenue": 464292,
+      "competitor_idx": 0.871,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 30529,
+        "instagram_creator": 29255,
+        "youtube_creator": 19983,
+        "meta_paid": 44063,
+        "tiktok_paid": 47458,
+        "paid_search": 45383,
+        "programmatic": 19309,
+        "retail_media": 22735
+      }
+    },
+    {
+      "week": "2024-W07",
+      "week_idx": 6,
+      "revenue": 442514,
+      "competitor_idx": 0.87,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23792,
+        "instagram_creator": 31178,
+        "youtube_creator": 18119,
+        "meta_paid": 37789,
+        "tiktok_paid": 36354,
+        "paid_search": 39110,
+        "programmatic": 18242,
+        "retail_media": 21298
+      }
+    },
+    {
+      "week": "2024-W08",
+      "week_idx": 7,
+      "revenue": 463929,
+      "competitor_idx": 0.781,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 16892,
+        "instagram_creator": 28239,
+        "youtube_creator": 15854,
+        "meta_paid": 41672,
+        "tiktok_paid": 30116,
+        "paid_search": 37366,
+        "programmatic": 21222,
+        "retail_media": 29426
+      }
+    },
+    {
+      "week": "2024-W09",
+      "week_idx": 8,
+      "revenue": 466229,
+      "competitor_idx": 0.78,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 22003,
+        "instagram_creator": 28465,
+        "youtube_creator": 21583,
+        "meta_paid": 43085,
+        "tiktok_paid": 28911,
+        "paid_search": 52110,
+        "programmatic": 21662,
+        "retail_media": 21491
+      }
+    },
+    {
+      "week": "2024-W10",
+      "week_idx": 9,
+      "revenue": 487037,
+      "competitor_idx": 0.796,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 10244,
+        "instagram_creator": 40247,
+        "youtube_creator": 21734,
+        "meta_paid": 32730,
+        "tiktok_paid": 29934,
+        "paid_search": 33957,
+        "programmatic": 22314,
+        "retail_media": 24117
+      }
+    },
+    {
+      "week": "2024-W11",
+      "week_idx": 10,
+      "revenue": 479438,
+      "competitor_idx": 0.782,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 27544,
+        "instagram_creator": 22092,
+        "youtube_creator": 27183,
+        "meta_paid": 34150,
+        "tiktok_paid": 33684,
+        "paid_search": 51304,
+        "programmatic": 12321,
+        "retail_media": 19648
+      }
+    },
+    {
+      "week": "2024-W12",
+      "week_idx": 11,
+      "revenue": 519690,
+      "competitor_idx": 0.78,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29515,
+        "instagram_creator": 28797,
+        "youtube_creator": 13757,
+        "meta_paid": 31357,
+        "tiktok_paid": 24844,
+        "paid_search": 39695,
+        "programmatic": 21020,
+        "retail_media": 23065
+      }
+    },
+    {
+      "week": "2024-W13",
+      "week_idx": 12,
+      "revenue": 514671,
+      "competitor_idx": 0.822,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 31769,
+        "instagram_creator": 30796,
+        "youtube_creator": 16942,
+        "meta_paid": 42988,
+        "tiktok_paid": 31515,
+        "paid_search": 40070,
+        "programmatic": 16863,
+        "retail_media": 31959
+      }
+    },
+    {
+      "week": "2024-W14",
+      "week_idx": 13,
+      "revenue": 513626,
+      "competitor_idx": 0.78,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26728,
+        "instagram_creator": 25109,
+        "youtube_creator": 18015,
+        "meta_paid": 51870,
+        "tiktok_paid": 36964,
+        "paid_search": 44406,
+        "programmatic": 19072,
+        "retail_media": 25625
+      }
+    },
+    {
+      "week": "2024-W15",
+      "week_idx": 14,
+      "revenue": 520190,
+      "competitor_idx": 0.81,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29995,
+        "instagram_creator": 24190,
+        "youtube_creator": 26852,
+        "meta_paid": 50088,
+        "tiktok_paid": 36333,
+        "paid_search": 28885,
+        "programmatic": 19364,
+        "retail_media": 20555
+      }
+    },
+    {
+      "week": "2024-W16",
+      "week_idx": 15,
+      "revenue": 524858,
+      "competitor_idx": 0.796,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29636,
+        "instagram_creator": 23574,
+        "youtube_creator": 18747,
+        "meta_paid": 37975,
+        "tiktok_paid": 23068,
+        "paid_search": 46862,
+        "programmatic": 26512,
+        "retail_media": 25579
+      }
+    },
+    {
+      "week": "2024-W17",
+      "week_idx": 16,
+      "revenue": 488578,
+      "competitor_idx": 0.78,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26954,
+        "instagram_creator": 26523,
+        "youtube_creator": 13631,
+        "meta_paid": 36350,
+        "tiktok_paid": 30289,
+        "paid_search": 39943,
+        "programmatic": 21419,
+        "retail_media": 23206
+      }
+    },
+    {
+      "week": "2024-W18",
+      "week_idx": 17,
+      "revenue": 497631,
+      "competitor_idx": 0.78,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 18536,
+        "instagram_creator": 34973,
+        "youtube_creator": 17498,
+        "meta_paid": 39803,
+        "tiktok_paid": 46298,
+        "paid_search": 44644,
+        "programmatic": 28136,
+        "retail_media": 34368
+      }
+    },
+    {
+      "week": "2024-W19",
+      "week_idx": 18,
+      "revenue": 560638,
+      "competitor_idx": 0.835,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 35938,
+        "instagram_creator": 29311,
+        "youtube_creator": 19941,
+        "meta_paid": 50035,
+        "tiktok_paid": 32687,
+        "paid_search": 43016,
+        "programmatic": 18091,
+        "retail_media": 22530
+      }
+    },
+    {
+      "week": "2024-W20",
+      "week_idx": 19,
+      "revenue": 554595,
+      "competitor_idx": 0.835,
+      "price_discount": 0,
+      "holiday": "Mother's Day",
+      "spend": {
+        "tiktok_creator": 21001,
+        "instagram_creator": 24194,
+        "youtube_creator": 24142,
+        "meta_paid": 38503,
+        "tiktok_paid": 37079,
+        "paid_search": 46008,
+        "programmatic": 15902,
+        "retail_media": 37180
+      }
+    },
+    {
+      "week": "2024-W21",
+      "week_idx": 20,
+      "revenue": 462921,
+      "competitor_idx": 0.859,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20401,
+        "instagram_creator": 25351,
+        "youtube_creator": 18714,
+        "meta_paid": 39801,
+        "tiktok_paid": 21389,
+        "paid_search": 30544,
+        "programmatic": 19472,
+        "retail_media": 25725
+      }
+    },
+    {
+      "week": "2024-W22",
+      "week_idx": 21,
+      "revenue": 484901,
+      "competitor_idx": 0.856,
+      "price_discount": 0,
+      "holiday": "Memorial Day",
+      "spend": {
+        "tiktok_creator": 22369,
+        "instagram_creator": 40807,
+        "youtube_creator": 19954,
+        "meta_paid": 61119,
+        "tiktok_paid": 34557,
+        "paid_search": 27721,
+        "programmatic": 19018,
+        "retail_media": 34567
+      }
+    },
+    {
+      "week": "2024-W23",
+      "week_idx": 22,
+      "revenue": 490661,
+      "competitor_idx": 0.894,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 27211,
+        "instagram_creator": 39888,
+        "youtube_creator": 24076,
+        "meta_paid": 43537,
+        "tiktok_paid": 37241,
+        "paid_search": 39126,
+        "programmatic": 16862,
+        "retail_media": 28375
+      }
+    },
+    {
+      "week": "2024-W24",
+      "week_idx": 23,
+      "revenue": 413750,
+      "competitor_idx": 0.898,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26487,
+        "instagram_creator": 38578,
+        "youtube_creator": 22982,
+        "meta_paid": 25335,
+        "tiktok_paid": 33489,
+        "paid_search": 34341,
+        "programmatic": 27967,
+        "retail_media": 21851
+      }
+    },
+    {
+      "week": "2024-W25",
+      "week_idx": 24,
+      "revenue": 488229,
+      "competitor_idx": 0.944,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23095,
+        "instagram_creator": 22989,
+        "youtube_creator": 20136,
+        "meta_paid": 49475,
+        "tiktok_paid": 43738,
+        "paid_search": 42266,
+        "programmatic": 23268,
+        "retail_media": 27727
+      }
+    },
+    {
+      "week": "2024-W26",
+      "week_idx": 25,
+      "revenue": 504170,
+      "competitor_idx": 1.014,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19500,
+        "instagram_creator": 35057,
+        "youtube_creator": 21214,
+        "meta_paid": 46459,
+        "tiktok_paid": 49100,
+        "paid_search": 51116,
+        "programmatic": 26039,
+        "retail_media": 26486
+      }
+    },
+    {
+      "week": "2024-W27",
+      "week_idx": 26,
+      "revenue": 459719,
+      "competitor_idx": 1.014,
+      "price_discount": 0,
+      "holiday": "July 4",
+      "spend": {
+        "tiktok_creator": 23619,
+        "instagram_creator": 21108,
+        "youtube_creator": 12555,
+        "meta_paid": 35600,
+        "tiktok_paid": 30274,
+        "paid_search": 45222,
+        "programmatic": 23416,
+        "retail_media": 33553
+      }
+    },
+    {
+      "week": "2024-W28",
+      "week_idx": 27,
+      "revenue": 478428,
+      "competitor_idx": 1.112,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26482,
+        "instagram_creator": 27291,
+        "youtube_creator": 16083,
+        "meta_paid": 38010,
+        "tiktok_paid": 33903,
+        "paid_search": 42414,
+        "programmatic": 19404,
+        "retail_media": 22990
+      }
+    },
+    {
+      "week": "2024-W29",
+      "week_idx": 28,
+      "revenue": 432194,
+      "competitor_idx": 1.111,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23610,
+        "instagram_creator": 34787,
+        "youtube_creator": 15887,
+        "meta_paid": 37188,
+        "tiktok_paid": 33895,
+        "paid_search": 34915,
+        "programmatic": 21238,
+        "retail_media": 28085
+      }
+    },
+    {
+      "week": "2024-W30",
+      "week_idx": 29,
+      "revenue": 469409,
+      "competitor_idx": 1.13,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26009,
+        "instagram_creator": 30001,
+        "youtube_creator": 15978,
+        "meta_paid": 49459,
+        "tiktok_paid": 45986,
+        "paid_search": 39875,
+        "programmatic": 20141,
+        "retail_media": 29663
+      }
+    },
+    {
+      "week": "2024-W31",
+      "week_idx": 30,
+      "revenue": 459629,
+      "competitor_idx": 1.167,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 34390,
+        "instagram_creator": 31411,
+        "youtube_creator": 17323,
+        "meta_paid": 36768,
+        "tiktok_paid": 37924,
+        "paid_search": 33879,
+        "programmatic": 23806,
+        "retail_media": 29328
+      }
+    },
+    {
+      "week": "2024-W32",
+      "week_idx": 31,
+      "revenue": 430905,
+      "competitor_idx": 1.161,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 18614,
+        "instagram_creator": 31998,
+        "youtube_creator": 15643,
+        "meta_paid": 47527,
+        "tiktok_paid": 45082,
+        "paid_search": 28163,
+        "programmatic": 24327,
+        "retail_media": 24848
+      }
+    },
+    {
+      "week": "2024-W33",
+      "week_idx": 32,
+      "revenue": 482901,
+      "competitor_idx": 1.177,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 28601,
+        "instagram_creator": 32712,
+        "youtube_creator": 15490,
+        "meta_paid": 42541,
+        "tiktok_paid": 38585,
+        "paid_search": 39010,
+        "programmatic": 24420,
+        "retail_media": 27890
+      }
+    },
+    {
+      "week": "2024-W34",
+      "week_idx": 33,
+      "revenue": 455129,
+      "competitor_idx": 1.09,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23068,
+        "instagram_creator": 40048,
+        "youtube_creator": 22617,
+        "meta_paid": 36995,
+        "tiktok_paid": 30277,
+        "paid_search": 42502,
+        "programmatic": 27534,
+        "retail_media": 22830
+      }
+    },
+    {
+      "week": "2024-W35",
+      "week_idx": 34,
+      "revenue": 414672,
+      "competitor_idx": 1.075,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 24708,
+        "instagram_creator": 28972,
+        "youtube_creator": 15760,
+        "meta_paid": 45103,
+        "tiktok_paid": 30951,
+        "paid_search": 38818,
+        "programmatic": 23741,
+        "retail_media": 23711
+      }
+    },
+    {
+      "week": "2024-W36",
+      "week_idx": 35,
+      "revenue": 452268,
+      "competitor_idx": 1.072,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26605,
+        "instagram_creator": 27638,
+        "youtube_creator": 18416,
+        "meta_paid": 42647,
+        "tiktok_paid": 30024,
+        "paid_search": 39255,
+        "programmatic": 16071,
+        "retail_media": 30023
+      }
+    },
+    {
+      "week": "2024-W37",
+      "week_idx": 36,
+      "revenue": 424258,
+      "competitor_idx": 1.097,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 27245,
+        "instagram_creator": 35744,
+        "youtube_creator": 11845,
+        "meta_paid": 50926,
+        "tiktok_paid": 36940,
+        "paid_search": 41383,
+        "programmatic": 23827,
+        "retail_media": 26193
+      }
+    },
+    {
+      "week": "2024-W38",
+      "week_idx": 37,
+      "revenue": 438615,
+      "competitor_idx": 1.111,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 34252,
+        "instagram_creator": 18120,
+        "youtube_creator": 16010,
+        "meta_paid": 41701,
+        "tiktok_paid": 34788,
+        "paid_search": 41131,
+        "programmatic": 18832,
+        "retail_media": 22349
+      }
+    },
+    {
+      "week": "2024-W39",
+      "week_idx": 38,
+      "revenue": 441004,
+      "competitor_idx": 1.096,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29170,
+        "instagram_creator": 28307,
+        "youtube_creator": 20106,
+        "meta_paid": 59792,
+        "tiktok_paid": 29359,
+        "paid_search": 43380,
+        "programmatic": 25735,
+        "retail_media": 22751
+      }
+    },
+    {
+      "week": "2024-W40",
+      "week_idx": 39,
+      "revenue": 412189,
+      "competitor_idx": 1.064,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19878,
+        "instagram_creator": 26823,
+        "youtube_creator": 18380,
+        "meta_paid": 48716,
+        "tiktok_paid": 27735,
+        "paid_search": 48880,
+        "programmatic": 19001,
+        "retail_media": 20228
+      }
+    },
+    {
+      "week": "2024-W41",
+      "week_idx": 40,
+      "revenue": 452147,
+      "competitor_idx": 1.023,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19540,
+        "instagram_creator": 39031,
+        "youtube_creator": 23456,
+        "meta_paid": 36026,
+        "tiktok_paid": 34637,
+        "paid_search": 39484,
+        "programmatic": 19194,
+        "retail_media": 20835
+      }
+    },
+    {
+      "week": "2024-W42",
+      "week_idx": 41,
+      "revenue": 448024,
+      "competitor_idx": 1.046,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 24127,
+        "instagram_creator": 29828,
+        "youtube_creator": 17843,
+        "meta_paid": 53120,
+        "tiktok_paid": 27874,
+        "paid_search": 44236,
+        "programmatic": 20704,
+        "retail_media": 31694
+      }
+    },
+    {
+      "week": "2024-W43",
+      "week_idx": 42,
+      "revenue": 453018,
+      "competitor_idx": 1.013,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 28393,
+        "instagram_creator": 52617,
+        "youtube_creator": 45621,
+        "meta_paid": 40834,
+        "tiktok_paid": 47686,
+        "paid_search": 46361,
+        "programmatic": 16592,
+        "retail_media": 15420
+      }
+    },
+    {
+      "week": "2024-W44",
+      "week_idx": 43,
+      "revenue": 462456,
+      "competitor_idx": 1.02,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 37371,
+        "instagram_creator": 45284,
+        "youtube_creator": 17917,
+        "meta_paid": 52473,
+        "tiktok_paid": 59454,
+        "paid_search": 44764,
+        "programmatic": 18978,
+        "retail_media": 19806
+      }
+    },
+    {
+      "week": "2024-W45",
+      "week_idx": 44,
+      "revenue": 504479,
+      "competitor_idx": 1.089,
+      "price_discount": 0,
+      "holiday": "Halloween",
+      "spend": {
+        "tiktok_creator": 39340,
+        "instagram_creator": 49770,
+        "youtube_creator": 28221,
+        "meta_paid": 48419,
+        "tiktok_paid": 56569,
+        "paid_search": 56363,
+        "programmatic": 20554,
+        "retail_media": 46180
+      }
+    },
+    {
+      "week": "2024-W46",
+      "week_idx": 45,
+      "revenue": 470629,
+      "competitor_idx": 1.061,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 30074,
+        "instagram_creator": 33734,
+        "youtube_creator": 26338,
+        "meta_paid": 57261,
+        "tiktok_paid": 64730,
+        "paid_search": 46773,
+        "programmatic": 18969,
+        "retail_media": 49633
+      }
+    },
+    {
+      "week": "2024-W47",
+      "week_idx": 46,
+      "revenue": 470409,
+      "competitor_idx": 1.027,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 47521,
+        "instagram_creator": 40462,
+        "youtube_creator": 29380,
+        "meta_paid": 41774,
+        "tiktok_paid": 58522,
+        "paid_search": 40535,
+        "programmatic": 16081,
+        "retail_media": 56900
+      }
+    },
+    {
+      "week": "2024-W48",
+      "week_idx": 47,
+      "revenue": 557159,
+      "competitor_idx": 1.043,
+      "price_discount": 0,
+      "holiday": "BFCM 2024",
+      "spend": {
+        "tiktok_creator": 36453,
+        "instagram_creator": 39669,
+        "youtube_creator": 31987,
+        "meta_paid": 36578,
+        "tiktok_paid": 44310,
+        "paid_search": 55554,
+        "programmatic": 14884,
+        "retail_media": 46720
+      }
+    },
+    {
+      "week": "2024-W49",
+      "week_idx": 48,
+      "revenue": 501304,
+      "competitor_idx": 1.121,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 42750,
+        "instagram_creator": 55510,
+        "youtube_creator": 31545,
+        "meta_paid": 36580,
+        "tiktok_paid": 62484,
+        "paid_search": 75530,
+        "programmatic": 20073,
+        "retail_media": 42435
+      }
+    },
+    {
+      "week": "2024-W50",
+      "week_idx": 49,
+      "revenue": 503487,
+      "competitor_idx": 1.129,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23751,
+        "instagram_creator": 46655,
+        "youtube_creator": 31618,
+        "meta_paid": 37664,
+        "tiktok_paid": 69306,
+        "paid_search": 54782,
+        "programmatic": 24361,
+        "retail_media": 30526
+      }
+    },
+    {
+      "week": "2024-W51",
+      "week_idx": 50,
+      "revenue": 532194,
+      "competitor_idx": 1.056,
+      "price_discount": 0,
+      "holiday": "December peak",
+      "spend": {
+        "tiktok_creator": 41740,
+        "instagram_creator": 37807,
+        "youtube_creator": 40057,
+        "meta_paid": 48119,
+        "tiktok_paid": 63955,
+        "paid_search": 42071,
+        "programmatic": 25809,
+        "retail_media": 50845
+      }
+    },
+    {
+      "week": "2024-W52",
+      "week_idx": 51,
+      "revenue": 468837,
+      "competitor_idx": 0.997,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 39463,
+        "instagram_creator": 51462,
+        "youtube_creator": 31648,
+        "meta_paid": 33406,
+        "tiktok_paid": 51400,
+        "paid_search": 30208,
+        "programmatic": 17606,
+        "retail_media": 39853
+      }
+    },
+    {
+      "week": "2025-W01",
+      "week_idx": 52,
+      "revenue": 458940,
+      "competitor_idx": 0.961,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 36953,
+        "instagram_creator": 54806,
+        "youtube_creator": 35684,
+        "meta_paid": 35413,
+        "tiktok_paid": 55625,
+        "paid_search": 29328,
+        "programmatic": 20836,
+        "retail_media": 20464
+      }
+    },
+    {
+      "week": "2025-W02",
+      "week_idx": 53,
+      "revenue": 469832,
+      "competitor_idx": 0.93,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 18346,
+        "instagram_creator": 35963,
+        "youtube_creator": 20517,
+        "meta_paid": 39200,
+        "tiktok_paid": 26238,
+        "paid_search": 39015,
+        "programmatic": 19810,
+        "retail_media": 29905
+      }
+    },
+    {
+      "week": "2025-W03",
+      "week_idx": 54,
+      "revenue": 452743,
+      "competitor_idx": 0.877,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20171,
+        "instagram_creator": 26167,
+        "youtube_creator": 22898,
+        "meta_paid": 55834,
+        "tiktok_paid": 33429,
+        "paid_search": 33869,
+        "programmatic": 17461,
+        "retail_media": 29100
+      }
+    },
+    {
+      "week": "2025-W04",
+      "week_idx": 55,
+      "revenue": 512009,
+      "competitor_idx": 0.952,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26776,
+        "instagram_creator": 33142,
+        "youtube_creator": 24008,
+        "meta_paid": 32316,
+        "tiktok_paid": 38232,
+        "paid_search": 48599,
+        "programmatic": 22091,
+        "retail_media": 33046
+      }
+    },
+    {
+      "week": "2025-W05",
+      "week_idx": 56,
+      "revenue": 506259,
+      "competitor_idx": 0.884,
+      "price_discount": 0,
+      "holiday": "Valentine's",
+      "spend": {
+        "tiktok_creator": 28285,
+        "instagram_creator": 33572,
+        "youtube_creator": 19989,
+        "meta_paid": 56497,
+        "tiktok_paid": 34592,
+        "paid_search": 47426,
+        "programmatic": 22003,
+        "retail_media": 25636
+      }
+    },
+    {
+      "week": "2025-W06",
+      "week_idx": 57,
+      "revenue": 514249,
+      "competitor_idx": 0.966,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26774,
+        "instagram_creator": 32706,
+        "youtube_creator": 15111,
+        "meta_paid": 59429,
+        "tiktok_paid": 32412,
+        "paid_search": 36614,
+        "programmatic": 15339,
+        "retail_media": 32214
+      }
+    },
+    {
+      "week": "2025-W07",
+      "week_idx": 58,
+      "revenue": 486895,
+      "competitor_idx": 0.969,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29171,
+        "instagram_creator": 38286,
+        "youtube_creator": 22746,
+        "meta_paid": 46175,
+        "tiktok_paid": 44707,
+        "paid_search": 44947,
+        "programmatic": 20192,
+        "retail_media": 22594
+      }
+    },
+    {
+      "week": "2025-W08",
+      "week_idx": 59,
+      "revenue": 481634,
+      "competitor_idx": 1.009,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23336,
+        "instagram_creator": 28993,
+        "youtube_creator": 20478,
+        "meta_paid": 36256,
+        "tiktok_paid": 35077,
+        "paid_search": 26554,
+        "programmatic": 21427,
+        "retail_media": 26228
+      }
+    },
+    {
+      "week": "2025-W09",
+      "week_idx": 60,
+      "revenue": 504065,
+      "competitor_idx": 1.031,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23916,
+        "instagram_creator": 30689,
+        "youtube_creator": 17526,
+        "meta_paid": 56280,
+        "tiktok_paid": 31979,
+        "paid_search": 39274,
+        "programmatic": 22490,
+        "retail_media": 30143
+      }
+    },
+    {
+      "week": "2025-W10",
+      "week_idx": 61,
+      "revenue": 474413,
+      "competitor_idx": 1.029,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 28049,
+        "instagram_creator": 29078,
+        "youtube_creator": 23384,
+        "meta_paid": 38994,
+        "tiktok_paid": 27216,
+        "paid_search": 42367,
+        "programmatic": 21723,
+        "retail_media": 28793
+      }
+    },
+    {
+      "week": "2025-W11",
+      "week_idx": 62,
+      "revenue": 485389,
+      "competitor_idx": 1.011,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 25503,
+        "instagram_creator": 35657,
+        "youtube_creator": 21271,
+        "meta_paid": 44954,
+        "tiktok_paid": 34064,
+        "paid_search": 32841,
+        "programmatic": 23673,
+        "retail_media": 26533
+      }
+    },
+    {
+      "week": "2025-W12",
+      "week_idx": 63,
+      "revenue": 502175,
+      "competitor_idx": 1.006,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20491,
+        "instagram_creator": 27651,
+        "youtube_creator": 22783,
+        "meta_paid": 34023,
+        "tiktok_paid": 35866,
+        "paid_search": 29533,
+        "programmatic": 22671,
+        "retail_media": 24205
+      }
+    },
+    {
+      "week": "2025-W13",
+      "week_idx": 64,
+      "revenue": 543347,
+      "competitor_idx": 0.948,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 32914,
+        "instagram_creator": 35948,
+        "youtube_creator": 22222,
+        "meta_paid": 55038,
+        "tiktok_paid": 30729,
+        "paid_search": 48251,
+        "programmatic": 17302,
+        "retail_media": 21223
+      }
+    },
+    {
+      "week": "2025-W14",
+      "week_idx": 65,
+      "revenue": 539369,
+      "competitor_idx": 0.984,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 24028,
+        "instagram_creator": 34980,
+        "youtube_creator": 15020,
+        "meta_paid": 41610,
+        "tiktok_paid": 41220,
+        "paid_search": 39623,
+        "programmatic": 24240,
+        "retail_media": 22606
+      }
+    },
+    {
+      "week": "2025-W15",
+      "week_idx": 66,
+      "revenue": 541371,
+      "competitor_idx": 1.038,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 23873,
+        "instagram_creator": 25790,
+        "youtube_creator": 18378,
+        "meta_paid": 60871,
+        "tiktok_paid": 43154,
+        "paid_search": 54292,
+        "programmatic": 22435,
+        "retail_media": 25149
+      }
+    },
+    {
+      "week": "2025-W16",
+      "week_idx": 67,
+      "revenue": 496120,
+      "competitor_idx": 1.017,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 31530,
+        "instagram_creator": 24854,
+        "youtube_creator": 22730,
+        "meta_paid": 45297,
+        "tiktok_paid": 38411,
+        "paid_search": 41756,
+        "programmatic": 20342,
+        "retail_media": 24408
+      }
+    },
+    {
+      "week": "2025-W17",
+      "week_idx": 68,
+      "revenue": 522570,
+      "competitor_idx": 0.96,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 32814,
+        "instagram_creator": 25625,
+        "youtube_creator": 18626,
+        "meta_paid": 52810,
+        "tiktok_paid": 34365,
+        "paid_search": 48167,
+        "programmatic": 18693,
+        "retail_media": 27072
+      }
+    },
+    {
+      "week": "2025-W18",
+      "week_idx": 69,
+      "revenue": 493178,
+      "competitor_idx": 0.965,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29742,
+        "instagram_creator": 36697,
+        "youtube_creator": 15618,
+        "meta_paid": 50641,
+        "tiktok_paid": 35171,
+        "paid_search": 37485,
+        "programmatic": 15750,
+        "retail_media": 22862
+      }
+    },
+    {
+      "week": "2025-W19",
+      "week_idx": 70,
+      "revenue": 534122,
+      "competitor_idx": 0.931,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29084,
+        "instagram_creator": 38435,
+        "youtube_creator": 20153,
+        "meta_paid": 53127,
+        "tiktok_paid": 41906,
+        "paid_search": 33650,
+        "programmatic": 18848,
+        "retail_media": 25170
+      }
+    },
+    {
+      "week": "2025-W20",
+      "week_idx": 71,
+      "revenue": 524533,
+      "competitor_idx": 0.985,
+      "price_discount": 0,
+      "holiday": "Mother's Day",
+      "spend": {
+        "tiktok_creator": 23723,
+        "instagram_creator": 33566,
+        "youtube_creator": 23276,
+        "meta_paid": 58888,
+        "tiktok_paid": 27125,
+        "paid_search": 50882,
+        "programmatic": 24404,
+        "retail_media": 30214
+      }
+    },
+    {
+      "week": "2025-W21",
+      "week_idx": 72,
+      "revenue": 518385,
+      "competitor_idx": 1.009,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19377,
+        "instagram_creator": 28694,
+        "youtube_creator": 20952,
+        "meta_paid": 36122,
+        "tiktok_paid": 32151,
+        "paid_search": 35761,
+        "programmatic": 20353,
+        "retail_media": 29601
+      }
+    },
+    {
+      "week": "2025-W22",
+      "week_idx": 73,
+      "revenue": 470415,
+      "competitor_idx": 1.03,
+      "price_discount": 0,
+      "holiday": "Memorial Day",
+      "spend": {
+        "tiktok_creator": 22680,
+        "instagram_creator": 41743,
+        "youtube_creator": 16174,
+        "meta_paid": 27218,
+        "tiktok_paid": 26289,
+        "paid_search": 35551,
+        "programmatic": 23975,
+        "retail_media": 19716
+      }
+    },
+    {
+      "week": "2025-W23",
+      "week_idx": 74,
+      "revenue": 480993,
+      "competitor_idx": 1.02,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 21856,
+        "instagram_creator": 27302,
+        "youtube_creator": 18317,
+        "meta_paid": 30428,
+        "tiktok_paid": 31301,
+        "paid_search": 36083,
+        "programmatic": 26091,
+        "retail_media": 24753
+      }
+    },
+    {
+      "week": "2025-W24",
+      "week_idx": 75,
+      "revenue": 432838,
+      "competitor_idx": 1.023,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 24014,
+        "instagram_creator": 35405,
+        "youtube_creator": 21805,
+        "meta_paid": 37062,
+        "tiktok_paid": 36597,
+        "paid_search": 34041,
+        "programmatic": 15438,
+        "retail_media": 22918
+      }
+    },
+    {
+      "week": "2025-W25",
+      "week_idx": 76,
+      "revenue": 488040,
+      "competitor_idx": 1.049,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20908,
+        "instagram_creator": 34394,
+        "youtube_creator": 20328,
+        "meta_paid": 67577,
+        "tiktok_paid": 28426,
+        "paid_search": 28094,
+        "programmatic": 23028,
+        "retail_media": 28933
+      }
+    },
+    {
+      "week": "2025-W26",
+      "week_idx": 77,
+      "revenue": 502267,
+      "competitor_idx": 1.025,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 20811,
+        "instagram_creator": 28520,
+        "youtube_creator": 19179,
+        "meta_paid": 45751,
+        "tiktok_paid": 44748,
+        "paid_search": 31437,
+        "programmatic": 19814,
+        "retail_media": 17964
+      }
+    },
+    {
+      "week": "2025-W27",
+      "week_idx": 78,
+      "revenue": 499194,
+      "competitor_idx": 1.067,
+      "price_discount": 0,
+      "holiday": "July 4",
+      "spend": {
+        "tiktok_creator": 21510,
+        "instagram_creator": 21917,
+        "youtube_creator": 16327,
+        "meta_paid": 51087,
+        "tiktok_paid": 34275,
+        "paid_search": 45910,
+        "programmatic": 16306,
+        "retail_media": 31799
+      }
+    },
+    {
+      "week": "2025-W28",
+      "week_idx": 79,
+      "revenue": 473291,
+      "competitor_idx": 1.002,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 21999,
+        "instagram_creator": 20945,
+        "youtube_creator": 22748,
+        "meta_paid": 46859,
+        "tiktok_paid": 44942,
+        "paid_search": 35555,
+        "programmatic": 17420,
+        "retail_media": 29021
+      }
+    },
+    {
+      "week": "2025-W29",
+      "week_idx": 80,
+      "revenue": 443303,
+      "competitor_idx": 0.988,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 25733,
+        "instagram_creator": 29451,
+        "youtube_creator": 22593,
+        "meta_paid": 46071,
+        "tiktok_paid": 35108,
+        "paid_search": 31950,
+        "programmatic": 26569,
+        "retail_media": 29090
+      }
+    },
+    {
+      "week": "2025-W30",
+      "week_idx": 81,
+      "revenue": 459455,
+      "competitor_idx": 0.993,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 22126,
+        "instagram_creator": 25658,
+        "youtube_creator": 27037,
+        "meta_paid": 45102,
+        "tiktok_paid": 37564,
+        "paid_search": 40487,
+        "programmatic": 20199,
+        "retail_media": 21776
+      }
+    },
+    {
+      "week": "2025-W31",
+      "week_idx": 82,
+      "revenue": 397506,
+      "competitor_idx": 0.996,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 29844,
+        "instagram_creator": 24582,
+        "youtube_creator": 21567,
+        "meta_paid": 38258,
+        "tiktok_paid": 43614,
+        "paid_search": 44875,
+        "programmatic": 19569,
+        "retail_media": 31376
+      }
+    },
+    {
+      "week": "2025-W32",
+      "week_idx": 83,
+      "revenue": 473758,
+      "competitor_idx": 0.992,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 31609,
+        "instagram_creator": 32266,
+        "youtube_creator": 10770,
+        "meta_paid": 46220,
+        "tiktok_paid": 34395,
+        "paid_search": 44191,
+        "programmatic": 15014,
+        "retail_media": 22656
+      }
+    },
+    {
+      "week": "2025-W33",
+      "week_idx": 84,
+      "revenue": 468378,
+      "competitor_idx": 1,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 26239,
+        "instagram_creator": 34064,
+        "youtube_creator": 19735,
+        "meta_paid": 60770,
+        "tiktok_paid": 35212,
+        "paid_search": 33692,
+        "programmatic": 21089,
+        "retail_media": 27324
+      }
+    },
+    {
+      "week": "2025-W34",
+      "week_idx": 85,
+      "revenue": 426360,
+      "competitor_idx": 1.089,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 21036,
+        "instagram_creator": 40440,
+        "youtube_creator": 23436,
+        "meta_paid": 48237,
+        "tiktok_paid": 24589,
+        "paid_search": 25352,
+        "programmatic": 21126,
+        "retail_media": 26572
+      }
+    },
+    {
+      "week": "2025-W35",
+      "week_idx": 86,
+      "revenue": 378776,
+      "competitor_idx": 1.121,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 28164,
+        "instagram_creator": 22409,
+        "youtube_creator": 22222,
+        "meta_paid": 54202,
+        "tiktok_paid": 28456,
+        "paid_search": 45755,
+        "programmatic": 15047,
+        "retail_media": 27364
+      }
+    },
+    {
+      "week": "2025-W36",
+      "week_idx": 87,
+      "revenue": 471622,
+      "competitor_idx": 1.088,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 22302,
+        "instagram_creator": 31147,
+        "youtube_creator": 21676,
+        "meta_paid": 68374,
+        "tiktok_paid": 25937,
+        "paid_search": 40739,
+        "programmatic": 18197,
+        "retail_media": 15297
+      }
+    },
+    {
+      "week": "2025-W37",
+      "week_idx": 88,
+      "revenue": 412446,
+      "competitor_idx": 1.125,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 30862,
+        "instagram_creator": 29345,
+        "youtube_creator": 18405,
+        "meta_paid": 40152,
+        "tiktok_paid": 27336,
+        "paid_search": 33557,
+        "programmatic": 26073,
+        "retail_media": 19844
+      }
+    },
+    {
+      "week": "2025-W38",
+      "week_idx": 89,
+      "revenue": 427718,
+      "competitor_idx": 1.141,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 27745,
+        "instagram_creator": 28264,
+        "youtube_creator": 13813,
+        "meta_paid": 33255,
+        "tiktok_paid": 36178,
+        "paid_search": 35303,
+        "programmatic": 22239,
+        "retail_media": 31251
+      }
+    },
+    {
+      "week": "2025-W39",
+      "week_idx": 90,
+      "revenue": 468714,
+      "competitor_idx": 1.159,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 22979,
+        "instagram_creator": 34918,
+        "youtube_creator": 22194,
+        "meta_paid": 46897,
+        "tiktok_paid": 37036,
+        "paid_search": 43863,
+        "programmatic": 21058,
+        "retail_media": 20412
+      }
+    },
+    {
+      "week": "2025-W40",
+      "week_idx": 91,
+      "revenue": 417320,
+      "competitor_idx": 1.114,
+      "price_discount": 1,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 18524,
+        "instagram_creator": 31275,
+        "youtube_creator": 16765,
+        "meta_paid": 58516,
+        "tiktok_paid": 39043,
+        "paid_search": 34617,
+        "programmatic": 17593,
+        "retail_media": 21437
+      }
+    },
+    {
+      "week": "2025-W41",
+      "week_idx": 92,
+      "revenue": 469600,
+      "competitor_idx": 1.143,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 25760,
+        "instagram_creator": 32133,
+        "youtube_creator": 16853,
+        "meta_paid": 31217,
+        "tiktok_paid": 39297,
+        "paid_search": 35348,
+        "programmatic": 19318,
+        "retail_media": 24396
+      }
+    },
+    {
+      "week": "2025-W42",
+      "week_idx": 93,
+      "revenue": 402502,
+      "competitor_idx": 1.069,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 19074,
+        "instagram_creator": 26249,
+        "youtube_creator": 21261,
+        "meta_paid": 55094,
+        "tiktok_paid": 37653,
+        "paid_search": 42536,
+        "programmatic": 20330,
+        "retail_media": 22041
+      }
+    },
+    {
+      "week": "2025-W43",
+      "week_idx": 94,
+      "revenue": 437916,
+      "competitor_idx": 0.997,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 37518,
+        "instagram_creator": 60967,
+        "youtube_creator": 28041,
+        "meta_paid": 55548,
+        "tiktok_paid": 54662,
+        "paid_search": 41646,
+        "programmatic": 23490,
+        "retail_media": 23786
+      }
+    },
+    {
+      "week": "2025-W44",
+      "week_idx": 95,
+      "revenue": 452084,
+      "competitor_idx": 1.039,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 40871,
+        "instagram_creator": 41033,
+        "youtube_creator": 30123,
+        "meta_paid": 44030,
+        "tiktok_paid": 69602,
+        "paid_search": 42613,
+        "programmatic": 22139,
+        "retail_media": 31462
+      }
+    },
+    {
+      "week": "2025-W45",
+      "week_idx": 96,
+      "revenue": 523388,
+      "competitor_idx": 1.025,
+      "price_discount": 0,
+      "holiday": "Halloween",
+      "spend": {
+        "tiktok_creator": 43818,
+        "instagram_creator": 47654,
+        "youtube_creator": 33089,
+        "meta_paid": 59087,
+        "tiktok_paid": 64669,
+        "paid_search": 49535,
+        "programmatic": 25968,
+        "retail_media": 45851
+      }
+    },
+    {
+      "week": "2025-W46",
+      "week_idx": 97,
+      "revenue": 499939,
+      "competitor_idx": 1.099,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 46575,
+        "instagram_creator": 55990,
+        "youtube_creator": 25047,
+        "meta_paid": 50090,
+        "tiktok_paid": 47654,
+        "paid_search": 53070,
+        "programmatic": 17457,
+        "retail_media": 52266
+      }
+    },
+    {
+      "week": "2025-W47",
+      "week_idx": 98,
+      "revenue": 442395,
+      "competitor_idx": 1.106,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 35132,
+        "instagram_creator": 56033,
+        "youtube_creator": 26870,
+        "meta_paid": 43349,
+        "tiktok_paid": 42128,
+        "paid_search": 42814,
+        "programmatic": 20736,
+        "retail_media": 33091
+      }
+    },
+    {
+      "week": "2025-W48",
+      "week_idx": 99,
+      "revenue": 524308,
+      "competitor_idx": 1.097,
+      "price_discount": 0,
+      "holiday": "BFCM 2025",
+      "spend": {
+        "tiktok_creator": 43900,
+        "instagram_creator": 42339,
+        "youtube_creator": 31895,
+        "meta_paid": 47402,
+        "tiktok_paid": 43880,
+        "paid_search": 41932,
+        "programmatic": 18308,
+        "retail_media": 40939
+      }
+    },
+    {
+      "week": "2025-W49",
+      "week_idx": 100,
+      "revenue": 464356,
+      "competitor_idx": 1.125,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 35738,
+        "instagram_creator": 48378,
+        "youtube_creator": 28356,
+        "meta_paid": 48533,
+        "tiktok_paid": 59982,
+        "paid_search": 52004,
+        "programmatic": 22070,
+        "retail_media": 37695
+      }
+    },
+    {
+      "week": "2025-W50",
+      "week_idx": 101,
+      "revenue": 479028,
+      "competitor_idx": 1.159,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 41258,
+        "instagram_creator": 55834,
+        "youtube_creator": 28569,
+        "meta_paid": 42665,
+        "tiktok_paid": 72612,
+        "paid_search": 66864,
+        "programmatic": 18277,
+        "retail_media": 41940
+      }
+    },
+    {
+      "week": "2025-W51",
+      "week_idx": 102,
+      "revenue": 518976,
+      "competitor_idx": 1.148,
+      "price_discount": 0,
+      "holiday": "December peak",
+      "spend": {
+        "tiktok_creator": 34563,
+        "instagram_creator": 40405,
+        "youtube_creator": 31243,
+        "meta_paid": 32872,
+        "tiktok_paid": 55682,
+        "paid_search": 39620,
+        "programmatic": 21846,
+        "retail_media": 47219
+      }
+    },
+    {
+      "week": "2025-W52",
+      "week_idx": 103,
+      "revenue": 462238,
+      "competitor_idx": 1.097,
+      "price_discount": 0,
+      "holiday": null,
+      "spend": {
+        "tiktok_creator": 45141,
+        "instagram_creator": 49014,
+        "youtube_creator": 26386,
+        "meta_paid": 37776,
+        "tiktok_paid": 63959,
+        "paid_search": 18992,
+        "programmatic": 22968,
+        "retail_media": 45750
+      }
+    }
+  ],
+  "total_revenue": 49482784,
+  "total_spend": 26801744,
+  "baseline": 220000,
+  "current_allocation": {
+    "tiktok_creator": 25000,
+    "instagram_creator": 30000,
+    "youtube_creator": 20000,
+    "meta_paid": 45000,
+    "tiktok_paid": 35000,
+    "paid_search": 40000,
+    "programmatic": 20000,
+    "retail_media": 25000
+  },
+  "total_weekly_budget": 240000
+}
