@@ -478,20 +478,30 @@
         var frag = document.createDocumentFragment();
 
         // Split into runs of whitespace vs non-whitespace so
-        // line-wrap can still happen at word boundaries.
+        // line-wrap happens at word boundaries — never mid-word.
         var parts = text.split(/(\s+)/);
         parts.forEach(function (part) {
           if (part.length === 0) return;
           if (/^\s+$/.test(part)) {
             frag.appendChild(document.createTextNode(part));
           } else {
+            // Word wrapper — inline-block + nowrap means the browser
+            // treats the entire word as one unbreakable unit. Without
+            // this, the browser would happily break a line between any
+            // two character spans, splitting words like 't|hat'.
+            var wordSpan = document.createElement('span');
+            wordSpan.className = 'scr-w';
+            wordSpan.style.display = 'inline-block';
+            wordSpan.style.whiteSpace = 'nowrap';
+
             for (var i = 0; i < part.length; i++) {
               var span = document.createElement('span');
               span.className = 'scr-c';
               span.textContent = part.charAt(i);
-              frag.appendChild(span);
+              wordSpan.appendChild(span);
               charEntries.push({ span: span, finalChar: part.charAt(i) });
             }
+            frag.appendChild(wordSpan);
           }
         });
 
