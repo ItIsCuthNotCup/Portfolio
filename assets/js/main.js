@@ -460,6 +460,12 @@
     var POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
     function run() {
+      // Save the original HTML so we can restore it after the
+      // animation. The per-char span structure is stable during
+      // animation but doesn't always re-flow as cleanly as the
+      // native H1 (we've seen mid-word clipping at edge widths).
+      var originalHTML = root.innerHTML;
+
       // Walk leaf text nodes; replace each with a sequence of
       // word-grouped character spans. Build a flat list of all
       // character entries for the animation loop.
@@ -544,7 +550,13 @@
           }
         }
 
-        if (p < 1) requestAnimationFrame(frame);
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          // Animation done — restore original HTML so the H1 reflows
+          // naturally (no mid-word clipping at narrow viewports).
+          root.innerHTML = originalHTML;
+        }
       }
 
       requestAnimationFrame(frame);

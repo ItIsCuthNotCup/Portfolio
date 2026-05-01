@@ -1038,19 +1038,22 @@ hr.rule.is-drawn, hr.hair.is-drawn {
      period; the drop cap echoes that with a subtle shift. */
 }
 
-/* Ink-mark: a curated highlighter over a key phrase. The accent
-   bar slides in left-to-right when the mark enters the viewport. */
+/* Ink-mark: a half-height "highlighter pen" stripe over a key
+   phrase. Covers the bottom ~45% of the line height so the text
+   itself is never obscured (works equally well on light or dark
+   themes, where the accent is bright yellow). The bar slides in
+   left-to-right when the mark enters the viewport. */
 .ink-mark {
   background-image: linear-gradient(
-    to right,
-    color-mix(in oklab, var(--accent) 22%, transparent) 0%,
-    color-mix(in oklab, var(--accent) 22%, transparent) 100%
+    to top,
+    color-mix(in oklab, var(--accent) 50%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 50%, transparent) 45%,
+    transparent 45%
   );
   background-repeat: no-repeat;
   background-size: 0% 100%;
   background-position: 0 0;
-  padding: 0.05em 0.18em;
-  border-radius: 1px;
+  padding: 0 0.06em;
   color: inherit;
   transition: background-size 800ms cubic-bezier(0.22, 0.61, 0.36, 1) 60ms;
 }
