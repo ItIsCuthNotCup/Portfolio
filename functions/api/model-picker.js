@@ -59,25 +59,25 @@ export async function onRequest(context) {
   const { request, env } = context;
 
   // CORS / method gate
+  const reqOrigin = request.headers.get('Origin');
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: corsHeaders(),
+      headers: corsHeaders(reqOrigin),
     });
   }
   if (request.method !== 'POST') {
-    return jsonResponse({ ok: false, error: 'POST only' }, 405);
+    return jsonResponse({ ok: false, error: 'POST only' }, 405, reqOrigin);
   }
 
   // Origin gate. Reject browser calls from foreign origins.
-  const reqOrigin = request.headers.get('Origin');
   if (!isAllowedOrigin(reqOrigin)) {
-    return jsonResponse({ ok: false, error: 'Origin not allowed.' }, 403);
+    return jsonResponse({ ok: false, error: 'Origin not allowed.' }, 403, reqOrigin);
   }
 
   try {
     if (!env.OPENROUTER_API_KEY) {
-      return okFalse('Server is missing the OPENROUTER_API_KEY secret. Set it in the Cloudflare Pages dashboard under Settings → Variables and Secrets.');
+      return okFalse('Server is missing the OPENROUTER_API_KEY secret. Set it in the Cloudflare Pages dashboard under Settings → Variables and Secrets.', reqOrigin);
     }
 
     // Parse body
@@ -85,30 +85,30 @@ export async function onRequest(context) {
     try {
       body = await request.json();
     } catch {
-      return jsonResponse({ ok: false, error: 'Body must be JSON.' }, 400);
+      return jsonResponse({ ok: false, error: 'Body must be JSON.' }, 400, reqOrigin);
     }
 
     const query = (body && typeof body.query === 'string') ? body.query.trim() : '';
     if (!query) {
-      return jsonResponse({ ok: false, error: 'Missing "query" string.' }, 400);
+      return jsonResponse({ ok: false, error: 'Missing "query" string.' }, 400, reqOrigin);
     }
     if (query.length > MAX_INPUT_CHARS) {
-      return jsonResponse({ ok: false, error: `Query exceeds ${MAX_INPUT_CHARS}-character limit.` }, 400);
+      return jsonResponse({ ok: false, error: `Query exceeds ${MAX_INPUT_CHARS}-character limit.` }, 400, reqOrigin);
     }
 
     // Topic guard
     const onTopic = ONTOPIC_PATTERNS.some(rx => rx.test(query));
     if (!onTopic) {
-      return okFalse("This picker only answers questions about choosing an LLM. Try one of the suggested questions or rephrase yours to mention models, tokens, context, pricing, or capabilities.");
+      return okFalse("This picker only answers questions about choosing an LLM. Try one of the suggested questions or rephrase yours to mention models, tokens, context, pricing, or capabilities.", reqOrigin);
     }
 
     // Rate limit + spend cap (KV-backed if available, else in-memory pass)
     const ipHash = await hashIp(request);
     const rateMsg = await checkAndBumpRate(env, ipHash);
-    if (rateMsg) return okFalse(rateMsg);
+    if (rateMsg) return okFalse(rateMsg, reqOrigin);
 
     const spendMsg = await checkAndBumpSpend(env);
-    if (spendMsg) return okFalse(spendMsg);
+    if (spendMsg) return okFalse(spendMsg, reqOrigin);
 
     // Cache check (24h)
     const cacheKey = await sha256Hex(`mp:${normalizeQuery(query)}`);
@@ -119,13 +119,13 @@ export async function onRequest(context) {
         cached: true,
         ...cached,
         trace: `cache hit · ${cached.candidates?.length || 0} candidates · ${GEN_MODEL}`,
-      });
+      }, 200, reqOrigin);
     }
 
     // Load catalog
     const catalog = await loadCatalog(context);
     if (!catalog || !Array.isArray(catalog.chunks) || catalog.chunks.length === 0) {
-      return okFalse('Model catalog is empty. The indexing notebook has not run yet — see /work/model-picker-lab/README.md.');
+      return okFalse('Model catalog is empty. The indexing notebook has not run yet — see /work/model-picker-lab/README.md.', reqOrigin);
     }
 
     // Hard-constraint extraction (regex)
@@ -200,7 +200,11 @@ export async function onRequest(context) {
 
           if (!genResp.ok || !genResp.body) {
             const errText = await safeText(genResp);
-            send('error', { message: `Generation failed: ${truncate(errText, 240)}` });
+            // Log full upstream response for debugging in CF Pages logs.
+            // Surface only a generic message to the client so we don't
+            // leak API-key state, quota internals, or upstream URLs.
+            console.error('OpenRouter generation failed', genResp.status, truncate(errText, 500));
+            send('error', { message: `Upstream model returned ${genResp.status}. Try again in a minute.` });
             send('done', { trace: 'generation failed' });
             controller.close();
             return;
@@ -249,7 +253,8 @@ export async function onRequest(context) {
           send('done', { trace: traceLine });
           controller.close();
         } catch (err) {
-          send('error', { message: err?.message || 'Streaming failed' });
+          console.error('model-picker stream threw', err);
+          send('error', { message: 'Streaming failed. Try again in a minute.' });
           send('done', { trace: 'failed' });
           controller.close();
         }
@@ -259,7 +264,7 @@ export async function onRequest(context) {
     return new Response(stream, {
       status: 200,
       headers: {
-        ...corsHeaders(),
+        ...corsHeaders(reqOrigin),
         'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         'X-Accel-Buffering': 'no',
@@ -267,7 +272,8 @@ export async function onRequest(context) {
     });
   } catch (err) {
     // CLAUDE.md hard rule #4: never 5xx.
-    return okFalse(err?.message || 'Unexpected runtime error.');
+    console.error('model-picker handler threw', err);
+    return okFalse('Unexpected runtime error.', reqOrigin);
   }
 }
 
@@ -397,7 +403,8 @@ async function embedQuery(env, text) {
   });
   if (!r.ok) {
     const t = await safeText(r);
-    throw new Error(`Embedding call failed: ${truncate(t, 200)}`);
+    console.error('OpenRouter embedding failed', r.status, truncate(t, 500));
+    throw new Error(`Embedding call failed (HTTP ${r.status}).`);
   }
   const data = await r.json();
   const vec = data?.data?.[0]?.embedding;
@@ -531,21 +538,27 @@ async function writeCache(env, key, value) {
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
+function corsHeaders(origin) {
+  // Reflect the request Origin when it is on the allowlist; otherwise
+  // omit ACAO so the browser blocks the response. Server-side / no-Origin
+  // callers don't enforce CORS anyway, so we don't need a wildcard.
+  const allowOrigin = origin && isAllowedOrigin(origin) ? origin : '';
+  const headers = {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
   };
+  if (allowOrigin) headers['Access-Control-Allow-Origin'] = allowOrigin;
+  return headers;
 }
-function jsonResponse(obj, status = 200) {
+function jsonResponse(obj, status = 200, origin) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { ...corsHeaders(), 'Content-Type': 'application/json; charset=utf-8' },
+    headers: { ...corsHeaders(origin), 'Content-Type': 'application/json; charset=utf-8' },
   });
 }
-function okFalse(error) {
-  return jsonResponse({ ok: false, error }, 200);
+function okFalse(error, origin) {
+  return jsonResponse({ ok: false, error }, 200, origin);
 }
 function openrouterHeaders(env) {
   return {
@@ -556,7 +569,12 @@ function openrouterHeaders(env) {
   };
 }
 async function hashIp(request) {
-  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || '0.0.0.0';
+  // Cloudflare always sets cf-connecting-ip and it cannot be spoofed by the
+  // client. Do NOT fall back to x-forwarded-for — that header is client-
+  // controlled on direct hits and would let attackers rotate the rate-limit
+  // bucket. If cf-connecting-ip is absent (non-CF runtime, local dev), use
+  // a fixed sentinel so the limits still apply, just shared.
+  const ip = request.headers.get('cf-connecting-ip') || '0.0.0.0';
   return sha256Hex(`mp-ip:${ip}`);
 }
 async function sha256Hex(s) {

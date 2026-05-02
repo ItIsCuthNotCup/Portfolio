@@ -5,8 +5,8 @@ name: Refresh Algorithm Watchdog
 
 on:
   schedule:
-    # 11:00 UTC = 7:00 AM ET (standard) / 6:00 AM EDT — after US viewers
-    # have started their day but before the morning push lands.
+    # 11:00 UTC = 7:00 AM EDT (Mar–Nov) / 6:00 AM EST (Nov–Mar) — after
+    # US viewers have started their day but before the morning push lands.
     - cron: '0 11 * * *'
   workflow_dispatch: {}
 
