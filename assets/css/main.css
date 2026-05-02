@@ -1284,3 +1284,37 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   background: var(--ink);
   color: var(--paper);
 }
+
+/* ── CIRIDAE SPARK — single orange accent, used sparingly ───────
+   The dither aesthetic deliberately killed color. Borrowing exactly
+   one move from Ciridae's style guide: their #CC6437 "subtle orange"
+   used as a rare, high-impact accent on otherwise-monochrome pages.
+   Curved pill shape contrasts deliberately against the sharp 1-bit
+   framing everywhere else. Only marks recently-shipped labs. */
+:root {
+  --spark: #CC6437;
+}
+.new-pill {
+  display: inline-block;
+  background: var(--spark);
+  color: #fff;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px !important;  /* override dither's global radius:0 */
+  vertical-align: middle;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+.lab-card .new-pill {
+  margin-left: 8px;
+  font-size: 9px;
+}
+/* Dropdown items: pill on the right side, slightly smaller */
+.nav-dropdown-menu a .new-pill {
+  margin-left: 8px;
+  font-size: 8px;
+  padding: 1px 6px;
+}
