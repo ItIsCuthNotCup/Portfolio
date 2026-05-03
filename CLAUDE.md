@@ -76,24 +76,48 @@ is in preprocessing.
 ```
 ~/Desktop/Desktop - Jacob's MacBook Air/Apps/Portfolio/
 ├── index.html                       # homepage
+├── _headers                         # Cloudflare Pages headers (cache, CSP, HSTS)
 ├── assets/
 │   ├── css/main.css                 # global styles + per-section blocks
-│   ├── css/<lab>-lab.css            # one per lab
+│   ├── css/<lab>-lab.css            # per-lab styles (where present)
 │   ├── js/main.js                   # global JS (scroll, scene stage, etc.)
-│   └── js/<lab>-lab.js              # one per lab
+│   └── js/<lab>-lab.js              # per-lab logic
+├── functions/
+│   └── api/model-picker.js          # CF Pages Function — RAG over OpenRouter
 ├── work/
-│   ├── churn-lab/index.html         # FIG. 01
-│   ├── segmentation-lab/index.html  # FIG. 02
-│   ├── reco-lab/index.html          # FIG. 03
-│   ├── ab-test-lab/index.html       # FIG. 04
-│   └── funnel-sim-lab/index.html    # FIG. 05
+│   # Model Labs section (FIG. 01–16, in homepage order)
+│   ├── churn-lab/                   # FIG. 01
+│   ├── segmentation-lab/            # FIG. 02
+│   ├── reco-lab/                    # FIG. 03
+│   ├── ab-test-lab/                 # FIG. 04
+│   ├── funnel-sim-lab/              # FIG. 05
+│   ├── sketch-lab/                  # FIG. 06 — ONNX in-browser
+│   ├── model-picker-lab/            # FIG. 07 — calls /api/model-picker
+│   ├── jobs-lab/                    # FIG. 08
+│   ├── time-use-lab/                # FIG. 09
+│   ├── watchdog-lab/                # FIG. 10 — daily cron-refreshed data
+│   ├── agi-forecast-lab/            # FIG. 11
+│   ├── logistic-regression-lab/     # FIG. 12
+│   ├── model-atlas-lab/             # FIG. 13 — gateway to deeper model demos
+│   ├── imm-lab/                     # FIG. 14 — pings imm-lab-api on Cloud Run
+│   ├── productivity-lab/            # FIG. 15
+│   ├── llm-learning-lab/            # FIG. 16
+│   # Tests section
+│   ├── escape-velocity-lab/         # TEST. 01
+│   ├── semiconductor-lab/           # TEST. 02
+│   # Deeper model demos reachable from model-atlas-lab
+│   ├── dbscan-lab/  decision-tree-lab/  gradient-boosting-lab/
+│   ├── isolation-forest-lab/  kmeans-lab/  knn-lab/
+│   ├── linear-regression-lab/  mlp-lab/  naive-bayes-lab/
+│   └── random-forest-lab/  ridge-lasso-lab/  svm-lab/
 └── notebooks/                       # Python: training + validation
 ```
 
-Six `index.html` files in total. Cowork's file picker shows them as a
-flat list without folder paths — they're not duplicates. The user's
-Cowork "Portfolio" folder mount is currently empty/wrong; the actual
-working folder is the path above.
+Cowork's file picker shows the `index.html` files as a flat list without
+folder paths — they're not duplicates. The user's Cowork "Portfolio"
+folder mount is currently empty/wrong; the actual working folder is the
+path above. When adding a lab, register it in BOTH the labs grid in
+`/index.html` AND the Labs dropdown in the masthead nav.
 
 ## Conventions to preserve (don't drift from these)
 
