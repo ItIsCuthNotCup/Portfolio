@@ -26,16 +26,17 @@ const DAILY_SPEND_CAP_USD = 2.00;
 // pricing (~$0.10/$0.40 per M).
 const ESTIMATED_COST_PER_CALL_USD = 0.0003;
 
-// Browser origin allowlist. Server-side calls (no Origin header) are
-// allowed through — the per-IP rate limit and daily spend cap defend
-// against those. Browser-based abuse from foreign origins is blocked
-// here; browsers cannot forge the Origin header from JS.
+// Browser origin allowlist. Origin must be present and on the list.
+// Browsers send Origin on cross-origin POSTs and on same-origin requests
+// from script. curl / server-side callers can still hit this endpoint
+// by passing -H 'Origin: https://jakecuth.com', but the implicit-allow
+// path for missing Origin is gone — see audit S4.
 const ALLOWED_ORIGINS = new Set([
   'https://jakecuth.com',
   'https://www.jakecuth.com',
 ]);
 function isAllowedOrigin(origin) {
-  if (!origin) return true;
+  if (!origin) return false;
   if (ALLOWED_ORIGINS.has(origin)) return true;
   // Cloudflare Pages preview deployments (covers both
   // <hash>.pages.dev and <hash>.<project>.pages.dev forms).
@@ -195,6 +196,12 @@ export async function onRequest(context) {
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: query },
               ],
+              // OpenAI-compat: emit a final usage chunk before [DONE].
+              stream_options: { include_usage: true },
+              // OpenRouter extension: include {prompt,completion,total}_cost
+              // (USD) on the usage chunk so the spend cap can reconcile to
+              // real numbers instead of the conservative deposit.
+              usage: { include: true },
             }),
           });
 
@@ -214,6 +221,7 @@ export async function onRequest(context) {
           const dec = new TextDecoder('utf-8');
           let buf = '';
           let fullText = '';
+          let actualCostUsd = null;
 
           while (true) {
             const { value, done } = await reader.read();
@@ -236,13 +244,28 @@ export async function onRequest(context) {
                   fullText += delta;
                   send('token', { text: delta });
                 }
+                // Final usage chunk (OpenAI compat). OpenRouter adds
+                // total_cost when `usage: { include: true }` is sent.
+                if (parsed.usage && typeof parsed.usage.total_cost === 'number') {
+                  actualCostUsd = parsed.usage.total_cost;
+                }
               } catch { /* ignore */ }
             }
           }
 
+          // Reconcile spend: replace the conservative deposit with actual
+          // when the upstream returned a cost. If it didn't, leave the
+          // deposit in place — better to overcount than to under-cap.
+          if (actualCostUsd != null) {
+            await reconcileSpend(env, ESTIMATED_COST_PER_CALL_USD, actualCostUsd);
+          }
+
           // Cache the final result
           const totalMs = Date.now() - t0;
-          const traceLine = `embed ${embedMs}ms · retrieved ${candidates.length} of ${pool.length} · ${GEN_MODEL} · ${totalMs}ms total · ~$${ESTIMATED_COST_PER_CALL_USD.toFixed(4)}`;
+          const costLabel = actualCostUsd != null
+            ? `$${actualCostUsd.toFixed(4)}`
+            : `~$${ESTIMATED_COST_PER_CALL_USD.toFixed(4)}`;
+          const traceLine = `embed ${embedMs}ms · retrieved ${candidates.length} of ${pool.length} · ${GEN_MODEL} · ${totalMs}ms total · ${costLabel}`;
           await writeCache(env, cacheKey, {
             ok: true,
             answer: fullText,
@@ -521,6 +544,24 @@ async function checkAndBumpSpend(env) {
     { expirationTtl: 90000 },
   );
   return null;
+}
+
+// After generation, swap the conservative deposit for the real cost
+// reported by OpenRouter. Concurrent reconciles can drift because KV
+// is eventually consistent, but the day-aligned key resets at UTC
+// midnight so drift is bounded to one day.
+async function reconcileSpend(env, depositUsd, actualUsd) {
+  if (!env.MODEL_PICKER_KV) return;
+  try {
+    const key = `spend:${currentDay()}`;
+    const cur = parseFloat(await env.MODEL_PICKER_KV.get(key) || '0');
+    const next = Math.max(0, cur - depositUsd) + actualUsd;
+    await env.MODEL_PICKER_KV.put(
+      key,
+      next.toFixed(6),
+      { expirationTtl: 90000 },
+    );
+  } catch { /* swallow — best-effort accounting */ }
 }
 
 async function readCache(env, key) {

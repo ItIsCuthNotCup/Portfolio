@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
+          pip install --require-hashes -r notebooks/requirements/refresh-simple.txt
 
       - name: Pull YouTube Trending
         env:
