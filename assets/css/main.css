@@ -1399,27 +1399,32 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   position: fixed;
   top: 0; left: 0;
   height: 100vh;
-  width: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 49;
+  width: 32px;
+  z-index: 51;  /* sits above the masthead so the rail is uninterrupted */
   pointer-events: none;
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 9.5px;
+  font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink-dim);
-  border-right: 1px solid color-mix(in oklab, var(--ink) 15%, transparent);
-  background: color-mix(in oklab, var(--paper) 60%, transparent);
+  color: var(--ink-soft);
+  border-right: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  background: var(--paper);
 }
+/* Outer span absolutely-positioned at the centre of the rail and
+   rotated around its own centre — avoids the flex-bounding-box trap
+   where long horizontal text inside a 32px-wide flex container spills
+   off-screen *before* the transform applies. */
 [data-theme="graphite"] .lab-rail span {
-  display: inline-block;
-  transform: rotate(-90deg);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center center;
   white-space: nowrap;
+  display: inline-block;
 }
 [data-theme="graphite"] .lab-rail .rail-fig {
   color: var(--spark);
+  font-weight: 500;
 }
 
 /* Spark highlight for one symbol per equation (editorial-poster move) */
@@ -1429,6 +1434,6 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   font-weight: 500;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 720px) {
   [data-theme="graphite"] .lab-rail { display: none; }
 }
