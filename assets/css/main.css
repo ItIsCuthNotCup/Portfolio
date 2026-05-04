@@ -89,6 +89,7 @@ body::before {
 .mono {
   font-family: 'DM Mono', ui-monospace, monospace;
   font-weight: 400; letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 .serif {
   font-family: 'Newsreader', 'Times New Roman', serif;
@@ -145,13 +146,23 @@ main { position: relative; }
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  transition: padding 220ms ease, background 220ms ease;
 }
+/* Condensed state — toggled by main.js once scrollY > 80px. Padding
+   tightens, background firms up, name shrinks slightly. Subtle by
+   design — premium editorial sites condense, they don't collapse. */
+.masthead.scrolled {
+  padding: 8px 28px;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+}
+.masthead.scrolled .masthead-name { font-size: 18px; }
 .masthead-dateline {
   font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
 }
 .masthead-name {
   flex: 1; text-align: center;
   font-size: 22px; letter-spacing: 0.02em;
+  transition: font-size 220ms ease;
 }
 .masthead-nav {
   font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
@@ -405,7 +416,8 @@ main { position: relative; }
 
 /* ── Big Display Text ───────────────────────────────────────── */
 .big-display {
-  font-size: 84px; line-height: 0.95; letter-spacing: -0.02em;
+  font-size: clamp(48px, 7.4vw, 96px);
+  line-height: 0.95; letter-spacing: -0.02em;
   margin: 18px 0 0; font-weight: 300; text-wrap: balance;
 }
 
@@ -986,7 +998,7 @@ main { position: relative; }
 }
 @media (max-width: 900px) {
   .hero h1 { font-size: clamp(40px, 8vw, 72px); }
-  .big-display { font-size: 56px; }
+  /* .big-display now uses a global clamp() — no breakpoint override needed */
   .capability-row { grid-template-columns: 1fr; gap: 8px; }
   .capability-fig { display: none; }
   .metrics-grid { grid-template-columns: repeat(3, 1fr); }

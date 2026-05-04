@@ -1026,4 +1026,63 @@
   } else {
     initMotionExtras();
   }
+
+  // ── Masthead condense on scroll ──
+  // Threshold-based: once scrollY > 80px the masthead picks up the
+  // .scrolled class. CSS handles the rest (padding shrinks, name
+  // size drops, background firms up). One rAF per tick — cheap.
+  function initMastheadCondense() {
+    var mast = document.querySelector('.masthead');
+    if (!mast) return;
+    var THRESHOLD = 80;
+    var ticking = false;
+    var lastScrolled = false;
+    function update() {
+      ticking = false;
+      var scrolled = window.scrollY > THRESHOLD;
+      if (scrolled !== lastScrolled) {
+        mast.classList.toggle('scrolled', scrolled);
+        lastScrolled = scrolled;
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    update();
+  }
+
+  // ── Colophon injection ──
+  // Homepage already has a colophon footer in markup. Lab pages
+  // don't. This appends the same element to any page that lacks
+  // one, so the editorial signoff is consistent across the site.
+  function initColophon() {
+    if (document.querySelector('footer.colophon')) return;
+    var year = 'MMXXVI';
+    var foot = document.createElement('footer');
+    foot.className = 'colophon mono';
+    foot.innerHTML =
+      '<div>Set in Newsreader &amp; DM Mono · Printed on the open web</div>' +
+      '<div>© Jacob Cuthbertson · ' + year + '</div>' +
+      '<div>' +
+      '<a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> · ' +
+      '<a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> · ' +
+      '<a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>' +
+      '</div>';
+    var main = document.querySelector('main');
+    if (main) main.appendChild(foot);
+    else document.body.appendChild(foot);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      initMastheadCondense();
+      initColophon();
+    });
+  } else {
+    initMastheadCondense();
+    initColophon();
+  }
 })();
