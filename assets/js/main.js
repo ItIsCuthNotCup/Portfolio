@@ -105,13 +105,9 @@
     });
   })();
 
-  // ── Cursor grid (canvas-rendered gravity-grid + chromatic-
-  //    aberration effect on dither dots near the cursor). ──
-  //    Each dither dot inside the gravity radius is pulled TOWARD
-  //    the cursor and its color separates into peach / coral /
-  //    lavender (3-way chromatic aberration). Aligns to the same
-  //    4×4 Bayer cell grid as the static SVG dither so the local
-  //    canvas dots overdraw the static dots cleanly.
+  // ── Cursor grid: dots near the cursor emit a colored streak
+  //    pulled toward the cursor — peach → coral → lavender along
+  //    its length. Inspired by stitch.withgoogle.com.
   (function initCursorGrid() {
     if (matchMedia('(hover: none)').matches) return;
     if (document.documentElement.getAttribute('data-theme') !== 'graphite') return;
@@ -120,25 +116,24 @@
     canvas.className = 'cursor-grid';
     canvas.setAttribute('aria-hidden', 'true');
     document.body.appendChild(canvas);
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d', { alpha: true });
 
     // Tuning knobs ---------------------------------------------------------
-    var TILE = 4;                  // Bayer tile size — matches main.css dither
-    var DOT_R = 1.0;               // base dot radius in CSS px
-    var GRAV_RADIUS = 200;         // pull radius around cursor
-    var MAX_PULL = 7;              // px of displacement at the very edge of the cursor
-    var ABERR = 4.5;               // px of channel separation at full strength
-    // Chromatic-aberration channels: peach, coral, lavender
-    var R_COLOR = [255, 165, 110];
-    var G_COLOR = [245, 130, 175];
-    var B_COLOR = [165, 130, 220];
+    var TILE = 4;                  // Bayer tile size (matches static dither)
+    var GRAV_RADIUS = 140;         // affected zone around cursor
+    var MAX_PULL = 14;              // px the streak reaches toward cursor at peak
+    var STREAK_W = 1.4;             // streak thickness
+    // Gradient palette (peach → coral → lavender → periwinkle)
+    var C1 = '255,165,110';   // peach
+    var C2 = '245,130,175';   // coral
+    var C3 = '165,130,220';   // lavender
     // ---------------------------------------------------------------------
 
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0;
-    var mx = -9999, my = -9999, lastMx = -9999, lastMy = -9999;
+    var mx = -9999, my = -9999;
     var rafPending = false;
-    var idleFrames = 0;  // when cursor stops moving + canvas already cleared, stop drawing
+    var idleFrames = 0;
 
     function resize() {
       W = window.innerWidth;
@@ -148,6 +143,8 @@
       canvas.style.width  = W + 'px';
       canvas.style.height = H + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineCap = 'round';
+      ctx.lineWidth = STREAK_W;
     }
     resize();
     window.addEventListener('resize', resize);
@@ -156,75 +153,79 @@
       rafPending = false;
       ctx.clearRect(0, 0, W, H);
 
+      // Cursor outside viewport — keep canvas clean, decay rAFs
       if (mx < 0 || my < 0 || mx > W || my > H) {
-        // Cursor outside viewport — render nothing. Keep idle counter
-        // ticking so we stop scheduling rAFs when truly idle.
-        idleFrames++;
-        if (idleFrames < 4) requestAnimationFrame(draw);
+        if (idleFrames < 2) {
+          idleFrames++;
+          rafPending = true;
+          requestAnimationFrame(draw);
+        }
         return;
       }
+      idleFrames = 0;
 
       var radius = GRAV_RADIUS;
       var radius2 = radius * radius;
-      // Bayer tiles within the gravity radius
+      // Bayer tiles within the affected zone
       var x0 = Math.max(0, Math.floor((mx - radius) / TILE) * TILE);
       var x1 = Math.min(W, Math.ceil((mx + radius) / TILE) * TILE);
       var y0 = Math.max(0, Math.floor((my - radius) / TILE) * TILE);
       var y1 = Math.min(H, Math.ceil((my + radius) / TILE) * TILE);
 
+      // Two dots per 4×4 Bayer tile, at (0,0) and (2,2). Each dot in
+      // the radius emits a single gradient streak toward the cursor —
+      // the dot itself stays put (rendered by the static SVG dither),
+      // but the streak makes it look like the color is being "pulled"
+      // out of the dot toward the cursor.
       for (var ty = y0; ty < y1; ty += TILE) {
         for (var tx = x0; tx < x1; tx += TILE) {
-          // Two dots per Bayer 4×4 tile: at (0,0) and (2,2)
-          drawDot(tx,     ty);
-          drawDot(tx + 2, ty + 2);
+          streak(tx, ty, radius2);
+          streak(tx + 2, ty + 2, radius2);
         }
       }
 
-      // Always re-schedule on motion. When cursor goes still, draw a few
-      // more frames so the displaced dots can ease back into place.
-      if (mx !== lastMx || my !== lastMy) {
-        idleFrames = 0;
-        requestAnimationFrame(draw);
-      } else if (idleFrames < 8) {
+      // Schedule the next frame only while the cursor is moving. Tick
+      // a few decay frames after stop so streaks visibly fade.
+      if (idleFrames < 8) {
         idleFrames++;
+        rafPending = true;
         requestAnimationFrame(draw);
       }
-      lastMx = mx; lastMy = my;
     }
 
-    function drawDot(ax, ay) {
+    function streak(ax, ay, radius2) {
       var dx = mx - ax, dy = my - ay;
       var d2 = dx * dx + dy * dy;
-      if (d2 > GRAV_RADIUS * GRAV_RADIUS) return;
+      if (d2 > radius2) return;
       var d = Math.sqrt(d2);
-      // t = 1 at cursor, 0 at edge of gravity radius
+      // t = 1 at cursor, 0 at edge of radius
       var t = 1 - d / GRAV_RADIUS;
-      var ease = t * t;  // ease-in: gentle outer, strong near cursor
+      // Strong ease so only the inner third of the radius gets visible
+      // streaks — keeps the effect focal not wash-y
+      var ease = t * t * t;
+      if (ease < 0.02) return;
 
-      // Pull TOWARD cursor (gravity)
+      // Streak goes from the dot toward the cursor, length = MAX_PULL × ease
       var ang = Math.atan2(dy, dx);
-      var pull = MAX_PULL * ease;
-      var px = ax + Math.cos(ang) * pull;
-      var py = ay + Math.sin(ang) * pull;
+      var len = MAX_PULL * ease;
+      var ex = ax + Math.cos(ang) * len;
+      var ey = ay + Math.sin(ang) * len;
 
-      // Chromatic aberration: 3 channel offsets at 120° apart
-      var off = ABERR * ease;
-      var alpha = 0.55 + 0.45 * ease;  // brighter near cursor
-      // Three offsets at 0°, 120°, 240° (radians: 0, 2π/3, 4π/3)
-      var ox1 = Math.cos(0) * off,            oy1 = Math.sin(0) * off;
-      var ox2 = Math.cos(2.094395) * off,     oy2 = Math.sin(2.094395) * off;
-      var ox3 = Math.cos(4.188790) * off,     oy3 = Math.sin(4.188790) * off;
-
-      drawCh(px + ox1, py + oy1, R_COLOR, alpha);
-      drawCh(px + ox2, py + oy2, G_COLOR, alpha);
-      drawCh(px + ox3, py + oy3, B_COLOR, alpha);
-    }
-
-    function drawCh(x, y, rgb, alpha) {
-      ctx.fillStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+      // Linear gradient along the streak. 4 stops walk through the
+      // palette: dot end stays mostly transparent (so the original
+      // static dot reads through) → peach → coral → lavender at the
+      // cursor-facing tip.
+      var grad = ctx.createLinearGradient(ax, ay, ex, ey);
+      var a = 0.85 * ease;
+      grad.addColorStop(0,    'rgba(' + C1 + ',0)');
+      grad.addColorStop(0.35, 'rgba(' + C1 + ',' + (a * 0.85).toFixed(2) + ')');
+      grad.addColorStop(0.7,  'rgba(' + C2 + ',' + a.toFixed(2) + ')');
+      grad.addColorStop(1,    'rgba(' + C3 + ',' + (a * 0.9).toFixed(2) + ')');
+      ctx.strokeStyle = grad;
       ctx.beginPath();
-      ctx.arc(x, y, DOT_R, 0, 6.283185);
-      ctx.fill();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
     }
 
     function schedule() {
@@ -239,7 +240,7 @@
       my = e.clientY;
       idleFrames = 0;
       schedule();
-    });
+    }, { passive: true });
     window.addEventListener('mouseleave', function () {
       mx = -9999; my = -9999;
       schedule();
