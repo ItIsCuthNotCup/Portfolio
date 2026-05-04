@@ -232,7 +232,11 @@
   function renderContributionChart(data, model) {
     const svg = document.getElementById('imm-contrib');
     if (!svg) return;
-    const W = 1100, H = 380, M = { t: 28, r: 24, b: 80, l: 100 };
+    // Left margin sized for the longest channel label ("Programmatic
+    // display") at 11px DM Mono — was 100, was clipping the first
+    // ~30px of every label. Right margin sized for the inline
+    // ".$X.XM" value labels.
+    const W = 1100, H = 380, M = { t: 28, r: 80, b: 80, l: 180 };
     const channels = model.channels.slice().sort((a, b) => b.contribution_mean - a.contribution_mean);
     const xMax = Math.max(...channels.map(c => c.contribution_hi)) * 1.05;
     const xScale = makeScale([0, xMax], [M.l, W - M.r]);
