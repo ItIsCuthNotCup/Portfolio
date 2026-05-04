@@ -1397,10 +1397,12 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 
 [data-theme="graphite"] .lab-rail {
   position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
+  /* Live in the content band only — clear of the masthead chrome
+     (top ~64px) and the theme-switcher (bottom ~80px). */
+  top: 80px; bottom: 80px;
+  left: 0;
   width: 32px;
-  z-index: 51;  /* sits above the masthead so the rail is uninterrupted */
+  z-index: 5;  /* sits below masthead and theme-switcher */
   pointer-events: none;
   font-family: 'DM Mono', ui-monospace, monospace;
   font-size: 10px;
@@ -1410,6 +1412,11 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   border-right: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
   background: var(--paper);
 }
+/* Push masthead + theme-switcher inward so they clear the 32px rail.
+   Done with margin-left rather than padding so the existing rules
+   keep working. */
+[data-theme="graphite"] .masthead { padding-left: 48px; }
+[data-theme="graphite"] .theme-switcher { left: 48px !important; }
 /* Outer span absolutely-positioned at the centre of the rail and
    rotated around its own centre — avoids the flex-bounding-box trap
    where long horizontal text inside a 32px-wide flex container spills
