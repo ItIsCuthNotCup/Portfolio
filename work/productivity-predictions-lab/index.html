@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Productivity Paradox Predictions Archive — Jake Cuth.</title>
+  <meta name="description" content="Ninety-one confident, dated, named predictions about when IT and AI will show up in aggregate productivity statistics. Plotted by year said and year targeted, with the actual BLS productivity series underneath.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Productivity Paradox Predictions Archive">
+  <meta property="og:description" content="Ninety-one predictions about IT and AI productivity, plotted against the actual BLS data.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/productivity-predictions-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=33">
+  <link rel="stylesheet" href="/assets/css/productivity-predictions-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 04</span> &middot; MMXXVI &middot; THE PRODUCTIVITY PARADOX</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling <span class="new-pill">NEW</span></a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery <span class="new-pill">NEW</span></a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn <span class="new-pill">NEW</span></a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" class="active" aria-current="page" role="menuitem">Productivity Predictions <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="pp-main">
+
+
+<!-- KIMI ATTRIBUTION BANNER -->
+<div class="mono ev-kimi-banner">
+  <span class="ev-kimi-tag">Experimental</span>
+  <span>This test was built with <strong>Kimi K2.6</strong>. Quality may vary compared to Claude Code.</span>
+  <span class="ev-kimi-right">Verify the primary sources &middot; Models can hallucinate</span>
+</div>
+<!-- HERO -->
+<section class="pp-hero">
+  <div class="mono section-label">
+    <span class="idx">TEST. 04</span>
+    <span>The Productivity Paradox Predictions Archive</span>
+  </div>
+  <h1 class="serif big-display pp-title">
+    The boost is always<br>
+    <span class="serif-italic" style="color:var(--accent)">just around the corner.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Ninety-one confident, dated, named predictions about when information
+    technology and AI will show up in aggregate productivity statistics.
+    Plotted by year said and year targeted. The actual BLS productivity
+    series runs underneath, so the reader can compare what economists
+    said to what the Bureau measured.
+  </p>
+  <p class="pp-kicker">
+    Solow's paradox was stated in 1987. It has not been definitively
+    resolved. There was a brief decade, roughly 1995 to 2004, when
+    productivity accelerated and economists declared the paradox solved.
+    Then the acceleration stopped. The predictions resumed.
+  </p>
+  <div class="mono pp-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Sources</div><div class="value">BLS &middot; NBER &middot; FRB &middot; CBO &middot; MGI &middot; primary press</div></div>
+    <div><div class="label">Coverage</div><div class="value"><span id="pp-coverage-stat">91 predictions, 1987 to 2026</span></div></div>
+  </div>
+  <div class="pp-inline-nav">
+    <a href="#origin">Origin Era</a> &middot;
+    <a href="#boom">Boom</a> &middot;
+    <a href="#slowdown">Slowdown</a> &middot;
+    <a href="#ai-prelude">AI Prelude</a> &middot;
+    <a href="#chatgpt">ChatGPT Era</a> &middot;
+    <a href="#right-but-late">Right but Late</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — FRAMING -->
+<section class="pp-section" id="origin">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Forty years of "almost ready"</span>
+  </div>
+  <div class="pp-prose">
+    <p class="pp-lede">
+      Everyone agrees the productivity boost is coming. They have for forty years.
+    </p>
+    <p>
+      In 1987, Robert Solow looked at the rise of the personal computer and
+      the simultaneous flatlining of US productivity growth and wrote, in a
+      brief NYRB book review, "you can see the computer age everywhere but in
+      the productivity statistics." The line became famous. The puzzle it
+      described became known as the Solow Paradox.
+    </p>
+    <p>
+      It has not been definitively resolved. There was a brief decade,
+      roughly 1995 to 2004, when productivity accelerated and economists
+      declared the paradox solved. Then the acceleration stopped. The
+      predictions resumed. This page collects the confident, dated, named
+      predictions. The same question has been asked for forty years.
+    </p>
+    <div class="pp-callout mono" id="pp-stability-callout">
+      After ninety-one predictions across four decades, the median gap
+      between year-said and year-targeted sits at <strong>7 years</strong>.
+      For AI-specific predictions, it is <strong>5 years</strong>.
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · TEST. 04.1 — THE HORIZON -->
+<section class="pp-section pp-section-horizon">
+  <div class="mono section-label">
+    <span class="idx">&sect; II &middot; TEST. 04.1</span>
+    <span>The Horizon</span>
+  </div>
+  <p class="pp-note">
+    Each point is one prediction. The x-axis is the year it was said; the
+    y-axis is the year it targeted. Above the diagonal is the future. Press
+    play to watch predictions accumulate. Hover any point for the quote.
+    Toggle the productivity overlay to see what the BLS actually measured.
+  </p>
+
+  <!-- Controls strip -->
+  <div class="pp-horizon-controls mono" aria-label="Horizon controls">
+    <button type="button" id="pp-play-btn" class="pp-play-btn">Play the forty years</button>
+    <div class="pp-horizon-counters" id="pp-horizon-counters">
+      <span class="pp-counter"><span class="label">Year</span><span class="value" id="pp-counter-year">1987</span></span>
+      <span class="pp-counter"><span class="label">Predictions</span><span class="value" id="pp-counter-preds">0</span></span>
+      <span class="pp-counter"><span class="label">Median target</span><span class="value" id="pp-counter-median">&mdash;</span></span>
+      <span class="pp-counter"><span class="label">Avg gap</span><span class="value" id="pp-counter-lift">&mdash;</span></span>
+    </div>
+  </div>
+
+  <!-- Filter pills: predictor type -->
+  <div class="pp-filter-row mono" id="pp-type-filter">
+    <span class="pp-filter-label">Predictor</span>
+    <button type="button" class="pp-pill active" data-type="all">All</button>
+    <button type="button" class="pp-pill" data-type="academic">Academic</button>
+    <button type="button" class="pp-pill" data-type="central-bank">Fed / Central Bank</button>
+    <button type="button" class="pp-pill" data-type="government">Government</button>
+    <button type="button" class="pp-pill" data-type="consultancy">Consultancy</button>
+    <button type="button" class="pp-pill" data-type="sell-side">Sell-side</button>
+    <button type="button" class="pp-pill" data-type="tech-industry">Tech CEO</button>
+  </div>
+
+  <!-- Filter pills: category -->
+  <div class="pp-filter-row mono" id="pp-cat-filter">
+    <span class="pp-filter-label">Topic</span>
+    <button type="button" class="pp-pill active" data-cat="all">All</button>
+    <button type="button" class="pp-pill" data-cat="general-it-paradox">IT Paradox</button>
+    <button type="button" class="pp-pill" data-cat="ai-aggregate-tfp">AI TFP</button>
+    <button type="button" class="pp-pill" data-cat="ai-labor-productivity">AI Labor Prod.</button>
+    <button type="button" class="pp-pill" data-cat="ai-sector-specific">AI Sector</button>
+    <button type="button" class="pp-pill" data-cat="ai-gdp-level">AI GDP</button>
+    <button type="button" class="pp-pill" data-cat="wage-effects">Wages</button>
+    <span class="pp-filter-divider"></span>
+    <button type="button" class="pp-pill pp-pill-toggle" id="pp-toggle-overlay" data-active="true">Show overlay</button>
+    <button type="button" class="pp-pill pp-pill-toggle" id="pp-toggle-rbl" data-active="false">Right but Late</button>
+  </div>
+
+  <!-- Zoom pills -->
+  <div class="pp-zoom-filter mono" id="pp-zoom-filter">
+    <span class="pp-filter-label">Zoom</span>
+    <button type="button" class="pp-zoom-pill pp-pill active" data-zoom="all">All (1985-2050)</button>
+    <button type="button" class="pp-zoom-pill pp-pill" data-zoom="modern">Modern (1995+)</button>
+    <button type="button" class="pp-zoom-pill pp-pill" data-zoom="recent">Recent (2015+)</button>
+  </div>
+
+  <!-- Chart -->
+  <div class="pp-horizon-wrap" id="pp-horizon-wrap">
+    <svg id="pp-horizon" viewBox="0 0 1280 540" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="The Horizon: predictions about productivity over time"></svg>
+    <div id="pp-tooltip" class="pp-tooltip mono" hidden></div>
+  </div>
+
+  <!-- Narrative ticker -->
+  <div class="pp-ticker" id="pp-ticker">
+    <span class="mono pp-ticker-tag">The record</span>
+    <span class="pp-ticker-text" id="pp-ticker-text">Press play and the chart fills decade by decade.</span>
+  </div>
+
+  <!-- Side panel for click -->
+  <div class="pp-side-backdrop" id="pp-side-backdrop" data-open="false" aria-hidden="true"></div>
+  <aside class="pp-side-panel" id="pp-side-panel" data-open="false" aria-label="Prediction detail" role="dialog">
+    <button type="button" class="pp-side-close" id="pp-side-close" aria-label="Close panel">
+      <span aria-hidden="true">&times;</span>
+      <span class="pp-side-close-label">Close</span>
+    </button>
+    <div class="pp-side-content" id="pp-side-content"></div>
+  </aside>
+</section>
+
+<hr class="hair">
+
+<!-- § III · TEST. 04.2 — BY ERA -->
+<section class="pp-section" id="boom">
+  <div class="mono section-label">
+    <span class="idx">&sect; III &middot; TEST. 04.2</span>
+    <span>By era</span>
+  </div>
+  <p class="pp-note">
+    Six panels, one per era. The same axes in each. See how the density,
+    direction, and outcome status shift across decades.
+  </p>
+  <div class="pp-multiples-grid" id="pp-multiples-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV — THE PATTERN -->
+<section class="pp-section" id="slowdown">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>The pattern</span>
+  </div>
+  <div class="pp-prose">
+    <p class="pp-lede">
+      The predictions are not random. They cluster in ways that say something
+      about the economics profession itself.
+    </p>
+    <p>
+      <strong>Sell-side analysts are the most consistently optimistic.</strong>
+      Goldman Sachs, Morgan Stanley, and JP Morgan have predicted a
+      productivity boost in twelve of the last twenty years. Their average
+      gap between year-said and year-targeted is 4.2 years. When the target
+      year passes without the boost materializing, the next report simply
+      moves the target forward.
+    </p>
+    <p>
+      <strong>Consultancies repeat each other.</strong>
+      McKinsey, PwC, and BCG publish similar AI productivity claims annually,
+      often with identical magnitude estimates. McKinsey's 2017 claim of $13
+      trillion by 2030 and PwC's 2017 claim of $15.7 trillion by 2030 were
+      published three months apart. The similarity is not coordination. It is
+      the same model, run by different firms.
+    </p>
+    <p>
+      <strong>CBO and OMB embed productivity assumptions in fiscal models.</strong>
+      These are not predictions in the conventional sense. They are baseline
+      projections required by law. But the productivity assumption is the
+      single most important driver of long-run debt projections. When CBO
+      assumes 1.3% productivity growth, it is also assuming that AI or some
+      other technology will restore the pre-2004 trend. That assumption has
+      been wrong for two decades.
+    </p>
+    <p>
+      <strong>Academic skeptics have been more accurate on timing.</strong>
+      Robert Gordon, Daron Acemoglu, and Nicholas Bloom have consistently
+      predicted that productivity gains will be smaller and later than the
+      consensus expects. Their track record on timing is better than the
+      optimists. Their track record on magnitude is harder to score, because
+      "small" is a relative claim.
+    </p>
+  </div>
+  <div class="pp-receipts" id="pp-receipts">
+    <div class="pp-receipt">
+      <div class="pp-receipt-label">Avg gap (all)</div>
+      <div class="pp-receipt-value">7.2<span class="pp-receipt-sub"> years</span></div>
+    </div>
+    <div class="pp-receipt">
+      <div class="pp-receipt-label">Avg gap (AI only)</div>
+      <div class="pp-receipt-value">5.1<span class="pp-receipt-sub"> years</span></div>
+    </div>
+    <div class="pp-receipt">
+      <div class="pp-receipt-label">Sell-side optimistic</div>
+      <div class="pp-receipt-value">92<span class="pp-receipt-sub"> %</span></div>
+    </div>
+    <div class="pp-receipt">
+      <div class="pp-receipt-label">Pending</div>
+      <div class="pp-receipt-value">34<span class="pp-receipt-sub"> predictions</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — PAIR WITH PRODUCTIVITY MYSTERY -->
+<section class="pp-section" id="ai-prelude">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Pair with The Productivity Mystery</span>
+  </div>
+  <div class="pp-crosslink">
+    <div class="pp-crosslink-text">
+      <p>
+        The productivity mystery is not just about what happened in the data.
+        It is also about what economists said would happen, and when.
+        <strong>The Productivity Mystery</strong> shows the BLS series, the
+        decomposition, the international comparison, and the seven competing
+        explanations. This archive shows the predictions that preceded each
+        data point.
+      </p>
+      <p>
+        Together they answer the same question from two directions. The
+        predictions say what people expected. The data says what actually
+        happened. The gap between them is the most interesting thing in
+        macroeconomics.
+      </p>
+      <div class="pp-crosslink-cta">
+        <a href="/work/productivity-lab/">See the data itself in The Productivity Mystery &rarr;</a>
+      </div>
+    </div>
+    <div class="pp-crosslink-chart" id="pp-crosslink-chart">
+      <!-- Mini chart rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · TEST. 04.3 — RIGHT BUT LATE -->
+<section class="pp-section" id="right-but-late">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI &middot; TEST. 04.3</span>
+    <span>Right but Late</span>
+  </div>
+  <div class="pp-prose">
+    <p class="pp-lede">
+      In macroeconomics, being late by seven years is often the difference
+      between "the prediction failed" and "the prediction was right but the
+      policy response was wrong."
+    </p>
+    <p>
+      The 1990s IT productivity story is a "right but late" narrative.
+      Brynjolfsson predicted in 1993 that the paradox would resolve by 1998.
+      It resolved in 1995-1996. CBO projected 1.3% productivity growth by
+      2000. It arrived by 2002. Gates predicted PC productivity gains by 1998.
+      They were visible by 2000.
+    </p>
+    <p>
+      The McKinsey AI claims of 2017-2019 are beginning to show the same
+      pattern. Sector-level gains in customer service and software development
+      are visible in 2024-2025. The aggregate TFP boost is not. Whether this
+      is "right but late" or "right in the wrong place" is the question the
+      archive will answer in 2030.
+    </p>
+  </div>
+  <div class="pp-horizon-wrap" id="pp-rbl-wrap">
+    <svg id="pp-rbl-chart" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Right but Late: delay in years for fulfilled predictions"></svg>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — THE ARCHIVE -->
+<section class="pp-section" id="chatgpt">
+  <div class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>The archive</span>
+  </div>
+  <p class="pp-note">
+    Click any row to expand for the full quote, context, and source. Filter
+    and sort using the controls below.
+  </p>
+  <div class="pp-archive-filters mono" id="pp-archive-filters">
+    <span class="pp-filter-label">Filter</span>
+    <select id="pp-filter-era" class="pp-pill" style="appearance:auto;padding-right:24px;">
+      <option value="all">All eras</option>
+      <option value="pre-paradox">Pre-Paradox</option>
+      <option value="origin">Origin Era (1987-95)</option>
+      <option value="boom">Boom (1995-2004)</option>
+      <option value="slowdown">Slowdown (2004-15)</option>
+      <option value="ai-prelude">AI Prelude (2015-22)</option>
+      <option value="chatgpt">ChatGPT Era (2022-26)</option>
+    </select>
+    <select id="pp-filter-outcome" class="pp-pill" style="appearance:auto;padding-right:24px;">
+      <option value="all">All outcomes</option>
+      <option value="fulfilled-on-time">Fulfilled on time</option>
+      <option value="fulfilled-with-delay">Fulfilled with delay</option>
+      <option value="partially-fulfilled">Partially fulfilled</option>
+      <option value="did-not-happen">Did not happen</option>
+      <option value="did-not-happen-yet">Did not happen yet</option>
+      <option value="pending">Pending</option>
+      <option value="anchor-quote">Anchor quotes</option>
+    </select>
+    <select id="pp-filter-stance" class="pp-pill" style="appearance:auto;padding-right:24px;">
+      <option value="all">All stances</option>
+      <option value="bullish">Bullish</option>
+      <option value="bearish">Bearish</option>
+      <option value="neutral">Neutral</option>
+    </select>
+  </div>
+  <div class="pp-archive-wrap">
+    <table class="pp-archive-table">
+      <thead>
+        <tr>
+          <th>Predictor</th>
+          <th>Institution</th>
+          <th>Year said</th>
+          <th>Year targeted</th>
+          <th>Magnitude</th>
+          <th>Metric</th>
+          <th>Outcome</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody id="pp-archive-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VIII — WHY THIS IS HARD -->
+<section class="pp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; VIII</span>
+    <span>Why this is hard</span>
+  </div>
+  <div class="pp-explanations">
+    <p class="pp-prose">
+      Four candidate explanations for why the productivity boost keeps
+      receding. None of them are mutually exclusive.
+    </p>
+    <div class="pp-explanation">
+      <h4>A. Diffusion takes longer than capability</h4>
+      <p>
+        A technology can be available for a decade before it shows up in
+        aggregate productivity, because workflows and business processes need
+        to change to accommodate it. Electric motors were invented in the
+        1880s but did not raise measured factory productivity until the 1920s,
+        after plant layouts were redesigned.
+      </p>
+      <cite>Paul David, "The Dynamo and the Computer," AER P&amp;P, 1990.</cite>
+    </div>
+    <div class="pp-explanation">
+      <h4>B. The J-curve</h4>
+      <p>
+        New technologies often <em>reduce</em> measured productivity in the
+        early years as firms invest in reorganization, before paying back
+        later. AI is currently in the investment phase where measured output
+        per hour falls because firms are spending time learning rather than
+        producing.
+      </p>
+      <cite>Brynjolfsson, Rock, and Syverson, "Artificial Intelligence and the Modern Productivity Paradox," NBER, 2017.</cite>
+    </div>
+    <div class="pp-explanation">
+      <h4>C. Measurement lags</h4>
+      <p>
+        The BLS productivity series is constructed from data that lags actual
+        production, and does not capture quality improvements, free goods, or
+        unmeasured service-sector output well. The productivity gain may
+        already be there. We may not be measuring it.
+      </p>
+      <cite>Syverson, "Challenges to Mismeasurement Explanations," JEP, 2017; Brynjolfsson et al., "GDP-B," NBER, 2019.</cite>
+    </div>
+    <div class="pp-explanation">
+      <h4>D. The skeptic case</h4>
+      <p>
+        Maybe the productivity gains are not there. Not because of
+        measurement, not because of timing, but because the technology is
+        less transformative than it appears. Acemoglu projects ~0.06%/yr TFP
+        gain over ten years. Gordon argues that AI is not comparable to
+        electricity in its economy-wide impact.
+      </p>
+      <cite>Acemoglu, "The Simple Macroeconomics of AI," NBER, 2024; Gordon, "The Rise and Fall of American Growth," 2016.</cite>
+    </div>
+    <div class="pp-explanation">
+      <h4>E. Or maybe it is just hard to predict</h4>
+      <p>
+        Hofstadter's Law applied to macroeconomics: it always takes longer
+        than you expect, even when you take into account that productivity
+        always takes longer than you expect. Forty years of confident
+        predictions about "just around the corner" suggests the economics
+        profession has a systematic bias toward near-term optimism.
+      </p>
+    </div>
+    <p class="pp-prose" style="margin-top:36px;">
+      AGI Horizon collects predictions about <em>intelligence</em>.
+      Productivity Mystery shows what happened in the <em>data</em>.
+      This lab is the bridge between them.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IX — SOURCES -->
+<section class="pp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IX</span>
+    <span>Sources</span>
+  </div>
+  <div class="pp-sources">
+    <div class="pp-source-group">
+      <h4>Pre-Paradox &amp; Origin Era (1978-1995)</h4>
+      <ul>
+        <li>Drucker, P. (1978). "The Coming Redesign of Work." <em>Harvard Business Review</em>.</li>
+        <li>Bell, D. (1973/1979). <em>The Coming of Post-Industrial Society</em>. Basic Books.</li>
+        <li>Solow, R. (1987). "We'd better watch out." <em>New York Review of Books</em>, July 12.</li>
+        <li>Brynjolfsson, E. (1993). "The Productivity Paradox of Information Technology." <em>CACM</em>, 36(12).</li>
+        <li>Gordon, R. (1993). NBER WP 4549. <a href="https://www.nber.org/papers/w4549" target="_blank" rel="noopener">nber.org &#8599;</a></li>
+        <li>CBO (1993, 1995). <em>Economic and Budget Outlook</em>. <a href="https://www.cbo.gov" target="_blank" rel="noopener">cbo.gov &#8599;</a></li>
+        <li>Gates, B. (1995). <em>The Road Ahead</em>. Viking.</li>
+        <li>Oliner, S. &amp; Sichel, D. (1994). "Computers and Output Growth Revisited." FRB.</li>
+      </ul>
+    </div>
+    <div class="pp-source-group">
+      <h4>The Boom (1995-2004)</h4>
+      <ul>
+        <li>Greenspan, A. (1995-2000). Humphrey-Hawkins testimonies. <a href="https://www.federalreserve.gov" target="_blank" rel="noopener">federalreserve.gov &#8599;</a></li>
+        <li>Jorgenson, D. &amp; Stiroh, K. (2000). "Raising the Speed Limit." <em>Brookings Papers</em>.</li>
+        <li>Brynjolfsson, E. &amp; Hitt, L. (2000). "Beyond Computation." <em>JEP</em>, Winter.</li>
+        <li>CEA (1996-2001). <em>Economic Report of the President</em>. <a href="https://www.govinfo.gov" target="_blank" rel="noopener">govinfo.gov &#8599;</a></li>
+        <li>McKinsey Global Institute (1997, 2001). Productivity reports. <a href="https://www.mckinsey.com/mgi" target="_blank" rel="noopener">mckinsey.com &#8599;</a></li>
+      </ul>
+    </div>
+    <div class="pp-source-group">
+      <h4>The Slowdown (2004-2015)</h4>
+      <ul>
+        <li>Gordon, R. (2012). "Is U.S. Economic Growth Over?" NBER WP 19895. <a href="https://www.nber.org/papers/w19895" target="_blank" rel="noopener">nber.org &#8599;</a></li>
+        <li>Cowen, T. (2011). <em>The Great Stagnation</em>. Dutton.</li>
+        <li>Brynjolfsson, E. &amp; McAfee, A. (2011, 2014). <em>Race Against the Machine</em> / <em>The Second Machine Age</em>.</li>
+        <li>Fernald, J. (2014). "Productivity and Potential Output." FRBSF WP 2014-15.</li>
+        <li>Bloom, N. et al. (2017/2020). "Are Ideas Getting Harder to Find?" <em>QJE</em>.</li>
+      </ul>
+    </div>
+    <div class="pp-source-group">
+      <h4>AI Prelude (2015-2022)</h4>
+      <ul>
+        <li>McKinsey Global Institute (2017, 2018). AI productivity reports.</li>
+        <li>PwC (2017, 2019). "Sizing the Prize." <a href="https://www.pwc.com/gx/en/issues/data-and-analytics/publications/artificial-intelligence-study.html" target="_blank" rel="noopener">pwc.com &#8599;</a></li>
+        <li>Acemoglu, D. &amp; Restrepo, P. (2017, 2018, 2019). NBER / <em>AER</em> / <em>JEP</em>.</li>
+        <li>Brynjolfsson, E., Rock, D., &amp; Syverson, C. (2017). NBER WP 24001.</li>
+        <li>OECD (2018, 2019, 2021). AI and Digital Economy Outlook reports. <a href="https://www.oecd.org" target="_blank" rel="noopener">oecd.org &#8599;</a></li>
+        <li>BIS (2018). <em>Annual Economic Report</em>. <a href="https://www.bis.org" target="_blank" rel="noopener">bis.org &#8599;</a></li>
+      </ul>
+    </div>
+    <div class="pp-source-group">
+      <h4>ChatGPT Era (2022-2026)</h4>
+      <ul>
+        <li>Goldman Sachs (2023). "Generative AI could raise global GDP by 7%." <a href="https://www.goldmansachs.com" target="_blank" rel="noopener">goldmansachs.com &#8599;</a></li>
+        <li>Acemoglu, D. (2024). "The Simple Macroeconomics of AI." NBER WP 32487.</li>
+        <li>Brynjolfsson, E., Li, D., &amp; Raymond, L. (2023). "Generative AI at Work." NBER WP 31161.</li>
+        <li>CBO (2024, 2025). <em>Long-Term Budget Outlook</em>. <a href="https://www.cbo.gov" target="_blank" rel="noopener">cbo.gov &#8599;</a></li>
+        <li>Anthropic (2025). <em>Anthropic Economic Index</em>. <a href="https://www.anthropic.com/economic-index" target="_blank" rel="noopener">anthropic.com &#8599;</a></li>
+        <li>IMF (2024). <em>World Economic Outlook</em>, April. <a href="https://www.imf.org" target="_blank" rel="noopener">imf.org &#8599;</a></li>
+      </ul>
+    </div>
+    <div class="pp-source-group">
+      <h4>Data</h4>
+      <ul>
+        <li>BLS Labor Productivity (PRS85006152). <a href="https://www.bls.gov/lpc/" target="_blank" rel="noopener">bls.gov/lpc &#8599;</a></li>
+        <li>BLS Total Factor Productivity (MPU4900013). <a href="https://www.bls.gov/mfp/" target="_blank" rel="noopener">bls.gov/mfp &#8599;</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § X — METHODOLOGY & COLOPHON -->
+<section class="pp-section pp-colophon-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; X</span>
+    <span>Methodology &amp; Colophon</span>
+  </div>
+
+  <div class="pp-method-grid">
+    <div>
+      <div class="mono pp-method-head">Pipeline</div>
+      <p>
+        Ninety-one rows assembled across five research batches in May 2026.
+        Sources include NBER working papers, FRB research, CBO/OMB budget
+        documents, OECD publications, BIS annual reports, MGI and PwC
+        reports, Goldman Sachs research notes, academic books, primary press,
+        and congressional testimony. Each row carries a verification level
+        and a source URL where available.
+      </p>
+    </div>
+    <div>
+      <div class="mono pp-method-head">What's measured</div>
+      <p>
+        For each prediction we record the year it was said, the year it
+        forecasted, the speaker's role and institution at the time, the
+        concept used (TFP, labor productivity, GDP), the magnitude where
+        specific, and the outcome status. Predictions without a specific
+        year are rendered as horizontal bars. Predictions with ranges use
+        the midpoint.
+      </p>
+    </div>
+    <div>
+      <div class="mono pp-method-head">Reading list</div>
+      <p>
+        <a href="https://www.nber.org/papers/w24001" target="_blank" rel="noopener" style="border-bottom:1px solid">Brynjolfsson, Rock, Syverson (2017) &#8599;</a><br>
+        <a href="https://www.nber.org/papers/w32487" target="_blank" rel="noopener" style="border-bottom:1px solid">Acemoglu (2024) &#8599;</a><br>
+        <a href="https://www.bls.gov/lpc/" target="_blank" rel="noopener" style="border-bottom:1px solid">BLS Labor Productivity &#8599;</a><br>
+        <a href="https://www.cbo.gov/publication/59689" target="_blank" rel="noopener" style="border-bottom:1px solid">CBO Long-Term Outlook (2024) &#8599;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono pp-method-head">Honest caveats</div>
+      <p>
+        Selection bias: this archive collects predictions that named a year.
+        Vague predictions are excluded, biasing the archive toward the brave.
+        Productivity measurement is contested. The Solow Paradox may be
+        partly a measurement problem. Predictor stances change over time.
+        Score predictions individually, not the predictor. The "right but
+        late" framing depends on judgment. Each tag carries an interpretive
+        note.
+      </p>
+    </div>
+  </div>
+
+  <div class="pp-caveats">
+    <div class="pp-caveat-label">Honest caveats</div>
+    <ul>
+      <li><strong>Selection bias.</strong> This archive collects predictions that named a year. Many predictions are deliberately vague ("AI will eventually raise productivity") and are excluded. The vague predictions are arguably the safer ones.</li>
+      <li><strong>Measurement is contested.</strong> Service-sector productivity, software quality improvements, and unmeasured digital free goods are hard for the BLS to capture. A "predicted productivity boom that didn't show up" might have shown up in welfare without showing up in measured GDP per hour.</li>
+      <li><strong>Most AI predictions are pending.</strong> Roughly 60% of post-2022 predictions have target years that haven't yet arrived. The archive will look very different in 2030.</li>
+      <li><strong>Predictor stances change.</strong> Brynjolfsson has been bullish, then cautious, then bullish again. Score predictions individually, not the predictor.</li>
+      <li><strong>Baseline projections are not forecasts.</strong> CBO and OMB productivity assumptions are embedded in fiscal models. The genre is contested. Each entry has an interpretive note.</li>
+    </ul>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Test navigation">
+    <a href="/work/tech-predictions-lab/">&larr; Prev: Tech Predictions (TEST. 03)</a>
+    <span>Test 04 of 04</span>
+    <a href="/">&uarr; Back to the front page</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="/assets/data/productivity-predictions/predictions.json" target="_blank" rel="noopener" class="btn-outline">View JSON &#8599;</a>
+    <a href="/assets/data/productivity-predictions/bls-productivity.json" target="_blank" rel="noopener" class="btn-outline">BLS Data JSON &#8599;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/productivity-predictions-lab.js?v=1"></script>
+</body>
+</html>
