@@ -1445,40 +1445,28 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   [data-theme="graphite"] .lab-rail { display: none; }
 }
 
-/* ── CURSOR WAVE — soft warm-gradient halo that follows the cursor
-   and tints the dither dots inside its radius. Mouse-tracked via
-   --mx / --my CSS vars (set by main.js initCursorWave).
+/* ── CURSOR GRID — canvas-rendered gravity-grid + chromatic-aberration
+   effect on the dither dots near the cursor. The canvas is injected
+   by main.js initCursorGrid(); this rule just positions and stacks
+   it. Each dither dot within ~200px of the cursor is pulled toward
+   the cursor, AND its colour channels separate into peach / coral /
+   lavender, like a lens-aberration ripple.
 
-   Blend strategy: mix-blend-mode: lighten means each pixel takes
-   max(base, wave). Cream paper (already lighter than the warm wave
-   colors) stays cream — no color leaks onto the background. Dark
-   dither dots (near-black) get lightened to the wave's color, so
-   dots inside the halo appear to glow in the gradient palette.
-   Outside the halo (alpha = 0) max(dot, transparent) = dot, so no
-   change. Effect appears and fades with cursor proximity.
-
-   Disabled on touch (no hover). */
-[data-theme="graphite"] .cursor-wave {
+   Sits ABOVE the static SVG dither overlay (z=100) so the canvas's
+   colored dots overdraw the local static dots inside the radius.
+   Outside the radius the canvas pixels are transparent so the
+   static dither shows through unchanged. */
+[data-theme="graphite"] .cursor-grid {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 101;
+  /* lighten ensures the colored dots only brighten — they don't
+     darken the cream paper between dots even when the canvas pixel
+     is partially opaque */
   mix-blend-mode: lighten;
-  background: radial-gradient(
-    circle 300px at var(--mx, -400px) var(--my, -400px),
-    rgba(255, 165, 110, 0.92) 0%,    /* warm peach core */
-    rgba(245, 145, 175, 0.75) 22%,   /* coral */
-    rgba(195, 135, 215, 0.55) 48%,   /* lavender */
-    rgba(140, 125, 220, 0.30) 70%,   /* cool periwinkle outer */
-    transparent 85%
-  );
-  opacity: 0;
-  transition: opacity 320ms ease-out;
-}
-[data-theme="graphite"] .cursor-wave.active {
-  opacity: 1;
 }
 
 @media (hover: none) {
-  [data-theme="graphite"] .cursor-wave { display: none; }
+  [data-theme="graphite"] .cursor-grid { display: none; }
 }

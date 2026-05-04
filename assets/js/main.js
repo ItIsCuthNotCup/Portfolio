@@ -105,36 +105,144 @@
     });
   })();
 
-  // ── Cursor wave (warm gradient halo that tints the dither dots
-  //    near the cursor; styled by .cursor-wave in main.css). ──
-  (function initCursorWave() {
+  // ── Cursor grid (canvas-rendered gravity-grid + chromatic-
+  //    aberration effect on dither dots near the cursor). ──
+  //    Each dither dot inside the gravity radius is pulled TOWARD
+  //    the cursor and its color separates into peach / coral /
+  //    lavender (3-way chromatic aberration). Aligns to the same
+  //    4×4 Bayer cell grid as the static SVG dither so the local
+  //    canvas dots overdraw the static dots cleanly.
+  (function initCursorGrid() {
     if (matchMedia('(hover: none)').matches) return;
-    // Inject the element once; no per-page HTML needed.
-    var wave = document.createElement('div');
-    wave.className = 'cursor-wave';
-    wave.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(wave);
+    if (document.documentElement.getAttribute('data-theme') !== 'graphite') return;
 
-    var px = -400, py = -400, fadeTimer = null, raf = null, dirty = false;
-    function flush() {
-      raf = null;
-      if (!dirty) return;
-      wave.style.setProperty('--mx', px + 'px');
-      wave.style.setProperty('--my', py + 'px');
-      dirty = false;
+    var canvas = document.createElement('canvas');
+    canvas.className = 'cursor-grid';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+
+    // Tuning knobs ---------------------------------------------------------
+    var TILE = 4;                  // Bayer tile size — matches main.css dither
+    var DOT_R = 1.0;               // base dot radius in CSS px
+    var GRAV_RADIUS = 200;         // pull radius around cursor
+    var MAX_PULL = 7;              // px of displacement at the very edge of the cursor
+    var ABERR = 4.5;               // px of channel separation at full strength
+    // Chromatic-aberration channels: peach, coral, lavender
+    var R_COLOR = [255, 165, 110];
+    var G_COLOR = [245, 130, 175];
+    var B_COLOR = [165, 130, 220];
+    // ---------------------------------------------------------------------
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+    var mx = -9999, my = -9999, lastMx = -9999, lastMy = -9999;
+    var rafPending = false;
+    var idleFrames = 0;  // when cursor stops moving + canvas already cleared, stop drawing
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width  = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function draw() {
+      rafPending = false;
+      ctx.clearRect(0, 0, W, H);
+
+      if (mx < 0 || my < 0 || mx > W || my > H) {
+        // Cursor outside viewport — render nothing. Keep idle counter
+        // ticking so we stop scheduling rAFs when truly idle.
+        idleFrames++;
+        if (idleFrames < 4) requestAnimationFrame(draw);
+        return;
+      }
+
+      var radius = GRAV_RADIUS;
+      var radius2 = radius * radius;
+      // Bayer tiles within the gravity radius
+      var x0 = Math.max(0, Math.floor((mx - radius) / TILE) * TILE);
+      var x1 = Math.min(W, Math.ceil((mx + radius) / TILE) * TILE);
+      var y0 = Math.max(0, Math.floor((my - radius) / TILE) * TILE);
+      var y1 = Math.min(H, Math.ceil((my + radius) / TILE) * TILE);
+
+      for (var ty = y0; ty < y1; ty += TILE) {
+        for (var tx = x0; tx < x1; tx += TILE) {
+          // Two dots per Bayer 4×4 tile: at (0,0) and (2,2)
+          drawDot(tx,     ty);
+          drawDot(tx + 2, ty + 2);
+        }
+      }
+
+      // Always re-schedule on motion. When cursor goes still, draw a few
+      // more frames so the displaced dots can ease back into place.
+      if (mx !== lastMx || my !== lastMy) {
+        idleFrames = 0;
+        requestAnimationFrame(draw);
+      } else if (idleFrames < 8) {
+        idleFrames++;
+        requestAnimationFrame(draw);
+      }
+      lastMx = mx; lastMy = my;
+    }
+
+    function drawDot(ax, ay) {
+      var dx = mx - ax, dy = my - ay;
+      var d2 = dx * dx + dy * dy;
+      if (d2 > GRAV_RADIUS * GRAV_RADIUS) return;
+      var d = Math.sqrt(d2);
+      // t = 1 at cursor, 0 at edge of gravity radius
+      var t = 1 - d / GRAV_RADIUS;
+      var ease = t * t;  // ease-in: gentle outer, strong near cursor
+
+      // Pull TOWARD cursor (gravity)
+      var ang = Math.atan2(dy, dx);
+      var pull = MAX_PULL * ease;
+      var px = ax + Math.cos(ang) * pull;
+      var py = ay + Math.sin(ang) * pull;
+
+      // Chromatic aberration: 3 channel offsets at 120° apart
+      var off = ABERR * ease;
+      var alpha = 0.55 + 0.45 * ease;  // brighter near cursor
+      // Three offsets at 0°, 120°, 240° (radians: 0, 2π/3, 4π/3)
+      var ox1 = Math.cos(0) * off,            oy1 = Math.sin(0) * off;
+      var ox2 = Math.cos(2.094395) * off,     oy2 = Math.sin(2.094395) * off;
+      var ox3 = Math.cos(4.188790) * off,     oy3 = Math.sin(4.188790) * off;
+
+      drawCh(px + ox1, py + oy1, R_COLOR, alpha);
+      drawCh(px + ox2, py + oy2, G_COLOR, alpha);
+      drawCh(px + ox3, py + oy3, B_COLOR, alpha);
+    }
+
+    function drawCh(x, y, rgb, alpha) {
+      ctx.fillStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+      ctx.beginPath();
+      ctx.arc(x, y, DOT_R, 0, 6.283185);
+      ctx.fill();
+    }
+
+    function schedule() {
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(draw);
+      }
+    }
+
     window.addEventListener('mousemove', function (e) {
-      px = e.clientX;
-      py = e.clientY;
-      dirty = true;
-      if (!raf) raf = requestAnimationFrame(flush);
-      wave.classList.add('active');
-      // Fade out a beat after the cursor stops moving.
-      if (fadeTimer) clearTimeout(fadeTimer);
-      fadeTimer = setTimeout(function () { wave.classList.remove('active'); }, 600);
+      mx = e.clientX;
+      my = e.clientY;
+      idleFrames = 0;
+      schedule();
     });
     window.addEventListener('mouseleave', function () {
-      wave.classList.remove('active');
+      mx = -9999; my = -9999;
+      schedule();
     });
   })();
 
