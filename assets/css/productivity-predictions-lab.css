@@ -10,11 +10,18 @@
 
 /* ── Hero ───────────────────────────────────────────────────── */
 .pp-hero {
-  padding: 120px 48px 60px;
+  padding: 120px 56px 60px 88px;
   max-width: 1280px;
   margin: 0 auto;
 }
-.pp-title { margin-top: 22px; }
+/* Clamp the big-display title so it never overflows the viewport
+   on mid-width windows, and so the italic "j" descender of
+   "just around the corner" clears the 32px lab-rail. */
+.pp-title {
+  margin-top: 22px;
+  font-size: clamp(48px, 7.4vw, 96px);
+  line-height: 0.95;
+}
 .pp-kicker {
   margin-top: 24px;
   max-width: 720px;
