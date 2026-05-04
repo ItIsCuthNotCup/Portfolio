@@ -20,12 +20,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=28">
+  <link rel="stylesheet" href="/assets/css/main.css?v=29">
   <link rel="stylesheet" href="/assets/css/llm-learning-lab.css?v=1">
 </head>
 <body>
 
 <div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">FIG. 16</span> &middot; MMXXVI &middot; HOW LLMS LEARN</span></div>
 <div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
 
 <header class="masthead">
@@ -225,7 +226,7 @@
     <div class="mono llm-eq-label">The attention equation</div>
     <div class="llm-eq">
       <span class="serif-italic" style="color:var(--accent)">Attention</span>(Q, K, V) =
-      <span class="llm-fn">softmax</span>(QK<sup>T</sup> / &radic;d<sub>k</sub>) · V
+      <span class="llm-fn">softmax</span>(QK<sup>T</sup> / <span class="spark">&radic;d<sub>k</sub></span>) · V
     </div>
     <div class="llm-eq-legend mono">
       Q queries the K keys to produce attention weights, which then take a

@@ -1378,3 +1378,57 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   width: 2px;
   background: var(--spark);
 }
+
+/* ── EDITORIAL POSTER ECHOES — borrowed from a Gradient Descent
+   editorial illustration. Two moves only:
+
+   1. .lab-rail — fixed-position thin left-edge rail with the lab's
+      FIG number, roman-numeral year, and title set in tiny mono
+      rotated -90°. Mimics the side-text running up the left margin
+      of a printed editorial spread ("GRADIENT DESCENT" up the gutter).
+      Zero color; pure typographic chrome.
+
+   2. .spark — single-character/symbol highlight in #CC6437 spark.
+      The poster highlights η (learning rate) in yellow-green inside
+      its equation; we do the same with the orange spark on the key
+      variable per equation. Used inline like:
+        <span class="spark">η</span>
+   ─────────────────────────────────────────────────────────── */
+
+[data-theme="graphite"] .lab-rail {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 49;
+  pointer-events: none;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-right: 1px solid color-mix(in oklab, var(--ink) 15%, transparent);
+  background: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+[data-theme="graphite"] .lab-rail span {
+  display: inline-block;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}
+[data-theme="graphite"] .lab-rail .rail-fig {
+  color: var(--spark);
+}
+
+/* Spark highlight for one symbol per equation (editorial-poster move) */
+[data-theme="graphite"] .spark {
+  color: var(--spark);
+  font-style: italic;
+  font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  [data-theme="graphite"] .lab-rail { display: none; }
+}

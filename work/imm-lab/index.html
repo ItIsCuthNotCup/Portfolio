@@ -20,12 +20,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=28">
+  <link rel="stylesheet" href="/assets/css/main.css?v=29">
   <link rel="stylesheet" href="/assets/css/imm-lab.css?v=1">
 </head>
 <body>
 
 <div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">FIG. 14</span> &middot; MMXXVI &middot; INFLUENCER MIX MODELING</span></div>
 <div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
 
 <!-- MASTHEAD -->
@@ -197,7 +198,7 @@
   <div class="imm-eq-wrap">
     <div class="mono imm-eq-label">Model equation</div>
     <div class="imm-eq">
-      <span class="imm-eq-line">y<sub>t</sub> = &beta;<sub>0</sub> + &Sigma;<sub>c</sub> &alpha;<sub>c</sub> &middot; <span class="imm-fn">Hill</span>(<span class="imm-fn">Adstock</span>(x<sub>c,t</sub>; &lambda;<sub>c</sub>); &kappa;<sub>c</sub>, s<sub>c</sub>) + Z<sub>t</sub><sup>T</sup>&gamma; + &epsilon;<sub>t</sub></span>
+      <span class="imm-eq-line">y<sub>t</sub> = &beta;<sub>0</sub> + &Sigma;<sub>c</sub> <span class="spark">&alpha;<sub>c</sub></span> &middot; <span class="imm-fn">Hill</span>(<span class="imm-fn">Adstock</span>(x<sub>c,t</sub>; &lambda;<sub>c</sub>); &kappa;<sub>c</sub>, s<sub>c</sub>) + Z<sub>t</sub><sup>T</sup>&gamma; + &epsilon;<sub>t</sub></span>
       <span class="imm-eq-line"><span class="imm-fn">Adstock</span>(x; &lambda;)<sub>t</sub> = x<sub>t</sub> + &lambda; &middot; <span class="imm-fn">Adstock</span>(x; &lambda;)<sub>t&minus;1</sub></span>
       <span class="imm-eq-line"><span class="imm-fn">Hill</span>(z; &kappa;, s) = z<sup>s</sup> / (&kappa;<sup>s</sup> + z<sup>s</sup>)</span>
     </div>
