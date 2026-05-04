@@ -690,6 +690,38 @@ main { position: relative; }
   font-variant-numeric: tabular-nums;
 }
 .lab-card:hover .lab-metric { color: var(--paper-2); opacity: 0.7; border-top-color: var(--paper-2); }
+
+/* Staggered reveal on first paint. Each card rises 12px and fades
+   in, offset by 50ms per card. Pure CSS — no IntersectionObserver
+   needed since the user's first impression is the above-fold rows.
+   Disabled under prefers-reduced-motion. */
+@keyframes lab-card-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .labs-grid .lab-card {
+    opacity: 0;
+    animation: lab-card-rise 600ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+  .labs-grid .lab-card:nth-child(1)  { animation-delay:   0ms; }
+  .labs-grid .lab-card:nth-child(2)  { animation-delay:  50ms; }
+  .labs-grid .lab-card:nth-child(3)  { animation-delay: 100ms; }
+  .labs-grid .lab-card:nth-child(4)  { animation-delay: 150ms; }
+  .labs-grid .lab-card:nth-child(5)  { animation-delay: 200ms; }
+  .labs-grid .lab-card:nth-child(6)  { animation-delay: 250ms; }
+  .labs-grid .lab-card:nth-child(7)  { animation-delay: 300ms; }
+  .labs-grid .lab-card:nth-child(8)  { animation-delay: 350ms; }
+  .labs-grid .lab-card:nth-child(9)  { animation-delay: 400ms; }
+  .labs-grid .lab-card:nth-child(10) { animation-delay: 450ms; }
+  .labs-grid .lab-card:nth-child(11) { animation-delay: 500ms; }
+  .labs-grid .lab-card:nth-child(12) { animation-delay: 550ms; }
+  .labs-grid .lab-card:nth-child(13) { animation-delay: 600ms; }
+  .labs-grid .lab-card:nth-child(14) { animation-delay: 650ms; }
+  .labs-grid .lab-card:nth-child(15) { animation-delay: 700ms; }
+  .labs-grid .lab-card:nth-child(16) { animation-delay: 750ms; }
+  .labs-grid .lab-card:nth-child(n+17) { animation-delay: 800ms; }
+}
 .lab-arrow {
   margin-top: 16px;
   font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
@@ -1096,7 +1128,10 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 .churn-lede::first-letter,
 .reco-lede::first-letter,
 .sk-lede::first-letter,
-.ab-lede::first-letter {
+.ab-lede::first-letter,
+.ev-lede::first-letter,
+.sc-lede::first-letter,
+.pp-lede::first-letter {
   font-family: 'Newsreader', Georgia, serif;
   font-weight: 500;
   font-style: normal;
