@@ -105,6 +105,39 @@
     });
   })();
 
+  // ── Cursor wave (warm gradient halo that tints the dither dots
+  //    near the cursor; styled by .cursor-wave in main.css). ──
+  (function initCursorWave() {
+    if (matchMedia('(hover: none)').matches) return;
+    // Inject the element once; no per-page HTML needed.
+    var wave = document.createElement('div');
+    wave.className = 'cursor-wave';
+    wave.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(wave);
+
+    var px = -400, py = -400, fadeTimer = null, raf = null, dirty = false;
+    function flush() {
+      raf = null;
+      if (!dirty) return;
+      wave.style.setProperty('--mx', px + 'px');
+      wave.style.setProperty('--my', py + 'px');
+      dirty = false;
+    }
+    window.addEventListener('mousemove', function (e) {
+      px = e.clientX;
+      py = e.clientY;
+      dirty = true;
+      if (!raf) raf = requestAnimationFrame(flush);
+      wave.classList.add('active');
+      // Fade out a beat after the cursor stops moving.
+      if (fadeTimer) clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(function () { wave.classList.remove('active'); }, 600);
+    });
+    window.addEventListener('mouseleave', function () {
+      wave.classList.remove('active');
+    });
+  })();
+
   // ── Theme switching ──
   (function initTheme() {
     var btns = document.querySelectorAll('.theme-btn');
