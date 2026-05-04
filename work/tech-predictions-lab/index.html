@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Predictions That Never Happened — Jake Cuth.</title>
+  <meta name="description" content="An archive of confident, dated, named technology predictions from 1940 to 2026 — the year came, the prediction did not. Plus the rare ones that did, just late. 82 predictions, sourced.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tech Predictions That Never Happened — Jake Cuth.">
+  <meta property="og:description" content="82 confident, dated technology predictions. Each named a year. Most of the years came and went without the predictions coming true.">
+  <meta property="og:image" content="https://jakecuth.pages.dev/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/tech-predictions-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=32">
+  <link rel="stylesheet" href="/assets/css/tech-predictions-lab.css?v=1">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 03</span> &middot; MMXXVI &middot; TECH PREDICTIONS</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" class="active" aria-current="page" role="menuitem">Tech Predictions <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="tp-main">
+
+<section class="tp-hero">
+  <div class="mono section-label">
+    <span class="idx">TEST. 03</span>
+    <span>The years came. The predictions did not.</span>
+  </div>
+  <h1 class="serif big-display tp-title">
+    Eighty-two named predictions.<br>
+    <span class="serif-italic" style="color:var(--accent)">Most of them aged badly.</span>
+  </h1>
+  <p class="lab-biz-line">
+    In 1996, Donald Knuth said he expected to be using a fountain pen
+    in fifty years. He was right about the pen. This page collects
+    eighty-two confident, dated, named technology predictions made
+    between 1940 and 2026. Each one named a year. The year came.
+    Most of the predictions did not. A handful did, but arrived years
+    later than promised.
+  </p>
+  <p class="tp-kicker">
+    The pattern across all of them is the same: smart, well-resourced
+    people consistently underestimate the time it takes to ship a
+    hard technology to scale. The point isn't to humiliate Elon Musk
+    or Mary Meeker. The point is that <em>everyone</em> in tech does
+    this. Including the smartest people. The pattern is structural,
+    not individual.
+  </p>
+  <div class="mono tp-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">82 predictions &middot; 1940 → 2026 &middot; 9 categories</div></div>
+    <div><div class="label">Companion</div><div class="value"><a href="/work/agi-forecast-lab/" style="border-bottom:1px solid">AGI Horizon &nearr;</a></div></div>
+  </div>
+  <p class="mono tp-disclaimer">
+    Sources are annotated per prediction. v1 dataset; URL verification
+    pending. Predictions marked <span style="color:var(--ink-dim)">low</span>
+    confidence are flagged in the archive.
+  </p>
+</section>
+
+<hr class="rule">
+
+<section class="tp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The lede chart</span>
+  </div>
+  <p class="tp-prose">
+    Each dot is one prediction. The X-axis is the year it was said;
+    the Y-axis is the year it pointed at. The diagonal is "predictions
+    about the present" — said in 2018, pointing at 2018. Predictions
+    above the diagonal point at the future; the further above, the
+    more ambitious. Color is category. Open circles did not happen;
+    filled circles did, with delay. Hover any dot for the quote;
+    click for the full context.
+  </p>
+
+  <div class="tp-chart-controls mono" aria-label="Chart filters">
+    <span class="tp-filter-label">Category</span>
+    <button type="button" class="tp-pill active" data-cat-filter="all">All</button>
+    <button type="button" class="tp-pill" data-cat-filter="av">AV</button>
+    <button type="button" class="tp-pill" data-cat-filter="vr">VR</button>
+    <button type="button" class="tp-pill" data-cat-filter="tv3d">3D TV</button>
+    <button type="button" class="tp-pill" data-cat-filter="ar">AR</button>
+    <button type="button" class="tp-pill" data-cat-filter="crypto">Crypto</button>
+    <button type="button" class="tp-pill" data-cat-filter="flying">Flying</button>
+    <button type="button" class="tp-pill" data-cat-filter="quantum">Quantum</button>
+    <button type="button" class="tp-pill" data-cat-filter="ai-home">AI/Home</button>
+    <button type="button" class="tp-pill" data-cat-filter="right-late">Right-late</button>
+    <span class="tp-filter-divider"></span>
+    <span class="tp-filter-label">View</span>
+    <button type="button" class="tp-pill active" data-view="targeted">Year targeted</button>
+    <button type="button" class="tp-pill" data-view="years-late">Years late (right-but-late)</button>
+  </div>
+
+  <div class="tp-chart-wrap" id="tp-lede-wrap">
+    <svg id="tp-lede" viewBox="0 0 1100 560" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Tech predictions scatter — year said vs year targeted"></svg>
+    <div id="tp-tooltip" class="tp-tooltip mono" hidden></div>
+  </div>
+
+  <div class="tp-readout">
+    <p class="mono tp-readout-label">How to read it</p>
+    <p>
+      A tight cluster <strong>far above</strong> the diagonal is a
+      pattern of long-shot predictions — autonomous vehicles bunched
+      around <em>"by 2020"</em> said in 2014–2018. A cluster
+      <strong>just above</strong> is short-horizon overconfidence —
+      "shipping next year" said every year. The 3D TV cluster of
+      2010–2011 is a brutal three-year band. The diagonal itself
+      catches up over time: predictions resolve as the calendar moves.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="tp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>By category</span>
+  </div>
+  <p class="tp-prose">
+    Six small multiples. Each panel uses the same axes as the lede
+    chart but is restricted to its category. Category-specific
+    patterns emerge: 3D TVs are a brief band of confident wrongness;
+    autonomous vehicles are an annual repeat through one decade;
+    AR is long-running and unresolved; flying cars are a comedy that
+    crosses generations.
+  </p>
+
+  <div class="tp-multiples" id="tp-multiples"></div>
+</section>
+
+<hr class="hair">
+
+<section class="tp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>The archive</span>
+  </div>
+  <p class="tp-prose">
+    Every prediction in the dataset, sortable. The archive is the
+    primary data product — the chart above is the visual summary.
+    Click any row for the full quote and outcome note.
+  </p>
+
+  <div class="tp-table-wrap">
+    <table class="tp-table" id="tp-table">
+      <thead>
+        <tr>
+          <th data-sort="predictor">Predictor</th>
+          <th data-sort="year_said">Said</th>
+          <th data-sort="year_targeted">Targeted</th>
+          <th data-sort="category">Category</th>
+          <th>Prediction</th>
+          <th data-sort="outcome">Outcome</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody id="tp-table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="tp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>Why this happens</span>
+  </div>
+  <p class="tp-prose">
+    Four candidate explanations for the pattern. None of them excuse
+    it; together they suggest why no individual predictor escapes it.
+  </p>
+
+  <div class="tp-explainers">
+    <div class="tp-explainer">
+      <div class="mono tp-explainer-label">1 &middot; The demo-to-deploy gap</div>
+      <p>Working in a controlled demo is roughly five percent of the
+      problem. The remaining ninety-five percent is corner cases,
+      regulatory approval, manufacturing scale, and a long tail of
+      edge cases that erode reliability targets. <em>The first 90%
+      takes 10% of the time. The last 10% takes 90%.</em></p>
+    </div>
+    <div class="tp-explainer">
+      <div class="mono tp-explainer-label">2 &middot; Selection bias in the predictor pool</div>
+      <p>The predictors who make headlines are the ones with confident
+      timelines. Pessimistic experts &mdash; "we don't know when this
+      will work" &mdash; don't get speaking invitations, don't get
+      funded, don't get retweeted. The corpus of public predictions
+      is filtered for confidence at the source.</p>
+    </div>
+    <div class="tp-explainer">
+      <div class="mono tp-explainer-label">3 &middot; Career incentives</div>
+      <p>Optimistic predictions raise capital and attract talent.
+      Pessimistic predictions don't. Selection persists at the
+      lifecycle level: the optimist builds the company, gets on stage,
+      and makes more predictions. Survivorship bias inside the
+      sampling.</p>
+    </div>
+    <div class="tp-explainer">
+      <div class="mono tp-explainer-label">4 &middot; Hofstadter's Law</div>
+      <p>"<em>It always takes longer than you expect, even when you
+      take into account Hofstadter's Law.</em>" &mdash; Douglas
+      Hofstadter, <em>G&ouml;del, Escher, Bach</em>, 1979. Recursive
+      correction does not help. The error has no fixed prior to
+      anchor against.</p>
+    </div>
+  </div>
+
+  <div class="tp-readout">
+    <p class="mono tp-readout-label">A fifth, optional</p>
+    <p>
+      <strong>Proxy targets versus deployment targets.</strong> The
+      prediction is usually about a demo benchmark or technical
+      milestone (Level-5 capable / supremacy demonstration / billion
+      users) but what the public hears is "deployed at scale." The
+      predictor and the audience score different things and only
+      notice the divergence when the deadline arrives.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<section class="tp-section">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts</span>
+  </div>
+  <div class="tp-receipts" id="tp-receipts"></div>
+</section>
+
+<hr class="hair">
+
+<section class="tp-section" id="methodology">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; honest caveats</span>
+  </div>
+
+  <div class="tp-method-grid">
+    <div>
+      <div class="mono method-head">Sourcing</div>
+      <p>
+        Each prediction includes a predictor, a year said, a year
+        targeted, a quote (verbatim or paraphrased — flagged), a
+        source title, and a verification level. v1 of the dataset
+        does not yet have primary URLs for most entries; URL
+        verification is the v2 pass. Predictions marked
+        <code>verified_level: low</code> are flagged in the archive
+        and should be read with caution.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Outcome scoring</div>
+      <p>
+        Each entry is scored as one of five outcomes:
+        <em>did-not-happen</em>, <em>did-not-happen-yet</em>,
+        <em>fulfilled-with-delay</em>, <em>fulfilled-on-time</em>, or
+        <em>partially-fulfilled</em>. Outcome notes specify the
+        criteria — "self-driving by 2020" can mean Level 2, Level 4,
+        or robo-taxis at scale, and the reading matters.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">What this lab is not</div>
+      <p>
+        Not a takedown of individuals. The lab does not score
+        predictors against each other. The argument is structural,
+        not personal. Read it as <em>"this is what happens when
+        smart people predict hard timelines"</em>, not "these specific
+        people are stupid."
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Companion piece</div>
+      <p>
+        This lab pairs explicitly with
+        <a href="/work/agi-forecast-lab/" style="border-bottom:1px solid">AGI Horizon</a>.
+        That lab makes the same point about the most ambitious
+        technology prediction of all — human-level AI. If you smiled
+        reading this one, that one will look slightly less funny.
+      </p>
+    </div>
+  </div>
+
+  <div class="tp-caveats">
+    <div class="mono tp-caveat-label">Caveats</div>
+    <ul>
+      <li><strong>Selection bias:</strong> this archive collects
+        predictions that came due unfulfilled. Successful technology
+        predictions exist — they just don't make a compelling archive.
+        The "Right but late" filter partially addresses this.</li>
+      <li><strong>Anglosphere bias:</strong> the dataset skews toward
+        English-language predictors. Tencent, Alibaba, Baidu, Samsung,
+        Sony predictions are underrepresented.</li>
+      <li><strong>Outcome interpretation:</strong> ~20% of entries
+        require a judgment call on what "fulfilled" means. Outcome
+        notes specify the reading; reasonable people will disagree on
+        some.</li>
+      <li><strong>Quote fidelity:</strong> entries marked
+        <code>verbatim: false</code> are paraphrases, faithful to the
+        public statement but not necessarily to its exact wording.
+        Pre-2010 quotes are particularly likely to be paraphrased
+        until a v2 verification pass is done.</li>
+    </ul>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Test navigation">
+    <a href="/work/semiconductor-lab/">&larr; Semiconductor Cartography</a>
+    <span>Test 03 of 03</span>
+    <a href="/work/agi-forecast-lab/">AGI Horizon (Lab) &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/assets/data/tech-predictions" target="_blank" rel="noopener" class="btn-outline">View the data on GitHub &nearr;</a>
+  </div>
+</section>
+
+<aside id="tp-side-panel" class="tp-side-panel" aria-hidden="true">
+  <div class="tp-sp-inner">
+    <button type="button" class="tp-sp-close" aria-label="Close prediction detail">&times;</button>
+    <div class="mono tp-sp-cat" id="tp-sp-cat"></div>
+    <div class="tp-sp-name" id="tp-sp-name"></div>
+    <div class="mono tp-sp-meta" id="tp-sp-meta"></div>
+    <blockquote class="tp-sp-quote" id="tp-sp-quote"></blockquote>
+    <div class="tp-sp-body">
+      <div class="mono tp-sp-section-label">Outcome</div>
+      <div class="tp-sp-outcome" id="tp-sp-outcome"></div>
+      <div class="mono tp-sp-section-label">Source</div>
+      <div class="tp-sp-source" id="tp-sp-source"></div>
+      <div class="mono tp-sp-section-label">Verification</div>
+      <div class="tp-sp-ver" id="tp-sp-ver"></div>
+    </div>
+  </div>
+</aside>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/tech-predictions-lab.js?v=1"></script>
+</body>
+</html>
