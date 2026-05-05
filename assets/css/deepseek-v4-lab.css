@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════════════════
+   DEEPSEEK-V4 LAB — TEST. 05
+   Built by DeepSeek-V4. Orchestrated by Claude Code.
+   Stub styles — DeepSeek will extend this file.
+   ═══════════════════════════════════════════════════════════ */
+
+.ds-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── DeepSeek + Claude attribution banner ───────────────────── */
+.ds-attr-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 48px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.ds-attr-banner strong {
+  color: var(--accent);
+  font-weight: 500;
+}
+.ds-attr-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  flex-shrink: 0;
+}
+.ds-attr-right {
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .ds-attr-banner { flex-wrap: wrap; padding: 10px 20px; gap: 6px; }
+  .ds-attr-right { width: 100%; opacity: 0.5; }
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.ds-hero {
+  padding: 120px 56px 60px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ds-title { margin-top: 22px; }
+.ds-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ds-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ds-dateline .label { color: var(--ink-dim); }
+.ds-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Construction notice (stub-state only) ──────────────────── */
+.ds-construction {
+  max-width: 880px;
+  margin: 80px auto;
+  padding: 60px 48px;
+  border: 1px dashed var(--ink-dim);
+  text-align: left;
+}
+.ds-construction h2 {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+  margin: 0 0 20px;
+}
+.ds-construction p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  max-width: 65ch;
+}
+.ds-construction .label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.ds-construction code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  padding: 2px 6px;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .ds-hero { padding: 100px 24px 40px; }
+  .ds-construction { margin: 40px 24px; padding: 40px 24px; }
+  .ds-dateline { grid-template-columns: 1fr; gap: 14px; }
+}

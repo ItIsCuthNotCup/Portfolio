@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside DeepSeek-V4 — Jake Cuth.</title>
+  <meta name="description" content="Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead. A visual explainer of the architecture innovations behind a 27% FLOPs and 10% KV cache reduction at 1M-token context.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Inside DeepSeek-V4">
+  <meta property="og:description" content="Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/work/deepseek-v4-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=37">
+  <link rel="stylesheet" href="/assets/css/deepseek-v4-lab.css?v=1">
+</head>
+<body>
+
+<!--
+  THIS LAB IS BEING BUILT BY DEEPSEEK-V4.
+  CLAUDE CODE IS THE ORCHESTRATOR.
+  See ./BRIEF.md for the full project brief.
+-->
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 05</span> &middot; MMXXVI &middot; INSIDE DEEPSEEK-V4</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling <span class="new-pill">NEW</span></a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery <span class="new-pill">NEW</span></a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn <span class="new-pill">NEW</span></a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" role="menuitem">Productivity Predictions</a>
+        <a href="/work/deepseek-v4-lab/" class="active" aria-current="page" role="menuitem">Inside DeepSeek-V4 <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="ds-main">
+
+<!-- DEEPSEEK + CLAUDE ATTRIBUTION BANNER -->
+<div class="mono ds-attr-banner">
+  <span class="ds-attr-tag">Experimental</span>
+  <span>This test was built by <strong>DeepSeek-V4</strong>, orchestrated by <strong>Claude Code</strong>. Quality may vary.</span>
+  <span class="ds-attr-right">Verify the primary sources &middot; Models can hallucinate</span>
+</div>
+
+<!-- HERO -->
+<section class="ds-hero">
+  <div class="mono section-label">
+    <span class="idx">TEST. 05</span>
+    <span>Inside DeepSeek-V4</span>
+  </div>
+  <h1 class="serif big-display ds-title">
+    Inside <span class="serif-italic" style="color:var(--accent)">DeepSeek-V4.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Five things most people assume modern LLMs do, and what DeepSeek-V4
+    does instead. A visual explainer of the architectural choices that
+    let a 1.6-trillion-parameter open-source model handle a one-million-
+    token context using twenty-seven percent of the FLOPs and ten percent
+    of the KV cache of its predecessor.
+  </p>
+  <p class="ds-kicker">
+    The popular mental model of how a Large Language Model works is
+    already five years out of date. The 2017 Transformer is still in
+    the family tree, but DeepSeek-V4 shares less with it than the
+    public discourse suggests. Below: five comparisons.
+  </p>
+  <div class="mono ds-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">DeepSeek-V4 + Claude Code</div></div>
+    <div><div class="label">Sources</div><div class="value">DeepSeek-V4 technical report &middot; Hugging Face</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!--
+  ┌─────────────────────────────────────────────────────────────┐
+  │ DEEPSEEK: BUILD THE FIVE PAIRED COMPARISONS BELOW HERE.    │
+  │ See ./BRIEF.md for the complete spec.                      │
+  │                                                             │
+  │ Each section should follow the pattern of                  │
+  │ /work/escape-velocity-lab/ and use:                        │
+  │   <section class="ds-section" id="...">                    │
+  │     <div class="mono section-label">                       │
+  │       <span class="idx">§ I</span><span>...</span>         │
+  │     </div>                                                  │
+  │     [paired diagram + prose + receipts box]                │
+  │   </section>                                                │
+  │                                                             │
+  │ Section order:                                              │
+  │   § I   — Attention hierarchy (CSA + HCA)                  │
+  │   § II  — KV cache compression                              │
+  │   § III — Manifold-Constrained Hyper-Connections           │
+  │   § IV  — Muon optimizer                                    │
+  │   § V   — FP4 numerical precision                           │
+  │   § VI  — Methodology + caveats + closing                  │
+  └─────────────────────────────────────────────────────────────┘
+-->
+
+<section class="ds-construction">
+  <div class="label">FIG. ∅ &middot; Construction notice</div>
+  <h2>This lab is being assembled.</h2>
+  <p>
+    The orchestrator (Claude Code) has set up the page chrome, navigation,
+    and attribution. The five paired comparisons — attention hierarchy,
+    KV cache compression, residual streams, the Muon optimizer, and FP4
+    precision — are being authored by DeepSeek-V4 against the brief at
+    <code>/work/deepseek-v4-lab/BRIEF.md</code>.
+  </p>
+  <p>
+    Check back shortly. In the meantime, the four other tests in this
+    section — Escape Velocity, Semiconductor Cartography, Tech
+    Predictions, and Productivity Predictions — are fully assembled.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- ── Lab navigation ─────────────────────────────────────── -->
+<nav class="lab-nav mono">
+  <a href="/work/productivity-predictions-lab/" class="lab-nav-prev">&larr; Productivity Predictions</a>
+  <span class="lab-nav-meta">Test 05 of 05</span>
+  <a href="/" class="lab-nav-next">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script>
+  // Dateline
+  (function () {
+    var el = document.getElementById('dateline-time');
+    if (!el) return;
+    var now = new Date();
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    el.textContent = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  })();
+</script>
+</body>
+</html>
