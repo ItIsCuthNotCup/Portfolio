@@ -1,7 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    DEEPSEEK-V4 LAB — TEST. 05
-   Built by DeepSeek-V4. Orchestrated by Claude Code.
-   Stub styles — DeepSeek will extend this file.
+   Authored by Claude Code · Subject: DeepSeek-V4 architecture
    ═══════════════════════════════════════════════════════════ */
 
 .ds-main {
@@ -9,7 +8,7 @@
   color: var(--ink);
 }
 
-/* ── DeepSeek + Claude attribution banner ───────────────────── */
+/* ── Attribution banner (sticky) ────────────────────────────── */
 .ds-attr-banner {
   display: flex;
   align-items: center;
@@ -25,10 +24,7 @@
   top: 0;
   z-index: 40;
 }
-.ds-attr-banner strong {
-  color: var(--accent);
-  font-weight: 500;
-}
+.ds-attr-banner strong { color: var(--accent); font-weight: 500; }
 .ds-attr-tag {
   display: inline-block;
   padding: 3px 8px;
@@ -38,10 +34,7 @@
   letter-spacing: 0.16em;
   flex-shrink: 0;
 }
-.ds-attr-right {
-  opacity: 0.7;
-  flex-shrink: 0;
-}
+.ds-attr-right { opacity: 0.7; flex-shrink: 0; }
 @media (max-width: 720px) {
   .ds-attr-banner { flex-wrap: wrap; padding: 10px 20px; gap: 6px; }
   .ds-attr-right { width: 100%; opacity: 0.5; }
@@ -79,47 +72,410 @@
   letter-spacing: 0.04em;
   font-size: 12px;
 }
-
-/* ── Construction notice (stub-state only) ──────────────────── */
-.ds-construction {
-  max-width: 880px;
-  margin: 80px auto;
-  padding: 60px 48px;
-  border: 1px dashed var(--ink-dim);
-  text-align: left;
+.ds-inline-nav {
+  margin-top: 28px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
 }
-.ds-construction h2 {
+.ds-inline-nav a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+  margin: 0 6px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.ds-inline-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Section frame ──────────────────────────────────────────── */
+.ds-section {
+  padding: 80px 56px 80px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ds-section-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 900px;
+  margin-bottom: 36px;
+}
+.ds-section-head h2 {
   font-family: 'Newsreader', serif;
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(36px, 4.6vw, 56px);
   line-height: 1.05;
-  margin: 0 0 20px;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
 }
-.ds-construction p {
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  margin: 0 0 14px;
-  max-width: 65ch;
-}
-.ds-construction .label {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+.ds-section-head .ds-section-italic {
+  font-style: italic;
   color: var(--accent);
-  margin-bottom: 18px;
 }
-.ds-construction code {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 13px;
-  background: color-mix(in oklab, var(--ink) 8%, transparent);
-  padding: 2px 6px;
+.ds-section-prose {
+  max-width: 720px;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.ds-section-prose p { margin: 0 0 18px; }
+.ds-section-prose p:last-child { margin-bottom: 0; }
+.ds-section-prose strong { font-weight: 500; }
+.ds-section-prose em { font-style: italic; color: var(--ink-soft); }
+
+/* Drop cap on the first paragraph of each section's prose */
+.ds-lede::first-letter {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-style: normal;
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  margin: 0.05em 0.06em 0 0;
   color: var(--ink);
 }
 
+/* ── Paired diagram grid ────────────────────────────────────── */
+.ds-paired {
+  margin: 48px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+.ds-paired > figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  background: color-mix(in oklab, var(--paper) 92%, var(--ink) 4%);
+  padding: 24px;
+}
+.ds-paired figcaption {
+  margin-top: 16px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.ds-paired figcaption strong {
+  color: var(--accent);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+.ds-svg-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+.ds-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  color: var(--ink);
+}
+.ds-svg .stroke { stroke: currentColor; fill: none; }
+.ds-svg .fill { fill: currentColor; }
+.ds-svg .accent-fill { fill: var(--accent); }
+.ds-svg .accent-stroke { stroke: var(--accent); fill: none; }
+.ds-svg .dim { opacity: 0.35; }
+.ds-svg .label-mono {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--ink-dim);
+}
+.ds-svg .label-fig {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .ds-paired { grid-template-columns: 1fr; gap: 18px; }
+}
+
+/* ── Receipts box ───────────────────────────────────────────── */
+.ds-receipts {
+  margin-top: 36px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 6%);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.ds-receipts-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.ds-receipts dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  gap: 6px 24px;
+}
+.ds-receipts dt { color: var(--ink-dim); }
+.ds-receipts dd { margin: 0; color: var(--ink); }
+@media (max-width: 720px) {
+  .ds-receipts dl { grid-template-columns: 1fr; gap: 2px; }
+  .ds-receipts dd { margin-bottom: 8px; }
+}
+
+/* ── For-the-curious math expander ─────────────────────────── */
+.ds-curious {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border-left: 2px solid var(--ink-dim);
+  background: transparent;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.ds-curious summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  list-style: none;
+  outline: none;
+}
+.ds-curious summary::-webkit-details-marker { display: none; }
+.ds-curious summary::before {
+  content: '▸ ';
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 200ms ease;
+}
+.ds-curious[open] summary::before {
+  transform: rotate(90deg);
+}
+.ds-curious p { margin: 14px 0 0; }
+.ds-curious code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 10%, transparent);
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+/* ── Headline panel (used at top of § II) ──────────────────── */
+.ds-headline {
+  margin: 32px 0;
+  padding: 28px 32px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.ds-headline-cell .num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: clamp(40px, 4.6vw, 56px);
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  display: block;
+}
+.ds-headline-cell .label {
+  display: block;
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+@media (max-width: 900px) {
+  .ds-headline { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── KV cache animated chart ───────────────────────────────── */
+.ds-chart-wrap {
+  margin: 36px 0 12px;
+  padding: 24px;
+  border: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  background: color-mix(in oklab, var(--paper) 92%, var(--ink) 4%);
+}
+.ds-chart-head {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.ds-chart-title {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+.ds-chart-svg { display: block; width: 100%; height: auto; }
+.ds-chart-svg .axis-line { stroke: var(--ink); stroke-width: 1; }
+.ds-chart-svg .gridline { stroke: var(--ink-dim); stroke-width: 0.5; opacity: 0.4; }
+.ds-chart-svg .axis-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  fill: var(--ink-dim);
+  letter-spacing: 0.04em;
+}
+.ds-chart-svg .series-baseline { stroke: var(--ink); stroke-width: 1.5; fill: none; opacity: 0.55; }
+.ds-chart-svg .series-v32 { stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+.ds-chart-svg .series-v4pro { stroke: var(--accent); stroke-width: 2.4; fill: none; }
+.ds-chart-svg .series-v4flash { stroke: var(--accent); stroke-width: 1.6; fill: none; stroke-dasharray: 6 3; }
+.ds-chart-legend {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.ds-chart-legend .swatch {
+  display: inline-block;
+  width: 20px;
+  height: 2px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.ds-chart-legend .swatch.s-baseline { background: var(--ink); opacity: 0.55; }
+.ds-chart-legend .swatch.s-v32 { background:
+  repeating-linear-gradient(90deg, var(--ink) 0 4px, transparent 4px 7px); }
+.ds-chart-legend .swatch.s-v4pro { background: var(--accent); height: 3px; }
+.ds-chart-legend .swatch.s-v4flash { background:
+  repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 9px); }
+
+/* ── Stacked bars (per-layer KV memory) ────────────────────── */
+.ds-stacked {
+  margin: 24px 0;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  align-items: center;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.ds-stacked-row { display: contents; }
+.ds-stacked-label { color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.16em; }
+.ds-stacked-bar {
+  height: 22px;
+  display: flex;
+  align-items: stretch;
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+}
+.ds-stacked-bar > span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 8px;
+  color: var(--paper);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ds-stacked-bar .seg-csa { background: var(--ink); }
+.ds-stacked-bar .seg-hca { background: color-mix(in oklab, var(--ink) 60%, var(--paper)); color: var(--paper); }
+.ds-stacked-bar .seg-swa { background: var(--accent); }
+.ds-stacked-bar .seg-fp4 { background: color-mix(in oklab, var(--accent) 60%, var(--ink) 30%); }
+.ds-stacked-bar .seg-empty { background: transparent; }
+
+/* ── Methodology / closing ─────────────────────────────────── */
+.ds-method {
+  padding: 80px 56px 80px 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.ds-method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px 48px;
+}
+.ds-method-grid h3 {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.ds-method-grid p {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ds-method-grid a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.ds-method-grid a:hover { color: var(--accent); border-color: var(--accent); }
+.ds-closing {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 720px;
+}
+.ds-closing p { margin: 0 0 16px; }
+
+/* ── Lab nav ───────────────────────────────────────────────── */
+.lab-nav {
+  margin: 0 88px 80px;
+  padding: 22px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.lab-nav a { color: var(--ink); border-bottom: 1px solid transparent; transition: border-color 180ms ease; }
+.lab-nav a:hover { border-bottom-color: var(--ink); }
+.lab-nav-meta { color: var(--ink-dim); }
+
 @media (max-width: 900px) {
   .ds-hero { padding: 100px 24px 40px; }
-  .ds-construction { margin: 40px 24px; padding: 40px 24px; }
+  .ds-section { padding: 60px 24px; }
+  .ds-method { padding: 60px 24px; }
+  .ds-method-grid { grid-template-columns: 1fr; gap: 28px; }
   .ds-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .lab-nav { flex-direction: column; gap: 10px; align-items: flex-start; margin: 0 24px 60px; }
 }

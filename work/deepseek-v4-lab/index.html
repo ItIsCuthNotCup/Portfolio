@@ -21,15 +21,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=37">
-  <link rel="stylesheet" href="/assets/css/deepseek-v4-lab.css?v=1">
+  <link rel="stylesheet" href="/assets/css/deepseek-v4-lab.css?v=2">
 </head>
 <body>
-
-<!--
-  THIS LAB IS BEING BUILT BY DEEPSEEK-V4.
-  CLAUDE CODE IS THE ORCHESTRATOR.
-  See ./BRIEF.md for the full project brief.
--->
 
 <div id="progress" class="progress"></div>
 <div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 05</span> &middot; MMXXVI &middot; INSIDE DEEPSEEK-V4</span></div>
@@ -86,10 +80,10 @@
 
 <main class="ds-main">
 
-<!-- DEEPSEEK + CLAUDE ATTRIBUTION BANNER -->
+<!-- ATTRIBUTION BANNER -->
 <div class="mono ds-attr-banner">
   <span class="ds-attr-tag">Experimental</span>
-  <span>This test was built by <strong>DeepSeek-V4</strong>, orchestrated by <strong>Claude Code</strong>. Quality may vary.</span>
+  <span>Authored by <strong>Claude Code</strong>. Subject: <strong>DeepSeek-V4</strong> architecture. Quality may vary.</span>
   <span class="ds-attr-right">Verify the primary sources &middot; Models can hallucinate</span>
 </div>
 
@@ -105,73 +99,956 @@
   <p class="lab-biz-line">
     Five things most people assume modern LLMs do, and what DeepSeek-V4
     does instead. A visual explainer of the architectural choices that
-    let a 1.6-trillion-parameter open-source model handle a one-million-
+    let a 1.6-trillion-parameter open-source model handle a one-million
     token context using twenty-seven percent of the FLOPs and ten percent
     of the KV cache of its predecessor.
   </p>
   <p class="ds-kicker">
     The popular mental model of how a Large Language Model works is
-    already five years out of date. The 2017 Transformer is still in
-    the family tree, but DeepSeek-V4 shares less with it than the
-    public discourse suggests. Below: five comparisons.
+    already five years out of date. The 2017 Transformer is still in the
+    family tree, but the frontier has moved on. Below: five comparisons,
+    each pairing what most people assume LLMs do with what DeepSeek-V4
+    actually does.
   </p>
   <div class="mono ds-dateline">
     <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
-    <div><div class="label">Engine</div><div class="value">DeepSeek-V4 + Claude Code</div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; vanilla JS</div></div>
     <div><div class="label">Sources</div><div class="value">DeepSeek-V4 technical report &middot; Hugging Face</div></div>
+  </div>
+  <div class="ds-inline-nav">
+    <a href="#attention">Attention</a> &middot;
+    <a href="#kv-cache">KV cache</a> &middot;
+    <a href="#residuals">Residuals</a> &middot;
+    <a href="#muon">Muon</a> &middot;
+    <a href="#precision">Precision</a> &middot;
+    <a href="#methodology">Methodology</a>
   </div>
 </section>
 
 <hr class="rule">
 
-<!--
-  ┌─────────────────────────────────────────────────────────────┐
-  │ DEEPSEEK: BUILD THE FIVE PAIRED COMPARISONS BELOW HERE.    │
-  │ See ./BRIEF.md for the complete spec.                      │
-  │                                                             │
-  │ Each section should follow the pattern of                  │
-  │ /work/escape-velocity-lab/ and use:                        │
-  │   <section class="ds-section" id="...">                    │
-  │     <div class="mono section-label">                       │
-  │       <span class="idx">§ I</span><span>...</span>         │
-  │     </div>                                                  │
-  │     [paired diagram + prose + receipts box]                │
-  │   </section>                                                │
-  │                                                             │
-  │ Section order:                                              │
-  │   § I   — Attention hierarchy (CSA + HCA)                  │
-  │   § II  — KV cache compression                              │
-  │   § III — Manifold-Constrained Hyper-Connections           │
-  │   § IV  — Muon optimizer                                    │
-  │   § V   — FP4 numerical precision                           │
-  │   § VI  — Methodology + caveats + closing                  │
-  └─────────────────────────────────────────────────────────────┘
--->
+<!-- ═══════════════════════════════════════════════════════════
+     § I — ATTENTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="attention">
+  <div class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>TEST. 05.1 &middot; Attention</span>
+  </div>
+  <div class="ds-section-head">
+    <h2>From <span class="ds-section-italic">everything attends to everything</span> to a zoom-out hierarchy.</h2>
+  </div>
 
-<section class="ds-construction">
-  <div class="label">FIG. ∅ &middot; Construction notice</div>
-  <h2>This lab is being assembled.</h2>
-  <p>
-    The orchestrator (Claude Code) has set up the page chrome, navigation,
-    and attribution. The five paired comparisons — attention hierarchy,
-    KV cache compression, residual streams, the Muon optimizer, and FP4
-    precision — are being authored by DeepSeek-V4 against the brief at
-    <code>/work/deepseek-v4-lab/BRIEF.md</code>.
-  </p>
-  <p>
-    Check back shortly. In the meantime, the four other tests in this
-    section — Escape Velocity, Semiconductor Cartography, Tech
-    Predictions, and Productivity Predictions — are fully assembled.
-  </p>
+  <div class="ds-paired">
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 280" class="ds-svg" aria-label="N by N attention matrix, all cells filled">
+          <defs>
+            <pattern id="dot-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="10" cy="10" r="2.6" class="fill"/>
+            </pattern>
+          </defs>
+          <text x="160" y="22" text-anchor="middle" class="label-mono">Keys (N tokens)</text>
+          <text x="22" y="160" text-anchor="middle" class="label-mono" transform="rotate(-90 22 160)">Queries (N tokens)</text>
+          <rect x="50" y="35" width="240" height="240" fill="url(#dot-grid)"/>
+          <rect x="50" y="35" width="240" height="240" class="stroke" stroke-width="1" opacity="0.5"/>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Assumption</strong>
+        Every query attends to every key. N&times;N attention. The
+        original 2017 Transformer.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 280" class="ds-svg" aria-label="DeepSeek V4 zoom-out attention hierarchy">
+          <!-- Query token at top right -->
+          <circle cx="280" cy="40" r="7" class="accent-fill"/>
+          <text x="280" y="22" text-anchor="middle" class="label-mono">Query</text>
+
+          <!-- Tier 1: Sliding window (n_win=128). 8 small dots -->
+          <g>
+            <text x="30" y="78" class="label-mono">Window</text>
+            <text x="30" y="92" class="label-fig">n=128</text>
+            <g class="fill">
+              <circle cx="120" cy="86" r="2.8"/>
+              <circle cx="140" cy="86" r="2.8"/>
+              <circle cx="160" cy="86" r="2.8"/>
+              <circle cx="180" cy="86" r="2.8"/>
+              <circle cx="200" cy="86" r="2.8"/>
+              <circle cx="220" cy="86" r="2.8"/>
+              <circle cx="240" cy="86" r="2.8"/>
+              <circle cx="260" cy="86" r="2.8"/>
+            </g>
+            <!-- Lines from window dots to query (dim, all included) -->
+            <g class="stroke" stroke-width="0.5" opacity="0.35">
+              <line x1="120" y1="86" x2="280" y2="40"/>
+              <line x1="140" y1="86" x2="280" y2="40"/>
+              <line x1="160" y1="86" x2="280" y2="40"/>
+              <line x1="180" y1="86" x2="280" y2="40"/>
+              <line x1="200" y1="86" x2="280" y2="40"/>
+              <line x1="220" y1="86" x2="280" y2="40"/>
+              <line x1="240" y1="86" x2="280" y2="40"/>
+              <line x1="260" y1="86" x2="280" y2="40"/>
+            </g>
+          </g>
+
+          <!-- Tier 2: CSA (m=4, top-k selected). 7 medium dots, 3 highlighted -->
+          <g>
+            <text x="30" y="158" class="label-mono">CSA</text>
+            <text x="30" y="172" class="label-fig">4:1, top-k</text>
+            <!-- Non-selected (dim) -->
+            <g class="fill dim">
+              <circle cx="110" cy="166" r="4.5"/>
+              <circle cx="155" cy="166" r="4.5"/>
+              <circle cx="245" cy="166" r="4.5"/>
+              <circle cx="290" cy="166" r="4.5"/>
+            </g>
+            <!-- Top-k selected (accent) -->
+            <g class="accent-fill">
+              <circle cx="135" cy="166" r="4.5"/>
+              <circle cx="200" cy="166" r="4.5"/>
+              <circle cx="265" cy="166" r="4.5"/>
+            </g>
+            <!-- Lines from selected only -->
+            <g class="accent-stroke" stroke-width="0.7" opacity="0.65">
+              <line x1="135" y1="166" x2="280" y2="40"/>
+              <line x1="200" y1="166" x2="280" y2="40"/>
+              <line x1="265" y1="166" x2="280" y2="40"/>
+            </g>
+          </g>
+
+          <!-- Tier 3: HCA (m'=128, dense). 4 large dots, all connected -->
+          <g>
+            <text x="30" y="238" class="label-mono">HCA</text>
+            <text x="30" y="252" class="label-fig">128:1, dense</text>
+            <g class="fill">
+              <circle cx="125" cy="246" r="7"/>
+              <circle cx="180" cy="246" r="7"/>
+              <circle cx="235" cy="246" r="7"/>
+              <circle cx="285" cy="246" r="7"/>
+            </g>
+            <g class="stroke" stroke-width="0.7" opacity="0.55">
+              <line x1="125" y1="246" x2="280" y2="40"/>
+              <line x1="180" y1="246" x2="280" y2="40"/>
+              <line x1="235" y1="246" x2="280" y2="40"/>
+              <line x1="285" y1="246" x2="280" y2="40"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Reality</strong>
+        The query attends to the recent window plus a top-k slice of
+        compressed mid-range entries plus a few heavily compressed
+        far-away entries. Far less work.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="ds-section-prose">
+    <p class="ds-lede">
+      Most people, when told that LLMs use "attention," picture a square
+      grid where every word looks at every other word. This was true in
+      2017. It is no longer how a frontier model handles a million-token
+      context, because the cost of that square grid is, in a literal
+      sense, quadratic.
+    </p>
+    <p>
+      DeepSeek-V4 interleaves two layer types. Compressed Sparse
+      Attention (CSA) takes every four tokens, crushes them into a
+      single entry, and lets a small "lightning indexer" pick out the
+      top thousand or so entries that matter for each query. Heavily
+      Compressed Attention (HCA) compresses one hundred and twenty-eight
+      tokens into a single entry and attends to all of them densely,
+      because by then there are very few. Both layer types are wrapped
+      around a small sliding window of recent uncompressed tokens, so
+      local detail is never lost.
+    </p>
+    <p>
+      The cleanest mental image is a zoom-out map. Close to the query,
+      individual streets. A bit further, neighborhoods. The whole rest
+      of the city, drawn as labelled districts. <em>The query never has
+      to look at every street.</em>
+    </p>
+  </div>
+
+  <details class="ds-curious">
+    <summary>For the curious — the indexer</summary>
+    <p>
+      The lightning indexer scores each compressed CSA entry against the
+      query using a small set of indexer query heads
+      (<code>64</code> heads, head dim <code>128</code>). Scores are
+      computed in <code>FP32</code>, then quantized to <code>BF16</code>
+      before the top-k selection. The paper reports that quantizing the
+      score path from FP32 to BF16 preserves <code>99.7%</code> recall
+      while doubling top-k throughput.
+    </p>
+  </details>
+
+  <div class="ds-receipts" aria-label="Section I receipts">
+    <div class="ds-receipts-head">Receipts &middot; § I</div>
+    <dl>
+      <dt>CSA compression ratio</dt><dd>m = 4 (4 tokens compressed to 1 entry)</dd>
+      <dt>HCA compression ratio</dt><dd>m' = 128</dd>
+      <dt>Sliding window</dt><dd>n_win = 128 tokens</dd>
+      <dt>Top-k (Pro / Flash)</dt><dd>1024 / 512</dd>
+      <dt>Indexer query heads</dt><dd>64, head dim 128</dd>
+      <dt>Total query heads (Pro / Flash)</dt><dd>128 / 64</dd>
+      <dt>KV cache reduction at 1M ctx vs. BF16 GQA8</dt><dd>~50&times;</dd>
+    </dl>
+  </div>
 </section>
 
 <hr class="rule">
 
+<!-- ═══════════════════════════════════════════════════════════
+     § II — KV CACHE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="kv-cache">
+  <div class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>TEST. 05.2 &middot; KV cache</span>
+  </div>
+  <div class="ds-section-head">
+    <h2>From linear growth to <span class="ds-section-italic">two percent of the textbook curve.</span></h2>
+  </div>
+
+  <div class="ds-headline" aria-label="Headline numbers">
+    <div class="ds-headline-cell">
+      <span class="num">27%</span>
+      <span class="label">FLOPs vs. V3.2</span>
+    </div>
+    <div class="ds-headline-cell">
+      <span class="num">10%</span>
+      <span class="label">KV cache vs. V3.2 &middot; Pro</span>
+    </div>
+    <div class="ds-headline-cell">
+      <span class="num">7%</span>
+      <span class="label">KV cache vs. V3.2 &middot; Flash</span>
+    </div>
+    <div class="ds-headline-cell">
+      <span class="num">~2%</span>
+      <span class="label">KV vs. BF16 GQA8 baseline</span>
+    </div>
+  </div>
+
+  <div class="ds-section-prose">
+    <p class="ds-lede">
+      Every token a model sees in a conversation, by default, is stored
+      forever. Its key and value projections sit in memory, in
+      sixteen-bit precision, ready to be attended to by every token
+      that comes later. This is what makes long-context expensive. It
+      is also why a chat that once ran in a few hundred megabytes can,
+      ten thousand turns in, demand fifty gigabytes per worker.
+    </p>
+    <p>
+      DeepSeek-V4 attacks the problem from three sides at once. The
+      attention layers compress what they store: four tokens to one in
+      CSA layers, a hundred and twenty-eight to one in HCA layers. The
+      precision drops too — main key-value entries live in <code>FP8</code>,
+      only the rotary positional dimensions need <code>BF16</code>, and
+      the indexer's QK path runs in <code>FP4</code>. And the layers
+      themselves are interleaved so most of the depth pays the
+      heavily-compressed cost rather than the moderate one.
+    </p>
+    <p>
+      The result, at a one-million-token context: <em>roughly two
+      percent</em> of the standard sixteen-bit GQA8 baseline.
+    </p>
+  </div>
+
+  <div class="ds-chart-wrap">
+    <div class="ds-chart-head">FIG. 05.2 &middot; KV cache (GB) by sequence length</div>
+    <div class="ds-chart-title serif">Memory grows linearly only if you let it.</div>
+    <svg viewBox="0 0 800 360" class="ds-chart-svg" id="kv-chart" aria-label="KV cache memory by sequence length, four series">
+      <!-- Y axis -->
+      <line x1="60" y1="40" x2="60" y2="320" class="axis-line"/>
+      <!-- X axis -->
+      <line x1="60" y1="320" x2="760" y2="320" class="axis-line"/>
+
+      <!-- Y gridlines and labels -->
+      <line x1="60" y1="60" x2="760" y2="60" class="gridline"/>
+      <line x1="60" y1="120" x2="760" y2="120" class="gridline"/>
+      <line x1="60" y1="180" x2="760" y2="180" class="gridline"/>
+      <line x1="60" y1="240" x2="760" y2="240" class="gridline"/>
+      <line x1="60" y1="280" x2="760" y2="280" class="gridline"/>
+
+      <text x="54" y="64" text-anchor="end" class="axis-label">250</text>
+      <text x="54" y="124" text-anchor="end" class="axis-label">200</text>
+      <text x="54" y="184" text-anchor="end" class="axis-label">150</text>
+      <text x="54" y="244" text-anchor="end" class="axis-label">100</text>
+      <text x="54" y="284" text-anchor="end" class="axis-label">50</text>
+      <text x="54" y="324" text-anchor="end" class="axis-label">0</text>
+      <text x="32" y="180" text-anchor="middle" class="axis-label" transform="rotate(-90 32 180)">KV cache (GB)</text>
+
+      <!-- X labels -->
+      <text x="60"  y="340" text-anchor="middle" class="axis-label">0</text>
+      <text x="200" y="340" text-anchor="middle" class="axis-label">200K</text>
+      <text x="340" y="340" text-anchor="middle" class="axis-label">400K</text>
+      <text x="480" y="340" text-anchor="middle" class="axis-label">600K</text>
+      <text x="620" y="340" text-anchor="middle" class="axis-label">800K</text>
+      <text x="760" y="340" text-anchor="middle" class="axis-label">1M</text>
+      <text x="410" y="356" text-anchor="middle" class="axis-label">Sequence length (tokens)</text>
+
+      <!-- BF16 GQA8 baseline: linear from (0,0) to (1M, 250 GB)  → SVG: (60,320) → (760,32) -->
+      <path d="M 60 320 L 760 32" class="series-baseline"/>
+      <text x="690" y="50" class="axis-label" fill="currentColor">BF16 GQA8: ~250 GB</text>
+
+      <!-- V3.2: (0,0) → (1M, 50 GB) → SVG y = 320 − 50/250*288 = 320 − 57.6 = 262.4 -->
+      <path d="M 60 320 L 760 262" class="series-v32"/>
+      <text x="640" y="252" class="axis-label" fill="currentColor">V3.2: ~50 GB</text>
+
+      <!-- V4-Pro: (0,0) → (1M, 5 GB) → SVG y = 320 − 5/250*288 = 320 − 5.76 = 314.2 -->
+      <path d="M 60 320 L 760 314" class="series-v4pro"/>
+      <text x="640" y="307" class="axis-label" fill="currentColor">V4-Pro: ~5 GB</text>
+
+      <!-- V4-Flash: (0,0) → (1M, 3.5 GB) → SVG y = 320 − 4 = 316 -->
+      <path d="M 60 320 L 760 316.5" class="series-v4flash"/>
+    </svg>
+    <div class="ds-chart-legend">
+      <span><span class="swatch s-baseline"></span>BF16 GQA8 baseline</span>
+      <span><span class="swatch s-v32"></span>DeepSeek-V3.2</span>
+      <span><span class="swatch s-v4pro"></span>DeepSeek-V4-Pro</span>
+      <span><span class="swatch s-v4flash"></span>DeepSeek-V4-Flash</span>
+    </div>
+  </div>
+
+  <div class="ds-section-prose">
+    <p>
+      The chart's punchline is the y-axis. Three of the four lines
+      crowd into the lowest few percent of the plot area. The textbook
+      "every token costs another sixteen-bit key-value pair" line shoots
+      diagonally to the top right. Everything else stays close to the
+      floor.
+    </p>
+  </div>
+
+  <details class="ds-curious">
+    <summary>For the curious — where the savings come from</summary>
+    <p>
+      Per-layer KV memory cost is roughly <code>2 &middot; n_heads
+      &middot; d_head &middot; bytes_per_element</code> per stored
+      entry. The standard baseline stores one entry per token at sixteen
+      bits per element. CSA cuts the number of entries by four. HCA
+      cuts it by a hundred and twenty-eight. Mixed-precision storage
+      then knocks another factor of roughly two off the per-entry cost.
+      The factors compound: <code>4 &times; 2</code> for the CSA layers,
+      <code>128 &times; 2</code> for the HCA layers, with the interleave
+      ratio doing the rest.
+    </p>
+  </details>
+
+  <div class="ds-receipts" aria-label="Section II receipts">
+    <div class="ds-receipts-head">Receipts &middot; § II</div>
+    <dl>
+      <dt>CSA compression</dt><dd>1/4 entries per token</dd>
+      <dt>HCA compression</dt><dd>1/128 entries per token</dd>
+      <dt>KV main precision</dt><dd>FP8</dd>
+      <dt>KV RoPE precision</dt><dd>BF16</dd>
+      <dt>Indexer QK precision</dt><dd>FP4</dd>
+      <dt>KV @ 1M ctx vs. BF16 GQA8</dt><dd>~2%</dd>
+      <dt>KV @ 1M ctx vs. V3.2</dt><dd>10% (Pro), 7% (Flash)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — RESIDUALS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="residuals">
+  <div class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>TEST. 05.3 &middot; Residual connections</span>
+  </div>
+  <div class="ds-section-head">
+    <h2>From one stream to <span class="ds-section-italic">four braided streams,</span> mixed by a doubly-stochastic matrix.</h2>
+  </div>
+
+  <div class="ds-paired">
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 280" class="ds-svg" aria-label="Single residual stream through layers">
+          <!-- 5 layer boxes stacked, single stream through -->
+          <g class="stroke" stroke-width="1">
+            <rect x="115" y="40"  width="90" height="30" fill="none"/>
+            <rect x="115" y="90"  width="90" height="30" fill="none"/>
+            <rect x="115" y="140" width="90" height="30" fill="none"/>
+            <rect x="115" y="190" width="90" height="30" fill="none"/>
+            <rect x="115" y="240" width="90" height="30" fill="none"/>
+          </g>
+          <text x="160" y="59" text-anchor="middle" class="label-fig">Layer 1</text>
+          <text x="160" y="109" text-anchor="middle" class="label-fig">Layer 2</text>
+          <text x="160" y="159" text-anchor="middle" class="label-fig">Layer 3</text>
+          <text x="160" y="209" text-anchor="middle" class="label-fig">Layer 4</text>
+          <text x="160" y="259" text-anchor="middle" class="label-fig">Layer 5</text>
+
+          <!-- Single residual line through all layers -->
+          <line x1="245" y1="20" x2="245" y2="270" class="accent-stroke" stroke-width="2.5"/>
+          <text x="270" y="24" class="label-mono">x</text>
+
+          <!-- Tributaries (small lines coming out of each layer) -->
+          <g class="stroke" stroke-width="1">
+            <path d="M 205 55 L 245 55" />
+            <path d="M 205 105 L 245 105" />
+            <path d="M 205 155 L 245 155" />
+            <path d="M 205 205 L 245 205" />
+            <path d="M 205 255 L 245 255" />
+          </g>
+          <text x="40" y="155" class="label-mono" text-anchor="start">x_out = x + f(x)</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Assumption</strong>
+        One residual stream. Every layer adds f(x) to the running x.
+        The 2017 design.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 280" class="ds-svg" aria-label="Four braided residual streams with doubly-stochastic mixing matrix">
+          <!-- 5 layer boxes stacked -->
+          <g class="stroke" stroke-width="1">
+            <rect x="60"  y="40"  width="200" height="30" fill="none"/>
+            <rect x="60"  y="90"  width="200" height="30" fill="none"/>
+            <rect x="60"  y="140" width="200" height="30" fill="none"/>
+            <rect x="60"  y="190" width="200" height="30" fill="none"/>
+            <rect x="60"  y="240" width="200" height="30" fill="none"/>
+          </g>
+
+          <!-- Mixing matrix (4x4) shown inside layer 3 -->
+          <g transform="translate(140,144)">
+            <rect x="0" y="0" width="40" height="22" fill="none" class="accent-stroke" stroke-width="0.8"/>
+            <line x1="10" y1="0" x2="10" y2="22" class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+            <line x1="20" y1="0" x2="20" y2="22" class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+            <line x1="30" y1="0" x2="30" y2="22" class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+            <line x1="0"  y1="5.5"  x2="40" y2="5.5"  class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+            <line x1="0"  y1="11"   x2="40" y2="11"   class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+            <line x1="0"  y1="16.5" x2="40" y2="16.5" class="accent-stroke" stroke-width="0.5" opacity="0.6"/>
+          </g>
+          <text x="160" y="138" text-anchor="middle" class="label-fig" fill="currentColor">B (4&times;4 doubly-stochastic)</text>
+
+          <!-- Four braided streams -->
+          <g class="accent-stroke" stroke-width="1.6">
+            <path d="M 80  20 L 80  40"/>
+            <path d="M 80  70 L 80  90"/>
+            <path d="M 80  120 L 80  140"/>
+            <path d="M 80  170 L 80  190"/>
+            <path d="M 80  220 L 80  240"/>
+            <path d="M 80  270 L 80  280"/>
+
+            <path d="M 130 20 L 130 40"/>
+            <path d="M 130 70 L 130 90"/>
+            <path d="M 130 120 L 130 140"/>
+            <path d="M 130 170 L 130 190"/>
+            <path d="M 130 220 L 130 240"/>
+            <path d="M 130 270 L 130 280"/>
+
+            <path d="M 190 20 L 190 40"/>
+            <path d="M 190 70 L 190 90"/>
+            <path d="M 190 120 L 190 140"/>
+            <path d="M 190 170 L 190 190"/>
+            <path d="M 190 220 L 190 240"/>
+            <path d="M 190 270 L 190 280"/>
+
+            <path d="M 240 20 L 240 40"/>
+            <path d="M 240 70 L 240 90"/>
+            <path d="M 240 120 L 240 140"/>
+            <path d="M 240 170 L 240 190"/>
+            <path d="M 240 220 L 240 240"/>
+            <path d="M 240 270 L 240 280"/>
+          </g>
+
+          <!-- Stream labels at top -->
+          <text x="80"  y="14" text-anchor="middle" class="label-mono">h₁</text>
+          <text x="130" y="14" text-anchor="middle" class="label-mono">h₂</text>
+          <text x="190" y="14" text-anchor="middle" class="label-mono">h₃</text>
+          <text x="240" y="14" text-anchor="middle" class="label-mono">h₄</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Reality</strong>
+        Four parallel streams. Each layer mixes them via a 4&times;4
+        matrix whose rows and columns each sum to 1, projected onto the
+        Birkhoff polytope.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="ds-section-prose">
+    <p class="ds-lede">
+      The residual connection is the most quietly load-bearing idea in
+      modern deep learning. It says: at each layer, instead of
+      replacing the running state, simply add to it. This is the
+      reason a hundred-layer network trains at all. It is also,
+      everywhere, the same single addition.
+    </p>
+    <p>
+      DeepSeek-V4 widens the running state into four parallel streams
+      and lets each layer mix them through a learned 4&times;4 matrix.
+      Plain hyper-connections — just any old 4&times;4 mixing matrix —
+      train unstably. The signal blows up or collapses across hundreds
+      of layers. The fix is to constrain that matrix to live on a
+      mathematical object called the <em>Birkhoff polytope</em>: the
+      set of doubly-stochastic matrices whose rows and columns each
+      sum to one. Twenty steps of a Sinkhorn-Knopp iteration project
+      the learned matrix onto that manifold, every forward pass.
+    </p>
+    <p>
+      The intuition is plumbing. A single residual stream is one river
+      flowing through the network. Hyper-connections turn it into four
+      braided rivers. The doubly-stochastic constraint is the
+      assurance that no layer accidentally dumps all the water into
+      one channel and dries the other three.
+    </p>
+  </div>
+
+  <details class="ds-curious">
+    <summary>For the curious — the spectral norm bound</summary>
+    <p>
+      Any doubly-stochastic matrix has spectral norm at most 1, with
+      equality when it is a permutation. Bounding the spectral norm
+      bounds how much the residual signal can grow in one layer.
+      Stacking many such matrices keeps the worst-case signal growth
+      polynomial in depth instead of exponential — which is the
+      practical condition for stable deep training.
+    </p>
+  </details>
+
+  <div class="ds-receipts" aria-label="Section III receipts">
+    <div class="ds-receipts-head">Receipts &middot; § III</div>
+    <dl>
+      <dt>Hyper-connection expansion factor</dt><dd>n_hc = 4 streams</dd>
+      <dt>Mixing matrix shape</dt><dd>4 &times; 4, doubly stochastic</dd>
+      <dt>Sinkhorn-Knopp iterations</dt><dd>20 per forward pass</dd>
+      <dt>Optimizer for mHC biases / gates</dt><dd>AdamW (not Muon)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — MUON
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="muon">
+  <div class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>TEST. 05.4 &middot; Optimizer</span>
+  </div>
+  <div class="ds-section-head">
+    <h2>From AdamW to <span class="ds-section-italic">Muon —</span> a step shaped only by direction.</h2>
+  </div>
+
+  <div class="ds-paired">
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 240" class="ds-svg" aria-label="AdamW step shaped by stretched gradient">
+          <!-- Stretched ellipse -->
+          <ellipse cx="160" cy="120" rx="110" ry="38" class="stroke" stroke-width="1.4" opacity="0.75"/>
+          <ellipse cx="160" cy="120" rx="80"  ry="28" class="stroke" stroke-width="0.6" opacity="0.45"/>
+          <ellipse cx="160" cy="120" rx="50"  ry="18" class="stroke" stroke-width="0.4" opacity="0.3"/>
+
+          <!-- Step vector along long axis -->
+          <line x1="160" y1="120" x2="262" y2="120" class="accent-stroke" stroke-width="2.2"/>
+          <polygon points="262,114 274,120 262,126" class="accent-fill"/>
+
+          <!-- Tick at origin -->
+          <circle cx="160" cy="120" r="3" class="fill"/>
+          <text x="160" y="220" text-anchor="middle" class="label-mono">step ∝ gradient itself</text>
+          <text x="160" y="32" text-anchor="middle" class="label-fig">AdamW</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Assumption</strong>
+        AdamW takes a step proportional to the gradient. If the
+        gradient is stretched, the step is stretched.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 240" class="ds-svg" aria-label="Muon step normalized to direction only">
+          <!-- Original ellipse (faded) and arrow toward circle -->
+          <ellipse cx="100" cy="120" rx="58" ry="20" class="stroke" stroke-width="1" opacity="0.45"/>
+          <text x="100" y="156" text-anchor="middle" class="label-fig" opacity="0.6">M</text>
+
+          <!-- Arrow indicating Newton-Schulz iteration -->
+          <line x1="170" y1="120" x2="200" y2="120" class="stroke" stroke-width="0.8"/>
+          <polygon points="200,116 208,120 200,124" class="fill"/>
+          <text x="185" y="110" text-anchor="middle" class="label-mono">NS</text>
+
+          <!-- Normalized circle (the singular values are all 1) -->
+          <circle cx="240" cy="120" r="32" class="accent-stroke" stroke-width="1.6"/>
+          <text x="240" y="166" text-anchor="middle" class="label-fig" fill="currentColor">UV<tspan baseline-shift="super" font-size="0.7em">T</tspan></text>
+
+          <!-- Step vector on the normalized side, same direction -->
+          <line x1="240" y1="120" x2="282" y2="120" class="accent-stroke" stroke-width="2.2"/>
+          <polygon points="282,114 294,120 282,126" class="accent-fill"/>
+
+          <circle cx="240" cy="120" r="3" class="fill"/>
+          <text x="160" y="220" text-anchor="middle" class="label-mono">step ∝ gradient direction only</text>
+          <text x="160" y="32" text-anchor="middle" class="label-fig">Muon</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Reality</strong>
+        Muon orthogonalizes the gradient first, then steps. The step
+        direction is preserved; the step magnitude is uniform.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="ds-section-prose">
+    <p class="ds-lede">
+      AdamW has been the default optimizer for transformers since GPT-2.
+      Its update rule is, to a first approximation, a normalized version
+      of the gradient. If the gradient is stretched in one direction,
+      the step is stretched in that direction. This is fine for
+      moderate-sized models. At trillion-parameter scale, those
+      stretches turn into instability.
+    </p>
+    <p>
+      Muon takes the gradient matrix M, computes its singular value
+      decomposition <code>M = U&Sigma;V&#x1d40;</code>, throws away
+      <code>&Sigma;</code>, and steps in the direction of
+      <code>UV&#x1d40;</code>. The step has the same direction
+      structure as the gradient, but every singular value is now 1.
+      Real SVD is too expensive to do per-step, so DeepSeek-V4 uses a
+      hybrid Newton-Schulz iteration — ten steps in two stages — that
+      approximates it cheaply.
+    </p>
+    <p>
+      The geometric picture: AdamW takes a stretched ellipse and steps
+      along its longest axis. Muon turns that ellipse into a sphere,
+      then steps. <em>Same direction, different magnitude.</em> The
+      result is faster convergence and better stability at scale.
+      AdamW is still used for the bits where matrix orthogonalization
+      doesn't make sense — embeddings, the prediction head, and RMSNorm
+      weights.
+    </p>
+  </div>
+
+  <details class="ds-curious">
+    <summary>For the curious — the Newton-Schulz coefficients</summary>
+    <p>
+      The hybrid Newton-Schulz iteration uses two stages. The first
+      eight steps use coefficients <code>(3.4445, -4.7750, 2.0315)</code>
+      for fast initial convergence. The final two use the standard
+      stable coefficients <code>(2, -1.5, 0.5)</code> to refine the
+      result. The iteration converges to the polar factor of M, which
+      is exactly <code>UV&#x1d40;</code>.
+    </p>
+  </details>
+
+  <div class="ds-receipts" aria-label="Section IV receipts">
+    <div class="ds-receipts-head">Receipts &middot; § IV</div>
+    <dl>
+      <dt>Optimizer (most params)</dt><dd>Muon</dd>
+      <dt>Optimizer (embeddings / head / RMSNorm)</dt><dd>AdamW</dd>
+      <dt>Newton-Schulz iterations</dt><dd>10 (8 fast + 2 stable)</dd>
+      <dt>Stage-1 coefficients</dt><dd>(3.4445, &minus;4.7750, 2.0315)</dd>
+      <dt>Stage-2 coefficients</dt><dd>(2, &minus;1.5, 0.5)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — PRECISION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="precision">
+  <div class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>TEST. 05.5 &middot; Numerical precision</span>
+  </div>
+  <div class="ds-section-head">
+    <h2>From sixteen bits to <span class="ds-section-italic">four,</span> with the loss baked into training.</h2>
+  </div>
+
+  <div class="ds-paired">
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 240" class="ds-svg" aria-label="Precision ladder showing BF16, FP8, FP4 byte layouts">
+          <!-- BF16 row: 16 cells -->
+          <text x="20" y="40" class="label-mono">BF16</text>
+          <g transform="translate(80,28)">
+            <!-- 1 sign cell (accent) -->
+            <rect x="0"  y="0" width="14" height="22" class="accent-fill" opacity="0.85"/>
+            <!-- 8 exponent cells (ink) -->
+            <rect x="14" y="0" width="14" height="22" class="fill"/>
+            <rect x="28" y="0" width="14" height="22" class="fill"/>
+            <rect x="42" y="0" width="14" height="22" class="fill"/>
+            <rect x="56" y="0" width="14" height="22" class="fill"/>
+            <rect x="70" y="0" width="14" height="22" class="fill"/>
+            <rect x="84" y="0" width="14" height="22" class="fill"/>
+            <rect x="98" y="0" width="14" height="22" class="fill"/>
+            <rect x="112" y="0" width="14" height="22" class="fill"/>
+            <!-- 7 mantissa cells (dim) -->
+            <rect x="126" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="140" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="154" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="168" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="182" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="196" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="210" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+          </g>
+          <text x="80" y="68" class="label-fig">16 bits</text>
+
+          <!-- FP8 (E4M3) row: 8 cells -->
+          <text x="20" y="115" class="label-mono">FP8</text>
+          <g transform="translate(80,103)">
+            <rect x="0"  y="0" width="14" height="22" class="accent-fill" opacity="0.85"/>
+            <rect x="14" y="0" width="14" height="22" class="fill"/>
+            <rect x="28" y="0" width="14" height="22" class="fill"/>
+            <rect x="42" y="0" width="14" height="22" class="fill"/>
+            <rect x="56" y="0" width="14" height="22" class="fill"/>
+            <rect x="70" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="84" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+            <rect x="98" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+          </g>
+          <text x="80" y="143" class="label-fig">8 bits</text>
+
+          <!-- FP4 (E2M1) row: 4 cells -->
+          <text x="20" y="190" class="label-mono">FP4</text>
+          <g transform="translate(80,178)">
+            <rect x="0"  y="0" width="14" height="22" class="accent-fill" opacity="0.85"/>
+            <rect x="14" y="0" width="14" height="22" class="fill"/>
+            <rect x="28" y="0" width="14" height="22" class="fill"/>
+            <rect x="42" y="0" width="14" height="22" class="fill" opacity="0.45"/>
+          </g>
+          <text x="80" y="218" class="label-fig">4 bits</text>
+
+          <!-- Legend -->
+          <g transform="translate(220,178)">
+            <rect x="0" y="0" width="10" height="10" class="accent-fill" opacity="0.85"/>
+            <text x="14" y="9" class="label-fig">sign</text>
+            <rect x="0" y="14" width="10" height="10" class="fill"/>
+            <text x="14" y="23" class="label-fig">exp</text>
+            <rect x="0" y="28" width="10" height="10" class="fill" opacity="0.45"/>
+            <text x="14" y="37" class="label-fig">mantissa</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Assumption</strong>
+        Weights live in 16-bit floats during training. Maybe 8-bit at
+        deployment via post-hoc quantization.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="ds-svg-wrap">
+        <svg viewBox="0 0 320 240" class="ds-svg" aria-label="V4 mixed-precision component map and memory bars">
+          <text x="160" y="22" text-anchor="middle" class="label-mono">Memory for 1.6T parameters</text>
+
+          <!-- Bars showing memory cost -->
+          <g transform="translate(40,40)">
+            <!-- BF16 row -->
+            <text x="0" y="14" class="label-fig">BF16</text>
+            <rect x="50" y="0" width="220" height="22" class="fill"/>
+            <text x="276" y="14" class="label-fig" fill="currentColor">3.2 TB</text>
+          </g>
+          <g transform="translate(40,76)">
+            <!-- FP8 row -->
+            <text x="0" y="14" class="label-fig">FP8</text>
+            <rect x="50" y="0" width="110" height="22" class="fill"/>
+            <text x="166" y="14" class="label-fig" fill="currentColor">1.6 TB</text>
+          </g>
+          <g transform="translate(40,112)">
+            <!-- FP4 row -->
+            <text x="0" y="14" class="label-fig">FP4</text>
+            <rect x="50" y="0" width="55" height="22" class="accent-fill" opacity="0.85"/>
+            <text x="111" y="14" class="label-fig" fill="currentColor">0.8 TB</text>
+          </g>
+
+          <!-- V4 component-precision map -->
+          <g transform="translate(40,160)">
+            <text x="0" y="0" class="label-mono">V4 component map</text>
+            <text x="0" y="20" class="label-fig">MoE expert weights</text>
+            <text x="180" y="20" class="label-fig" fill="currentColor">FP4</text>
+            <text x="0" y="36" class="label-fig">KV cache main</text>
+            <text x="180" y="36" class="label-fig" fill="currentColor">FP8</text>
+            <text x="0" y="52" class="label-fig">KV cache RoPE dims</text>
+            <text x="180" y="52" class="label-fig" fill="currentColor">BF16</text>
+            <text x="0" y="68" class="label-fig">Indexer QK path</text>
+            <text x="180" y="68" class="label-fig" fill="currentColor">FP4</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Reality</strong>
+        Mixed precision is built into training. The expert weights live
+        in FP4 from the start, with quantization-aware updates.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="ds-section-prose">
+    <p class="ds-lede">
+      The math people quote about LLM size — "175 billion parameters
+      times two bytes equals 350 gigabytes" — is the math of a model
+      stored in 16-bit floats. That has been the working assumption
+      since 2018. It is the reason frontier models do not fit on
+      single GPUs without tricks.
+    </p>
+    <p>
+      DeepSeek-V4 trains in mixed precision from the start. The
+      Mixture-of-Experts expert weights live in <code>FP4</code> — four
+      bits — with quantization-aware training so the model adapts to
+      the precision loss instead of being post-hoc compressed and
+      hoping. The attention indexer's QK path also runs in
+      <code>FP4</code>. The main KV entries live in <code>FP8</code>;
+      only the rotary positional embedding dimensions need
+      <code>BF16</code>. Index scores quantize from <code>FP32</code>
+      down to <code>BF16</code>, which doubles top-k throughput while
+      preserving 99.7% recall.
+    </p>
+    <p>
+      The trick that makes all of this fit together is a lossless
+      conversion between FP4 and FP8 — FP8 has two more exponent bits
+      than FP4, so as long as a per-block scale factor lives within
+      FP8's dynamic range, the quantization is reversible. <em>The
+      whole pipeline runs in the existing FP8 framework.</em>
+    </p>
+  </div>
+
+  <details class="ds-curious">
+    <summary>For the curious — why FP4 needs a scale factor</summary>
+    <p>
+      Four bits give 16 distinct values. To represent a wide range of
+      weights, FP4 stores them in blocks (typically 32 weights per
+      block) with a shared scale factor. The actual weight is
+      <code>fp4_value &times; scale</code>. As long as the scale's
+      dynamic range fits inside FP8's exponent, the FP4 block can be
+      losslessly dequantized into FP8 for matmul. This is the trick
+      that lets MXFP4 ride the existing FP8 hardware path.
+    </p>
+  </details>
+
+  <div class="ds-receipts" aria-label="Section V receipts">
+    <div class="ds-receipts-head">Receipts &middot; § V</div>
+    <dl>
+      <dt>MoE expert weights</dt><dd>FP4 (MXFP4) with QAT</dd>
+      <dt>KV cache main</dt><dd>FP8</dd>
+      <dt>KV cache RoPE dims</dt><dd>BF16</dd>
+      <dt>Indexer QK path</dt><dd>FP4</dd>
+      <dt>Index score precision</dt><dd>BF16 (down from FP32)</dd>
+      <dt>Index recall preserved</dt><dd>99.7%</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="ds-method" id="methodology">
+  <div class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, caveats</span>
+  </div>
+
+  <div class="ds-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five paired comparisons, each a "what most people assume" diagram
+        next to a "what DeepSeek-V4 actually does" diagram, with editorial
+        prose explaining the gap and a receipts box pinning each
+        numerical claim to a section of the technical report.
+      </p>
+      <p>
+        The diagrams are hand-coded SVG, no charting library. The page
+        is static HTML with vanilla JavaScript only for the dateline.
+        Page weight stays under one megabyte total. No analytics, no
+        tracking.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Primary: the
+        <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro" target="_blank" rel="noopener">DeepSeek-V4-Pro release on Hugging Face</a>
+        and the accompanying technical report. All numerical claims
+        — compression ratios, head counts, precision configurations,
+        Newton-Schulz coefficients — are sourced there.
+      </p>
+      <p>
+        Secondary context for the historical comparisons: the original
+        2017 "Attention Is All You Need" paper, the AdamW paper, and
+        the Muon optimizer paper.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        This is a <em>visual</em> explainer. It simplifies for clarity.
+        The paper is the source of truth.
+      </p>
+      <p>
+        The "what people assume" framing is a generalization for the
+        educated non-specialist. ML researchers know none of these
+        assumptions are universal; the lab is not written for them.
+      </p>
+      <p>
+        The 27% FLOPs and 10% KV cache numbers compare V4-Pro to V3.2
+        at one-million-token context. At shorter contexts, the gap
+        narrows.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a complete account of DeepSeek-V4. Innovations like
+        DeepSeekMoE and Multi-Token Prediction are inherited from V3
+        and not covered. The lab focuses on the five most impactful and
+        most under-covered changes.
+      </p>
+      <p>
+        Not authored by DeepSeek-V4 itself, despite the subject. This
+        page was written by Claude Code based on the public technical
+        report. Verify the primary sources.
+      </p>
+    </div>
+  </div>
+
+  <div class="ds-closing">
+    <p>
+      Five comparisons. Five places where the public mental model of how
+      LLMs work has fallen behind what frontier labs are actually
+      shipping. The 2017 Transformer is still in the family tree, but
+      DeepSeek-V4 shares less with it than the popular discourse
+      suggests.
+    </p>
+    <p>
+      The throughline: efficiency at scale isn't won by one big idea.
+      It's won by a stack of compromises &mdash; compress here, sparsify
+      there, constrain a manifold, normalize a singular value, drop two
+      bits of precision &mdash; that compound multiplicatively. The
+      headline number is twenty-seven percent FLOPs and ten percent KV
+      cache. The boring truth is that no single change in this paper
+      produced that result. They all did, together.
+    </p>
+    <p>
+      If frontier-LLM efficiency feels mysterious, this is why. It
+      isn't one trick. It's five.
+    </p>
+  </div>
+</section>
+
 <!-- ── Lab navigation ─────────────────────────────────────── -->
-<nav class="lab-nav mono">
-  <a href="/work/productivity-predictions-lab/" class="lab-nav-prev">&larr; Productivity Predictions</a>
+<nav class="lab-nav mono" aria-label="Test navigation">
+  <a href="/work/productivity-predictions-lab/">&larr; Prev: Productivity Predictions (TEST. 04)</a>
   <span class="lab-nav-meta">Test 05 of 05</span>
-  <a href="/" class="lab-nav-next">Return to the masthead &rarr;</a>
+  <a href="/">Return to the masthead &rarr;</a>
 </nav>
 
 </main>
@@ -184,8 +1061,8 @@
 </div>
 
 <script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/deepseek-v4-lab.js?v=1"></script>
 <script>
-  // Dateline
   (function () {
     var el = document.getElementById('dateline-time');
     if (!el) return;
