@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=39">
+  <link rel="stylesheet" href="/assets/css/main.css?v=40">
   <link rel="stylesheet" href="/assets/css/time-use-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,54 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do Americans actually spend their time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The average American adult spends roughly 8.5 hours sleeping, 3.5 hours working including commute, 3 hours on screens (television, phone, computer outside of work), 1.5 hours eating, and the remaining 7 hours on a mix of household tasks, childcare, errands, and socializing. Pick an age cohort or employment status in the lab to see how the day redraws for that group."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does the time-use data come from?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The U.S. Bureau of Labor Statistics' American Time Use Survey (ATUS), which has interviewed over 200,000 Americans about exactly how they spent their previous day, in 15-minute blocks. ATUS has run continuously since 2003 and is the most authoritative source for U.S. time-use research."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much free time does the average American have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "After sleep, work, and required household tasks, the average American adult has roughly 4 to 5 hours of discretionary time per weekday and 6 to 7 hours per weekend day. The gap between the most and least time-rich demographics is smaller than people assume \u2014 about 90 minutes \u2014 once you control for employment status and the presence of young children."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does parenting change the day?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Parents of young children (under age 6) lose roughly 2 hours of personal and discretionary time per day to childcare-related tasks compared to non-parents. The biggest absolute differences are in sleep (parents lose 30 to 45 minutes), screen time (parents lose around 60 minutes), and household tasks (parents add about 45 minutes)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the most distinctive cohort in the data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Retired adults aged 65 and over have the most distinctive day pattern: roughly 1.5 more hours of sleep, 2 more hours of screen time, 1.5 more hours of household activities, and effectively zero hours of paid work compared to working-age adults. The opposite extreme is parents of young children with full-time jobs, whose days are the most compressed in the dataset."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -340,6 +388,29 @@
     </div>
   </div>
 
+  <section class="faq" aria-label="Frequently asked questions">
+    <h2 class="faq-head">FAQ</h2>
+    <details>
+      <summary>How do Americans actually spend their time?</summary>
+      <div class="faq-answer"><p>The average American adult spends roughly 8.5 hours sleeping, 3.5 hours working including commute, 3 hours on screens (television, phone, computer outside of work), 1.5 hours eating, and the remaining 7 hours on a mix of household tasks, childcare, errands, and socializing. Pick an age cohort or employment status in the lab to see how the day redraws for that group.</p></div>
+    </details>
+    <details>
+      <summary>Where does the time-use data come from?</summary>
+      <div class="faq-answer"><p>The U.S. Bureau of Labor Statistics' American Time Use Survey (ATUS), which has interviewed over 200,000 Americans about exactly how they spent their previous day, in 15-minute blocks. ATUS has run continuously since 2003 and is the most authoritative source for U.S. time-use research.</p></div>
+    </details>
+    <details>
+      <summary>How much free time does the average American have?</summary>
+      <div class="faq-answer"><p>After sleep, work, and required household tasks, the average American adult has roughly 4 to 5 hours of discretionary time per weekday and 6 to 7 hours per weekend day. The gap between the most and least time-rich demographics is smaller than people assume — about 90 minutes — once you control for employment status and the presence of young children.</p></div>
+    </details>
+    <details>
+      <summary>How does parenting change the day?</summary>
+      <div class="faq-answer"><p>Parents of young children (under age 6) lose roughly 2 hours of personal and discretionary time per day to childcare-related tasks compared to non-parents. The biggest absolute differences are in sleep (parents lose 30 to 45 minutes), screen time (parents lose around 60 minutes), and household tasks (parents add about 45 minutes).</p></div>
+    </details>
+    <details>
+      <summary>What's the most distinctive cohort in the data?</summary>
+      <div class="faq-answer"><p>Retired adults aged 65 and over have the most distinctive day pattern: roughly 1.5 more hours of sleep, 2 more hours of screen time, 1.5 more hours of household activities, and effectively zero hours of paid work compared to working-age adults. The opposite extreme is parents of young children with full-time jobs, whose days are the most compressed in the dataset.</p></div>
+    </details>
+  </section>
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">
     <div class="mono related-labs-head">Related labs</div>

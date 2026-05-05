@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=39">
+  <link rel="stylesheet" href="/assets/css/main.css?v=40">
   <link rel="stylesheet" href="/assets/css/deepseek-v4-lab.css?v=2">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,54 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is DeepSeek-V4?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DeepSeek-V4 is a 1.6-trillion-parameter open-source large language model released by DeepSeek in 2026. It handles a one-million-token context window using roughly 27% of the FLOPs and 10% of the KV cache of its predecessor DeepSeek-V3.2 \u2014 a 50\u00d7 reduction in cache versus the standard BF16 GQA8 baseline."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does DeepSeek-V4 reduce KV cache by 90%?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Through three compounding architectural choices: hybrid attention (Compressed Sparse Attention compresses 4 tokens to 1 entry, Heavily Compressed Attention compresses 128 to 1), mixed-precision storage (FP8 main, BF16 rotary positional dimensions, FP4 indexer), and interleaved layer types so the dense-attention overhead applies to only a few layers. The factors compound multiplicatively to yield the headline 50\u00d7 cache reduction."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Compressed Sparse Attention (CSA)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CSA is one of the two attention layer types in DeepSeek-V4. It groups every 4 consecutive tokens into a single compressed entry, then a \"lightning indexer\" picks the top-1024 (Pro) or top-512 (Flash) most-relevant entries for each query. The query attends only to those selected entries plus a sliding window of recent uncompressed tokens, instead of attending to every previous token."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Muon optimizer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Muon is the optimizer DeepSeek-V4 uses for most parameters, replacing AdamW. It orthogonalizes the gradient before stepping: the gradient matrix M is approximated as UV^T (the polar factor of M's singular value decomposition) via a 10-iteration hybrid Newton-Schulz, then the step is taken in that \"shape-only\" direction with all singular values normalized to 1. The result is faster convergence and better stability at trillion-parameter scale."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is DeepSeek-V4 better than DeepSeek-V3.2?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For long-context tasks, dramatically: at one-million-token context V4-Pro uses 10% of V3.2's KV cache and 27% of its FLOPs, with comparable or better quality on benchmark tasks. At shorter contexts the gap narrows. The improvement isn't from one big idea but from five compounding architectural changes: hybrid attention, manifold-constrained hyper-connections, the Muon optimizer, FP4 quantization-aware training, and per-layer mixed precision."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -1128,6 +1176,29 @@
 </section>
 
 <!-- ── Lab navigation ─────────────────────────────────────── -->
+  <section class="faq" aria-label="Frequently asked questions">
+    <h2 class="faq-head">FAQ</h2>
+    <details>
+      <summary>What is DeepSeek-V4?</summary>
+      <div class="faq-answer"><p>DeepSeek-V4 is a 1.6-trillion-parameter open-source large language model released by DeepSeek in 2026. It handles a one-million-token context window using roughly 27% of the FLOPs and 10% of the KV cache of its predecessor DeepSeek-V3.2 — a 50× reduction in cache versus the standard BF16 GQA8 baseline.</p></div>
+    </details>
+    <details>
+      <summary>How does DeepSeek-V4 reduce KV cache by 90%?</summary>
+      <div class="faq-answer"><p>Through three compounding architectural choices: hybrid attention (Compressed Sparse Attention compresses 4 tokens to 1 entry, Heavily Compressed Attention compresses 128 to 1), mixed-precision storage (FP8 main, BF16 rotary positional dimensions, FP4 indexer), and interleaved layer types so the dense-attention overhead applies to only a few layers. The factors compound multiplicatively to yield the headline 50× cache reduction.</p></div>
+    </details>
+    <details>
+      <summary>What is Compressed Sparse Attention (CSA)?</summary>
+      <div class="faq-answer"><p>CSA is one of the two attention layer types in DeepSeek-V4. It groups every 4 consecutive tokens into a single compressed entry, then a "lightning indexer" picks the top-1024 (Pro) or top-512 (Flash) most-relevant entries for each query. The query attends only to those selected entries plus a sliding window of recent uncompressed tokens, instead of attending to every previous token.</p></div>
+    </details>
+    <details>
+      <summary>What is the Muon optimizer?</summary>
+      <div class="faq-answer"><p>Muon is the optimizer DeepSeek-V4 uses for most parameters, replacing AdamW. It orthogonalizes the gradient before stepping: the gradient matrix M is approximated as UV^T (the polar factor of M's singular value decomposition) via a 10-iteration hybrid Newton-Schulz, then the step is taken in that "shape-only" direction with all singular values normalized to 1. The result is faster convergence and better stability at trillion-parameter scale.</p></div>
+    </details>
+    <details>
+      <summary>Is DeepSeek-V4 better than DeepSeek-V3.2?</summary>
+      <div class="faq-answer"><p>For long-context tasks, dramatically: at one-million-token context V4-Pro uses 10% of V3.2's KV cache and 27% of its FLOPs, with comparable or better quality on benchmark tasks. At shorter contexts the gap narrows. The improvement isn't from one big idea but from five compounding architectural changes: hybrid attention, manifold-constrained hyper-connections, the Muon optimizer, FP4 quantization-aware training, and per-layer mixed precision.</p></div>
+    </details>
+  </section>
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">
     <div class="mono related-labs-head">Related labs</div>

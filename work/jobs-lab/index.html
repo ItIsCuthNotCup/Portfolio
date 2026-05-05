@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=39">
+  <link rel="stylesheet" href="/assets/css/main.css?v=40">
   <link rel="stylesheet" href="/assets/css/jobs-lab.css?v=3">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,54 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How exposed is my job to AI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Type your occupation in the lab to get a score on three peer-reviewed exposure measures (Felten et al., Frey & Osborne, Webb), plus a Bureau of Labor Statistics employment projection through 2030. The site covers 888 U.S. occupations. AI exposure is highest in knowledge work (analysts, marketers, paralegals) and lowest in physical work that requires fine motor coordination (electricians, plumbers, dental hygienists)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between AI exposure and robotics exposure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AI exposure measures vulnerability to large-language-model and computer-vision automation: cognitive tasks done at a desk. Robotics exposure measures vulnerability to physical automation: assembly, transportation, food service. The two pressures hit opposite ends of the workforce and shouldn't be lumped together as \"automation.\""
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which jobs are safest from automation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Jobs that combine in-person interaction, fine motor skill, and unpredictable physical environments. Hairdressers, EMTs, electricians, dental hygienists, and occupational therapists all show under 5% combined AI plus robotics exposure scores. Knowledge work done at a desk (analysts, marketers, paralegals) shows the highest exposure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the BLS projection through 2030?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Bureau of Labor Statistics publishes a 10-year occupational employment projection that estimates job growth or decline for each of 888 occupations. The projections account for technology change but were largely set before the 2022 to 2026 generative-AI surge, so they likely understate AI-related shifts in white-collar roles."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does the data come from?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AI exposure scores come from Felten, Raj, and Seamans (2021), Frey and Osborne (2017), and Webb (2020). Robotics exposure scores come from Webb (2020). Employment counts and projections come from the BLS Occupational Employment Statistics and Employment Projections programs. All data sources are linked from the lab."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -534,6 +582,29 @@
     </div>
   </details>
 
+  <section class="faq" aria-label="Frequently asked questions">
+    <h2 class="faq-head">FAQ</h2>
+    <details>
+      <summary>How exposed is my job to AI?</summary>
+      <div class="faq-answer"><p>Type your occupation in the lab to get a score on three peer-reviewed exposure measures (Felten et al., Frey &amp; Osborne, Webb), plus a Bureau of Labor Statistics employment projection through 2030. The site covers 888 U.S. occupations. AI exposure is highest in knowledge work (analysts, marketers, paralegals) and lowest in physical work that requires fine motor coordination (electricians, plumbers, dental hygienists).</p></div>
+    </details>
+    <details>
+      <summary>What's the difference between AI exposure and robotics exposure?</summary>
+      <div class="faq-answer"><p>AI exposure measures vulnerability to large-language-model and computer-vision automation: cognitive tasks done at a desk. Robotics exposure measures vulnerability to physical automation: assembly, transportation, food service. The two pressures hit opposite ends of the workforce and shouldn't be lumped together as "automation."</p></div>
+    </details>
+    <details>
+      <summary>Which jobs are safest from automation?</summary>
+      <div class="faq-answer"><p>Jobs that combine in-person interaction, fine motor skill, and unpredictable physical environments. Hairdressers, EMTs, electricians, dental hygienists, and occupational therapists all show under 5% combined AI plus robotics exposure scores. Knowledge work done at a desk (analysts, marketers, paralegals) shows the highest exposure.</p></div>
+    </details>
+    <details>
+      <summary>What is the BLS projection through 2030?</summary>
+      <div class="faq-answer"><p>The Bureau of Labor Statistics publishes a 10-year occupational employment projection that estimates job growth or decline for each of 888 occupations. The projections account for technology change but were largely set before the 2022 to 2026 generative-AI surge, so they likely understate AI-related shifts in white-collar roles.</p></div>
+    </details>
+    <details>
+      <summary>Where does the data come from?</summary>
+      <div class="faq-answer"><p>AI exposure scores come from Felten, Raj, and Seamans (2021), Frey and Osborne (2017), and Webb (2020). Robotics exposure scores come from Webb (2020). Employment counts and projections come from the BLS Occupational Employment Statistics and Employment Projections programs. All data sources are linked from the lab.</p></div>
+    </details>
+  </section>
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">
     <div class="mono related-labs-head">Related labs</div>

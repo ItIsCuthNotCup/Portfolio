@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=39">
+  <link rel="stylesheet" href="/assets/css/main.css?v=40">
   <link rel="stylesheet" href="/assets/css/agi-forecast-lab.css?v=5">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,54 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "When will AGI arrive?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "That's the question the lab tries to answer empirically by collecting every public AGI prediction it can find from 1950 to 2026. The aggregate of 250 predictions has averaged \"about twenty years from now\" in essentially every decade, with the median forecaster expecting AGI within their own remaining career. The pattern itself, stable across seventy years of AI history, is more informative than any individual prediction."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What counts as an \"AGI prediction\" in this dataset?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A public, named, dated forecast about when artificial general intelligence (or human-level AI, or strong AI) will arrive. Each entry has the predictor's name, role, the source (press article, conference talk, paper, or interview), the year said, and the year targeted. Implicit predictions and unattributed forecasts are excluded."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who predicts AGI is closest?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Researchers at frontier labs (OpenAI, Anthropic, Google DeepMind, Meta AI) consistently forecast the nearest arrival dates, typically within 5 to 10 years of when they speak. Academic researchers and historians of technology predict longer horizons, often 30 to 50 years out. The gap between the two camps is narrower in 2024 to 2026 than in any prior period in the dataset."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Has anyone been right about AGI yet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The earliest predictions had AGI arriving in the 1970s or 1980s. None of those came true; the field went through an \"AI winter\" instead. Predictions made between 1990 and 2010 mostly targeted 2020 to 2030, also unfulfilled. Whether 2026-era predictions targeting 2030 to 2040 will be the first accurate cohort is the open question."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does the data come from?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Press archives (New York Times, Financial Times, MIT Technology Review), conference proceedings (NeurIPS, ICML, ICLR), publication databases, and individual statements from interviews, podcast appearances, and blog posts. Each source link is exposed in the lab. Some entries are reconstructed retroactively for older dates and flagged accordingly in the data."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -662,6 +710,29 @@
     </div>
   </div>
 
+  <section class="faq" aria-label="Frequently asked questions">
+    <h2 class="faq-head">FAQ</h2>
+    <details>
+      <summary>When will AGI arrive?</summary>
+      <div class="faq-answer"><p>That's the question the lab tries to answer empirically by collecting every public AGI prediction it can find from 1950 to 2026. The aggregate of 250 predictions has averaged "about twenty years from now" in essentially every decade, with the median forecaster expecting AGI within their own remaining career. The pattern itself, stable across seventy years of AI history, is more informative than any individual prediction.</p></div>
+    </details>
+    <details>
+      <summary>What counts as an "AGI prediction" in this dataset?</summary>
+      <div class="faq-answer"><p>A public, named, dated forecast about when artificial general intelligence (or human-level AI, or strong AI) will arrive. Each entry has the predictor's name, role, the source (press article, conference talk, paper, or interview), the year said, and the year targeted. Implicit predictions and unattributed forecasts are excluded.</p></div>
+    </details>
+    <details>
+      <summary>Who predicts AGI is closest?</summary>
+      <div class="faq-answer"><p>Researchers at frontier labs (OpenAI, Anthropic, Google DeepMind, Meta AI) consistently forecast the nearest arrival dates, typically within 5 to 10 years of when they speak. Academic researchers and historians of technology predict longer horizons, often 30 to 50 years out. The gap between the two camps is narrower in 2024 to 2026 than in any prior period in the dataset.</p></div>
+    </details>
+    <details>
+      <summary>Has anyone been right about AGI yet?</summary>
+      <div class="faq-answer"><p>No. The earliest predictions had AGI arriving in the 1970s or 1980s. None of those came true; the field went through an "AI winter" instead. Predictions made between 1990 and 2010 mostly targeted 2020 to 2030, also unfulfilled. Whether 2026-era predictions targeting 2030 to 2040 will be the first accurate cohort is the open question.</p></div>
+    </details>
+    <details>
+      <summary>Where does the data come from?</summary>
+      <div class="faq-answer"><p>Press archives (New York Times, Financial Times, MIT Technology Review), conference proceedings (NeurIPS, ICML, ICLR), publication databases, and individual statements from interviews, podcast appearances, and blog posts. Each source link is exposed in the lab. Some entries are reconstructed retroactively for older dates and flagged accordingly in the data.</p></div>
+    </details>
+  </section>
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">
     <div class="mono related-labs-head">Related labs</div>

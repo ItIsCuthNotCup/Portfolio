@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=39">
+  <link rel="stylesheet" href="/assets/css/main.css?v=40">
   <link rel="stylesheet" href="/assets/css/model-atlas-lab.css?v=2">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,54 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does the Model Atlas do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It's an expert system that recommends a discriminative machine learning model for your specific problem. Answer five questions (dataset size, target type, feature interactions, interpretability needs, latency tolerance) and the atlas routes you to one of 13 algorithms with reasons for the choice, plus a live, interactive demo of that algorithm running in your browser."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which 13 ML models does it cover?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Linear regression, ridge and lasso, logistic regression, decision tree, random forest, gradient boosting, support vector machine, multi-layer perceptron, naive Bayes, k-nearest neighbors, k-means, DBSCAN, and isolation forest. Each has its own deep-dive page with hand-built interactive visualizations of how the algorithm trains and predicts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why an expert system instead of \"just use XGBoost\"?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "XGBoost is the right answer for many problems, but not all. Linear models are still the right choice when interpretability matters, k-nearest neighbors when the dataset is small enough, isolation forest for anomaly detection, and DBSCAN when cluster count is unknown. The atlas surfaces those distinctions instead of letting them get lost behind one default."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the \"right model\" determined?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A small decision tree trained on the scikit-learn algorithm cheat-sheet plus practitioner heuristics, encoded as five branching questions. The output isn't algorithmic ground truth \u2014 it's a starting point and an explanation of why. Each recommendation includes its tradeoffs (for example, \"favors interpretability over flexibility\") and the algorithms you'd consider next if the recommendation doesn't fit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are the demos real or simulated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Real. Each algorithm's deep-dive page implements that algorithm in vanilla JavaScript, runs it on synthetic or canonical datasets, and visualizes the training and inference loop live. No hidden API calls, no cached predictions. You can see gradient descent slide a logistic regression boundary into place, watch DBSCAN merge density clusters in real time, see decision trees split on feature thresholds, and so on."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -321,6 +369,29 @@
     </ul>
   </aside>
 
+  <section class="faq" aria-label="Frequently asked questions">
+    <h2 class="faq-head">FAQ</h2>
+    <details>
+      <summary>What does the Model Atlas do?</summary>
+      <div class="faq-answer"><p>It's an expert system that recommends a discriminative machine learning model for your specific problem. Answer five questions (dataset size, target type, feature interactions, interpretability needs, latency tolerance) and the atlas routes you to one of 13 algorithms with reasons for the choice, plus a live, interactive demo of that algorithm running in your browser.</p></div>
+    </details>
+    <details>
+      <summary>Which 13 ML models does it cover?</summary>
+      <div class="faq-answer"><p>Linear regression, ridge and lasso, logistic regression, decision tree, random forest, gradient boosting, support vector machine, multi-layer perceptron, naive Bayes, k-nearest neighbors, k-means, DBSCAN, and isolation forest. Each has its own deep-dive page with hand-built interactive visualizations of how the algorithm trains and predicts.</p></div>
+    </details>
+    <details>
+      <summary>Why an expert system instead of "just use XGBoost"?</summary>
+      <div class="faq-answer"><p>XGBoost is the right answer for many problems, but not all. Linear models are still the right choice when interpretability matters, k-nearest neighbors when the dataset is small enough, isolation forest for anomaly detection, and DBSCAN when cluster count is unknown. The atlas surfaces those distinctions instead of letting them get lost behind one default.</p></div>
+    </details>
+    <details>
+      <summary>How is the "right model" determined?</summary>
+      <div class="faq-answer"><p>A small decision tree trained on the scikit-learn algorithm cheat-sheet plus practitioner heuristics, encoded as five branching questions. The output isn't algorithmic ground truth — it's a starting point and an explanation of why. Each recommendation includes its tradeoffs (for example, "favors interpretability over flexibility") and the algorithms you'd consider next if the recommendation doesn't fit.</p></div>
+    </details>
+    <details>
+      <summary>Are the demos real or simulated?</summary>
+      <div class="faq-answer"><p>Real. Each algorithm's deep-dive page implements that algorithm in vanilla JavaScript, runs it on synthetic or canonical datasets, and visualizes the training and inference loop live. No hidden API calls, no cached predictions. You can see gradient descent slide a logistic regression boundary into place, watch DBSCAN merge density clusters in real time, see decision trees split on feature thresholds, and so on.</p></div>
+    </details>
+  </section>
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">
     <div class="mono related-labs-head">Related labs</div>
