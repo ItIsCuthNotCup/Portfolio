@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=40">
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
   <link rel="stylesheet" href="/assets/css/semiconductor-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -86,6 +86,30 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "AI semiconductor supply chain, 30 facilities",
+    "description": "Mapped dataset of 30 facilities across seven layers of the AI chip supply chain \u2014 from rare-earth mines to advanced packaging \u2014 with chokepoint annotations.",
+    "url": "https://jakecuth.com/work/semiconductor-lab/",
+    "creator": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "distribution": [
+      {
+        "@type": "DataDownload",
+        "encodingFormat": "application/json",
+        "contentUrl": "https://jakecuth.com/assets/data/semiconductor/supply-chain.json"
+      }
+    ],
+    "inLanguage": "en"
+  }
+  </script>
 </head>
 <body>
 
@@ -152,6 +176,14 @@
 </div>
 
 <!-- HERO -->
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#labs">Tests</a></li>
+    <li><span aria-current="page">Semiconductor Cartography</span></li>
+  </ol>
+</nav>
 <section class="sc-hero">
   <h2 class="mono section-label">
     <span class="idx">TEST. 02</span>

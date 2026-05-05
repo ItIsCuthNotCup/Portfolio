@@ -995,6 +995,55 @@ main { position: relative; }
   color: var(--ink-dim); text-transform: uppercase;
 }
 
+/* ── Breadcrumb nav (visible counterpart to BreadcrumbList JSON-LD) ──
+   Sits below the masthead, above the hero. Small mono text, ink-dim,
+   mirrors the editorial dateline aesthetic. Both readers and Google
+   benefit from a visible hierarchy in addition to the schema. */
+.breadcrumb {
+  padding: 80px 88px 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+/* When a breadcrumb is present, the existing hero padding-top (120px,
+   originally meant to clear the fixed masthead) becomes redundant. Pull
+   any *-hero section a little closer to the breadcrumb. */
+main > .breadcrumb + section[class*="-hero"],
+main > .breadcrumb + section.hero,
+main > .breadcrumb ~ section[class*="-hero"]:first-of-type {
+  padding-top: 32px;
+}
+.breadcrumb ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.breadcrumb li { margin: 0; }
+.breadcrumb li:not(:last-child)::after {
+  content: '/';
+  margin-left: 12px;
+  color: var(--ink-dim);
+  opacity: 0.5;
+}
+.breadcrumb a {
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.breadcrumb a:hover {
+  border-bottom-color: var(--ink);
+  color: var(--accent);
+}
+.breadcrumb [aria-current="page"] { color: var(--accent); }
+@media (max-width: 720px) {
+  .breadcrumb { padding: 90px 24px 0; }
+}
+
 /* ── FAQ section (added on top labs for AI search visibility) ──
    GEO research: pages with FAQ sections get +611% AI Overview lift
    (BrightEdge / OtterlyAI 2025). Format matches how people query

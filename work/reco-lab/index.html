@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flixer — Jake Cuth.</title>
+  <title>Recommendation Engine · Live in-browser movie reco — Jake Cuth.</title>
   <meta name="description" content="Click a poster, three algorithms reinterpret your taste. Content-based, collaborative, hybrid — all precomputed from MovieLens, all running in your browser.">
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Flixer — a recommendation engine, in the open">
+  <meta property="og:title" content="Recommendation Engine · Live in-browser movie reco">
   <meta property="og:description" content="Click a poster, three algorithms reinterpret your taste. Content-based, collaborative, hybrid — all precomputed from MovieLens, all running in your browser.">
   <meta property="og:image" content="https://jakecuth.com/assets/og/reco-lab.png?v=1">
   <meta property="og:url" content="https://jakecuth.com/work/reco-lab/">
@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
 
   <!-- Shared styles + page styles -->
-  <link rel="stylesheet" href="/assets/css/main.css?v=40">
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
   <link rel="stylesheet" href="/assets/css/reco-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -33,7 +33,7 @@
   <meta property="article:published_time" content="2026-04-23T00:00:00Z">
   <meta property="article:modified_time" content="2026-05-04T00:00:00Z">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Flixer — a recommendation engine, in the open">
+  <meta name="twitter:title" content="Recommendation Engine · Live in-browser movie reco">
   <meta name="twitter:description" content="Click a poster, three algorithms reinterpret your taste. Content-based, collaborative, hybrid — all precomputed from MovieLens, all running in your browser.">
   <meta name="twitter:image" content="https://jakecuth.com/assets/og/reco-lab.png?v=1">
   <script type="application/ld+json">
@@ -91,6 +91,35 @@
   <meta property="og:site_name" content="Jake Cuth.">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Flixer \u2014 a recommendation engine, in the open",
+    "description": "Click a poster, three algorithms reinterpret your taste. Content-based, collaborative, hybrid \u2014 all precomputed from MovieLens, all running in your browser.",
+    "image": "https://jakecuth.com/assets/og/reco-lab.png?v=1",
+    "url": "https://jakecuth.com/work/reco-lab/",
+    "datePublished": "2026-04-23",
+    "dateModified": "2026-05-04",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -158,6 +187,14 @@
 <!-- ═══════════════════════════════════════════════════════════
      § VIII · FIG. 03 — TITLE
      ═══════════════════════════════════════════════════════════ -->
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#labs">Labs</a></li>
+    <li><span aria-current="page">Recommendation Engine</span></li>
+  </ol>
+</nav>
 <section class="reco-hero">
   <h2 class="mono section-label">
     <span class="idx">FIG. 03</span>

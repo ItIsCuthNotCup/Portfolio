@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=40">
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
   <link rel="stylesheet" href="/assets/css/notes.css?v=1">
 
   <script type="application/ld+json">
@@ -118,7 +118,7 @@
     and that cluster is almost surely far away if you split the data
     on its strongest principal direction. So k=2 wins by structural
     accident. Increase k and you start putting clusters near each
-    other, separation drops, score drops &mdash; even when k=4 is the
+    other, separation drops, score drops, even when k=4 is the
     actual answer.
   </p>
 
@@ -146,10 +146,9 @@
     The fix is one extra parameter on the methodology contract and
     fifteen lines of SVG. The full diff is in
     <code>notebooks/segmentation_model.py</code> and
-    <code>assets/js/segmentation-lab.js</code>. Reviewers raised it
-    as ACC-3 in an audit; the right call was to keep the chart
-    technically correct and add the annotation that protects the
-    reader from the easy misread.
+    <code>assets/js/segmentation-lab.js</code>. The right call is to
+    keep the chart technically correct and add the annotation that
+    protects the reader from the easy misread.
   </p>
 
   <p>
