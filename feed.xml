@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Jake Cuth. — Notes</title>
+  <subtitle>Field notes from a senior data analyst.</subtitle>
+  <link href="https://jakecuth.com/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://jakecuth.com/notes/" rel="alternate" type="text/html"/>
+  <id>https://jakecuth.com/feed.xml</id>
+  <updated>2026-05-05T00:00:00Z</updated>
+  <author>
+    <name>Jacob Cuthbertson</name>
+    <uri>https://jakecuth.com/</uri>
+  </author>
+  <rights>© Jacob Cuthbertson</rights>
+  <generator uri="https://jakecuth.com/" version="1">jakecuth.com</generator>
+
+  <!-- Posts go here, newest first. Format per entry:
+
+  <entry>
+    <title>Title of the note</title>
+    <link href="https://jakecuth.com/notes/SLUG/" rel="alternate" type="text/html"/>
+    <id>https://jakecuth.com/notes/SLUG/</id>
+    <published>2026-MM-DDTHH:MM:SSZ</published>
+    <updated>2026-MM-DDTHH:MM:SSZ</updated>
+    <summary>One-line summary.</summary>
+    <content type="html"><![CDATA[ Full HTML content here. ]]></content>
+    <category term="data"/>
+    <category term="ml"/>
+  </entry>
+
+  -->
+</feed>

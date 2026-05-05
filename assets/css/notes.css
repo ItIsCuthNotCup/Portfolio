@@ -1,0 +1,227 @@
+/* ═══════════════════════════════════════════════════════════
+   NOTES — listing page + per-note styles
+   Inherits most typography and chrome from main.css.
+   ═══════════════════════════════════════════════════════════ */
+
+.notes-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero (used on /notes/ listing page) ────────────────────── */
+.notes-hero {
+  padding: 120px 56px 60px 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.notes-hero .lab-biz-line {
+  margin-top: 28px;
+  max-width: 640px;
+}
+.notes-hero a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.notes-hero a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Listing ────────────────────────────────────────────────── */
+.notes-list-section {
+  padding: 60px 56px 80px 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.notes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.notes-list-item {
+  padding: 28px 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+}
+.notes-list-item:last-child { border-bottom: none; }
+.notes-list-item a {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 36px;
+  text-decoration: none;
+  color: inherit;
+  align-items: baseline;
+}
+.notes-list-item .note-meta {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+.notes-list-item .note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.notes-list-item .note-title {
+  font-family: 'Newsreader', serif;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: -0.01em;
+  transition: color 200ms ease;
+}
+.notes-list-item a:hover .note-title { color: var(--accent); }
+.notes-list-item .note-summary {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 64ch;
+}
+.notes-list-item .note-tags {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 4px;
+}
+
+/* Empty state */
+.notes-empty {
+  padding: 48px 0;
+  text-align: left;
+  color: var(--ink-soft);
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.55;
+  border-top: 1px dashed var(--ink-dim);
+  border-bottom: 1px dashed var(--ink-dim);
+}
+.notes-empty a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.notes-empty a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Per-note page (when /notes/<slug>/ is added) ──────────── */
+.note-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+.note-hero {
+  padding: 120px 56px 40px 88px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.note-hero h1 {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  margin: 22px 0 0;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.note-dateline {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  gap: 36px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: 'DM Mono', ui-monospace, monospace;
+}
+.note-dateline .label { color: var(--ink-dim); }
+.note-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.note-body {
+  padding: 40px 56px 80px 88px;
+  max-width: 720px;
+  margin: 0 auto;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.note-body p { margin: 0 0 22px; }
+.note-body p:last-child { margin-bottom: 0; }
+.note-body strong { font-weight: 500; }
+.note-body em { font-style: italic; color: var(--ink-soft); }
+.note-body a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.note-body a:hover { color: var(--accent); border-color: var(--accent); }
+.note-body code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  padding: 1px 5px;
+  font-size: 0.86em;
+}
+.note-body pre {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+  padding: 18px 22px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 22px 0;
+}
+.note-body pre code { background: transparent; padding: 0; }
+.note-body blockquote {
+  margin: 22px 0;
+  padding-left: 24px;
+  border-left: 2px solid var(--accent);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.note-lede::first-letter {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-style: normal;
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  margin: 0.05em 0.06em 0 0;
+  color: var(--ink);
+}
+
+.note-tags-bar {
+  margin-top: 48px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.note-tags-bar .tag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  border: 1px solid var(--ink-dim);
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .notes-hero { padding: 100px 24px 40px; }
+  .notes-list-section { padding: 40px 24px 60px; }
+  .notes-list-item a { grid-template-columns: 1fr; gap: 8px; }
+  .note-hero { padding: 100px 24px 30px; }
+  .note-body { padding: 30px 24px 60px; font-size: 17px; }
+  .note-dateline { grid-template-columns: 1fr; gap: 14px; }
+}

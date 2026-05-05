@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/css/main.css?v=38">
-  <link rel="stylesheet" href="/assets/css/model-atlas-lab.css?v=1">
+  <link rel="stylesheet" href="/assets/css/model-atlas-lab.css?v=2">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
   <link rel="canonical" href="https://jakecuth.com/work/model-atlas-lab/">
@@ -105,6 +105,7 @@
         <a href="/work/deepseek-v4-lab/" role="menuitem">Inside DeepSeek-V4 <span class="new-pill">NEW</span></a>
       </div>
     </div>
+    <a href="/notes/">Notes</a>
     <a href="/#education">Education</a>
     <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
   </nav>
@@ -261,6 +262,33 @@
       <div class="ma-receipt-value">~150<span class="small">readable lines of JS</span></div>
     </div>
   </div>
+
+  <!-- Static index of all 12 algorithm deep-dive pages.
+       These pages are otherwise reached only through the JS-rendered atlas
+       above; this aside makes them directly crawlable and provides a
+       sitewide table of contents for the algorithm section. -->
+  <aside class="atlas-deepdives" aria-label="Algorithm deep-dives">
+    <div class="mono atlas-deepdives-head">Algorithm deep-dives &middot; 12 pages</div>
+    <p class="atlas-deepdives-intro">
+      The atlas above recommends a model for your problem. Every recommendation
+      links to a live, interactive deep-dive page. The full set, listed here
+      for direct access:
+    </p>
+    <ul class="atlas-deepdives-list">
+      <li><a href="/work/linear-regression-lab/"><span class="dive-name">Linear Regression</span><span class="dive-line">The geometry of fitting a line. Drag points, watch coefficients update.</span></a></li>
+      <li><a href="/work/ridge-lasso-lab/"><span class="dive-name">Ridge &amp; Lasso</span><span class="dive-line">Two regularizers, side by side. Watch coefficients shrink toward zero.</span></a></li>
+      <li><a href="/work/decision-tree-lab/"><span class="dive-name">Decision Tree</span><span class="dive-line">Recursive splits made visible. Click a node, see the question it asks.</span></a></li>
+      <li><a href="/work/random-forest-lab/"><span class="dive-name">Random Forest</span><span class="dive-line">Many imperfect trees beat one perfect tree. Bagging, in motion.</span></a></li>
+      <li><a href="/work/gradient-boosting-lab/"><span class="dive-name">Gradient Boosting</span><span class="dive-line">Each tree fixes the last tree&rsquo;s mistakes. Loss curves drawn live.</span></a></li>
+      <li><a href="/work/svm-lab/"><span class="dive-name">Support Vector Machine</span><span class="dive-line">The widest margin wins. Soft-margin linear SVM, support vectors highlighted.</span></a></li>
+      <li><a href="/work/mlp-lab/"><span class="dive-name">Multi-Layer Perceptron</span><span class="dive-line">A small neural net you can watch learn. Backprop, one batch at a time.</span></a></li>
+      <li><a href="/work/naive-bayes-lab/"><span class="dive-name">Naive Bayes</span><span class="dive-line">The conditional-independence shortcut, drawn as overlapping clouds.</span></a></li>
+      <li><a href="/work/knn-lab/"><span class="dive-name">K-Nearest Neighbors</span><span class="dive-line">No training. Just measure distance to k neighbors and vote.</span></a></li>
+      <li><a href="/work/kmeans-lab/"><span class="dive-name">K-Means</span><span class="dive-line">Pick k. Watch points snap to centroids and centroids drift to centers.</span></a></li>
+      <li><a href="/work/dbscan-lab/"><span class="dive-name">DBSCAN</span><span class="dive-line">Density-based clustering. No k needed. Noise points fall out for free.</span></a></li>
+      <li><a href="/work/isolation-forest-lab/"><span class="dive-name">Isolation Forest</span><span class="dive-line">Anomalies are easy to isolate. Random splits, short paths, outlier scores.</span></a></li>
+    </ul>
+  </aside>
 
   <!-- Related labs -->
   <aside class="related-labs" aria-label="Related labs">

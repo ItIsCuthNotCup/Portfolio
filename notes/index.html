@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — Jake Cuth.</title>
+  <meta name="description" content="Field notes from a senior data analyst. Short pieces about data, ML, tools, and the industry. Updated three times a week.">
+
+  <link rel="canonical" href="https://jakecuth.com/notes/">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Notes — Jake Cuth.">
+  <meta property="og:description" content="Field notes from a senior data analyst. Short pieces about data, ML, tools, and the industry.">
+  <meta property="og:image" content="https://jakecuth.com/og-image.png?v=2">
+  <meta property="og:url" content="https://jakecuth.com/notes/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Notes — Jake Cuth.">
+  <meta name="twitter:description" content="Field notes from a senior data analyst.">
+  <meta name="twitter:image" content="https://jakecuth.com/og-image.png?v=2">
+
+  <link rel="alternate" type="application/atom+xml" title="Jake Cuth. — Notes" href="/feed.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "url": "https://jakecuth.com/notes/",
+    "name": "Jake Cuth. — Notes",
+    "description": "Field notes from a senior data analyst. Short pieces about data, ML, tools, and the industry.",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">NOTES</span> &middot; MMXXVI &middot; FIELD NOTES FROM A SENIOR DATA ANALYST</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling <span class="new-pill">NEW</span></a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery <span class="new-pill">NEW</span></a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn <span class="new-pill">NEW</span></a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <a href="/notes/" class="active" aria-current="page">Notes <span class="new-pill">NEW</span></a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" role="menuitem">Productivity Predictions</a>
+        <a href="/work/deepseek-v4-lab/" role="menuitem">Inside DeepSeek-V4 <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="notes-main">
+
+<section class="notes-hero">
+  <div class="mono section-label">
+    <span class="idx">NOTES</span>
+    <span>Field notes from a senior data analyst</span>
+  </div>
+  <h1 class="serif big-display">
+    Notes <span class="serif-italic" style="color:var(--accent)">in the margins.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Shorter pieces. Three a week. Data, ML, tools, the industry. The
+    labs are the marquee form on this site. These are everything
+    that doesn&rsquo;t fit there. Subscribe via
+    <a href="/feed.xml">RSS</a>, or check back from the homepage.
+  </p>
+</section>
+
+<hr class="rule">
+
+<section class="notes-list-section">
+  <ul class="notes-list">
+    <!-- POSTS APPEAR HERE, NEWEST FIRST.
+         Format per item:
+
+         <li class="notes-list-item">
+           <a href="/notes/<slug>/">
+             <div class="note-meta">
+               <div>YYYY-MM-DD</div>
+               <div>NOTE 001</div>
+             </div>
+             <div class="note-body">
+               <h2 class="note-title">Title here</h2>
+               <p class="note-summary">One-line summary.</p>
+               <div class="note-tags">data &middot; ml &middot; tools</div>
+             </div>
+           </a>
+         </li>
+    -->
+    <li class="notes-empty">
+      The first note ships imminently. Check back shortly, or subscribe
+      to the <a href="/feed.xml">Atom feed</a>.
+    </li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+</body>
+</html>

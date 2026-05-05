@@ -450,3 +450,77 @@
 @media (prefers-reduced-motion: reduce) {
   #ma-recommendation, .ma-progress-bar { transition: none !important; }
 }
+
+/* ── Algorithm deep-dives static index ──────────────────────────────
+   Static <aside> listing all 12 deep-dive pages, ensuring crawler
+   discoverability of pages that are otherwise reached only through
+   the JS-rendered atlas widget above. */
+.atlas-deepdives {
+  margin: 64px 88px 0;
+  padding: 36px 0 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.atlas-deepdives-head {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.atlas-deepdives-intro {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 65ch;
+  margin: 0 0 24px;
+}
+.atlas-deepdives-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.atlas-deepdives-list li {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.atlas-deepdives-list a {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--paper);
+  transition: background 200ms ease, color 200ms ease;
+}
+.atlas-deepdives-list a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.atlas-deepdives-list .dive-name {
+  font-family: 'Newsreader', serif;
+  font-size: 18px;
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.atlas-deepdives-list .dive-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.atlas-deepdives-list a:hover .dive-line { color: var(--paper-2); opacity: 0.85; }
+
+@media (max-width: 720px) {
+  .atlas-deepdives { margin: 40px 24px 0; padding-top: 28px; }
+  .atlas-deepdives-list { grid-template-columns: 1fr; }
+}
