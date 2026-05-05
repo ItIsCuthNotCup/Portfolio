@@ -12,6 +12,13 @@
 // No live API required for the page to work. If IMM_API_URL is set on
 // window, the what-if tool POSTs to that URL instead.
 
+// Default the live API URL inline here so the HTML doesn't need an
+// inline <script> tag (which would require 'unsafe-inline' in CSP).
+// Override by setting window.IMM_API_URL before this script loads.
+if (typeof window !== 'undefined' && !window.IMM_API_URL) {
+  window.IMM_API_URL = 'https://imm-lab-api-290331859515.us-central1.run.app';
+}
+
 (function () {
   'use strict';
 

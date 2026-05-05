@@ -288,6 +288,11 @@
       const resp = await fetch('/assets/data/model-picker/methodology.json', { cache: 'no-cache' });
       if (!resp.ok) throw new Error('methodology.json missing');
       const m = await resp.json();
+      // Surface refresh time on the candidates table so prices read with their as-of date.
+      const $asof = document.getElementById('mp-price-asof');
+      if ($asof && m.last_refresh_human) {
+        $asof.textContent = `Prices as of ${m.last_refresh_human}`;
+      }
       const cells = [
         { label: 'Models indexed',     value: m.model_count ?? '—' },
         { label: 'Last refresh',       value: m.last_refresh_human ?? '—' },

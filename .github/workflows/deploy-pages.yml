@@ -28,3 +28,11 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy . --project-name=jakecuth --branch=${{ steps.cf.outputs.branch }}
+
+      # Push every URL in sitemap.xml to IndexNow (Bing, Yandex, ChatGPT
+      # search) so updates are crawled in minutes, not days. Only runs
+      # on the main branch; key file is at /<key>.txt in the repo root.
+      - name: Ping IndexNow
+        if: github.ref == 'refs/heads/main'
+        run: python3 notebooks/ping_indexnow.py
+        continue-on-error: true

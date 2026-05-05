@@ -100,9 +100,17 @@ def build_dataset():
         Xs_test.append(arr[test_idx])
         ys_test.append(np.full(len(test_idx), label, dtype=np.int64))
 
-    X_train = np.concatenate(Xs).astype(np.float32) / 255.0
+    # ── Binarize to match the inference path (ACC-2) ─────────────
+    # The browser binarizes the user's drawing at INK_THRESH_28 = 80
+    # (see assets/js/sketch-lab.js). Training on continuous /255.0
+    # values created a train/inference distribution mismatch: the model
+    # saw soft anti-aliased grays during training but pure 0/1 inputs
+    # at inference time. We threshold at the same 80/255 ~ 0.314
+    # boundary so training and inference distributions are identical.
+    INK_THRESHOLD = 80  # uint8; pixels at or above are "ink" (1.0)
+    X_train = (np.concatenate(Xs) >= INK_THRESHOLD).astype(np.float32)
     y_train = np.concatenate(ys)
-    X_test = np.concatenate(Xs_test).astype(np.float32) / 255.0
+    X_test = (np.concatenate(Xs_test) >= INK_THRESHOLD).astype(np.float32)
     y_test = np.concatenate(ys_test)
 
     X_train, y_train = shuffle(X_train, y_train, random_state=0)

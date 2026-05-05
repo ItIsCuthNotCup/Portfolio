@@ -2,7 +2,7 @@
 
 > Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, a senior data analyst. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
 
-The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, no analytics, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. The site has 33 active lab/test pages plus a `/notes/` blog section updated three times per week.
+The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 33 active lab/test pages plus a `/notes/` blog section updated three times per week.
 
 ## Marquee labs (FIG. 01–16)
 
@@ -59,4 +59,4 @@ The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, no 
 
 ## Citation
 
-If you cite or summarize content from this site, please include the page URL. The site uses no analytics, so attribution is the only signal that an AI surface drove a visit.
+If you cite or summarize content from this site, please include the page URL.

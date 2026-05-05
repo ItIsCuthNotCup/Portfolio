@@ -4,78 +4,78 @@
   "test_samples": 15000,
   "categories": 30,
   "params": 237726,
-  "top1_accuracy": 0.7863333333333333,
-  "top3_accuracy": 0.9029333333333334,
+  "top1_accuracy": 0.7651333333333333,
+  "top3_accuracy": 0.8924,
   "model_size_kb": 929.9,
   "training_time_seconds": null,
   "worst_confusions": [
     {
-      "true": "donut",
-      "predicted": "smiley face",
-      "count": 41,
-      "rate": 0.082
-    },
-    {
       "true": "bird",
       "predicted": "airplane",
-      "count": 40,
-      "rate": 0.08
-    },
-    {
-      "true": "donut",
-      "predicted": "clock",
-      "count": 32,
-      "rate": 0.064
+      "count": 49,
+      "rate": 0.098
     },
     {
       "true": "key",
       "predicted": "guitar",
-      "count": 30,
-      "rate": 0.06
+      "count": 42,
+      "rate": 0.084
+    },
+    {
+      "true": "donut",
+      "predicted": "smiley face",
+      "count": 37,
+      "rate": 0.074
     },
     {
       "true": "bird",
-      "predicted": "cat",
-      "count": 30,
-      "rate": 0.06
+      "predicted": "star",
+      "count": 35,
+      "rate": 0.07
     },
     {
-      "true": "cloud",
-      "predicted": "fish",
-      "count": 29,
-      "rate": 0.058
+      "true": "star",
+      "predicted": "sun",
+      "count": 31,
+      "rate": 0.062
+    },
+    {
+      "true": "book",
+      "predicted": "butterfly",
+      "count": 30,
+      "rate": 0.06
     }
   ],
   "per_class_accuracy": {
-    "airplane": 0.782,
-    "apple": 0.898,
-    "bicycle": 0.852,
-    "bird": 0.512,
-    "book": 0.77,
-    "butterfly": 0.786,
-    "cat": 0.736,
-    "clock": 0.83,
-    "cloud": 0.756,
-    "coffee cup": 0.73,
-    "donut": 0.726,
-    "envelope": 0.9,
-    "eye": 0.804,
-    "fish": 0.862,
-    "flower": 0.75,
-    "guitar": 0.872,
-    "hand": 0.756,
-    "hat": 0.788,
-    "house": 0.89,
-    "ice cream": 0.824,
-    "key": 0.758,
-    "ladder": 0.858,
-    "lightning": 0.634,
-    "moon": 0.688,
-    "mountain": 0.862,
-    "mushroom": 0.888,
-    "pizza": 0.744,
-    "smiley face": 0.79,
-    "star": 0.742,
-    "sun": 0.802
+    "airplane": 0.78,
+    "apple": 0.896,
+    "bicycle": 0.858,
+    "bird": 0.484,
+    "book": 0.748,
+    "butterfly": 0.768,
+    "cat": 0.696,
+    "clock": 0.812,
+    "cloud": 0.738,
+    "coffee cup": 0.708,
+    "donut": 0.71,
+    "envelope": 0.878,
+    "eye": 0.79,
+    "fish": 0.794,
+    "flower": 0.742,
+    "guitar": 0.86,
+    "hand": 0.77,
+    "hat": 0.762,
+    "house": 0.858,
+    "ice cream": 0.808,
+    "key": 0.692,
+    "ladder": 0.81,
+    "lightning": 0.598,
+    "moon": 0.678,
+    "mountain": 0.838,
+    "mushroom": 0.85,
+    "pizza": 0.748,
+    "smiley face": 0.732,
+    "star": 0.74,
+    "sun": 0.808
   }
 }

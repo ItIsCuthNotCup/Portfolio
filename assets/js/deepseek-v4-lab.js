@@ -1,11 +1,23 @@
 /* ═══════════════════════════════════════════════════════════
    DEEPSEEK-V4 LAB — vanilla JS
-   Lone job: animate the KV-cache line chart's strokes when the
-   chart enters the viewport. Everything else on the page is
-   static SVG + CSS.
+   Two jobs:
+   - Animate the KV-cache line chart's strokes when the chart
+     enters the viewport.
+   - Set the "Filed" dateline to today's date.
+   Everything else on the page is static SVG + CSS.
    ═══════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
+
+  // Populate dateline. Lifted out of inline <script> so script-src
+  // CSP can drop 'unsafe-inline'.
+  (function setDateline() {
+    var el = document.getElementById('dateline-time');
+    if (!el) return;
+    var now = new Date();
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    el.textContent = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  })();
 
   function animateKvChart() {
     var chart = document.getElementById('kv-chart');
