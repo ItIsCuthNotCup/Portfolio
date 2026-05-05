@@ -991,6 +991,80 @@ main { position: relative; }
   color: var(--ink-dim); text-transform: uppercase;
 }
 
+/* ── Related labs (cross-link block above lab-nav) ──────────── */
+/* Inserted programmatically into every main lab. Three thematic
+   siblings rendered as a horizontal grid that mirrors the labs-grid
+   on the homepage. Builds internal-linking signal for crawlers and
+   gives readers a clear "what to read next" path. */
+.related-labs {
+  margin: 0 88px 60px;
+  padding: 36px 0 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.related-labs-head {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.related-labs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.related-labs-list li {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin: 0;
+}
+.related-labs-list a {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 20px 20px;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  background: var(--paper);
+  transition: background 220ms ease, color 220ms ease;
+}
+.related-labs-list a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.related-fig {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.related-title {
+  font-size: 22px;
+  margin-top: 10px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+.related-line {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  flex: 1;
+}
+.related-labs-list a:hover .related-fig,
+.related-labs-list a:hover .related-title { color: var(--paper); }
+.related-labs-list a:hover .related-line { color: var(--paper-2); opacity: 0.85; }
+
+@media (max-width: 900px) {
+  .related-labs { margin: 0 24px 40px; padding-top: 28px; }
+  .related-labs-list { grid-template-columns: 1fr; }
+}
+
 /* ── Colophon / Footer ──────────────────────────────────────── */
 .colophon {
   padding: 40px 48px;
