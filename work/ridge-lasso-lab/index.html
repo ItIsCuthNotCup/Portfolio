@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
   <style>
     .rl-coefs { display: grid; gap: 6px; }
@@ -137,7 +137,7 @@
 
 <section class="mc-hero">
   <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
-  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Ridge / Lasso</span></div>
+  <h2 class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Ridge / Lasso</span></h2>
   <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Linear, but<br><span class="serif-italic" style="color:var(--accent)">disciplined.</span></h1>
   <p class="lab-biz-line">
     Linear models with an L2 (ridge) or L1 (lasso) penalty on the
@@ -161,7 +161,7 @@
 <hr class="rule">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; I</span><span>Coefficients, shrunk live</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; I</span><span>Coefficients, shrunk live</span></h2>
   <p class="mc-note">Bars on the right show coefficient magnitude. Lasso at high lambda zeroes most of them &mdash; the useful ones survive.</p>
   <div class="mc-demo">
     <figure class="mc-demo-canvas">
@@ -197,7 +197,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></h2>
   <div class="mc-prose">
     <p>
       Ridge adds <span class="formula">λ·Σwⱼ²</span> to the loss; Lasso
@@ -232,7 +232,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></h2>
   <div class="mc-grid-2">
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">High-dimensional data</h3>
       <p>Genomics, text, images-as-features &mdash; whenever you have many more candidate predictors than samples, regularization is essential. Lasso-based feature selection turns "thousands of correlated genes" into "the eight that drive the outcome."</p></div>
@@ -248,7 +248,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></h2>
   <div class="mc-tradeoff">
     <div class="mc-tradeoff-svg">
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -276,7 +276,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></h2>
   <p class="mc-real">
     <strong>Insurance underwriting at GEICO and Progressive.</strong>
     Generalized Linear Models with elastic-net regularization underwrite
@@ -292,7 +292,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></h2>
   <div class="mc-compare-row">
     <a class="mc-compare-card" href="/work/linear-regression-lab/"><p class="name">Linear Regression</p><p class="note">No regularization</p></a>
     <a class="mc-compare-card" href="/work/logistic-regression-lab/"><p class="name">Logistic Regression</p><p class="note">Same idea, classification</p></a>

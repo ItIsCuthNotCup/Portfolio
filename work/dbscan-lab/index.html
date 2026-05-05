@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -128,7 +128,7 @@
 
 <section class="mc-hero">
   <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
-  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>DBSCAN</span></div>
+  <h2 class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>DBSCAN</span></h2>
   <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Clusters without<br><span class="serif-italic" style="color:var(--accent)">committing to k.</span></h1>
   <p class="lab-biz-line">
     Density-based clustering. Points in dense neighborhoods form
@@ -152,7 +152,7 @@
 <hr class="rule">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; I</span><span>Density, drawn live</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; I</span><span>Density, drawn live</span></h2>
   <p class="mc-note">Points within eps of a core point join that cluster. Points with too few neighbors are noise.</p>
   <div class="mc-demo">
     <figure class="mc-demo-canvas">
@@ -187,7 +187,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></h2>
   <div class="mc-prose">
     <p>
       Pick a point. Find its neighbors within distance eps. If there are
@@ -220,7 +220,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></h2>
   <div class="mc-grid-2">
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Non-convex clusters</h3>
       <p>Try the rings preset. K-Means slices the plane with straight lines and gets the wrong answer. DBSCAN follows density and finds the two rings as separate clusters. Anything spatial that isn't roughly globular is DBSCAN's territory.</p></div>
@@ -236,7 +236,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></h2>
   <div class="mc-tradeoff">
     <div class="mc-tradeoff-svg">
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -264,7 +264,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></h2>
   <p class="mc-real">
     <strong>Astronomical surveys at LSST and the Sloan Digital Sky Survey.</strong>
     DBSCAN is the workhorse for finding stellar streams, galaxy clusters,
@@ -278,7 +278,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></h2>
   <div class="mc-compare-row">
     <a class="mc-compare-card" href="/work/kmeans-lab/"><p class="name">K-Means</p><p class="note">Faster &middot; convex clusters only</p></a>
     <a class="mc-compare-card" href="/work/isolation-forest-lab/"><p class="name">Isolation Forest</p><p class="note">Anomaly detection &middot; complementary</p></a>

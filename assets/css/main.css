@@ -338,6 +338,10 @@ main { position: relative; }
   font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ink-dim);
   display: flex; align-items: baseline; gap: 14px;
+  /* Reset defaults — class applies to both <div> (hero kickers) and <h2>
+     (section headers, post-batch-2 SEO conversion). */
+  font-weight: 400;
+  margin: 0;
 }
 .section-label .idx { color: var(--accent); }
 

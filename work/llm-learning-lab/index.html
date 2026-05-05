@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/llm-learning-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -147,10 +147,10 @@
 
 <!-- HERO -->
 <section class="llm-hero">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">FIG. 16</span>
     <span>How LLMs Learn</span>
-  </div>
+  </h2>
   <h1 class="serif big-display llm-title">
     A trillion words.<br>
     <span class="serif-italic" style="color:var(--accent)">A handful of equations.</span>
@@ -180,10 +180,10 @@
 
 <!-- § I — SCALING LAWS -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; I</span>
     <span>Scaling laws — the closest thing ML has to a physical law</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     Plot training compute on a log axis, plot pretraining loss on the other
     log axis, and you get something almost too clean: a near-straight line
@@ -217,10 +217,10 @@
 
 <!-- § II — TRAINING STACK -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; II</span>
     <span>The training stack — what data goes in, in what order</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     A modern frontier model goes through four training stages, and they
     are not equal. <strong>96% of compute</strong> is spent on
@@ -239,10 +239,10 @@
 
 <!-- § III — TOKENIZATION -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; III</span>
     <span>Tokenization — how language becomes integers</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     Before a model sees a word, the word becomes a number. Byte-pair
     encoding (BPE) chops text into the most-common sub-word pieces and
@@ -278,10 +278,10 @@
 
 <!-- § IV — TRANSFORMER -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; IV</span>
     <span>The Transformer — the one architectural idea that worked</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     Vaswani et al. (2017) replaced the recurrence in RNN/LSTM language
     models with a single mechanism: self-attention. Every token can attend
@@ -325,10 +325,10 @@
 
 <!-- § V — TRAINING DYNAMICS -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; V</span>
     <span>What learning actually looks like — training dynamics</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     Pretraining loss falls along a startlingly clean line on a log-step
     axis. But "training" isn't a single curve; it's a landscape of named
@@ -348,10 +348,10 @@
 
 <!-- § VI — EMERGENCE -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; VI</span>
     <span>Emergence — real, or a measurement artifact?</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     Wei et al. (2022) coined the term: certain capabilities — multi-digit
     arithmetic, MMLU at threshold sizes, instruction-following on novel
@@ -386,10 +386,10 @@
 
 <!-- § VII — ALIGNMENT -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; VII</span>
     <span>Alignment — the post-pretraining toolkit</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     A fresh pretrained model knows the internet but doesn't yet know how
     to be an assistant. The toolkit for closing that gap has grown
@@ -406,10 +406,10 @@
 
 <!-- § VIII — BENCHMARKS -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; VIII</span>
     <span>The benchmark race — what 'better' has actually meant</span>
-  </div>
+  </h2>
   <p class="llm-prose">
     For most of the field's history, a new benchmark would last 4–5 years
     before frontier systems caught up to humans. Since 2022 that window
@@ -440,10 +440,10 @@
 
 <!-- CODA — INTERP & NEXT-TOKEN -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">Coda</span>
     <span>Two threads worth flagging</span>
-  </div>
+  </h2>
   <div class="llm-coda-grid" id="llm-coda"></div>
 </section>
 
@@ -451,10 +451,10 @@
 
 <!-- RECEIPTS -->
 <section class="llm-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; IX</span>
     <span>Receipts</span>
-  </div>
+  </h2>
   <div class="llm-receipts" id="llm-receipts"></div>
 </section>
 
@@ -462,10 +462,10 @@
 
 <!-- METHODOLOGY -->
 <section class="llm-section" id="methodology">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">&sect; X</span>
     <span>Methodology, sources, caveats</span>
-  </div>
+  </h2>
 
   <div class="llm-method-grid">
     <div>

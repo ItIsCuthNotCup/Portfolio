@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/segmentation-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -151,10 +151,10 @@
      § 00 — TITLE
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-hero">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">FIG. 02</span>
     <span>Customer Segmentation, Unsupervised</span>
-  </div>
+  </h2>
   <h1 class="serif big-display seg-title" data-scramble data-scramble-duration="1200">
     Which customers<br>
     <span class="serif-italic" style="color:var(--accent)">earn their keep.</span>
@@ -184,10 +184,10 @@
      § I — WHY THIS MATTERS
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section seg-section--airy">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ I</span>
     <span>Why segmentation matters</span>
-  </div>
+  </h2>
   <div class="seg-prose">
     <p class="seg-lede">
       Mass marketing dilutes both signal and budget. A
@@ -223,10 +223,10 @@
      § II — DATA PROFILE
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section seg-section--dense">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ II</span>
     <span>Data Profile</span>
-  </div>
+  </h2>
   <div class="metrics-grid" id="profile-grid"><!-- JS --></div>
   <div class="profile-sub mono" id="profile-sub"></div>
 </section>
@@ -237,10 +237,10 @@
      § III — THREE METHODS, ONE DATASET
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ III</span>
     <span>Three clustering methods, one dataset</span>
-  </div>
+  </h2>
   <p class="seg-note">
     Run on the same log+scaled R/F/M matrix. Higher silhouette and Calinski-Harabasz
     are better; lower Davies-Bouldin is better. No single metric decides —
@@ -271,10 +271,10 @@
      § IV · FIG. 02.1 — K SELECTION
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ IV · FIG. 02.1</span>
     <span>K selection — silhouette and elbow, all three methods</span>
-  </div>
+  </h2>
   <p class="seg-note">
     Left: silhouette score vs k — higher is tighter clusters. Accent dot marks
     the chosen operational k. The k=2 column is shaded and labeled
@@ -304,10 +304,10 @@
      § V · FIG. 02.2 — SEGMENT MAP
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section" id="sec-map">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ V · FIG. 02.2</span>
     <span>The segment map — 2,000 customers, PCA(2)</span>
-  </div>
+  </h2>
   <p class="seg-note">
     Each point is one customer. Axes are the top two principal components of
     the log-scaled R/F/M matrix. Hover a point for raw values. Click a legend
@@ -330,10 +330,10 @@
      § VI · FIG. 02.3 — LIVE CLASSIFIER
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section" id="sec-classify">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VI · FIG. 02.3</span>
     <span>Classify a customer, live</span>
-  </div>
+  </h2>
   <p class="seg-note">
     Inputs are log1p-transformed and standardized with the same scaler the
     model was trained on, then assigned to the nearest K-Means centroid by
@@ -380,10 +380,10 @@
      § VII · FIG. 02.4 — SEGMENT CARDS
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VII · FIG. 02.4</span>
     <span>Segment profiles</span>
-  </div>
+  </h2>
   <p class="seg-note">
     One card per cluster. The small bars show where each segment's
     <em>median</em> customer lands on the overall distribution for Recency,
@@ -399,10 +399,10 @@
      § VIII · FIG. 02.5 — CAMPAIGN ROI SIMULATOR
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section" id="sec-simulator">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VIII · FIG. 02.5</span>
     <span>Campaign ROI simulator</span>
-  </div>
+  </h2>
   <p class="seg-note">
     Pick a segment, set a per-customer campaign cost and an expected lift
     multiplier. The baseline response rate is the segment's own measured 60-day
@@ -484,10 +484,10 @@
      § IX — METHODOLOGY / COLOPHON
      ═══════════════════════════════════════════════════════════ -->
 <section class="seg-section seg-section--airy seg-colophon-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ IX</span>
     <span>Methodology &amp; Colophon</span>
-  </div>
+  </h2>
 
   <div class="method-grid">
     <div>

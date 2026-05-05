@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
   <!-- Shared styles + page styles -->
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/churn-lab.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -153,10 +153,10 @@
      § 00 — TITLE
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-hero">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">FIG. 01</span>
     <span>The Churn Model, In the Open</span>
-  </div>
+  </h2>
   <h1 class="serif big-display churn-title" data-scramble data-scramble-duration="1200">
     The customers<br>
     <span class="serif-italic" style="color:var(--accent)">about to leave.</span>
@@ -183,10 +183,10 @@
      § I — WHY THIS MATTERS (business framing)
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ I</span>
     <span>Why a churn model matters</span>
-  </div>
+  </h2>
   <div class="churn-prose">
     <p class="churn-lede">
       Keeping a customer is cheaper than winning one back. About
@@ -233,10 +233,10 @@
      § II — DATA PROFILE
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ II</span>
     <span>Data Profile</span>
-  </div>
+  </h2>
   <div class="metrics-grid" id="profile-grid">
     <!-- filled by JS -->
   </div>
@@ -249,10 +249,10 @@
      § III — MODEL COMPARISON
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ III</span>
     <span>Three models, one test set</span>
-  </div>
+  </h2>
   <p class="churn-note">
     Class imbalance is handled on every model (<span class="mono">class_weight='balanced'</span>
     for LR and RF, <span class="mono">scale_pos_weight</span> for XGB). Winner
@@ -282,10 +282,10 @@
      § IV — Fig. 01.1 · ROC CURVES
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ IV · FIG. 01.1</span>
     <span>ROC curves — all three models overlaid</span>
-  </div>
+  </h2>
   <div class="chart-frame" id="roc-frame">
     <div class="chart-corners">
       <span class="cc tl"></span><span class="cc tr"></span>
@@ -310,10 +310,10 @@
      § V — Fig. 01.2 · LIVE SCORING
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ V · FIG. 01.2</span>
     <span>Score a customer, live</span>
-  </div>
+  </h2>
   <p class="churn-note">
     Inputs are standardized with the same means and standard deviations the
     training scaler fit. The logit, probability, and feature contributions are
@@ -368,10 +368,10 @@
      § VI — Fig. 01.3 · THRESHOLD TUNING
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section" id="sec-threshold">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VI · FIG. 01.3</span>
     <span>Threshold tuning against dollars</span>
-  </div>
+  </h2>
   <p class="churn-note">
     Real models ship with a <em>decision threshold</em>, not just a score. Move
     the slider to see how precision, recall, and per-thousand-customer cost
@@ -428,10 +428,10 @@
      § VII — Fig. 01.4 · FEATURE IMPORTANCE
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VII · FIG. 01.4</span>
     <span>Feature importance — mean |SHAP|, XGBoost</span>
-  </div>
+  </h2>
   <p class="churn-note">
     Tree SHAP decomposes each XGBoost prediction into per-feature contributions
     and averages their absolute values across a 500-row test sample. Read it as:
@@ -452,10 +452,10 @@
      § VIII — Fig. 01.5 · SHAP DEPENDENCE
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ VIII · FIG. 01.5</span>
     <span>SHAP dependence — top two features</span>
-  </div>
+  </h2>
   <p class="churn-note">
     X-axis: the raw feature value for one customer. Y-axis: how much that
     feature moved their churn score, positive or negative. Non-linearity shows
@@ -481,10 +481,10 @@
      § IX — Fig. 01.6 · FAIRNESS
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ IX · FIG. 01.6</span>
     <span>Fairness audit — by Geography &amp; Gender</span>
-  </div>
+  </h2>
   <p class="churn-note">
     Disparate impact is a live concern in regulated banking — the OCC and FDIC
     examine retention models for fair-lending proxies. This panel shows the
@@ -500,10 +500,10 @@
      § X — COLOPHON / METHODOLOGY
      ═══════════════════════════════════════════════════════════ -->
 <section class="churn-section churn-colophon-section">
-  <div class="mono section-label">
+  <h2 class="mono section-label">
     <span class="idx">§ X</span>
     <span>Methodology &amp; Colophon</span>
-  </div>
+  </h2>
 
   <div class="method-grid">
     <div>

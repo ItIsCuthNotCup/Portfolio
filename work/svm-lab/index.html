@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/main.css?v=39">
   <link rel="stylesheet" href="/assets/css/model-card.css?v=1">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
@@ -128,7 +128,7 @@
 
 <section class="mc-hero">
   <a href="/work/model-atlas-lab/" class="mc-breadcrumb">&larr; from the Model Atlas</a>
-  <div class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Support Vector Machine</span></div>
+  <h2 class="mono section-label"><span class="idx">FIG. 13 &middot; ATLAS</span><span>Support Vector Machine</span></h2>
   <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">The widest<br><span class="serif-italic" style="color:var(--accent)">margin wins.</span></h1>
   <p class="lab-biz-line">
     Find the hyperplane that separates classes with the largest possible
@@ -153,7 +153,7 @@
 <hr class="rule">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; I</span><span>The margin, drawn live</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; I</span><span>The margin, drawn live</span></h2>
   <p class="mc-note">Solid red is the decision boundary. Dashed lines on either side are the margin. Larger circles are support vectors.</p>
   <div class="mc-demo">
     <figure class="mc-demo-canvas">
@@ -188,7 +188,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; II</span><span>How it works</span></h2>
   <div class="mc-prose">
     <p>
       The SVM finds the hyperplane that maximizes the perpendicular
@@ -222,7 +222,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></h2>
   <div class="mc-grid-2">
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Small high-dimensional datasets</h3>
       <p>The number of parameters is roughly the number of support vectors, which is often a fraction of the training set. SVMs are famously strong on text classification, where features are tens of thousands of dimensions and examples are tens of thousands.</p></div>
@@ -238,7 +238,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; IV</span><span>Trade-off scorecard</span></h2>
   <div class="mc-tradeoff">
     <div class="mc-tradeoff-svg">
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -267,7 +267,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; V</span><span>In production</span></h2>
   <p class="mc-real">
     <strong>Spam filtering at Gmail (early generations).</strong>
     Linear SVM on bag-of-words features was the workhorse of email
@@ -281,7 +281,7 @@
 <hr class="hair">
 
 <section class="mc-section">
-  <div class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></div>
+  <h2 class="mono section-label"><span class="idx">&sect; VI</span><span>Compare to</span></h2>
   <div class="mc-compare-row">
     <a class="mc-compare-card" href="/work/logistic-regression-lab/"><p class="name">Logistic Regression</p><p class="note">Same shape, different loss</p></a>
     <a class="mc-compare-card" href="/work/knn-lab/"><p class="name">KNN</p><p class="note">Local, not global</p></a>
