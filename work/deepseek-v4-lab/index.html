@@ -276,7 +276,7 @@
   </div>
 
   <details class="ds-curious">
-    <summary>For the curious — the indexer</summary>
+    <summary>For the curious: the indexer</summary>
     <p>
       The lightning indexer scores each compressed CSA entry against the
       query using a small set of indexer query heads
@@ -348,7 +348,7 @@
       DeepSeek-V4 attacks the problem from three sides at once. The
       attention layers compress what they store: four tokens to one in
       CSA layers, a hundred and twenty-eight to one in HCA layers. The
-      precision drops too — main key-value entries live in <code>FP8</code>,
+      precision drops too. Main key-value entries live in <code>FP8</code>,
       only the rotary positional dimensions need <code>BF16</code>, and
       the indexer's QK path runs in <code>FP4</code>. And the layers
       themselves are interleaved so most of the depth pays the
@@ -427,7 +427,7 @@
   </div>
 
   <details class="ds-curious">
-    <summary>For the curious — where the savings come from</summary>
+    <summary>For the curious: where the savings come from</summary>
     <p>
       Per-layer KV memory cost is roughly <code>2 &middot; n_heads
       &middot; d_head &middot; bytes_per_element</code> per stored
@@ -591,7 +591,7 @@
     <p>
       DeepSeek-V4 widens the running state into four parallel streams
       and lets each layer mix them through a learned 4&times;4 matrix.
-      Plain hyper-connections — just any old 4&times;4 mixing matrix —
+      Plain hyper-connections, just any old 4&times;4 mixing matrix,
       train unstably. The signal blows up or collapses across hundreds
       of layers. The fix is to constrain that matrix to live on a
       mathematical object called the <em>Birkhoff polytope</em>: the
@@ -609,13 +609,13 @@
   </div>
 
   <details class="ds-curious">
-    <summary>For the curious — the spectral norm bound</summary>
+    <summary>For the curious: the spectral norm bound</summary>
     <p>
       Any doubly-stochastic matrix has spectral norm at most 1, with
       equality when it is a permutation. Bounding the spectral norm
       bounds how much the residual signal can grow in one layer.
       Stacking many such matrices keeps the worst-case signal growth
-      polynomial in depth instead of exponential — which is the
+      polynomial in depth instead of exponential, which is the
       practical condition for stable deep training.
     </p>
   </details>
@@ -642,7 +642,7 @@
     <span>TEST. 05.4 &middot; Optimizer</span>
   </div>
   <div class="ds-section-head">
-    <h2>From AdamW to <span class="ds-section-italic">Muon —</span> a step shaped only by direction.</h2>
+    <h2>From AdamW to <span class="ds-section-italic">Muon.</span> A step shaped only by direction.</h2>
   </div>
 
   <div class="ds-paired">
@@ -720,7 +720,7 @@
       <code>UV&#x1d40;</code>. The step has the same direction
       structure as the gradient, but every singular value is now 1.
       Real SVD is too expensive to do per-step, so DeepSeek-V4 uses a
-      hybrid Newton-Schulz iteration — ten steps in two stages — that
+      hybrid Newton-Schulz iteration (ten steps in two stages) that
       approximates it cheaply.
     </p>
     <p>
@@ -729,13 +729,13 @@
       then steps. <em>Same direction, different magnitude.</em> The
       result is faster convergence and better stability at scale.
       AdamW is still used for the bits where matrix orthogonalization
-      doesn't make sense — embeddings, the prediction head, and RMSNorm
+      doesn't make sense: embeddings, the prediction head, and RMSNorm
       weights.
     </p>
   </div>
 
   <details class="ds-curious">
-    <summary>For the curious — the Newton-Schulz coefficients</summary>
+    <summary>For the curious: the Newton-Schulz coefficients</summary>
     <p>
       The hybrid Newton-Schulz iteration uses two stages. The first
       eight steps use coefficients <code>(3.4445, -4.7750, 2.0315)</code>
@@ -892,16 +892,16 @@
 
   <div class="ds-section-prose">
     <p class="ds-lede">
-      The math people quote about LLM size — "175 billion parameters
-      times two bytes equals 350 gigabytes" — is the math of a model
+      The math people quote about LLM size, "175 billion parameters
+      times two bytes equals 350 gigabytes," is the math of a model
       stored in 16-bit floats. That has been the working assumption
       since 2018. It is the reason frontier models do not fit on
       single GPUs without tricks.
     </p>
     <p>
       DeepSeek-V4 trains in mixed precision from the start. The
-      Mixture-of-Experts expert weights live in <code>FP4</code> — four
-      bits — with quantization-aware training so the model adapts to
+      Mixture-of-Experts expert weights live in <code>FP4</code> (four
+      bits) with quantization-aware training so the model adapts to
       the precision loss instead of being post-hoc compressed and
       hoping. The attention indexer's QK path also runs in
       <code>FP4</code>. The main KV entries live in <code>FP8</code>;
@@ -912,7 +912,7 @@
     </p>
     <p>
       The trick that makes all of this fit together is a lossless
-      conversion between FP4 and FP8 — FP8 has two more exponent bits
+      conversion between FP4 and FP8. FP8 has two more exponent bits
       than FP4, so as long as a per-block scale factor lives within
       FP8's dynamic range, the quantization is reversible. <em>The
       whole pipeline runs in the existing FP8 framework.</em>
@@ -920,7 +920,7 @@
   </div>
 
   <details class="ds-curious">
-    <summary>For the curious — why FP4 needs a scale factor</summary>
+    <summary>For the curious: why FP4 needs a scale factor</summary>
     <p>
       Four bits give 16 distinct values. To represent a wide range of
       weights, FP4 stores them in blocks (typically 32 weights per
@@ -978,8 +978,8 @@
         Primary: the
         <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro" target="_blank" rel="noopener">DeepSeek-V4-Pro release on Hugging Face</a>
         and the accompanying technical report. All numerical claims
-        — compression ratios, head counts, precision configurations,
-        Newton-Schulz coefficients — are sourced there.
+        (compression ratios, head counts, precision configurations,
+        Newton-Schulz coefficients) are sourced there.
       </p>
       <p>
         Secondary context for the historical comparisons: the original
@@ -1030,9 +1030,9 @@
     </p>
     <p>
       The throughline: efficiency at scale isn't won by one big idea.
-      It's won by a stack of compromises &mdash; compress here, sparsify
+      It's won by a stack of compromises (compress here, sparsify
       there, constrain a manifold, normalize a singular value, drop two
-      bits of precision &mdash; that compound multiplicatively. The
+      bits of precision) that compound multiplicatively. The
       headline number is twenty-seven percent FLOPs and ten percent KV
       cache. The boring truth is that no single change in this paper
       produced that result. They all did, together.
