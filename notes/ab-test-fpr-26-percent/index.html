@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why my A/B simulator says false positives are 26%, not 5% — Jake Cuth.</title>
+  <meta name="description" content="Peeking at an A/B test every 50 users until p < 0.05 turns a 5% nominal false-positive rate into 26% empirical. The Monte Carlo ran on the lab page; here is what the number means.">
+
+  <link rel="canonical" href="https://jakecuth.com/notes/ab-test-fpr-26-percent/">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Why my A/B simulator says false positives are 26%, not 5%">
+  <meta property="og:description" content="Peeking every 50 users turns a 5% nominal false-positive rate into 26% empirical. Monte Carlo from the A/B Test Simulator lab.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/ab-test-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/notes/ab-test-fpr-26-percent/">
+  <meta property="article:published_time" content="2026-05-03T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-03T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why my A/B simulator says false positives are 26%, not 5%">
+  <meta name="twitter:description" content="Peeking every 50 users turns a 5% nominal false-positive rate into 26% empirical. Monte Carlo from the A/B Test Simulator lab.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/ab-test-lab.png?v=1">
+
+  <link rel="alternate" type="application/atom+xml" title="Jake Cuth. — Notes" href="/feed.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=38">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Why my A/B simulator says false positives are 26%, not 5%",
+    "datePublished": "2026-05-03",
+    "dateModified": "2026-05-03",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": "https://jakecuth.com/notes/ab-test-fpr-26-percent/",
+    "image": "https://www.jakecuth.com/assets/og/ab-test-lab.png?v=1"
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">NOTE 001</span> &middot; MMXXVI &middot; A/B TESTING</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <a href="/work/">Labs</a>
+    <a href="/notes/" class="active" aria-current="page">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="note-main">
+
+<section class="note-hero">
+  <div class="mono section-label">
+    <span class="idx">NOTE 001</span>
+    <span>2026-05-03 &middot; ab testing</span>
+  </div>
+  <h1 class="serif">
+    Why my A/B simulator says false positives are
+    <span class="serif-italic" style="color:var(--accent)">26%, not 5%.</span>
+  </h1>
+  <div class="note-dateline">
+    <div>
+      <div class="label">Published</div>
+      <div class="value">May 3, 2026</div>
+    </div>
+    <div>
+      <div class="label">Read time</div>
+      <div class="value">3 min</div>
+    </div>
+    <div>
+      <div class="label">Companion lab</div>
+      <div class="value"><a href="/work/ab-test-lab/">A/B Test Simulator</a></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<article class="note-body">
+  <p class="note-lede">
+    The textbook says &alpha; = 0.05 means a 5% false-positive rate.
+    The simulator on my A/B test lab says 26%. The lab is right and
+    the textbook is right; they are measuring two different things.
+  </p>
+
+  <p>
+    The lab ran 1,000 simulated experiments with the true effect set
+    to zero &mdash; A and B converted at the same rate. Each
+    experiment peeked every 50 users and stopped the moment a
+    two-proportion z-test crossed p &lt; 0.05. Ten thousand peeks per
+    arm at most, then call it a day. Twenty-six percent of the
+    experiments declared a winner. The headline number is
+    <strong>5.2&times; nominal &alpha;</strong>, and it is the lesson
+    the lab was built to teach.
+  </p>
+
+  <p>
+    The textbook 5% applies to <em>one</em> test at the end of the
+    experiment. Peeking is many tests on growing samples, and the
+    p-value distribution under H<sub>0</sub> is uniform on every
+    single peek &mdash; so the chance of ever crossing 0.05 grows as
+    you keep looking. With 200 peeks at most you would naively expect
+    near-certainty of an &alpha;-level cross under pure noise; in
+    practice the dependence between successive peeks softens that to
+    the 25&ndash;30% range across most reasonable peek schedules.
+  </p>
+
+  <p>
+    The fix that practitioners reach for first &mdash; a Bonferroni
+    correction across peeks &mdash; works but is wasteful: it reserves
+    almost all the power for tests that will never run. The cleaner
+    fixes are sequential designs (mSPRT, group sequential boundaries
+    &agrave; la O&apos;Brien-Fleming), or just &mdash; and this is
+    the part the lab repeats &mdash; <strong>commit to a sample
+    size up front and only test once</strong>.
+  </p>
+
+  <p>
+    The lab also runs the same protocol across 50 random seeds because
+    A/B testing <em>is</em> variance, and reporting one seed defeats
+    the lesson. The 5&ndash;95% band on empirical FPR across those
+    seeds usually lands between 23% and 30%. The point estimate on
+    the page is one slice of that distribution.
+  </p>
+
+  <p>
+    If you want to see the math: the simulator is at
+    <a href="/work/ab-test-lab/">/work/ab-test-lab/</a> and the
+    Python that produced the reference numbers is
+    <a href="https://github.com/jacobcuthbertson/portfolio/blob/main/notebooks/ab_test_model.py">
+    notebooks/ab_test_model.py</a>. The peeking Monte Carlo lives in
+    <code>peek_until_significant()</code> and the multi-seed band lives
+    in <code>multi_seed_ensemble()</code>.
+  </p>
+
+  <p>
+    Stopping early is a lie. The lab proves it twenty-six times out of
+    a hundred.
+  </p>
+
+  <div class="note-tags-bar">
+    <span class="tag">A/B testing</span>
+    <span class="tag">monte carlo</span>
+    <span class="tag">stats</span>
+  </div>
+</article>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+</body>
+</html>

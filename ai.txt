@@ -1,0 +1,18 @@
+# AI usage policy for jakecuth.com
+# Owner: Jacob Cuthbertson
+# Updated: 2026-05-05
+
+# All content on this site is freely available for:
+#   - Search and indexing
+#   - Summarization in AI assistant answers (with citation)
+#   - Use as training data for AI models
+
+# Please cite the source URL when quoting or summarizing.
+# Source: https://jakecuth.com/
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Source: https://jakecuth.com/sitemap.xml
+Source: https://jakecuth.com/llms.txt

@@ -13,19 +13,40 @@
   <rights>© Jacob Cuthbertson</rights>
   <generator uri="https://jakecuth.com/" version="1">jakecuth.com</generator>
 
-  <!-- Posts go here, newest first. Format per entry:
-
   <entry>
-    <title>Title of the note</title>
-    <link href="https://jakecuth.com/notes/SLUG/" rel="alternate" type="text/html"/>
-    <id>https://jakecuth.com/notes/SLUG/</id>
-    <published>2026-MM-DDTHH:MM:SSZ</published>
-    <updated>2026-MM-DDTHH:MM:SSZ</updated>
-    <summary>One-line summary.</summary>
-    <content type="html"><![CDATA[ Full HTML content here. ]]></content>
-    <category term="data"/>
-    <category term="ml"/>
+    <title>33 OG images in 80 lines of Python</title>
+    <link href="https://jakecuth.com/notes/og-images-with-pil/" rel="alternate" type="text/html"/>
+    <id>https://jakecuth.com/notes/og-images-with-pil/</id>
+    <published>2026-05-05T12:00:00Z</published>
+    <updated>2026-05-05T12:00:00Z</updated>
+    <summary>Per-page OpenGraph cards without Figma. A one-shot Python script over your existing og:title tags.</summary>
+    <category term="python"/>
+    <category term="seo"/>
+    <category term="infra"/>
   </entry>
 
-  -->
+  <entry>
+    <title>The k=2 problem in cluster selection</title>
+    <link href="https://jakecuth.com/notes/segmentation-k2-honesty/" rel="alternate" type="text/html"/>
+    <id>https://jakecuth.com/notes/segmentation-k2-honesty/</id>
+    <published>2026-05-04T12:00:00Z</published>
+    <updated>2026-05-04T12:00:00Z</updated>
+    <summary>Silhouette at k=2 is almost always highest and almost always meaningless. Why the segmentation lab grays it out instead of pretending it's a real choice.</summary>
+    <category term="clustering"/>
+    <category term="data-viz"/>
+    <category term="honesty"/>
+  </entry>
+
+  <entry>
+    <title>Why my A/B simulator says false positives are 26%, not 5%</title>
+    <link href="https://jakecuth.com/notes/ab-test-fpr-26-percent/" rel="alternate" type="text/html"/>
+    <id>https://jakecuth.com/notes/ab-test-fpr-26-percent/</id>
+    <published>2026-05-03T12:00:00Z</published>
+    <updated>2026-05-03T12:00:00Z</updated>
+    <summary>Peeking every 50 users turns a 5% nominal false-positive rate into 26% empirical. The Monte Carlo lives on the A/B Test Simulator lab page.</summary>
+    <category term="ab-testing"/>
+    <category term="monte-carlo"/>
+    <category term="stats"/>
+  </entry>
+
 </feed>

@@ -1,0 +1,62 @@
+# Jake Cuth.
+
+> Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, a senior data analyst. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
+
+The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, no analytics, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. The site has 33 active lab/test pages plus a `/notes/` blog section updated three times per week.
+
+## Marquee labs (FIG. 01–16)
+
+- [Churn Model](https://jakecuth.com/work/churn-lab/): Predicts which customers will cancel using gradient-boosted decision trees on telecom data, with SHAP feature importances and a fairness audit by demographic.
+- [Customer Segmentation](https://jakecuth.com/work/segmentation-lab/): K-means and DBSCAN clustering on 1M UK retail transactions with RFM features and silhouette scoring.
+- [Recommendation Engine](https://jakecuth.com/work/reco-lab/): A live, in-browser movie recommender. Click posters you like and watch three different algorithms (collaborative filtering, content-based, hybrid) return different answers.
+- [A/B Test Simulator](https://jakecuth.com/work/ab-test-lab/): Bayesian and frequentist A/B test simulator with adjustable priors. Demonstrates why peeking inflates the false-positive rate from 5% nominal to 26% empirical.
+- [Funnel Simulation](https://jakecuth.com/work/funnel-sim-lab/): Agent-based simulation of a marketing funnel. Hundreds of dots flow through five stages with per-segment dropoff rates.
+- [Sketch Recognition](https://jakecuth.com/work/sketch-lab/): A 30-class sketch classifier running entirely in your browser via ONNX. ~930 KB model, no API calls.
+- [Model Picker](https://jakecuth.com/work/model-picker-lab/): RAG over OpenRouter's 300+ model catalog. Ask in plain language, get a recommendation plus a side-by-side of four models that fit.
+- [AI & Jobs](https://jakecuth.com/work/jobs-lab/): Type any U.S. occupation. See its AI exposure, robotics exposure, and BLS projection through 2030 across 888 occupations.
+- [Time-Use Atlas](https://jakecuth.com/work/time-use-lab/): How Americans actually spend 24 hours, drawn as a clock. Pick an age, employment status, or parenting situation; watch the day redraw.
+- [Algorithm Watchdog](https://jakecuth.com/work/watchdog-lab/): Daily-refreshed dashboard of what YouTube's algorithm is rewarding right now. Video length, posting times, category mix, channel concentration.
+- [AGI Horizon](https://jakecuth.com/work/agi-forecast-lab/): 250 public AGI predictions from 1950 to 2026, plotted on year said vs year targeted. Shows that AGI has been "twenty years out" since 1965.
+- [Logistic Regression](https://jakecuth.com/work/logistic-regression-lab/): The simplest classifier worth deploying. Plant points on a canvas, watch gradient descent slide a probability boundary into place live.
+- [The Model Atlas](https://jakecuth.com/work/model-atlas-lab/): An expert system over 13 discriminative ML models. Five questions about your problem, one recommendation with reasons, and deep live demos for every algorithm.
+- [Influencer Mix Modeling](https://jakecuth.com/work/imm-lab/): A working Bayesian Marketing Mix Model for a creator-driven D2C brand. 8 channels, 104 weeks, 200 posterior draws.
+- [The Productivity Mystery](https://jakecuth.com/work/productivity-lab/): Why measured U.S. labor productivity has stagnated 1947 to 2025, told through seven public datasets and seven candidate explanations.
+- [How LLMs Learn](https://jakecuth.com/work/llm-learning-lab/): The four-stage pipeline from a blank model to ChatGPT, drawn as a single annotated chain. Scaling laws, training stack, tokenization, alignment.
+
+## Tests (TEST. 01–05, AI-built or AI-subject experimental pages)
+
+- [Escape Velocity](https://jakecuth.com/work/escape-velocity-lab/): Six measurable curves arguing whether AI is approaching escape velocity or riding an S-curve. Built with Kimi K2.6.
+- [Semiconductor Cartography](https://jakecuth.com/work/semiconductor-lab/): The geography of the AI chip supply chain. Thirty facilities, seven layers, the chokepoints that could stall the industry. Built with Kimi K2.6.
+- [Tech Predictions](https://jakecuth.com/work/tech-predictions-lab/): A century of confident technology predictions, scored against what actually shipped.
+- [Productivity Predictions](https://jakecuth.com/work/productivity-predictions-lab/): Ninety-one confident, dated, named predictions about when IT and AI will show up in BLS productivity statistics. Built with Kimi K2.6.
+- [Inside DeepSeek-V4](https://jakecuth.com/work/deepseek-v4-lab/): Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead. Compressed sparse attention, hyper-connections, the Muon optimizer, FP4 quantization-aware training. Authored by Claude Code from the V4 technical report.
+
+## Algorithm deep-dives (reachable from /work/model-atlas-lab/)
+
+- [Linear Regression](https://jakecuth.com/work/linear-regression-lab/) — fitting a line, drag points, watch coefficients update.
+- [Ridge & Lasso](https://jakecuth.com/work/ridge-lasso-lab/) — two regularizers side by side, watch coefficients shrink.
+- [Decision Tree](https://jakecuth.com/work/decision-tree-lab/) — recursive splits made visible.
+- [Random Forest](https://jakecuth.com/work/random-forest-lab/) — bagging in motion, many imperfect trees beat one perfect one.
+- [Gradient Boosting](https://jakecuth.com/work/gradient-boosting-lab/) — each tree fixes the last tree's mistakes.
+- [Support Vector Machine](https://jakecuth.com/work/svm-lab/) — soft-margin linear SVM with support vectors highlighted.
+- [Multi-Layer Perceptron](https://jakecuth.com/work/mlp-lab/) — a small neural net with backprop, one batch at a time.
+- [Naive Bayes](https://jakecuth.com/work/naive-bayes-lab/) — conditional independence drawn as overlapping clouds.
+- [K-Nearest Neighbors](https://jakecuth.com/work/knn-lab/) — no training, just measure distance to k neighbors and vote.
+- [K-Means](https://jakecuth.com/work/kmeans-lab/) — pick k, watch points snap to centroids.
+- [DBSCAN](https://jakecuth.com/work/dbscan-lab/) — density-based clustering, no k needed.
+- [Isolation Forest](https://jakecuth.com/work/isolation-forest-lab/) — random splits, short paths to anomalies.
+
+## Notes
+
+- [Notes index](https://jakecuth.com/notes/) — Field notes from a senior data analyst, three a week.
+- [Atom feed](https://jakecuth.com/feed.xml) — Subscribe to notes.
+
+## About
+
+- [Jacob Cuthbertson on GitHub](https://github.com/jacobcuthbertson)
+- [Jacob Cuthbertson on LinkedIn](https://www.linkedin.com/in/jacobcuthbertson/)
+- [Jacob Cuthbertson on Codewars](https://www.codewars.com/users/jacobcuthbertson)
+
+## Citation
+
+If you cite or summarize content from this site, please include the page URL. The site uses no analytics, so attribution is the only signal that an AI surface drove a visit.
