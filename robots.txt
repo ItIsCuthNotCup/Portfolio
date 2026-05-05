@@ -1,0 +1,8 @@
+# jakecuth.com — robots
+# Editorial portfolio site. All content welcome to be indexed.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://jakecuth.com/sitemap.xml
