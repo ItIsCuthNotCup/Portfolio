@@ -23,7 +23,7 @@ The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and
 - [The Productivity Mystery](https://jakecuth.com/work/productivity-lab/): Why measured U.S. labor productivity has stagnated 1947 to 2025, told through seven public datasets and seven candidate explanations.
 - [How LLMs Learn](https://jakecuth.com/work/llm-learning-lab/): The four-stage pipeline from a blank model to ChatGPT, drawn as a single annotated chain. Scaling laws, training stack, tokenization, alignment.
 
-## Tests (TEST. 01–07, AI-built or AI-subject experimental pages)
+## Tests (TEST. 01–08, AI-built or AI-subject experimental pages)
 
 - [Escape Velocity](https://jakecuth.com/work/escape-velocity-lab/): Six measurable curves arguing whether AI is approaching escape velocity or riding an S-curve. Built with Kimi K2.6.
 - [Semiconductor Cartography](https://jakecuth.com/work/semiconductor-lab/): The geography of the AI chip supply chain. Thirty facilities, seven layers, the chokepoints that could stall the industry. Built with Kimi K2.6.
@@ -32,6 +32,7 @@ The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and
 - [Inside DeepSeek-V4](https://jakecuth.com/work/deepseek-v4-lab/): Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead. Compressed sparse attention, hyper-connections, the Muon optimizer, FP4 quantization-aware training. Authored by Claude Code from the V4 technical report.
 - [Inside Subquadratic](https://jakecuth.com/work/subquadratic-lab/): Anatomy of the May 5, 2026 SubQ AI launch. Real $29M seed and $19.6M GPU contract, third-party-verified production benchmarks, self-reported research-mode claims of 12M context and 1,000× compute reduction, and the Magic.dev parallel that triggered the AI Theranos question. Eight-claim smell-test scorecard.
 - [Attention Is All You Need](https://jakecuth.com/work/attention-lab/): An interactive infographic of the 2017 Transformer paper. Hand-tuned 6×6 attention heatmap, eight learned head patterns, and a complexity slider that demonstrates why self-attention beats RNNs whenever sequence length n is smaller than representation dimension d.
+- [Inside LeWorldModel](https://jakecuth.com/work/leworldmodel-lab/): A 15M-parameter JEPA world model that replaces seven anti-collapse loss terms with one Gaussian-matching regularizer (SIGReg). Single 192-dim CLS token per frame, 48x faster planning than DINO-WM, end-to-end trainable on a single GPU.
 
 ## Algorithm deep-dives (reachable from /work/model-atlas-lab/)
 

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside LeWorldModel · Two losses, one hyperparameter — Jake Cuth.</title>
+  <meta name="description" content="An interactive infographic of LeWM, the JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer. SIGReg, in pictures.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/leworldmodel-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Inside LeWorldModel · Two losses, one hyperparameter">
+  <meta property="og:description" content="An interactive infographic of LeWM, the JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer. SIGReg, in pictures.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/leworldmodel-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Inside LeWorldModel · Two losses, one hyperparameter">
+  <meta name="twitter:description" content="An interactive infographic of LeWM, the JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer. SIGReg, in pictures.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/leworldmodel-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Tests", "item": "https://jakecuth.com/#tests" },
+      { "@type": "ListItem", "position": 3, "name": "Inside LeWorldModel - Two losses, one hyperparameter", "item": "https://jakecuth.com/work/leworldmodel-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Inside LeWorldModel - Two losses, one hyperparameter",
+    "description": "An interactive infographic of LeWM, the JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer. SIGReg, in pictures.",
+    "image": "https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "url": "https://jakecuth.com/work/leworldmodel-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jakecuth.com/work/leworldmodel-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Inside LeWorldModel - Two losses, one hyperparameter",
+    "description": "An interactive infographic of LeWM, the JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer. SIGReg, in pictures.",
+    "image": "https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1",
+    "url": "https://jakecuth.com/work/leworldmodel-lab/",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is LeWorldModel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LeWorldModel (LeWM) is a Joint-Embedding Predictive Architecture for action-conditioned world modeling, introduced in March 2026 by Maes, Le Lidec, Scieur, LeCun, and Balestriero (Mila, NYU, Samsung SAIL, Brown). It is the first JEPA that trains stably end-to-end from raw pixels using only two loss terms and a single effective hyperparameter, replacing the brittle anti-collapse machinery (EMAs, stop-gradients, frozen pretrained encoders, multi-term VICReg objectives) used by prior JEPAs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is SIGReg?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SIGReg, or Sketched Isotropic Gaussian Regularization, is the regularizer that prevents representation collapse in LeWM. It pushes the encoder's embedding distribution toward an isotropic Gaussian using random one-dimensional projections (Cramér-Wold theorem) and the Epps-Pulley normality test. With M random projections per step (M = 1024 in the paper) the test runs in linear time, has bounded gradients, and parallelizes cleanly. It is a distribution-matching anti-collapse term, not a pairwise repulsion."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does LeWM compare to DINO-WM and PLDM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LeWM uses one CLS token per frame (192 dimensions); DINO-WM uses about 196 patch tokens per frame from a frozen DINOv2 encoder. LeWM plans about forty-eight times faster (one second per planning cycle versus forty-seven seconds for DINO-WM on an L40S GPU) and is end-to-end trainable, while DINO-WM depends on a frozen pretrained encoder. Versus PLDM, the only previous end-to-end JEPA world model, LeWM collapses six tunable loss coefficients into one and achieves higher Push-T success rates with cleaner training dynamics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does LeWM lose?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three places. Two-Room navigation, where the true data manifold is roughly three-dimensional and the 192-dim isotropic Gaussian prior over-regularizes. OGBench-Cube, the visually rich 3D manipulation task where DINOv2's ImageNet-scale priors carry. And anything requiring long-horizon reasoning, where autoregressive latent rollouts compound prediction error. The paper's authors flag these explicitly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is LeWM a video generator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. LeWM is a planner, not a generator. It does not render pixels. The post-hoc decoder used in some figures is a separate, training-free transformer added after the model is trained, purely for visualization. The model itself only predicts the next 192-dimensional CLS token. Different paradigms imagine in different substrates: Sora dreams in megapixels, Genie 3 dreams in interactive scenes, LeWM imagines an arrow through a 192-dimensional cloud."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 08</span> &middot; MMXXVI &middot; INSIDE LEWORLDMODEL</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" role="menuitem">Productivity Predictions</a>
+        <a href="/work/deepseek-v4-lab/" role="menuitem">Inside DeepSeek-V4</a>
+        <a href="/work/subquadratic-lab/" role="menuitem">Inside Subquadratic</a>
+        <a href="/work/attention-lab/" role="menuitem">Attention Is All You Need</a>
+        <a href="/work/leworldmodel-lab/" class="active" aria-current="page" role="menuitem">Inside LeWorldModel <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="lwm-main">
+
+<!-- ATTRIBUTION BANNER -->
+<div class="mono lwm-attr-banner">
+  <span class="lwm-attr-tag">Source paper</span>
+  <span>Maes, Le Lidec, Scieur, LeCun, Balestriero. <strong>Mila / NYU / Samsung SAIL / Brown.</strong> March 2026 preprint.</span>
+  <span class="lwm-attr-right">Pre-peer-review &middot; numbers traceable to the paper</span>
+</div>
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#tests">Tests</a></li>
+    <li><span aria-current="page">Inside LeWorldModel</span></li>
+  </ol>
+</nav>
+
+<section class="lwm-hero">
+  <h2 class="mono section-label">
+    <span class="idx">TEST. 08</span>
+    <span>Two losses. One hyperparameter.</span>
+  </h2>
+  <h1 class="serif big-display lwm-title">
+    Inside<br>
+    <span class="serif-italic" style="color:var(--accent)">LeWorldModel.</span>
+  </h1>
+  <p class="lab-biz-line">
+    The world model that fits in fifteen million parameters, trains on
+    one GPU, encodes each frame as a single 192-dim vector, and plans
+    forty-eight times faster than its closest foundation-model rival.
+    Built from a fifteen-page paper that does in two loss terms what
+    every prior JEPA needed seven of.
+  </p>
+  <p class="lwm-kicker">
+    Every prior Joint-Embedding Predictive Architecture has been a
+    hyperparameter swamp. Exponential moving averages, stop-gradients,
+    frozen DINOv2 encoders, seven-term VICReg objectives. LeWM throws
+    all of it out and replaces it with one regularizer that asks a
+    single question of the embedding cloud: <em>does it look like an
+    isotropic Gaussian from a thousand random angles?</em>
+  </p>
+  <div class="mono lwm-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; canvas &middot; vanilla JS</div></div>
+    <div><div class="label">Source</div><div class="value">Maes et al., March 2026 (arXiv preprint)</div></div>
+  </div>
+  <div class="lwm-inline-nav">
+    <a href="#why">Why JEPA</a> &middot;
+    <a href="#sigreg">SIGReg</a> &middot;
+    <a href="#tokens">Token economy</a> &middot;
+    <a href="#stack">The architecture</a> &middot;
+    <a href="#results">Wins and losses</a> &middot;
+    <a href="#methodology">Methodology</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — WHY JEPA COLLAPSES
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-section" id="why">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>TEST. 08.1 &middot; Why JEPA collapses</span>
+  </h2>
+  <div class="lwm-section-head">
+    <h2>Predict the future. <span class="lwm-section-italic">Or just predict zero.</span></h2>
+  </div>
+
+  <div class="lwm-section-prose">
+    <p class="lwm-lede">
+      A Joint-Embedding Predictive Architecture is a deceptively simple
+      idea. Encode the present frame to a vector. Encode the future
+      frame to a vector. Train a small predictor to map the present
+      vector plus the action to the future vector. The model never has
+      to render pixels, never has to reconstruct anything, and never
+      has to pay the bill for modeling visual texture that does not
+      matter for control.
+    </p>
+    <p>
+      The catch is that nothing stops the encoder from learning to map
+      every frame to a single point. If both sides of the prediction
+      collapse to the same constant vector, the prediction loss is
+      satisfied perfectly. The encoder has learned <em>nothing about
+      the world</em>, and the loss curve looks like a triumph.
+    </p>
+    <p>
+      Every prior JEPA has paid for collapse-prevention with extra
+      machinery. BYOL-style methods use an exponential moving average
+      target encoder and a stop-gradient. DINO uses centering and
+      sharpening. PLDM bolts on a seven-term VICReg-derived objective
+      with six tunable weights, plus inverse dynamics, plus auxiliary
+      smoothness. DINO-WM ducks the question entirely by not training
+      its encoder. Every fix works, and every fix introduces brittleness:
+      EMAs need warmup tuning, VICReg coefficients drift, and frozen
+      foundation encoders force you to live inside whatever
+      representation DINOv2 happened to learn.
+    </p>
+  </div>
+
+  <div class="lwm-receipts" aria-label="Section I receipts">
+    <div class="lwm-receipts-head">Receipts &middot; the JEPA tax, before LeWM</div>
+    <dl>
+      <dt>BYOL / V-JEPA family</dt><dd>EMA target encoder + stop-gradient + asymmetric projector</dd>
+      <dt>DINO / DINOv2</dt><dd>EMA + centering + sharpening + multi-crop</dd>
+      <dt>PLDM (closest competitor)</dt><dd>7 loss terms, 6 tunable coefficients, inverse dynamics, smoothness</dd>
+      <dt>DINO-WM</dt><dd>encoder is frozen DINOv2, not trained at all</dd>
+      <dt>LeWM</dt><dd>2 loss terms, 1 effective hyperparameter (&lambda; = 0.1)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — SIGREG (INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-section" id="sigreg">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>TEST. 08.2 &middot; SIGReg, in pictures</span>
+  </h2>
+  <div class="lwm-section-head">
+    <h2>One target distribution. <span class="lwm-section-italic">A thousand random angles.</span></h2>
+  </div>
+
+  <div class="lwm-eq" aria-label="LeWM total loss">
+    L<sub>LeWM</sub> = L<sub>pred</sub> + <em>&lambda;</em> &middot; SIGReg(Z)
+    <span class="lwm-eq-caption">Two terms &middot; &lambda; = 0.1 &middot; M = 1024 random projections per step</span>
+  </div>
+
+  <div class="lwm-section-prose">
+    <p class="lwm-lede">
+      Collapse is a distributional pathology. A degenerate encoder
+      maps everything to a point, a line, or a low-dimensional
+      subspace. The cleanest fix is to specify a target distribution
+      for the embedding cloud and force the encoder to match it. The
+      natural choice is the isotropic Gaussian: maximally entropic
+      given a fixed variance, rotationally symmetric, and with a
+      closed-form characteristic function.
+    </p>
+    <p>
+      Directly testing high-dimensional normality is intractable.
+      SIGReg dodges that with a two-step trick. First, the
+      <strong>Cramér-Wold theorem</strong> (1936): a multivariate
+      distribution equals N(0, I) if and only if every one-dimensional
+      projection of it is N(0, 1). So instead of a D-dimensional
+      normality test, sample M random unit directions and run M
+      one-dimensional tests. Second, the <strong>Epps-Pulley test</strong>
+      (1983): a 1-D normality statistic based on the empirical
+      characteristic function. Bounded gradient. Bounded Hessian.
+      Linear-time per projection. Friendly to SGD.
+    </p>
+    <p>
+      Drag the slider below. The left panel shows a 2D embedding
+      cloud. The right panel shows the histogram of one random 1-D
+      projection of that cloud, with the target N(0, 1) curve drawn in
+      dashes. <em>SIGReg does not push individual embeddings apart. It
+      pushes the shape of the cloud toward a Gaussian.</em>
+    </p>
+  </div>
+
+  <div class="lwm-sigreg-wrap">
+    <div class="lwm-sigreg-head">FIG. 08.1 &middot; SIGReg, interactive</div>
+    <div class="lwm-sigreg-title serif">Slide &lambda; from collapsed to isotropic.</div>
+    <div class="lwm-sigreg-sub">Left: the embedding cloud, two dimensions for visibility. Right: a random 1-D slice through it.</div>
+
+    <div class="lwm-sigreg-canvas-wrap">
+      <div class="lwm-sigreg-panel">
+        <h3>The cloud (2D scatter)</h3>
+        <canvas id="lwm-sigreg-scatter" width="320" height="320" aria-label="2D scatter of embedding samples"></canvas>
+      </div>
+      <div class="lwm-sigreg-panel">
+        <h3>One random 1-D projection</h3>
+        <canvas id="lwm-sigreg-hist" width="320" height="320" aria-label="Histogram of a random 1-D projection vs target N(0,1)"></canvas>
+      </div>
+    </div>
+
+    <div class="lwm-sigreg-control">
+      <input type="range" id="lwm-sigreg-slider" min="0" max="100" value="10" aria-label="SIGReg pressure lambda">
+      <div class="lwm-sigreg-readout">
+        &lambda; = <span class="lwm-lambda" id="lwm-sigreg-lambda">0.001</span>
+        <span class="lwm-state" id="lwm-sigreg-state">Collapsed</span>
+      </div>
+    </div>
+
+    <div class="lwm-sigreg-note" id="lwm-sigreg-note">
+      No SIGReg pressure. The encoder maps everything to a single point.
+    </div>
+  </div>
+
+  <details class="lwm-curious">
+    <summary>The math: why 1-D projections are enough</summary>
+    <p>
+      <code>Cramér-Wold (1936):</code> a probability measure P on
+      &#8477;<sup>d</sup> is uniquely determined by the family of
+      distributions of its projections {u &middot; X : ||u|| = 1}. So
+      P = N(0, I) iff every 1-D projection of P is N(0, 1).
+    </p>
+    <p>
+      <code>SIGReg(Z) = (1/M) &Sigma;<sub>m</sub> T<sub>EP</sub>(Z &middot; u<sup>(m)</sup>)</code>
+      with u<sup>(m)</sup> ~ Uniform(S<sup>D-1</sup>), resampled every step.
+    </p>
+    <p>
+      With M = 1024 directions, the Monte-Carlo sketch is empirically
+      excellent on these tasks. Per the appendix, the result is
+      essentially insensitive to M; only &lambda; matters. The single
+      effective hyperparameter is why grid-search collapses from
+      polynomial to logarithmic time. PLDM has six coefficients;
+      LeWM has one.
+    </p>
+  </details>
+
+  <div class="lwm-receipts" aria-label="Section II receipts">
+    <div class="lwm-receipts-head">Receipts &middot; SIGReg</div>
+    <dl>
+      <dt>Loss terms</dt><dd>2 (prediction + SIGReg)</dd>
+      <dt>Effective hyperparameter</dt><dd>&lambda; = 0.1</dd>
+      <dt>Random projections per step</dt><dd>M = 1024 (per appendix, insensitive)</dd>
+      <dt>Statistic</dt><dd>Epps-Pulley empirical characteristic function</dd>
+      <dt>Theoretical foundation</dt><dd>Cramér-Wold theorem (1936)</dd>
+      <dt>Anti-collapse mechanism</dt><dd>distribution-matching, not pairwise repulsion</dd>
+      <dt>EMA / stop-gradient</dt><dd>none</dd>
+      <dt>Reconstruction head</dt><dd>none</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — TOKEN ECONOMY (INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-section" id="tokens">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>TEST. 08.3 &middot; The token economy</span>
+  </h2>
+  <div class="lwm-section-head">
+    <h2>One CLS token. <span class="lwm-section-italic">Or one fog of patches.</span></h2>
+  </div>
+
+  <div class="lwm-section-prose">
+    <p class="lwm-lede">
+      The cost of imagining the next frame depends almost entirely on
+      how many tokens you choose to represent it with. Every world
+      model on this page does the same job at a high level. Each one
+      pays a different bill per timestep. The dot grids below are
+      one-to-one: each dot is one token the model carries forward
+      every time it rolls the future.
+    </p>
+    <p>
+      LeWM is a single accent dot. DINO-WM is a 14&times;14 patch grid.
+      V-JEPA 2 is a larger grid. Genie 3 is so dense the dots blur into
+      a fog. Sora is so dense we cannot draw it cell-by-cell on this
+      card. The 48&times; planning speedup over DINO-WM does not come
+      from a clever attention trick. It comes from this picture.
+    </p>
+  </div>
+
+  <div class="lwm-tokens-wrap">
+    <div class="lwm-tokens-head">FIG. 08.2 &middot; Token economy &middot; one dot per token, per frame</div>
+    <div class="lwm-tokens-title serif">Pick a model. See its bill.</div>
+    <div class="lwm-tokens-sub">Tokens compound with every CEM candidate, every refinement step, and every horizon step. Linear factors stack to orders of magnitude.</div>
+    <div class="lwm-tokens-tabs" id="lwm-tokens-tabs" role="tablist">
+      <button type="button" class="lwm-tokens-tab is-active" data-model="lewm" role="tab">LeWM</button>
+      <button type="button" class="lwm-tokens-tab" data-model="dino-wm" role="tab">DINO-WM</button>
+      <button type="button" class="lwm-tokens-tab" data-model="vjepa2" role="tab">V-JEPA 2</button>
+      <button type="button" class="lwm-tokens-tab" data-model="genie3" role="tab">Genie 3</button>
+      <button type="button" class="lwm-tokens-tab" data-model="sora" role="tab">Sora</button>
+    </div>
+    <div class="lwm-tokens-board">
+      <div class="lwm-tokens-canvas">
+        <div class="lwm-tokens-dots" id="lwm-tokens-dots" aria-live="polite"></div>
+      </div>
+      <div class="lwm-tokens-info" id="lwm-tokens-info"></div>
+    </div>
+  </div>
+
+  <details class="lwm-curious">
+    <summary>How the planning loop compounds the per-frame cost</summary>
+    <p>
+      LeWM plans by Cross-Entropy Method in latent space. Each cycle:
+      sample <code>300 candidate action sequences</code> of horizon
+      <code>H = 5</code>, roll each one autoregressively through the
+      predictor, score by L2 distance to the goal latent, refit a
+      Gaussian to the top <code>30 elites</code>, repeat for
+      <code>10 to 30 iterations</code>, execute the first action,
+      replan.
+    </p>
+    <p>
+      Total token-rollouts per planning cycle = <code>300 &times; H &times; iters</code>.
+      Multiply by tokens-per-frame, and you have the actual compute
+      budget. LeWM at 1 token/frame and DINO-WM at 196 tokens/frame
+      have the same loop structure but a 196&times; difference per
+      step. That is where the paper's reported <code>~1s</code> vs
+      <code>~47s</code> per planning cycle on an L40S comes from.
+    </p>
+  </details>
+
+  <div class="lwm-receipts" aria-label="Section III receipts">
+    <div class="lwm-receipts-head">Receipts &middot; planning loop</div>
+    <dl>
+      <dt>CEM candidates</dt><dd>300</dd>
+      <dt>Planning horizon</dt><dd>H = 5</dd>
+      <dt>Elite fraction</dt><dd>top 30 (10%)</dd>
+      <dt>CEM iterations</dt><dd>10 to 30 per cycle</dd>
+      <dt>LeWM plan time</dt><dd>~1 s / cycle (L40S)</dd>
+      <dt>DINO-WM plan time</dt><dd>~47 s / cycle (L40S)</dd>
+      <dt>Speedup</dt><dd>~48&times;</dd>
+      <dt>Token ratio (LeWM : DINO-WM)</dt><dd>1 : 196</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — THE ARCHITECTURE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-section" id="stack">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>TEST. 08.4 &middot; The architecture</span>
+  </h2>
+  <div class="lwm-section-head">
+    <h2>Two modules. <span class="lwm-section-italic">Both trained end-to-end.</span></h2>
+  </div>
+
+  <div class="lwm-section-prose">
+    <p class="lwm-lede">
+      The whole system is two transformers and two batch-norm
+      projectors. The encoder is a ViT-Tiny, fifteen million parameters
+      total across encoder and predictor. There is no EMA target, no
+      stop-gradient, no reconstruction head, no reward head, and no
+      proprioceptive input. Gradients flow through everything.
+    </p>
+    <p>
+      Action conditioning is injected via AdaLN, the same scale-shift
+      trick used in diffusion transformers. The AdaLN parameters are
+      zero-initialized so the predictor begins as identity-on-action,
+      then gradually learns to use the action signal. That single
+      detail is the difference between stable training and divergence.
+    </p>
+  </div>
+
+  <div class="lwm-arch" aria-label="LeWorldModel architecture">
+    <div class="lwm-arch-side">
+      <header>
+        Encoder
+        <span class="sub">ViT-Tiny &middot; ~5M params</span>
+      </header>
+      <div class="lwm-arch-stack">
+        <div class="lwm-arch-block">Frame o<sub>t</sub><span class="b-tag">RGB</span></div>
+        <div class="lwm-arch-block is-norm">+ patch embed (14&times;14)</div>
+        <div class="lwm-arch-stack-meta">&darr; repeat 12&times; &darr;</div>
+        <div class="lwm-arch-block is-mha">Multi-head self-attention<span class="b-tag">h=3</span></div>
+        <div class="lwm-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="lwm-arch-block is-ffn">MLP<span class="b-tag">d=192</span></div>
+        <div class="lwm-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="lwm-arch-stack-meta">&darr; output &darr;</div>
+        <div class="lwm-arch-block is-attn">CLS token<span class="b-tag">192-d</span></div>
+        <div class="lwm-arch-block is-ffn">BN-projector<span class="b-tag">restores Gaussian shape</span></div>
+        <div class="lwm-arch-block is-attn">z<sub>t</sub><span class="b-tag">to predictor + SIGReg</span></div>
+      </div>
+    </div>
+    <div class="lwm-arch-side">
+      <header>
+        Predictor
+        <span class="sub">Causal transformer &middot; ~10M params</span>
+      </header>
+      <div class="lwm-arch-stack">
+        <div class="lwm-arch-block">N past latents [z<sub>t-N+1</sub>, ..., z<sub>t</sub>]<span class="b-tag">N=3 typical</span></div>
+        <div class="lwm-arch-block">Action a<sub>t</sub><span class="b-tag">via AdaLN</span></div>
+        <div class="lwm-arch-stack-meta">&darr; repeat 6&times; &darr;</div>
+        <div class="lwm-arch-block is-mha">Causal self-attention<span class="b-tag">h=16</span></div>
+        <div class="lwm-arch-block is-norm">AdaLN (zero-init)</div>
+        <div class="lwm-arch-block is-ffn">MLP, dropout 10%<span class="b-tag">d=192</span></div>
+        <div class="lwm-arch-block is-norm">AdaLN (zero-init)</div>
+        <div class="lwm-arch-stack-meta">&darr; output &darr;</div>
+        <div class="lwm-arch-block is-ffn">BN-projector</div>
+        <div class="lwm-arch-block is-attn">&zhat;<sub>t+1</sub><span class="b-tag">predicted next latent</span></div>
+        <div class="lwm-arch-block is-norm">L<sub>pred</sub> = ||&zhat;<sub>t+1</sub> - z<sub>t+1</sub>||&sup2;</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="lwm-curious">
+    <summary>Why the BN-projector matters</summary>
+    <p>
+      The ViT's final LayerNorm normalizes the CLS token to unit norm
+      <em>per sample</em>, which destroys the distributional shape
+      that SIGReg is trying to enforce <em>across samples</em>. A
+      one-layer MLP projector with batch normalization restores the
+      distributional structure. Without it, SIGReg is pulling against
+      LayerNorm, and training stalls.
+    </p>
+    <p>
+      The AdaLN zero-initialization is borrowed from DiT (Peebles &amp;
+      Xie). At step zero, action conditioning has no effect; the
+      predictor is identity-on-action. Gradient flow gradually wakes
+      up the action pathway. This is empirically the difference
+      between converging cleanly and diverging in the first few
+      hundred steps.
+    </p>
+  </details>
+
+  <div class="lwm-receipts" aria-label="Section IV receipts">
+    <div class="lwm-receipts-head">Receipts &middot; architecture</div>
+    <dl>
+      <dt>Total params</dt><dd>~15M (5M encoder + 10M predictor)</dd>
+      <dt>Encoder</dt><dd>ViT-Tiny, 12 layers, 3 heads, d=192, patch 14</dd>
+      <dt>Predictor</dt><dd>causal transformer, 6 layers, 16 heads, dropout 10%</dd>
+      <dt>Per-frame embedding</dt><dd>1 CLS token, 192-d</dd>
+      <dt>Action injection</dt><dd>AdaLN, zero-initialized</dd>
+      <dt>Context window</dt><dd>N = 3 (Push-T, OGBench-Cube), N = 1 (Two-Room)</dd>
+      <dt>Trained on</dt><dd>1 GPU, hours (not days)</dd>
+      <dt>Target encoder</dt><dd>same encoder, no EMA, no stop-grad</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — RESULTS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-section" id="results">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>TEST. 08.5 &middot; What it does, what it does not</span>
+  </h2>
+  <div class="lwm-section-head">
+    <h2>Wins on planning. <span class="lwm-section-italic">Loses where pretraining still helps.</span></h2>
+  </div>
+
+  <div class="lwm-headline" aria-label="Headline LeWM numbers">
+    <div class="lwm-headline-cell">
+      <span class="num">15M</span>
+      <span class="label">Total parameters</span>
+    </div>
+    <div class="lwm-headline-cell">
+      <span class="num">192-d</span>
+      <span class="label">CLS token per frame</span>
+    </div>
+    <div class="lwm-headline-cell">
+      <span class="num">~1 s</span>
+      <span class="label">Plan / cycle (vs DINO-WM ~47 s)</span>
+    </div>
+    <div class="lwm-headline-cell">
+      <span class="num">+18%</span>
+      <span class="label">Push-T success vs PLDM</span>
+    </div>
+  </div>
+
+  <div class="lwm-section-prose">
+    <p>
+      The strongest result is on Push-T. LeWM matches or beats
+      DINO-WM there even though DINO-WM is given proprioceptive inputs
+      that LeWM does not see, and improves over PLDM (the closest
+      end-to-end JEPA competitor) by eighteen percent. Beyond
+      benchmark numbers, the latent space recovers physical quantities
+      under linear and MLP probes with <code>r &asymp; 0.99</code> on
+      Push-T agent x/y, block x/y, and block angle.
+    </p>
+    <p>
+      Two emergent behaviors are worth flagging. First, <em>temporal
+      latent path straightening</em>: the cosine similarity between
+      consecutive latent velocity vectors increases over training.
+      Trajectories become geometrically straighter in latent space,
+      a known signature in primate visual cortex. Second,
+      <em>violation-of-expectation</em>: the model's surprise signal
+      spikes for object teleportation but not for color changes. It is
+      a model trained on no rewards and no labels that is more bothered
+      by physical impossibility than by visual perturbation.
+    </p>
+  </div>
+
+  <div class="lwm-twocol">
+    <div class="lwm-col-wins">
+      <h3>Where LeWM wins</h3>
+      <ul>
+        <li><strong>Push-T (success rate)</strong>matches or beats DINO-WM, +18% over PLDM at the apples-to-apples comparison</li>
+        <li><strong>Reacher</strong>competitive with foundation-model planners</li>
+        <li><strong>Token economy</strong>200&times; fewer tokens per frame than DINO-WM, ~28,000&times; fewer than Sora</li>
+        <li><strong>Planning speed</strong>~1 s/cycle vs DINO-WM's ~47 s, V-JEPA 2-AC's ~16 s, Cosmos's ~4 min</li>
+        <li><strong>Trainability</strong>one GPU, hours, single hyperparameter to tune</li>
+        <li><strong>Physical probes</strong>r &asymp; 0.99 on agent / block coordinates from a 192-d CLS</li>
+        <li><strong>Latent straightening</strong>more straightening than PLDM despite no explicit smoothness term</li>
+        <li><strong>Surprise tracks physics</strong>spike on teleport, no spike on color change</li>
+      </ul>
+    </div>
+    <div class="lwm-col-loses">
+      <h3>Where LeWM loses</h3>
+      <ul>
+        <li><strong>Two-Room navigation</strong>2D task with intrinsic dim ~3 is over-regularized by a 192-d Gaussian prior</li>
+        <li><strong>OGBench-Cube</strong>visually rich 3D scenes still favor DINO-WM's ImageNet-scale priors</li>
+        <li><strong>Long-horizon reasoning</strong>autoregressive latent rollouts compound error</li>
+        <li><strong>Anything generative</strong>does not render pixels; the post-hoc decoder is for visualization only</li>
+        <li><strong>Anything language</strong>no tokens, no vocabulary, not the problem class</li>
+        <li><strong>Passive video</strong>requires action labels; cannot learn from raw observation</li>
+        <li><strong>Uncertainty</strong>deterministic dynamics, Euclidean cost in latent space</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lwm-compare" aria-label="World model family comparison">
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Predicts</th>
+          <th>Anti-collapse</th>
+          <th>Plan / step</th>
+          <th>Good at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dreamer V3</td>
+          <td>pixels + reward</td>
+          <td>reconstruction + KL</td>
+          <td>imagine + actor-critic</td>
+          <td>RL on games</td>
+        </tr>
+        <tr>
+          <td>DINO-WM</td>
+          <td>future DINOv2 patches</td>
+          <td>frozen pretrained encoder</td>
+          <td>~47 s</td>
+          <td>visually rich planning</td>
+        </tr>
+        <tr>
+          <td>PLDM</td>
+          <td>future embeddings</td>
+          <td>7-term VICReg</td>
+          <td>fast, unstable</td>
+          <td>simple low-D environments</td>
+        </tr>
+        <tr>
+          <td>V-JEPA 2-AC</td>
+          <td>masked latent patches</td>
+          <td>EMA + stop-grad</td>
+          <td>~16 s</td>
+          <td>foundation video, post-trained</td>
+        </tr>
+        <tr>
+          <td>Genie 3</td>
+          <td>next pixel frame</td>
+          <td>generative loss</td>
+          <td>24 fps real-time</td>
+          <td>interactive worlds</td>
+        </tr>
+        <tr>
+          <td>Sora</td>
+          <td>spacetime patches</td>
+          <td>diffusion</td>
+          <td>minutes / minute</td>
+          <td>photoreal video</td>
+        </tr>
+        <tr class="is-lwm">
+          <td>LeWM</td>
+          <td>next 192-d CLS</td>
+          <td>SIGReg (Gaussian match)</td>
+          <td>~1 s</td>
+          <td>cheap pixel-to-action planning</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <details class="lwm-curious">
+    <summary>The two-room failure, in one sentence</summary>
+    <p>
+      Two-Room is a 2D navigation task whose true data manifold is
+      roughly three-dimensional. Forcing a 192-d isotropic Gaussian
+      prior on a manifold that small distorts the representation. The
+      paper notes this explicitly: SIGReg is a strong prior, and on
+      data that does not deserve a strong prior it can over-regularize.
+      PLDM and DINO-WM, with weaker priors, win on Two-Room.
+    </p>
+  </details>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="lwm-method" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, what this is and is not</span>
+  </h2>
+
+  <div class="lwm-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five sections, each pinned to a specific section of the source
+        preprint. The two interactive widgets in &sect; II and &sect;
+        III run entirely client-side in vanilla JavaScript. The SIGReg
+        scatter and projection histogram are sampled live from a
+        controllable distribution. The token-economy isotype is a
+        one-dot-per-token pictogram, capped at six hundred dots before
+        switching to a density overlay.
+      </p>
+      <p>
+        The diagrams are hand-coded HTML/CSS grids and a small canvas
+        widget. No charting library, no React, no build step. Page
+        weight stays under one megabyte; only Cloudflare Web Analytics
+        runs at the platform level. No tracking.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Primary: Maes, Le Lidec, Scieur, LeCun, Balestriero. <em>"LeWorldModel"</em>, March 2026 preprint (arXiv pending). Numerical claims on this page (parameter counts, planning latencies, success deltas, hyperparameters) trace to that paper or its appendix.
+      </p>
+      <p>
+        Prerequisite: Balestriero &amp; LeCun, <a href="https://arxiv.org/abs/2511.08544" target="_blank" rel="noopener">"LeJEPA" (arXiv:2511.08544, 2025)</a>, where SIGReg is introduced and proved to prevent collapse under stated smoothness assumptions.
+      </p>
+      <p>
+        Comparators: <a href="https://arxiv.org/abs/2412.18984" target="_blank" rel="noopener">DINO-WM (Zhou et al., ICML 2025)</a>, PLDM (Sobal et al., 2025), V-JEPA 2 (Meta), <a href="https://arxiv.org/abs/2501.00663" target="_blank" rel="noopener">Titans (Behrouz et al., 2024)</a>, <a href="https://arxiv.org/abs/2312.00752" target="_blank" rel="noopener">Mamba (Gu &amp; Dao)</a>. Numbers cited from each paper's primary results table.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        This is a <em>preprint</em>, version 1 (March 2026), with v2
+        revised the same month. It has not yet completed peer review.
+        "Provable anti-collapse" is provable for SIGReg in LeJEPA
+        under smoothness assumptions; the world-model setting adds
+        dynamics, and the paper does not extend the proof. Read as
+        "principled and empirically robust" rather than "formally
+        guaranteed for the dynamics-conditioned case."
+      </p>
+      <p>
+        The 200&times; token-ratio and 48&times; planning speedup
+        numbers are reported on a single hardware setup (NVIDIA L40S)
+        against a particular DINO-WM configuration. Directionally
+        robust, not tight fundamental ratios.
+      </p>
+      <p>
+        The benchmark suite (Two-Room, Reacher, Push-T, OGBench-Cube)
+        is small. Generalization to large-scale 3D robotics, real-robot
+        data, or natural video has not been demonstrated.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a tutorial on JEPAs in general. The page focuses on the
+        single architectural shift LeWM proposes: replacing brittle
+        anti-collapse machinery with a principled distribution-matching
+        regularizer. The broader JEPA family (BYOL, DINO, V-JEPA,
+        I-JEPA, JEPA-2) is referenced for context, not surveyed.
+      </p>
+      <p>
+        Not a runnable model. Nothing on this page actually plans
+        anything. The interactives illustrate the loss-shape and the
+        token economy; they are not LeWM's encoder or predictor in
+        the browser. For runnable code, see the authors' implementation
+        when released.
+      </p>
+    </div>
+  </div>
+
+  <div class="lwm-closing">
+    <p>
+      For nine years, every JEPA recipe has paid an anti-collapse tax.
+      Exponential moving averages, stop-gradients, frozen foundation
+      encoders, multi-term VICReg objectives. Each fix worked. Each fix
+      added a knob. The cumulative knob count on a working JEPA was
+      large enough that a new researcher had to first learn the swamp,
+      then learn the model.
+    </p>
+    <p>
+      LeWM is the first time someone has shown the swamp was optional.
+      One regularizer that asks one question of the embedding cloud,
+      from a thousand random angles. <em>Does it look Gaussian?</em>
+      That question is enough.
+    </p>
+    <p>
+      What is striking about this paper is not that it proposes a new
+      architecture. It does not. It proposes a new <em>discipline</em>
+      around the loss. Specify what the embedding distribution should
+      be, then enforce that. Stop bolting on anti-collapse mechanisms
+      one at a time and hoping. The downstream effects (smaller models,
+      faster planning, single-knob training, surprise that tracks
+      physics) all flow from that one move.
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="faq-head">FAQ</h2>
+  <details>
+    <summary>What is LeWorldModel?</summary>
+    <div class="faq-answer"><p>LeWorldModel (LeWM) is a Joint-Embedding Predictive Architecture for action-conditioned world modeling, introduced in March 2026 by Maes, Le Lidec, Scieur, LeCun, and Balestriero (Mila, NYU, Samsung SAIL, Brown). It is the first JEPA that trains stably end-to-end from raw pixels using only two loss terms and a single effective hyperparameter, replacing the brittle anti-collapse machinery (EMAs, stop-gradients, frozen pretrained encoders, multi-term VICReg objectives) used by prior JEPAs.</p></div>
+  </details>
+  <details>
+    <summary>What is SIGReg?</summary>
+    <div class="faq-answer"><p>SIGReg, or Sketched Isotropic Gaussian Regularization, is the regularizer that prevents representation collapse in LeWM. It pushes the encoder's embedding distribution toward an isotropic Gaussian using random one-dimensional projections (Cramér-Wold theorem) and the Epps-Pulley normality test. With M random projections per step (M = 1024 in the paper) the test runs in linear time, has bounded gradients, and parallelizes cleanly. It is a distribution-matching anti-collapse term, not a pairwise repulsion.</p></div>
+  </details>
+  <details>
+    <summary>How does LeWM compare to DINO-WM and PLDM?</summary>
+    <div class="faq-answer"><p>LeWM uses one CLS token per frame (192 dimensions); DINO-WM uses about 196 patch tokens per frame from a frozen DINOv2 encoder. LeWM plans about forty-eight times faster (one second per planning cycle versus forty-seven seconds for DINO-WM on an L40S GPU) and is end-to-end trainable, while DINO-WM depends on a frozen pretrained encoder. Versus PLDM, the only previous end-to-end JEPA world model, LeWM collapses six tunable loss coefficients into one and achieves higher Push-T success rates with cleaner training dynamics.</p></div>
+  </details>
+  <details>
+    <summary>Where does LeWM lose?</summary>
+    <div class="faq-answer"><p>Three places. Two-Room navigation, where the true data manifold is roughly three-dimensional and the 192-dim isotropic Gaussian prior over-regularizes. OGBench-Cube, the visually rich 3D manipulation task where DINOv2's ImageNet-scale priors carry. And anything requiring long-horizon reasoning, where autoregressive latent rollouts compound prediction error. The paper's authors flag these explicitly.</p></div>
+  </details>
+  <details>
+    <summary>Is LeWM a video generator?</summary>
+    <div class="faq-answer"><p>No. LeWM is a planner, not a generator. It does not render pixels. The post-hoc decoder used in some figures is a separate, training-free transformer added after the model is trained, purely for visualization. The model itself only predicts the next 192-dimensional CLS token. Different paradigms imagine in different substrates: Sora dreams in megapixels, Genie 3 dreams in interactive scenes, LeWM imagines an arrow through a 192-dimensional cloud.</p></div>
+  </details>
+</section>
+
+<!-- ── Related labs ───────────────────────────────────────── -->
+<aside class="related-labs" aria-label="Related labs">
+  <div class="mono related-labs-head">Related labs &middot; the post-Transformer arc</div>
+  <ul class="related-labs-list">
+    <li>
+      <a href="/work/attention-lab/">
+        <span class="mono related-fig">TEST. 07</span>
+        <span class="serif related-title">Attention Is All You Need</span>
+        <span class="related-line">The 2017 paper LeWM is implicitly arguing against. Self-attention scales as n squared d; LeWM scales by collapsing the frame to one token.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/subquadratic-lab/">
+        <span class="mono related-fig">TEST. 06</span>
+        <span class="serif related-title">Inside Subquadratic</span>
+        <span class="related-line">A different post-Transformer pitch. SubQ keeps language tokens, drops quadratic attention. LeWM drops the language framing entirely.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/deepseek-v4-lab/">
+        <span class="mono related-fig">TEST. 05</span>
+        <span class="serif related-title">Inside DeepSeek-V4</span>
+        <span class="related-line">A frontier LLM's anatomy. CSA, Muon, FP4. LeWM is on the opposite end of the parameter axis: 15M, not 1.6T.</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<nav class="lab-nav mono" aria-label="Test navigation">
+  <a href="/work/attention-lab/">&larr; Prev: Attention Is All You Need (TEST. 07)</a>
+  <span class="lab-nav-meta">Test 08 of 08</span>
+  <a href="/">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/leworldmodel-lab.js?v=1"></script>
+</body>
+</html>
