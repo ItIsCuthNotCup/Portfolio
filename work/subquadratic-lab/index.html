@@ -26,7 +26,7 @@
   <!-- SEO: canonical, twitter card, JSON-LD -->
   <link rel="canonical" href="https://jakecuth.com/work/subquadratic-lab/">
   <meta property="article:published_time" content="2026-05-06T00:00:00Z">
-  <meta property="article:modified_time" content="2026-05-06T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Inside Subquadratic · The SubQ launch, with receipts">
   <meta name="twitter:description" content="A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced.">
@@ -67,7 +67,7 @@
     "description": "A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced. The anatomy of a launch that triggered the AI Theranos question.",
     "image": "https://www.jakecuth.com/assets/og/subquadratic-lab.png?v=1",
     "datePublished": "2026-05-06",
-    "dateModified": "2026-05-06",
+    "dateModified": "2026-05-07",
     "url": "https://jakecuth.com/work/subquadratic-lab/",
     "inLanguage": "en",
     "author": {
@@ -145,7 +145,7 @@
     "image": "https://www.jakecuth.com/assets/og/subquadratic-lab.png?v=1",
     "url": "https://jakecuth.com/work/subquadratic-lab/",
     "datePublished": "2026-05-06",
-    "dateModified": "2026-05-06",
+    "dateModified": "2026-05-07",
     "applicationCategory": "DataScienceApplication",
     "operatingSystem": "Any (browser-based)",
     "browserRequirements": "Requires JavaScript",
@@ -372,13 +372,13 @@
       <span class="tag tag-self">Self-reported</span>
     </div>
     <div class="sq-headline-cell">
-      <span class="num">~1000&times;</span>
-      <span class="label">Attention compute reduction at 12M</span>
+      <span class="num">150 t/s</span>
+      <span class="label">Generation throughput</span>
       <span class="tag tag-self">Self-reported</span>
     </div>
     <div class="sq-headline-cell">
-      <span class="num">92.1%</span>
-      <span class="label">Needle-in-a-haystack at 12M tokens</span>
+      <span class="num">O(n)</span>
+      <span class="label">Attention complexity (claimed)</span>
       <span class="tag tag-self">Self-reported</span>
     </div>
     <div class="sq-headline-cell">
@@ -386,6 +386,21 @@
       <span class="label">MRCR v2 production score</span>
       <span class="tag">Third-party verified</span>
     </div>
+  </div>
+
+  <!-- Direct quotes from subq.ai (added after launch coverage to capture company's own framing) -->
+  <div class="sq-receipts" aria-label="Direct from subq.ai">
+    <div class="sq-receipts-head">Direct from subq.ai &middot; what the marketing page actually says</div>
+    <dl>
+      <dt>Architecture (homepage wording)</dt><dd>"Fully sub-quadratic sparse-attention" &middot; O(n) claim, not just subquadratic</dd>
+      <dt>Throughput</dt><dd>150 tokens per second</dd>
+      <dt>Cost framing</dt><dd>"1/5 of competing LLMs"</dd>
+      <dt>Context size, in code</dt><dd>Python 3.13 standard library &asymp; 5.1M tokens</dd>
+      <dt>Context size, in PRs</dt><dd>~1,050 React PRs (six months) &asymp; 7.5M tokens</dd>
+      <dt>SubQ Code claim</dt><dd>"~25% lower bill, 10&times; faster exploration" vs Claude Code / Codex / Cursor</dd>
+      <dt>API surface</dt><dd>OpenAI-compatible endpoints &middot; streaming &middot; tool use</dd>
+      <dt>Technical report</dt><dd>"coming soon" (still not on arXiv as of file date)</dd>
+    </dl>
   </div>
 
   <div class="sq-section-prose">
@@ -918,9 +933,18 @@
       <div class="sq-score-mark warn">&#x26A0;</div>
       <div class="sq-score-claim">
         <strong>SWE-Bench Verified = <span class="sq-score-num">81.8 to 82.4</span></strong>
-        <p>Within two points of frontier. The company concedes the result is "harness as much as model." The score reflects the agentic scaffolding around the model. Plausible as a coding-agent system, not a clean architecture comparison.</p>
+        <p>Within two points of mid-tier frontier. The company concedes the result is "harness as much as model." Note: subq.ai itself lists Opus 4.7 at <span class="sq-score-num">87.6</span> in its comparison band, which is <em>five points above</em> SubQ on the same benchmark. The marketing language ("outperforms Opus 4.7") describes a different benchmark, not SWE-Bench.</p>
       </div>
       <div class="sq-score-tag warn">Caveat</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark flag">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>"Outperforms Opus 4.7, Gemini 3.1 Pro, GPT-5.5"</strong>
+        <p>The subq.ai homepage lists each comparator with a number that SubQ does <em>not</em> beat on at least one of the cited benchmarks. SubQ's <span class="sq-score-num">81.8</span> SWE-Bench is below Opus 4.7's <span class="sq-score-num">87.6</span>. SubQ's <span class="sq-score-num">65.9</span> MRCR v2 is below GPT-5.5's <span class="sq-score-num">74.0</span>. The "outperforms" framing is technically true on a cherry-picked-per-model basis, not on a same-benchmark basis.</p>
+      </div>
+      <div class="sq-score-tag warn">Cherry-picked</div>
     </div>
 
     <div class="sq-score-row" role="listitem">
@@ -965,8 +989,8 @@
   <div class="sq-receipts" aria-label="Section V receipts">
     <div class="sq-receipts-head">Receipts &middot; &sect; V</div>
     <dl>
-      <dt>Plausible (third-party or low-risk)</dt><dd>3 of 8 cited claims</dd>
-      <dt>Suspicious or caveat-bound</dt><dd>5 of 8 cited claims</dd>
+      <dt>Plausible (third-party or low-risk)</dt><dd>3 of 9 cited claims</dd>
+      <dt>Suspicious or caveat-bound</dt><dd>6 of 9 cited claims</dd>
       <dt>Outright implausible on current evidence</dt><dd>0 of 8</dd>
       <dt>Independent reproductions</dt><dd>None as of May 6, 2026</dd>
       <dt>arXiv paper</dt><dd>Not found</dd>
