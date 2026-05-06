@@ -400,6 +400,132 @@ else:
 
 
 # ──────────────────────────────────────────────────────────────
+# SEO contract — see references/seo.md
+# Every new lab must have all required meta tags, three JSON-LD
+# blocks, a per-lab OG image, a sitemap entry, and an llms.txt
+# entry. Without these the lab is effectively invisible.
+# ──────────────────────────────────────────────────────────────
+section("SEO")
+
+new_lab_html_path = REPO_ROOT / "work" / f"{NEW_SLUG}-lab" / "index.html"
+if not new_lab_html_path.exists():
+    fail(f"new lab HTML missing at {new_lab_html_path.relative_to(REPO_ROOT)}")
+else:
+    html = new_lab_html_path.read_text(encoding="utf-8", errors="ignore")
+
+    # 1. Required meta tags
+    required_meta = {
+        "canonical":              r'<link[^>]+rel="canonical"[^>]+href="https://jakecuth\.com/work/' + re.escape(NEW_SLUG) + r'-lab/"',
+        "og:type":                r'<meta[^>]+property="og:type"',
+        "og:title":               r'<meta[^>]+property="og:title"',
+        "og:description":         r'<meta[^>]+property="og:description"',
+        "og:image (www host)":    r'<meta[^>]+property="og:image"[^>]+content="https://www\.jakecuth\.com/assets/og/' + re.escape(NEW_SLUG) + r'-lab\.png',
+        "og:url":                 r'<meta[^>]+property="og:url"',
+        "og:site_name":           r'<meta[^>]+property="og:site_name"',
+        "og:locale":              r'<meta[^>]+property="og:locale"',
+        "article:published_time": r'<meta[^>]+property="article:published_time"',
+        "article:modified_time":  r'<meta[^>]+property="article:modified_time"',
+        "twitter:card":           r'<meta[^>]+name="twitter:card"',
+        "twitter:title":          r'<meta[^>]+name="twitter:title"',
+        "twitter:description":    r'<meta[^>]+name="twitter:description"',
+        "twitter:image (www)":    r'<meta[^>]+name="twitter:image"[^>]+content="https://www\.jakecuth\.com/assets/og/' + re.escape(NEW_SLUG) + r'-lab\.png',
+        "twitter:site=@ItsCuthulhu":    r'<meta[^>]+name="twitter:site"[^>]+content="@ItsCuthulhu"',
+        "twitter:creator=@ItsCuthulhu": r'<meta[^>]+name="twitter:creator"[^>]+content="@ItsCuthulhu"',
+        "theme-color":            r'<meta[^>]+name="theme-color"',
+    }
+    for label, pattern in required_meta.items():
+        if re.search(pattern, html):
+            ok(f"meta tag: {label}")
+        else:
+            fail(f"meta tag missing or wrong: {label}")
+
+    # 2. Description length 60-160 chars
+    m = re.search(r'<meta\s+name="description"\s+content="([^"]+)"', html)
+    if not m:
+        fail("description meta tag missing")
+    else:
+        dlen = len(m.group(1))
+        if 60 <= dlen <= 160:
+            ok(f"description length OK ({dlen} chars)")
+        else:
+            fail(f"description length {dlen} chars (must be 60–160)")
+
+    # 3. Three JSON-LD blocks present and valid JSON
+    ld_blocks = re.findall(
+        r'<script\s+type="application/ld\+json">\s*(\{.*?\})\s*</script>',
+        html, re.S,
+    )
+    types_seen = []
+    for raw in ld_blocks:
+        try:
+            d = json.loads(raw)
+            t = d.get("@type", "")
+            types_seen.append(t)
+        except json.JSONDecodeError as e:
+            fail(f"JSON-LD block doesn't parse: {e}")
+    for required_type in ("BreadcrumbList", "Article", "WebApplication"):
+        if required_type in types_seen:
+            ok(f"JSON-LD: {required_type}")
+        else:
+            fail(f"JSON-LD missing @type={required_type}")
+
+# 4. OG image file exists at expected path
+og_image_path = REPO_ROOT / "assets" / "og" / f"{NEW_SLUG}-lab.png"
+if og_image_path.exists():
+    size = og_image_path.stat().st_size
+    if size > 1024:
+        ok(f"OG image present ({size // 1024} KB)")
+    else:
+        fail(f"OG image suspiciously small ({size} bytes)")
+else:
+    fail(f"OG image missing: {og_image_path.relative_to(REPO_ROOT)}")
+    fail("  run: python3 notebooks/generate_og_images.py")
+
+# 5. Sitemap entry
+sitemap_path = REPO_ROOT / "sitemap.xml"
+if sitemap_path.exists():
+    sitemap_text = sitemap_path.read_text(encoding="utf-8")
+    if f"/work/{NEW_SLUG}-lab/" in sitemap_text:
+        ok("sitemap.xml has the new lab URL")
+    else:
+        fail(f"sitemap.xml missing entry for /work/{NEW_SLUG}-lab/")
+else:
+    fail("sitemap.xml not found at repo root")
+
+# 6. llms.txt entry
+llms_path = REPO_ROOT / "llms.txt"
+if llms_path.exists():
+    llms_text = llms_path.read_text(encoding="utf-8")
+    if f"/work/{NEW_SLUG}-lab/" in llms_text:
+        ok("llms.txt mentions the new lab")
+    else:
+        fail(f"llms.txt missing bullet for /work/{NEW_SLUG}-lab/")
+else:
+    fail("llms.txt not found at repo root")
+
+# 7. No duplicate canonical URLs across the whole site
+canonicals = {}
+for p in REPO_ROOT.rglob("index.html"):
+    s = str(p)
+    if any(skip in s for skip in ("/.cache/", "/.venv/", "/.local-plugins/",
+                                  "/.remote-plugins/", "/.claude/", "/node_modules/")):
+        continue
+    try:
+        t = p.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        continue
+    m = re.search(r'<link[^>]+rel="canonical"[^>]+href="([^"]+)"', t)
+    if m:
+        canonicals.setdefault(m.group(1), []).append(str(p.relative_to(REPO_ROOT)))
+dupes = {url: paths for url, paths in canonicals.items() if len(paths) > 1}
+if dupes:
+    for url, paths in dupes.items():
+        fail(f"duplicate canonical {url} on: {', '.join(paths)}")
+else:
+    ok("canonical URLs are unique across the site")
+
+
+# ──────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────
 print()

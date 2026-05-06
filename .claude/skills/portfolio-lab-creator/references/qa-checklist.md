@@ -138,6 +138,32 @@ Example failure:
 QA gate: FAIL (2 failures)
 ```
 
+## SEO checks (run alongside the structural checks above)
+
+Per `references/seo.md`, every new lab must satisfy these. The
+verify script enforces all of them; failure aborts commit:
+
+- **Required meta tags present**: title, description (60–160 chars),
+  canonical, og:type, og:title, og:description, og:image, og:url,
+  og:site_name, og:locale, article:published_time,
+  article:modified_time, twitter:card, twitter:title,
+  twitter:description, twitter:image, twitter:site, twitter:creator,
+  theme-color
+- **Three JSON-LD blocks present and parse as valid JSON**:
+  BreadcrumbList, Article, WebApplication
+- **Per-lab OG image exists**: `assets/og/<slug>-lab.png` is a real
+  PNG file, 1200×630
+- **OG image URL points at www host**:
+  `https://www.jakecuth.com/assets/og/<slug>-lab.png?v=N` (NOT bare
+  apex — apex breaks some social scrapers)
+- **Sitemap entry exists**: `sitemap.xml` has a `<url>` block whose
+  `<loc>` ends with `/work/<slug>-lab/`
+- **llms.txt entry exists**: `llms.txt` mentions
+  `/work/<slug>-lab/` somewhere
+- **Twitter handle is `@ItsCuthulhu`** for both site and creator
+- **No duplicate canonical URLs**: no other page on the site uses
+  the same `<link rel="canonical">` value
+
 ## When to override the QA gate
 
 Never. If the gate fails, fix the lab. Do not commit.

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attention Is All You Need · The Transformer paper, anatomized — Jake Cuth.</title>
+  <meta name="description" content="An interactive infographic of the 2017 Transformer paper. Scaled dot-product attention, multi-head heatmap, and the complexity argument that won.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/attention-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Attention Is All You Need · The Transformer paper, anatomized">
+  <meta property="og:description" content="An interactive infographic of the 2017 Transformer paper. Scaled dot-product attention, multi-head heatmap, and the complexity argument that won.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/attention-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/attention-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-06T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-06T00:00:00Z">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Attention Is All You Need · The Transformer paper, anatomized">
+  <meta name="twitter:description" content="An interactive infographic of the 2017 Transformer paper. Scaled dot-product attention, multi-head heatmap, and the complexity argument that won.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/attention-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/attention-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Tests", "item": "https://jakecuth.com/#tests" },
+      { "@type": "ListItem", "position": 3, "name": "Attention Is All You Need — The Transformer paper, anatomized", "item": "https://jakecuth.com/work/attention-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Attention Is All You Need — The Transformer paper, anatomized",
+    "description": "An interactive infographic of the 2017 Transformer paper. Scaled dot-product attention, multi-head heatmap, and the complexity argument that won.",
+    "image": "https://www.jakecuth.com/assets/og/attention-lab.png?v=1",
+    "datePublished": "2026-05-06",
+    "dateModified": "2026-05-06",
+    "url": "https://jakecuth.com/work/attention-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jakecuth.com/work/attention-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Attention Is All You Need — The Transformer paper, anatomized",
+    "description": "An interactive infographic of the 2017 Transformer paper. Scaled dot-product attention, multi-head heatmap, and the complexity argument that won.",
+    "image": "https://www.jakecuth.com/assets/og/attention-lab.png?v=1",
+    "url": "https://jakecuth.com/work/attention-lab/",
+    "datePublished": "2026-05-06",
+    "dateModified": "2026-05-06",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the Transformer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Transformer is the neural network architecture introduced in the 2017 paper 'Attention Is All You Need' by Vaswani et al. It dispenses with recurrence and convolution entirely, relying only on stacked self-attention and feed-forward layers. It is the architecture every modern large language model is built on, including GPT, Claude, Gemini, and DeepSeek."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is scaled dot-product attention?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Scaled dot-product attention computes Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V. The query Q is compared against every key K via a dot product, the result is divided by the square root of the key dimension d_k to keep gradients stable, a softmax converts the scores to weights that sum to one, and the weights are used to take a weighted sum of the value vectors V."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why multi-head attention?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A single attention layer averages information from all positions, which blurs distinct relationships. Multi-head attention runs h parallel attention layers (h = 8 in the base model), each in its own d_k = d_v = 64 dimensional subspace, and concatenates the results. Different heads learn to attend to different things: subject-verb agreement, anaphora, syntactic role, position. The total computational cost is similar to single-head with full dimensionality."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is self-attention faster than RNNs at typical sequence lengths?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Self-attention costs O(n squared times d) per layer but only O(1) sequential operations because every position is computed in parallel. Recurrent layers cost O(n times d squared) per layer and require O(n) sequential operations. When the sequence length n is smaller than the representation dimension d (as it is for typical sentences encoded with d = 512), self-attention is both fewer FLOPs and dramatically more parallelizable. The maximum path length between any two positions also drops from O(n) to O(1)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What were the original Transformer's results?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "On WMT 2014 English-to-German translation, the big Transformer achieved 28.4 BLEU, beating the previous best (including ensembles) by more than two BLEU. On WMT 2014 English-to-French it reached 41.8 BLEU. The base model trained for twelve hours on eight NVIDIA P100 GPUs at a total cost of 3.3 times 10^18 FLOPs, a fraction of competitors. The model also generalized to English constituency parsing without architecture-specific tuning."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 07</span> &middot; MMXXVI &middot; ATTENTION IS ALL YOU NEED</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" role="menuitem">Productivity Predictions</a>
+        <a href="/work/deepseek-v4-lab/" role="menuitem">Inside DeepSeek-V4</a>
+        <a href="/work/subquadratic-lab/" role="menuitem">Inside Subquadratic</a>
+        <a href="/work/attention-lab/" class="active" aria-current="page" role="menuitem">Attention Is All You Need <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="att-main">
+
+<!-- ATTRIBUTION BANNER -->
+<div class="mono att-attr-banner">
+  <span class="att-attr-tag">Source paper</span>
+  <span>Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin. <strong>NeurIPS 2017.</strong> arXiv:1706.03762.</span>
+  <span class="att-attr-right">All numbers below trace to the paper.</span>
+</div>
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#tests">Tests</a></li>
+    <li><span aria-current="page">Attention Is All You Need</span></li>
+  </ol>
+</nav>
+
+<section class="att-hero">
+  <h2 class="mono section-label">
+    <span class="idx">TEST. 07</span>
+    <span>The Transformer paper, anatomized</span>
+  </h2>
+  <h1 class="serif big-display att-title">
+    Attention is<br>
+    <span class="serif-italic" style="color:var(--accent)">all you need.</span>
+  </h1>
+  <p class="lab-biz-line">
+    The eight-page paper that ended a decade of recurrent and
+    convolutional sequence models, and started the one we are still
+    living through. Below: every piece of the original Transformer,
+    drawn from the source. Two of them are interactive.
+  </p>
+  <p class="att-kicker">
+    Six authors, eight pages, one architecture. The Transformer
+    replaced recurrence and convolution with stacked self-attention,
+    won state of the art in translation at a fraction of the training
+    cost, and within five years became the substrate for every
+    frontier large language model. This page is the paper, in five
+    moves, with two of them you can poke.
+  </p>
+  <div class="mono att-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; vanilla JS</div></div>
+    <div><div class="label">Source</div><div class="value"><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener" style="border-bottom:1px solid">arXiv:1706.03762 &#8599;</a></div></div>
+  </div>
+  <div class="att-inline-nav">
+    <a href="#why">Why attention</a> &middot;
+    <a href="#dot-product">Dot-product</a> &middot;
+    <a href="#multi-head">Multi-head</a> &middot;
+    <a href="#stack">The stack</a> &middot;
+    <a href="#why-it-won">Why it won</a> &middot;
+    <a href="#methodology">Methodology</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — WHY ATTENTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-section" id="why">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>TEST. 07.1 &middot; Why attention</span>
+  </h2>
+  <div class="att-section-head">
+    <h2>Two bottlenecks. <span class="att-section-italic">One paper that removed both.</span></h2>
+  </div>
+
+  <div class="att-section-prose">
+    <p class="att-lede">
+      In 2017, the dominant sequence-to-sequence models were recurrent.
+      LSTMs and GRUs read tokens one at a time, threading a hidden
+      state forward through the sequence. The architecture was elegant
+      and powerful and slow. Every step depended on the step before.
+      That dependency made batching across the time axis impossible
+      and made long sequences expensive in two compounding ways: more
+      sequential operations, and a longer path between distant tokens
+      that had to learn to talk to each other.
+    </p>
+    <p>
+      Convolutional alternatives (ByteNet, ConvS2S) sidestepped the
+      sequential problem by computing positions in parallel, but the
+      receptive field still grew slowly with depth. Distant tokens
+      either took many layers to interact, or required dilations and
+      tricks. Path length between far positions remained <code>O(log n)</code>
+      at best.
+    </p>
+    <p>
+      The 2017 paper proposed a third option. Drop recurrence. Drop
+      convolution. Connect every position to every other position in
+      one layer through attention, and let the model decide which
+      connections matter. <em>Path length collapses to one. Sequential
+      operations collapse to one.</em> Computational complexity moves
+      from <code>O(n &middot; d&sup2;)</code> for a recurrent layer to
+      <code>O(n&sup2; &middot; d)</code> for self-attention, which is
+      a win whenever <code>n &lt; d</code>. For typical sentences
+      encoded with <code>d = 512</code>, that is essentially always.
+    </p>
+  </div>
+
+  <div class="att-receipts" aria-label="Section I receipts">
+    <div class="att-receipts-head">Receipts &middot; &sect; I</div>
+    <dl>
+      <dt>Self-attention complexity / layer</dt><dd>O(n&sup2; &middot; d)</dd>
+      <dt>Recurrent complexity / layer</dt><dd>O(n &middot; d&sup2;)</dd>
+      <dt>Convolutional complexity / layer</dt><dd>O(k &middot; n &middot; d&sup2;)</dd>
+      <dt>Self-attention sequential ops</dt><dd>O(1)</dd>
+      <dt>Recurrent sequential ops</dt><dd>O(n)</dd>
+      <dt>Self-attention max path length</dt><dd>O(1)</dd>
+      <dt>Recurrent max path length</dt><dd>O(n)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — SCALED DOT-PRODUCT ATTENTION (INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-section" id="dot-product">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>TEST. 07.2 &middot; Scaled dot-product attention</span>
+  </h2>
+  <div class="att-section-head">
+    <h2>One equation. <span class="att-section-italic">Hover any row to feel it.</span></h2>
+  </div>
+
+  <div class="att-eq" aria-label="Scaled dot-product attention equation">
+    Attention(<em>Q, K, V</em>) = softmax(<em>QK</em><sup>T</sup> / &radic;<em>d<sub>k</sub></em>) <em>V</em>
+    <span class="att-eq-caption">Equation (1) &middot; Vaswani et al., 2017</span>
+  </div>
+
+  <div class="att-section-prose">
+    <p class="att-lede">
+      The attention operation takes three inputs. A matrix of queries
+      <code>Q</code>, a matrix of keys <code>K</code>, and a matrix of
+      values <code>V</code>. For every row in <code>Q</code> (one query
+      per token), we compute a dot product against every row in
+      <code>K</code> (one key per token). The result is a matrix of
+      compatibility scores: how much should each query attend to each
+      key.
+    </p>
+    <p>
+      The scores divide by <code>&radic;d<sub>k</sub></code> for a
+      practical reason. Without that scaling, large <code>d<sub>k</sub></code>
+      pushes the softmax into a regime where its gradients vanish. The
+      paper hypothesizes that for components of <code>q</code> and
+      <code>k</code> with mean zero and variance one, their dot product
+      has variance <code>d<sub>k</sub></code>, large enough to saturate
+      softmax at frontier dimension. Dividing by <code>&radic;d<sub>k</sub></code>
+      restores stable gradients.
+    </p>
+    <p>
+      A softmax over each row turns the scaled scores into attention
+      weights that sum to one. Those weights then weight the rows of
+      <code>V</code> to produce the output: each token's representation
+      is now a content-weighted blend of every other token's value.
+      <em>The whole thing is one matrix multiplication, one scale, one
+      softmax, one multiplication.</em>
+    </p>
+  </div>
+
+  <!-- INTERACTIVE: 6×6 attention heatmap on "the cat sat on the mat" -->
+  <div class="att-heatmap-wrap">
+    <div class="att-heatmap-head">FIG. 07.1 &middot; Self-attention weights, hand-tuned for a six-token sentence</div>
+    <div class="att-heatmap-title serif">"the cat sat on the mat"</div>
+    <div class="att-heatmap-sub">Hover or focus a row to see what each query attends to. Each row sums to 1.</div>
+    <div class="att-heatmap-grid" id="att-heatmap" role="grid" aria-label="Attention weights, queries by keys">
+      <!-- JS populates the rest. The corner cell + cols + 6 row groups go here. -->
+    </div>
+    <div class="att-hm-readout" id="att-hm-readout" aria-live="polite">
+      Hover any row. <strong>Each row is one query token</strong> looking at the whole sentence and choosing which keys to attend to. Weights sum to 1.
+    </div>
+  </div>
+
+  <details class="att-curious">
+    <summary>The two attention variants the paper considered</summary>
+    <p>
+      <code>Additive attention</code> uses a feed-forward network with
+      a single hidden layer to compute compatibility. Mathematically
+      similar but slower and less space-efficient in practice, since
+      it cannot be expressed as a single highly-optimized matmul.
+    </p>
+    <p>
+      <code>Multiplicative (dot-product) attention</code> is what the
+      paper uses. Identical to additive at small <code>d<sub>k</sub></code>;
+      faster on the kind of hardware everyone actually trains on. The
+      <code>1 / &radic;d<sub>k</sub></code> scaling is the only twist
+      they had to add to make it work at frontier scale.
+    </p>
+  </details>
+
+  <div class="att-receipts" aria-label="Section II receipts">
+    <div class="att-receipts-head">Receipts &middot; &sect; II</div>
+    <dl>
+      <dt>Compatibility</dt><dd>scaled dot product</dd>
+      <dt>Scaling factor</dt><dd>1 / &radic;d<sub>k</sub></dd>
+      <dt>Normalization</dt><dd>row-wise softmax</dd>
+      <dt>d<sub>k</sub> in base model</dt><dd>64</dd>
+      <dt>d<sub>v</sub> in base model</dt><dd>64</dd>
+      <dt>Base model d<sub>model</sub></dt><dd>512</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — MULTI-HEAD ATTENTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-section" id="multi-head">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>TEST. 07.3 &middot; Multi-head attention</span>
+  </h2>
+  <div class="att-section-head">
+    <h2>One layer becomes <span class="att-section-italic">eight parallel views.</span></h2>
+  </div>
+
+  <div class="att-section-prose">
+    <p class="att-lede">
+      A single attention layer has a problem. It averages information
+      from every position the query attends to. Averaging is fine when
+      every relevant relationship lives in the same representation
+      subspace. It is destructive when different relationships need to
+      be tracked at the same time: subject-verb agreement and
+      preposition binding and anaphora and tense, all braided into a
+      single weighted sum.
+    </p>
+    <p>
+      The fix is to run the attention operation <em>h</em> times in
+      parallel, each in its own learned linear projection of <code>Q</code>,
+      <code>K</code>, and <code>V</code>. Each head sees a different
+      subspace. Each head learns a different attention pattern. The
+      outputs concatenate, then a final linear projection collapses them
+      back to <code>d<sub>model</sub></code>. Because each head operates
+      on <code>d<sub>k</sub> = d<sub>v</sub> = d<sub>model</sub> / h</code>,
+      the total compute stays comparable to single-head with full width.
+    </p>
+    <p>
+      In the base model, <code>h = 8</code>. Eight parallel attention
+      patterns, eight parallel learned projections, one concatenated
+      output. The paper's appendix shows individual heads learning to
+      perform syntactically and semantically distinct jobs without ever
+      being told to. <em>Some attend to the previous token. Some link
+      verbs to their objects. Some specialize in long-range coreference.</em>
+    </p>
+  </div>
+
+  <!-- 8-head strip: each head shows a different attention pattern -->
+  <div class="att-heads">
+    <div class="att-heads-head">FIG. 07.2 &middot; Eight heads, eight patterns &middot; same six-token sentence</div>
+    <div class="att-heads-title serif">What each head learns to look at.</div>
+    <div class="att-heads-strip">
+      <!-- HEAD 1: Self / diagonal -->
+      <div class="att-head"><div class="att-head-label">Head 1<span class="att-head-name">self</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.01"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.03"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 2: Previous token -->
+      <div class="att-head"><div class="att-head-label">Head 2<span class="att-head-name">previous</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.7"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 3: Subject-verb-object -->
+      <div class="att-head"><div class="att-head-label">Head 3<span class="att-head-name">SVO</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.55"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.45"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.40"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.55"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 4: Article to noun -->
+      <div class="att-head"><div class="att-head-label">Head 4<span class="att-head-name">article</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 5: Preposition links -->
+      <div class="att-head"><div class="att-head-label">Head 5<span class="att-head-name">prep</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.45"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.40"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.55"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 6: Long-range / first-token -->
+      <div class="att-head"><div class="att-head-label">Head 6<span class="att-head-name">long-range</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.45"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.55"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.10"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 7: Broad / averaging -->
+      <div class="att-head"><div class="att-head-label">Head 7<span class="att-head-name">broad</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.20"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.20"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.20"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.20"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.20"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.16"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.18"></div></div>
+        </div>
+      </div>
+
+      <!-- HEAD 8: Last-token / EOS -->
+      <div class="att-head"><div class="att-head-label">Head 8<span class="att-head-name">final</span></div>
+        <div class="att-head-mini">
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.65"></div></div>
+          <div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.05"></div></div><div class="att-head-cell"><div class="fill" style="opacity:0.85"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="att-curious">
+    <summary>The math, fully expanded</summary>
+    <p>
+      <code>MultiHead(Q, K, V) = Concat(head&#x2081;, ..., head&#x2095;) W&#x1d3c;</code>
+    </p>
+    <p>
+      where each <code>head&#x1d62; = Attention(QW&#x1d62;&#x1d31;, KW&#x1d62;&#x1d4f;, VW&#x1d62;&#x1d65;)</code>.
+      The four parameter matrices per head are
+      <code>W&#x1d62;&#x1d31; &#8712; &#8477;&#x1d49;&#x1d50;&#x1d52;&#x1d48;&#x1d49;&#x2113; x &#x1d48;&#x2096;</code>,
+      <code>W&#x1d62;&#x1d4f; &#8712; &#8477;&#x1d49;&#x1d50;&#x1d52;&#x1d48;&#x1d49;&#x2113; x &#x1d48;&#x2096;</code>,
+      <code>W&#x1d62;&#x1d65; &#8712; &#8477;&#x1d49;&#x1d50;&#x1d52;&#x1d48;&#x1d49;&#x2113; x &#x1d48;&#x1d65;</code>,
+      and <code>W&#x1d3c; &#8712; &#8477;&#x02b0;&#x1d48;&#x1d65; x &#x1d49;&#x1d50;&#x1d52;&#x1d48;&#x1d49;&#x2113;</code>.
+    </p>
+    <p>
+      With <code>h = 8, d&#x2096; = d&#x1d65; = 64, d&#x2098;&#x2092;&#x1d05;&#x2091;&#x2097; = 512</code>,
+      a single multi-head attention layer has comparable compute to a
+      single full-dimension head. <em>Eight views, one budget.</em>
+    </p>
+  </details>
+
+  <div class="att-receipts" aria-label="Section III receipts">
+    <div class="att-receipts-head">Receipts &middot; &sect; III</div>
+    <dl>
+      <dt>Heads in base model</dt><dd>h = 8</dd>
+      <dt>Per-head dimensions</dt><dd>d<sub>k</sub> = d<sub>v</sub> = 64</dd>
+      <dt>Concatenated output dim</dt><dd>h &middot; d<sub>v</sub> = 512</dd>
+      <dt>Total compute vs single-head</dt><dd>roughly equal</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — THE STACK
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-section" id="stack">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>TEST. 07.4 &middot; Encoder, decoder, repeat six times</span>
+  </h2>
+  <div class="att-section-head">
+    <h2>Two stacks. Six layers each. <span class="att-section-italic">One residual connection at every step.</span></h2>
+  </div>
+
+  <div class="att-section-prose">
+    <p class="att-lede">
+      The full Transformer is two stacks of six identical layers each.
+      The encoder reads the input. The decoder writes the output, one
+      token at a time, conditioned on what it has written and on the
+      encoder's output. Every sub-layer is wrapped in a residual
+      connection followed by layer normalization, so the running
+      representation is the sub-layer's output added to its input. The
+      whole stack outputs vectors of dimension <code>d<sub>model</sub> = 512</code>
+      from start to finish.
+    </p>
+    <p>
+      Three flavors of attention show up. The encoder uses
+      <em>self-attention</em> over its input. The decoder uses
+      <em>masked self-attention</em>, which prevents each position
+      from looking at future positions during training, preserving the
+      auto-regressive property. The decoder also uses
+      <em>encoder-decoder attention</em>, where queries come from the
+      decoder and keys and values come from the encoder's output. That
+      third flavor is how the decoder grounds its generation in the
+      input sentence.
+    </p>
+    <p>
+      Position information is added at the bottom of both stacks via
+      sinusoidal positional encodings. Sine and cosine waves of
+      different frequencies, summed onto the embeddings before any
+      attention happens. The paper found that learned positional
+      embeddings worked equally well, but they preferred the sinusoids
+      because they generalize to sequences longer than anything seen
+      during training.
+    </p>
+  </div>
+
+  <!-- Architecture: encoder stack on left, decoder stack on right -->
+  <div class="att-arch" aria-label="Transformer encoder and decoder stacks">
+    <div class="att-arch-side">
+      <header>
+        Encoder
+        <span class="sub">N = 6 identical layers</span>
+      </header>
+      <div class="att-arch-stack">
+        <div class="att-arch-block">Input embedding<span class="b-tag">d=512</span></div>
+        <div class="att-arch-block is-norm">+ positional encoding (sin/cos)</div>
+        <div class="att-arch-stack-meta">&darr; repeat 6&times; &darr;</div>
+        <div class="att-arch-block is-mha">Multi-head self-attention<span class="b-tag">h=8</span></div>
+        <div class="att-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="att-arch-block is-ffn">Position-wise FFN<span class="b-tag">d_ff=2048</span></div>
+        <div class="att-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="att-arch-stack-meta">&darr; output &darr;</div>
+        <div class="att-arch-block is-attn">Encoder output<span class="b-tag">to decoder K, V</span></div>
+      </div>
+    </div>
+    <div class="att-arch-side">
+      <header>
+        Decoder
+        <span class="sub">N = 6 identical layers, auto-regressive</span>
+      </header>
+      <div class="att-arch-stack">
+        <div class="att-arch-block">Output embedding (shifted right)<span class="b-tag">d=512</span></div>
+        <div class="att-arch-block is-norm">+ positional encoding (sin/cos)</div>
+        <div class="att-arch-stack-meta">&darr; repeat 6&times; &darr;</div>
+        <div class="att-arch-block is-mha">Masked multi-head self-attention<span class="b-tag">causal</span></div>
+        <div class="att-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="att-arch-block is-mha">Encoder-decoder attention<span class="b-tag">Q from dec, K/V from enc</span></div>
+        <div class="att-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="att-arch-block is-ffn">Position-wise FFN<span class="b-tag">d_ff=2048</span></div>
+        <div class="att-arch-block is-norm">Add &amp; LayerNorm</div>
+        <div class="att-arch-stack-meta">&darr; output &darr;</div>
+        <div class="att-arch-block is-attn">Linear &rarr; Softmax<span class="b-tag">next-token probs</span></div>
+      </div>
+    </div>
+  </div>
+
+  <details class="att-curious">
+    <summary>Sinusoidal positional encoding</summary>
+    <p>
+      <code>PE&#x208d;&#x209a;&#x2092;&#x209b;,2i&#x208e; = sin(pos / 10000<sup>2i / d&#x2098;&#x2092;&#x1d05;&#x2091;&#x2097;</sup>)</code>
+    </p>
+    <p>
+      <code>PE&#x208d;&#x209a;&#x2092;&#x209b;,2i+1&#x208e; = cos(pos / 10000<sup>2i / d&#x2098;&#x2092;&#x1d05;&#x2091;&#x2097;</sup>)</code>
+    </p>
+    <p>
+      The wavelengths form a geometric progression from <code>2&pi;</code> to
+      <code>10000 &middot; 2&pi;</code>. The paper hypothesized that this
+      family lets the model attend by relative position easily, since
+      <code>PE&#x209a;&#x2092;&#x209b;+k</code> is a linear function of
+      <code>PE&#x209a;&#x2092;&#x209b;</code> for any fixed <code>k</code>.
+    </p>
+  </details>
+
+  <div class="att-receipts" aria-label="Section IV receipts">
+    <div class="att-receipts-head">Receipts &middot; &sect; IV</div>
+    <dl>
+      <dt>Layers per stack</dt><dd>N = 6</dd>
+      <dt>Model dimension</dt><dd>d<sub>model</sub> = 512</dd>
+      <dt>FFN inner dimension</dt><dd>d<sub>ff</sub> = 2048</dd>
+      <dt>Heads</dt><dd>h = 8</dd>
+      <dt>Per-head dim</dt><dd>d<sub>k</sub> = d<sub>v</sub> = 64</dd>
+      <dt>Sub-layers per encoder layer</dt><dd>2 (attention + FFN)</dd>
+      <dt>Sub-layers per decoder layer</dt><dd>3 (masked self-attn + cross-attn + FFN)</dd>
+      <dt>Around every sub-layer</dt><dd>residual connection + LayerNorm</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — WHY IT WON (INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-section" id="why-it-won">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>TEST. 07.5 &middot; Why it won</span>
+  </h2>
+  <div class="att-section-head">
+    <h2>Slide n. <span class="att-section-italic">Watch the answer flip.</span></h2>
+  </div>
+
+  <div class="att-section-prose">
+    <p class="att-lede">
+      The complexity argument was the most under-appreciated part of
+      the paper at publication. Self-attention costs more per layer in
+      raw FLOPs at long sequence lengths, but it costs much less in
+      <em>sequential</em> operations because every position can be
+      computed at the same time. The maximum path length between any
+      two positions also drops to a constant. The slider below makes
+      that tradeoff legible. Drag <code>n</code> across the typical
+      range of inputs and watch which architecture is cheapest at each
+      length, holding <code>d = 512</code> constant.
+    </p>
+  </div>
+
+  <!-- INTERACTIVE: Complexity slider -->
+  <div class="att-slider-wrap">
+    <div class="att-slider-head">FIG. 07.3 &middot; Per-layer FLOPs by sequence length, d = 512</div>
+    <div class="att-slider-title serif">Self-attention is fewer FLOPs whenever n &lt; d.</div>
+    <div class="att-slider-sub">Drag the slider. Bars are normalized to the most expensive layer at this n. Numbers are absolute FLOPs per layer.</div>
+    <div class="att-slider-control">
+      <input type="range" id="att-slider" min="0" max="100" value="35" aria-label="Sequence length n">
+      <div class="att-slider-readout">
+        n = <span class="att-slider-n" id="att-slider-n">64</span>
+        <span class="att-slider-tag" id="att-slider-tag">A sentence</span>
+      </div>
+    </div>
+    <div class="att-bars">
+      <div class="att-bar-row is-self">
+        <div class="att-bar-label">Self-attention<span class="att-bar-formula">O(n&sup2; &middot; d)</span></div>
+        <div class="att-bar-track"><div class="att-bar-fill"></div></div>
+        <div class="att-bar-value"><span class="att-bar-value-num">2.10 M</span><span class="att-bar-unit">FLOPs</span></div>
+      </div>
+      <div class="att-bar-row is-recurrent">
+        <div class="att-bar-label">Recurrent<span class="att-bar-formula">O(n &middot; d&sup2;)</span></div>
+        <div class="att-bar-track"><div class="att-bar-fill"></div></div>
+        <div class="att-bar-value"><span class="att-bar-value-num">16.78 M</span><span class="att-bar-unit">FLOPs</span></div>
+      </div>
+      <div class="att-bar-row is-conv">
+        <div class="att-bar-label">Convolutional, k=3<span class="att-bar-formula">O(k &middot; n &middot; d&sup2;)</span></div>
+        <div class="att-bar-track"><div class="att-bar-fill"></div></div>
+        <div class="att-bar-value"><span class="att-bar-value-num">50.33 M</span><span class="att-bar-unit">FLOPs</span></div>
+      </div>
+      <div class="att-bar-row is-restricted">
+        <div class="att-bar-label">Restricted self-attn, r=256<span class="att-bar-formula">O(r &middot; n &middot; d)</span></div>
+        <div class="att-bar-track"><div class="att-bar-fill"></div></div>
+        <div class="att-bar-value"><span class="att-bar-value-num">8.39 M</span><span class="att-bar-unit">FLOPs</span></div>
+      </div>
+    </div>
+    <div class="att-slider-note">
+      Around <span>n &asymp; 512</span> is where self-attention loses its FLOP advantage to recurrence. Below that, self-attention wins on FLOPs <em>and</em> on parallelism. Above it, the paper's appendix already proposed restricted self-attention to keep the work linear at very long sequence lengths. We are still living through what happens above 512.
+    </div>
+  </div>
+
+  <div class="att-section-prose">
+    <p>
+      The final ingredient was the result. The Transformer beat every
+      previously reported model, including ensembles, on WMT 2014
+      English-to-German by more than two BLEU. It set a new
+      single-model state of the art on English-to-French, training in
+      <em>three and a half days</em> on eight P100 GPUs, a small
+      fraction of the cost of the previous best. The base model
+      trained for twelve hours and already beat every competitor.
+    </p>
+  </div>
+
+  <div class="att-receipts" aria-label="Section V receipts">
+    <div class="att-receipts-head">Receipts &middot; &sect; V</div>
+    <dl>
+      <dt>BLEU on WMT 2014 EN-DE (big)</dt><dd>28.4 (previous SOTA was 26.36)</dd>
+      <dt>BLEU on WMT 2014 EN-FR (big)</dt><dd>41.8 (single-model SOTA)</dd>
+      <dt>Base model BLEU EN-DE</dt><dd>27.3 (already beat every competitor)</dd>
+      <dt>Training cost (base, FLOPs)</dt><dd>3.3 &times; 10<sup>18</sup></dd>
+      <dt>Training cost (big, FLOPs)</dt><dd>2.3 &times; 10<sup>19</sup></dd>
+      <dt>Hardware</dt><dd>8 NVIDIA P100 GPUs</dd>
+      <dt>Big model training time</dt><dd>3.5 days</dd>
+      <dt>Generalization (WSJ parsing F1)</dt><dd>91.3 (WSJ-only) &middot; 92.7 (semi-supervised)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="att-method" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, what this is and is not</span>
+  </h2>
+
+  <div class="att-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five sections, each pinned to a specific section of the source
+        paper. The two interactive widgets in &sect; II and &sect; V
+        run entirely client-side in vanilla JavaScript. Heatmap
+        weights are hand-tuned to a plausible self-attention pattern;
+        the multi-head strip in &sect; III is illustrative, not the
+        output of an actual trained model.
+      </p>
+      <p>
+        The diagrams are hand-coded SVG and CSS grids, no charting
+        library. The page is static HTML with vanilla JavaScript only
+        for the dateline, the heatmap interaction, and the complexity
+        slider. No analytics beyond the privacy-respecting Cloudflare
+        Web Analytics that ships at the platform level.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Primary: <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., "Attention Is All You Need," NeurIPS 2017</a>. arXiv:1706.03762. Every numerical claim on this page traces to a section of that paper: complexity table to &sect; 4, BLEU scores to Table 2, hyperparameters to &sect; 5 and Table 3, sinusoidal positional encoding to &sect; 3.5.
+      </p>
+      <p>
+        The reference TensorFlow implementation, <a href="https://github.com/tensorflow/tensor2tensor" target="_blank" rel="noopener">tensor2tensor</a>, is what the original authors used. The PyTorch reference is the <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html" target="_blank" rel="noopener">Annotated Transformer</a> from Harvard NLP. Both are excellent reading after this page.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        The heatmap in &sect; II is a plausible self-attention pattern,
+        not the output of a trained model. It is constructed to make
+        syntactic structure visible to a first-time reader, not to
+        reproduce specific behavior of a specific checkpoint.
+      </p>
+      <p>
+        The eight head patterns in &sect; III are stylized. Real
+        attention heads in trained Transformers are messier and the
+        precise jobs each head learns vary across runs and seeds. The
+        paper's appendix shows real examples; the strip on this page
+        compresses the "different heads, different jobs" intuition
+        into eight cartoons.
+      </p>
+      <p>
+        The complexity slider treats <code>d</code> as fixed at 512 and
+        ignores constant factors. Modern models use much larger <code>d</code>
+        and much longer <code>n</code>; the crossover point is more
+        nuanced today than the paper's clean <code>n &lt; d</code> result.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a complete reading of the paper. The training regime,
+        regularization, label smoothing, learning-rate warmup, and
+        constituency parsing experiments are summarized in receipts
+        boxes but not visualized. The original is eight pages and is
+        worth reading directly.
+      </p>
+      <p>
+        Not a working Transformer. Nothing on this page actually
+        translates anything. For a runnable in-browser Transformer,
+        see Hugging Face's transformers.js or the Annotated Transformer.
+        This lab is the diagram, not the engine.
+      </p>
+    </div>
+  </div>
+
+  <div class="att-closing">
+    <p>
+      Eight pages. Six authors. One architecture. The 2017 paper is
+      now nine years old and every frontier large language model on
+      Earth is a direct descendant of its decoder stack. The
+      receipts that mattered were not the BLEU scores. They were the
+      complexity table and the parallelism argument. Recurrence had
+      a hidden tax. Attention removed it.
+    </p>
+    <p>
+      What followed is harder to summarize. Encoder-only Transformers
+      became BERT. Decoder-only Transformers became GPT. The encoder
+      stack faded, the decoder stack ate the world, and the field is
+      still arguing about whether to keep stretching <em>n</em> or
+      replace <em>n&sup2;</em> with something genuinely subquadratic.
+      Two of those arguments are running labs on this site already.
+    </p>
+    <p>
+      All of that started here. <em>Attention is all you need.</em>
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="faq-head">FAQ</h2>
+  <details>
+    <summary>What is the Transformer?</summary>
+    <div class="faq-answer"><p>The Transformer is the neural network architecture introduced in the 2017 paper "Attention Is All You Need" by Vaswani et al. It dispenses with recurrence and convolution entirely, relying only on stacked self-attention and feed-forward layers. It is the architecture every modern large language model is built on, including GPT, Claude, Gemini, and DeepSeek.</p></div>
+  </details>
+  <details>
+    <summary>What is scaled dot-product attention?</summary>
+    <div class="faq-answer"><p>Scaled dot-product attention computes Attention(Q, K, V) = softmax(Q K^T / √d_k) V. The query Q is compared against every key K via a dot product, the result is divided by the square root of the key dimension d_k to keep gradients stable, a softmax converts the scores to weights that sum to one, and the weights are used to take a weighted sum of the value vectors V.</p></div>
+  </details>
+  <details>
+    <summary>Why multi-head attention?</summary>
+    <div class="faq-answer"><p>A single attention layer averages information from all positions, which blurs distinct relationships. Multi-head attention runs h parallel attention layers (h = 8 in the base model), each in its own d_k = d_v = 64 dimensional subspace, and concatenates the results. Different heads learn to attend to different things: subject-verb agreement, anaphora, syntactic role, position. The total computational cost is similar to single-head with full dimensionality.</p></div>
+  </details>
+  <details>
+    <summary>Why is self-attention faster than RNNs at typical sequence lengths?</summary>
+    <div class="faq-answer"><p>Self-attention costs O(n² · d) per layer but only O(1) sequential operations because every position is computed in parallel. Recurrent layers cost O(n · d²) per layer and require O(n) sequential operations. When the sequence length n is smaller than the representation dimension d (as it is for typical sentences encoded with d = 512), self-attention is both fewer FLOPs and dramatically more parallelizable. The maximum path length between any two positions also drops from O(n) to O(1).</p></div>
+  </details>
+  <details>
+    <summary>What were the original Transformer's results?</summary>
+    <div class="faq-answer"><p>On WMT 2014 English-to-German translation, the big Transformer achieved 28.4 BLEU, beating the previous best (including ensembles) by more than two BLEU. On WMT 2014 English-to-French it reached 41.8 BLEU. The base model trained for twelve hours on eight NVIDIA P100 GPUs at a total cost of 3.3 × 10¹⁸ FLOPs, a fraction of competitors. The model also generalized to English constituency parsing without architecture-specific tuning.</p></div>
+  </details>
+</section>
+
+<!-- ── Related labs ───────────────────────────────────────── -->
+<aside class="related-labs" aria-label="Related labs">
+  <div class="mono related-labs-head">Related labs &middot; the post-Transformer arc</div>
+  <ul class="related-labs-list">
+    <li>
+      <a href="/work/deepseek-v4-lab/">
+        <span class="mono related-fig">TEST. 05</span>
+        <span class="serif related-title">Inside DeepSeek-V4</span>
+        <span class="related-line">What a 2026 frontier model keeps from the 2017 design and what it replaces. Compressed sparse attention, hyper-connections, Muon, FP4.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/subquadratic-lab/">
+        <span class="mono related-fig">TEST. 06</span>
+        <span class="serif related-title">Inside Subquadratic</span>
+        <span class="related-line">The latest "post-Transformer" pitch. Real company, $29M seed, claims of 12M context and 1,000× compute reduction. Receipts and red flags.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/llm-learning-lab/">
+        <span class="mono related-fig">FIG. 16</span>
+        <span class="serif related-title">How LLMs Learn</span>
+        <span class="related-line">The four-stage pipeline from a blank Transformer to ChatGPT. Pretraining, supervised fine-tuning, RLHF, evaluation.</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<nav class="lab-nav mono" aria-label="Test navigation">
+  <a href="/work/subquadratic-lab/">&larr; Prev: Inside Subquadratic (TEST. 06)</a>
+  <span class="lab-nav-meta">Test 07 of 07</span>
+  <a href="/">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/attention-lab.js?v=1"></script>
+</body>
+</html>

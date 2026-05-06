@@ -89,9 +89,20 @@ unattended run, which defeats the purpose of this skill.
 6. **Cross-cutting updates** — the new lab must be wired into the
    site's existing nav. See `references/cross-cutting.md` for the
    exact list of files and edits.
-7. **Bump cache-bust versions** on every HTML page that links the
+7. **SEO wiring** — every new lab needs full meta tags, three
+   JSON-LD blocks, a per-lab OG image, a sitemap entry, an
+   llms.txt entry, and a Related-labs aside. See
+   `references/seo.md` for the complete contract; without these,
+   the lab is effectively invisible to Google, Bing, and AI
+   search. Run the helpers in this order:
+   - `python3 notebooks/generate_og_images.py` (per-lab card)
+   - `python3 notebooks/wire_og_images.py` (rewrites og:image lines)
+   Manually update `sitemap.xml` and `llms.txt`. The
+   `cross_cutting_update.py` script does NOT touch these — they
+   need human judgment about priority and section placement.
+8. **Bump cache-bust versions** on every HTML page that links the
    modified `main.css` or `main.js`.
-8. **Run the QA gate**: `python3 .claude/skills/portfolio-lab-creator/scripts/verify_lab.py <slug>`.
+9. **Run the QA gate**: `python3 .claude/skills/portfolio-lab-creator/scripts/verify_lab.py <slug>`.
    This is the contract. It checks:
    - Every JS-referenced ID exists in the HTML
    - Every asset file exists at the expected path
@@ -103,11 +114,17 @@ unattended run, which defeats the purpose of this skill.
    - Homepage labs grid shows the right number of cards
    - JS files pass `node --check`
    - Optional Python notebook (if exists) passes a basic syntax check
-9. **Commit.** Only after the QA gate returns 0. Use a descriptive
-   message that names the FIG number and slug. Do NOT push from this
-   skill on an interactive run — leave that to the user. On a
-   SCHEDULED run, push only if both the QA gate AND a post-commit
-   smoke render in jsdom both pass (see "Scheduled mode" below).
+   - SEO contract: per-lab OG image exists at the expected path,
+     `sitemap.xml` has a `<url>` entry for the new slug, `llms.txt`
+     mentions the new slug, canonical and og:url present, and the
+     description length is 60–160 chars (see `references/seo.md`)
+10. **Commit.** Only after the QA gate returns 0. Use a descriptive
+    message that names the FIG number and slug. Do NOT push from
+    this skill on an interactive run — leave that to the user. On
+    a SCHEDULED run, push only if both the QA gate AND a
+    post-commit smoke render in jsdom both pass (see "Scheduled
+    mode" below). The post-push deploy GitHub Action will ping
+    IndexNow automatically — no manual step required.
 
 ## ML pipeline decision
 
@@ -230,7 +247,9 @@ before writing any new copy.
 - No resume framing. The site is editorial, not corporate. No
   "Download Resume", no recruiter-brief PDFs.
 - No build step, no framework. Pure HTML + vanilla JS + CSS.
-- No analytics. Don't add any.
+- Analytics: Cloudflare Web Analytics is enabled at the Pages
+  level (auto-injected, privacy-respecting, no cookies). Don't
+  add any second analytics provider — one is enough.
 - No new accent colors. Stick to `--paper`, `--ink`, `--ink-soft`,
   `--ink-dim`, `--accent`.
 
@@ -243,6 +262,9 @@ Read the relevant ones before / during your work:
 - `references/conventions.md` — typography, voice, copy rules
 - `references/cross-cutting.md` — exactly which files to edit when
   adding a lab and the exact search/replace operations
+- `references/seo.md` — meta tags, JSON-LD, OG image, sitemap,
+  llms.txt, related-labs aside. Required for every new lab; not
+  optional polish.
 - `references/ml-pipeline.md` — for ML-backed labs: training
   environment, ONNX export contract, methodology schema, browser
   preprocessing parity
@@ -310,9 +332,26 @@ Before declaring done, walk through this list:
       has the new version
 - [ ] If model-backed: methodology.json present, model.onnx loads,
       preprocessing parity check passes
+- [ ] **SEO contract from `references/seo.md`:**
+  - [ ] All meta tags present: canonical, og:type/title/description/
+        image/url/site_name/locale, article:published_time,
+        article:modified_time, twitter:card/title/description/
+        image/site/creator, theme-color
+  - [ ] Three JSON-LD blocks present: BreadcrumbList, Article,
+        WebApplication
+  - [ ] `assets/og/<slug>-lab.png` exists (1200×630) — generated
+        by `notebooks/generate_og_images.py`
+  - [ ] `og:image` and `twitter:image` URLs use
+        `https://www.jakecuth.com/...` (not bare apex)
+  - [ ] `sitemap.xml` has a `<url>` for the new lab
+  - [ ] `llms.txt` has a bullet for the new lab in the right section
+  - [ ] Related-labs aside renders on the new lab and links to 3
+        cluster-mates
+  - [ ] Description meta is 60–160 characters
 - [ ] `scripts/verify_lab.py <slug>` exits 0
 - [ ] On scheduled run: smoke render in jsdom of new lab + homepage
       + one random existing lab all succeed
 - [ ] Commit message includes FIG number, slug, and "[auto]" if
       scheduled
-- [ ] On scheduled run only: `git push` succeeded
+- [ ] On scheduled run only: `git push` succeeded (deploy Action
+      will then auto-ping IndexNow with all sitemap URLs)
