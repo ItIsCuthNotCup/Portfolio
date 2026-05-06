@@ -35,7 +35,7 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="assets/css/main.css?v=41">
-  <link rel="stylesheet" href="assets/css/research-filter.css?v=1">
+  <link rel="stylesheet" href="assets/css/research-filter.css?v=2">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
   <link rel="canonical" href="https://jakecuth.com">
@@ -243,17 +243,17 @@
     </p>
   </div>
 
-  <!-- Sticky toolbar: search + jumps + readout -->
+  <!-- Toolbar: chip jumps + search + count -->
   <div class="research-toolbar">
-    <div class="research-search">
-      <input type="search" id="research-search-input" placeholder="Search by name, topic, or technique..." aria-label="Search labs">
+    <div class="research-chips" id="research-chips" role="tablist" aria-label="Jump to category">
+      <a class="research-chip" href="#models" role="tab">Models <span class="chip-count">8</span></a>
+      <a class="research-chip" href="#stories" role="tab">Stories <span class="chip-count">10</span></a>
+      <a class="research-chip" href="#papers" role="tab">Papers <span class="chip-count">4</span></a>
+      <a class="research-chip" href="#primers" role="tab">Primers <span class="chip-count">14</span></a>
     </div>
-    <nav class="research-jumps" aria-label="Jump to category">
-      <a href="#models">Models <span class="jump-count">8</span></a>
-      <a href="#stories">Stories <span class="jump-count">10</span></a>
-      <a href="#papers">Papers <span class="jump-count">4</span></a>
-      <a href="#primers">Primers <span class="jump-count">14</span></a>
-    </nav>
+    <div class="research-search">
+      <input type="search" id="research-search-input" placeholder="Search labs..." aria-label="Search labs">
+    </div>
     <div class="research-readout" id="research-readout"><strong>36</strong> labs</div>
   </div>
 
