@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside Subquadratic · The SubQ launch, with receipts — Jake Cuth.</title>
+  <meta name="description" content="A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced. The anatomy of a launch that triggered the AI Theranos question.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Inside Subquadratic · The SubQ launch, with receipts">
+  <meta property="og:description" content="A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced.">
+  <meta property="og:image" content="https://jakecuth.com/assets/og/default.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/subquadratic-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/subquadratic-lab.css?v=1">
+
+  <!-- SEO: canonical, twitter card, JSON-LD -->
+  <link rel="canonical" href="https://jakecuth.com/work/subquadratic-lab/">
+  <meta property="article:published_time" content="2026-05-06T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-06T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Inside Subquadratic · The SubQ launch, with receipts">
+  <meta name="twitter:description" content="A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced.">
+  <meta name="twitter:image" content="https://jakecuth.com/assets/og/default.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://jakecuth.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Tests",
+        "item": "https://jakecuth.com/#labs"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Inside Subquadratic",
+        "item": "https://jakecuth.com/work/subquadratic-lab/"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Inside Subquadratic",
+    "description": "A real company, $29M seed, $19.6M GPU contract, and benchmark numbers nobody has reproduced. The anatomy of a launch that triggered the AI Theranos question.",
+    "image": "https://jakecuth.com/og-image.png?v=2",
+    "datePublished": "2026-05-06",
+    "dateModified": "2026-05-06",
+    "url": "https://jakecuth.com/work/subquadratic-lab/",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://jakecuth.com/work/subquadratic-lab/"
+    }
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Subquadratic a real company?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Subquadratic AI is a Miami-based startup that filed an SEC Form D in February 2026 and emerged from stealth on May 5, 2026 with a reported $29M seed at a roughly $500M valuation. It has a credentialed CEO and CTO, an active hiring pipeline, an SEC filing on record, and a $19.6M, 24-month GPU rental contract with the NASDAQ-listed Digi Power X. It is not a Theranos-style shell or vaporware fraud. It is a brand-new, unproven, closed-weights lab."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is SubQ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SubQ is the brand name for Subquadratic's first model. The production preview, SubQ 1M-Preview, claims a one-million-token context window. A research configuration is claimed to extend to twelve million tokens, with fifty million targeted for Q4 2026. The architecture is called Subquadratic Selective Attention (SSA), pitched as a content-dependent sparse attention with a selection step that itself is subquadratic."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are the SubQ benchmark numbers real?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Some are third-party verified. The production model's RULER-128K score of 95.0 and MRCR v2 score of 65.9 were confirmed by a single unnamed third party. The bigger numbers (research-mode MRCR v2 of 83.0, the 1,000-times compute reduction at 12M tokens, the 92.1 percent needle-in-a-haystack at 12M) are self-reported, single-run, on a closed model with no public weights, no arXiv paper, and no independent reproduction as of May 2026."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is the AI community skeptical of SubQ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three reasons. First, prior subquadratic-attention claims (Mamba, RWKV, Kimi Linear, DeepSeek Sparse Attention) have generally been either truly subquadratic but underperforming at frontier scale, or quadratic in actual implementation. Second, Magic.dev made a structurally identical pitch in August 2024 (one-hundred-million-token context, roughly thousand-times efficiency, more than five hundred million in funding) and has not produced an externally validated model in the twenty-one months since. Third, SubQ's own technical paper acknowledges every benchmark was run only once."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this a hit piece on Subquadratic?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The conclusion of this lab is that Subquadratic is a real, well-funded, recently launched closed-weights AI startup whose benchmark claims are unusually aggressive and have not yet been independently reproduced. It is not a Theranos-style fraud on current evidence, but the published numbers should be treated as marketing pending third-party verification on a public API endpoint or an arXiv paper. The company sits in the 'real company with overhyped claims, reserve judgment' bucket: closer to Magic.dev than to OpenAI or Anthropic."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 06</span> &middot; MMXXVI &middot; INSIDE SUBQUADRATIC</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+        Labs <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/imm-lab/" role="menuitem">Influencer Mix Modeling</a>
+        <a href="/work/productivity-lab/" role="menuitem">The Productivity Mystery</a>
+        <a href="/work/llm-learning-lab/" role="menuitem">How LLMs Learn</a>
+        <a href="/work/churn-lab/" role="menuitem">Churn Model</a>
+        <a href="/work/segmentation-lab/" role="menuitem">Customer Segmentation</a>
+        <a href="/work/reco-lab/" role="menuitem">Recommendation Engine</a>
+        <a href="/work/ab-test-lab/" role="menuitem">A/B Test Simulator</a>
+        <a href="/work/funnel-sim-lab/" role="menuitem">Funnel Simulation</a>
+        <a href="/work/sketch-lab/" role="menuitem">Sketch Recognition</a>
+        <a href="/work/model-picker-lab/" role="menuitem">Model Picker</a>
+        <a href="/work/jobs-lab/" role="menuitem">AI &amp; Jobs</a>
+        <a href="/work/time-use-lab/" role="menuitem">Time-Use Atlas</a>
+        <a href="/work/watchdog-lab/" role="menuitem">Algorithm Watchdog</a>
+        <a href="/work/agi-forecast-lab/" role="menuitem">AGI Horizon</a>
+        <a href="/work/logistic-regression-lab/" role="menuitem">Logistic Regression</a>
+        <a href="/work/model-atlas-lab/" role="menuitem">The Model Atlas</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Tests <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu" role="menu">
+        <a href="/work/escape-velocity-lab/" role="menuitem">Escape Velocity</a>
+        <a href="/work/semiconductor-lab/" role="menuitem">Semiconductor Cartography</a>
+        <a href="/work/tech-predictions-lab/" role="menuitem">Tech Predictions</a>
+        <a href="/work/productivity-predictions-lab/" role="menuitem">Productivity Predictions</a>
+        <a href="/work/deepseek-v4-lab/" role="menuitem">Inside DeepSeek-V4</a>
+        <a href="/work/subquadratic-lab/" class="active" aria-current="page" role="menuitem">Inside Subquadratic <span class="new-pill">NEW</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="sq-main">
+
+<!-- ATTRIBUTION BANNER -->
+<div class="mono sq-attr-banner">
+  <span class="sq-attr-tag">Editorial</span>
+  <span>An anatomy of <strong>Subquadratic / SubQ AI</strong>. Receipts and red flags from the May 5, 2026 launch.</span>
+  <span class="sq-attr-right">Closed weights &middot; No arXiv paper &middot; Reserve judgment</span>
+</div>
+
+<!-- HERO -->
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#labs">Tests</a></li>
+    <li><span aria-current="page">Inside Subquadratic</span></li>
+  </ol>
+</nav>
+<section class="sq-hero">
+  <h2 class="mono section-label">
+    <span class="idx">TEST. 06</span>
+    <span>Inside Subquadratic &middot; The SubQ launch, with receipts</span>
+  </h2>
+  <h1 class="serif big-display sq-title">
+    Real company.<br>
+    <span class="serif-italic" style="color:var(--accent)">Unverified claims.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A new Miami AI lab, twenty-nine million in seed funding, an SEC Form D
+    on file, an eighteen-and-a-half-million-dollar GPU contract on a
+    NASDAQ-listed counterparty, and a launch deck that claims a
+    twelve-million-token context window at a thousandth of frontier
+    compute. None of the eye-popping numbers have been independently
+    reproduced. This page is the receipts.
+  </p>
+  <p class="sq-kicker">
+    On May 5, 2026, Subquadratic emerged from stealth with the first new
+    "post-Transformer" architecture pitch since DeepSeek Sparse Attention.
+    The company is real. The funding is real. The press cycle is real.
+    The benchmark numbers are partially third-party verified, mostly self
+    reported, and entirely run-once. Below: the verifiable, the unverified,
+    and why the AI community is pattern matching this launch to Magic.dev.
+  </p>
+  <div class="mono sq-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; vanilla JS</div></div>
+    <div><div class="label">Sources</div><div class="value">subq.ai &middot; SiliconANGLE &middot; The New Stack &middot; SEC Form D</div></div>
+  </div>
+  <div class="sq-inline-nav">
+    <a href="#company">The company</a> &middot;
+    <a href="#numbers">The numbers</a> &middot;
+    <a href="#architecture">The architecture</a> &middot;
+    <a href="#magic">The Magic.dev parallel</a> &middot;
+    <a href="#smell-test">The smell test</a> &middot;
+    <a href="#methodology">Methodology</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — THE COMPANY
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-section" id="company">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>TEST. 06.1 &middot; The company</span>
+  </h2>
+  <div class="sq-section-head">
+    <h2>What is on file. <span class="sq-section-italic">And what comes with an asterisk.</span></h2>
+  </div>
+
+  <div class="sq-section-prose">
+    <p class="sq-lede">
+      Before any benchmark argument, the threshold question is whether the
+      company exists at all. Subquadratic clears that bar comfortably. It
+      filed an SEC Form D in February 2026, incorporated as Subquadratic
+      AI, headquartered in Miami. It has a CEO with a twenty-five-year
+      operating record, a CTO with a verifiable engineering background, a
+      live careers page on Rippling, and a research presence at AAAI and
+      ICLR 2026. The company is not a shell.
+    </p>
+    <p>
+      The uncomfortable parts are not the existence questions. They are
+      the composition questions. Most of the founding team is not
+      ML-research-credentialed in the usual sense. The lead investors
+      lean consumer and marketplace, not foundation-model. The eleven
+      PhD researchers reportedly on staff are unnamed. Each detail in
+      isolation is innocent. The accumulation is what registers.
+    </p>
+    <p>
+      The honest split is two columns. Real receipts on the left. Real
+      asterisks on the right. <em>Both columns are accurate. Neither
+      cancels the other.</em>
+    </p>
+  </div>
+
+  <div class="sq-twocol">
+    <div class="sq-col-real">
+      <h3>Receipts &middot; verifiable on file</h3>
+      <ul>
+        <li><strong>SEC Form D filed</strong>February 2026. Public record via StreetInsider. Confirms the offering exists.</li>
+        <li><strong>$29M seed round</strong>Reported by The New Stack at a ~$500M valuation. Closed before stealth-exit.</li>
+        <li><strong>CEO Justin Dangel</strong>Twenty-five-year operator. Founded Voter.com (1998), Goji (2008), co-founded Firefly Health and Ready Responders (GV / Founders Fund backed).</li>
+        <li><strong>CTO Alex Whedon</strong>Ex-Meta software engineer. Former Head of Generative AI at TribeAI. NeurIPS / AAAI / ICLR 2026 attendee.</li>
+        <li><strong>$19.6M GPU contract</strong>Twenty-four-month bare-metal Blackwell B300 rental from Digi Power X (NASDAQ: DGXX). Signed April 20, 2026. Effective May 15, 2026. 15% upfront.</li>
+        <li><strong>Live hiring pipeline</strong>Rippling careers page open through May 2026. Roles include technical copywriter, sales, ML research.</li>
+        <li><strong>Research happy hours</strong>Hosted at AAAI 2026 and ICLR 2026 in Rio under the Subquadratic banner before stealth exit.</li>
+      </ul>
+    </div>
+    <div class="sq-col-asterisk">
+      <h3>Asterisks &middot; what's missing</h3>
+      <ul>
+        <li><strong>No ML-research CEO</strong>Justin Dangel's record is healthcare, insurance, consumer. No publication record, no prior AI work.</li>
+        <li><strong>11 PhD researchers, unnamed</strong>Self-reported headcount with backgrounds at Meta, Google, Oxford, Cambridge, ByteDance, Adobe, Microsoft, BYU. Individual identities not publicly enumerated.</li>
+        <li><strong>Investor base is consumer</strong>Lead names: Justin Mateen (Tinder, JAM Fund), Javier Villamizar (ex-SoftBank), Grant Gittlin (Lasagna), Jaclyn Rice Nelson. No a16z, no Sequoia, no Founders Fund, no Index, no Khosla.</li>
+        <li><strong>Closed weights, no arXiv</strong>Will not open-weights "in the near term." A "technical paper" is referenced in marketing but not findable on arXiv as of May 2026.</li>
+        <li><strong>Single third-party verifier</strong>Production benchmarks confirmed by one unnamed third party. The bigger research numbers are self-reported.</li>
+        <li><strong>Stock-moving infra reveal</strong>The Digi Power X contract moved DGXX +19% on announcement. The disclosure benefits both counterparties.</li>
+        <li><strong>"Run once" caveat</strong>Subquadratic's own paper notes each comparator was evaluated a single time per setting "due to high inference cost."</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sq-receipts" aria-label="Section I receipts">
+    <div class="sq-receipts-head">Receipts &middot; &sect; I</div>
+    <dl>
+      <dt>Incorporation</dt><dd>Subquadratic AI &middot; Miami, FL</dd>
+      <dt>SEC Form D filed</dt><dd>February 2026</dd>
+      <dt>Stealth exit</dt><dd>May 5, 2026</dd>
+      <dt>Seed round</dt><dd>$29M &middot; ~$500M valuation (The New Stack)</dd>
+      <dt>Headcount (self-reported)</dt><dd>~11 PhD researchers + execs + sales</dd>
+      <dt>GPU contract</dt><dd>$19.6M &middot; 24 months &middot; Blackwell B300 (DGXX)</dd>
+      <dt>Open weights</dt><dd>None planned in near term</dd>
+      <dt>arXiv paper</dt><dd>Not found as of May 2026</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — THE NUMBERS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-section" id="numbers">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>TEST. 06.2 &middot; The numbers</span>
+  </h2>
+  <div class="sq-section-head">
+    <h2>The headline panel. <span class="sq-section-italic">Then the asterisk on each line.</span></h2>
+  </div>
+
+  <div class="sq-headline" aria-label="Headline benchmark numbers">
+    <div class="sq-headline-cell">
+      <span class="num">12M</span>
+      <span class="label">Token context, research config</span>
+      <span class="tag tag-self">Self-reported</span>
+    </div>
+    <div class="sq-headline-cell">
+      <span class="num">~1000&times;</span>
+      <span class="label">Attention compute reduction at 12M</span>
+      <span class="tag tag-self">Self-reported</span>
+    </div>
+    <div class="sq-headline-cell">
+      <span class="num">92.1%</span>
+      <span class="label">Needle-in-a-haystack at 12M tokens</span>
+      <span class="tag tag-self">Self-reported</span>
+    </div>
+    <div class="sq-headline-cell">
+      <span class="num">65.9</span>
+      <span class="label">MRCR v2 production score</span>
+      <span class="tag">Third-party verified</span>
+    </div>
+  </div>
+
+  <div class="sq-section-prose">
+    <p class="sq-lede">
+      The cluster of numbers above is what triggered the "AI Theranos"
+      reaction on X. Each one sounds extraordinary on first read. Each
+      one carries a different status under inspection. The third-party
+      verifier confirmed two production scores. Everything else, including
+      the most quoted figures, sits in the self-reported, single-run
+      column. That distinction matters more than any individual headline.
+    </p>
+    <p>
+      The cleanest read of the benchmark sheet is a side-by-side bar
+      chart of MRCR v2, the multi-reference long-context retrieval
+      benchmark that frontier models currently disagree on most. SubQ's
+      production score on MRCR v2 (third-party verified) is 65.9. Their
+      research-config score on MRCR v2 (self-reported) is 83.0. The
+      delta between those two numbers (seventeen points on the same
+      benchmark for the same family of models) is itself larger than the
+      gap between most frontier models' end-to-end results.
+    </p>
+    <p>
+      The prior is not that the production number is wrong. The prior is
+      that <em>any seventeen-point self-vs-third-party gap on a
+      reproducible long-context benchmark gets independently reproduced
+      before it is treated as load bearing.</em> No reproduction yet
+      exists.
+    </p>
+  </div>
+
+  <!-- BENCH CHART -->
+  <div class="sq-chart-wrap">
+    <div class="sq-chart-head">FIG. 06.1 &middot; MRCR v2 long-context retrieval scores, by source</div>
+    <div class="sq-chart-title serif">The seventeen-point gap, in one frame.</div>
+    <svg viewBox="0 0 800 380" class="sq-chart-svg" id="sq-bench-chart" aria-label="MRCR v2 scores compared across SubQ research, SubQ production, GPT-5.5, Claude Opus 4.7, Gemini 3.1 Pro">
+      <!-- Y axis -->
+      <line x1="220" y1="40" x2="220" y2="340" class="axis-line"/>
+      <!-- X axis -->
+      <line x1="220" y1="340" x2="780" y2="340" class="axis-line"/>
+
+      <!-- X gridlines (0, 25, 50, 75, 100) -->
+      <line x1="360" y1="40" x2="360" y2="340" class="gridline"/>
+      <line x1="500" y1="40" x2="500" y2="340" class="gridline"/>
+      <line x1="640" y1="40" x2="640" y2="340" class="gridline"/>
+      <line x1="780" y1="40" x2="780" y2="340" class="gridline"/>
+
+      <text x="220" y="358" text-anchor="middle" class="axis-label">0</text>
+      <text x="360" y="358" text-anchor="middle" class="axis-label">25</text>
+      <text x="500" y="358" text-anchor="middle" class="axis-label">50</text>
+      <text x="640" y="358" text-anchor="middle" class="axis-label">75</text>
+      <text x="780" y="358" text-anchor="middle" class="axis-label">100</text>
+      <text x="500" y="376" text-anchor="middle" class="axis-label">MRCR v2 score (higher is better)</text>
+
+      <!-- Row labels and bars. y centers at 70, 130, 190, 250, 310. Bar height 38, anchored from x=220.
+           Width formula: (score / 100) * 560.  e.g. 83 → 464.8, 65.9 → 369, 74 → 414, 32.2 → 180, 26.3 → 147 -->
+
+      <!-- SubQ research 83 -->
+      <text x="210" y="64" text-anchor="end" class="bar-label">SubQ research</text>
+      <text x="210" y="78" text-anchor="end" class="axis-label">self-reported</text>
+      <rect x="220" y="55" width="465" height="32" class="bar-self" data-grow="1"/>
+      <text x="694" y="76" class="bar-label">83.0</text>
+
+      <!-- SubQ production 65.9 -->
+      <text x="210" y="124" text-anchor="end" class="bar-label">SubQ production</text>
+      <text x="210" y="138" text-anchor="end" class="axis-label">third-party verified</text>
+      <rect x="220" y="115" width="369" height="32" class="bar-verified" data-grow="1"/>
+      <text x="598" y="136" class="bar-label">65.9</text>
+
+      <!-- GPT-5.5 74 -->
+      <text x="210" y="184" text-anchor="end" class="bar-label">GPT-5.5</text>
+      <text x="210" y="198" text-anchor="end" class="axis-label">frontier reference</text>
+      <rect x="220" y="175" width="414" height="32" class="bar-frontier" data-grow="1"/>
+      <text x="643" y="196" class="bar-label">74.0</text>
+
+      <!-- Opus 4.7 32.2 -->
+      <text x="210" y="244" text-anchor="end" class="bar-label">Claude Opus 4.7</text>
+      <text x="210" y="258" text-anchor="end" class="axis-label">frontier reference</text>
+      <rect x="220" y="235" width="180" height="32" class="bar-frontier" data-grow="1"/>
+      <text x="409" y="256" class="bar-label">32.2</text>
+
+      <!-- Gemini 3.1 Pro 26.3 -->
+      <text x="210" y="304" text-anchor="end" class="bar-label">Gemini 3.1 Pro</text>
+      <text x="210" y="318" text-anchor="end" class="axis-label">frontier reference</text>
+      <rect x="220" y="295" width="147" height="32" class="bar-frontier" data-grow="1"/>
+      <text x="376" y="316" class="bar-label">26.3</text>
+    </svg>
+    <div class="sq-chart-legend">
+      <span><span class="swatch s-self"></span>SubQ self-reported</span>
+      <span><span class="swatch s-verified"></span>SubQ third-party verified</span>
+      <span><span class="swatch s-frontier"></span>Frontier reference</span>
+    </div>
+  </div>
+
+  <div class="sq-section-prose">
+    <p>
+      Frontier models on MRCR v2 cluster in a wide band. GPT-5.5 leads
+      the named comparators at 74. Claude Opus 4.7 sits at 32.2 and
+      Gemini 3.1 Pro at 26.3, in part because MRCR v2 is unusually hostile
+      to general-purpose long-context behavior. The headline result for
+      SubQ's production model (65.9) is below the top of that band but
+      well above the rest, which is plausible for a long-context-specialized
+      architecture. The headline result for SubQ's research config (83) is
+      nine points above the strongest frontier reference, on a benchmark
+      where the differences between leading models are usually measured in
+      single digits.
+    </p>
+    <p>
+      The four other widely-cited scores carry similar caveats:
+    </p>
+  </div>
+
+  <details class="sq-curious">
+    <summary>The other four scores, with status</summary>
+    <p>
+      <code>RULER 128K = 95.0</code> &middot; production model, third-party
+      verified. Plausible. Frontier models cluster around 94 to 95 at this
+      length; Claude Opus 4.6 reportedly sits at 94.8.
+    </p>
+    <p>
+      <code>RULER 128K = 97.1</code> &middot; research config, self-reported.
+      Above frontier but on a benchmark that is increasingly saturated;
+      not by itself extraordinary.
+    </p>
+    <p>
+      <code>SWE-Bench Verified = 81.8 to 82.4</code> &middot; self-reported,
+      Subquadratic concedes "harness as much as model." The number reflects
+      the agent scaffolding around the model as much as the model itself.
+    </p>
+    <p>
+      <code>NIAH 92.1% at 12M tokens</code> &middot; self-reported.
+      Needle-in-a-haystack is the easiest long-context benchmark by
+      construction; a sparse-attention design that handles position
+      encoding correctly should clear it. Impressive, not extraordinary.
+    </p>
+    <p>
+      <code>52.2x faster than FlashAttention at 1M</code> &middot; speedup
+      claim plausible for sparse vs. dense at 1M. The relevant question
+      is whether quality holds at scale, not the speedup itself.
+    </p>
+    <p>
+      <code>~1000x compute reduction at 12M</code> &middot; self-reported.
+      Mathematically possible if attention is truly linear. Magic.dev
+      claimed almost the same number in 2024 and never delivered an
+      externally validated model.
+    </p>
+  </details>
+
+  <div class="sq-receipts" aria-label="Section II receipts">
+    <div class="sq-receipts-head">Receipts &middot; &sect; II</div>
+    <dl>
+      <dt>RULER 128K (production, third-party)</dt><dd>95.0</dd>
+      <dt>RULER 128K (research, self)</dt><dd>97.1</dd>
+      <dt>MRCR v2 (production, third-party)</dt><dd>65.9</dd>
+      <dt>MRCR v2 (research, self)</dt><dd>83.0</dd>
+      <dt>SWE-Bench Verified (self)</dt><dd>81.8 to 82.4 &middot; "harness as much as model"</dd>
+      <dt>NIAH at 12M tokens (self)</dt><dd>92.1%</dd>
+      <dt>Speedup vs FlashAttention at 1M</dt><dd>52.2&times; (self)</dd>
+      <dt>Run count per benchmark</dt><dd>1</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — THE ARCHITECTURE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-section" id="architecture">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>TEST. 06.3 &middot; The architecture</span>
+  </h2>
+  <div class="sq-section-head">
+    <h2>SSA, in one diagram. <span class="sq-section-italic">And the graveyard around it.</span></h2>
+  </div>
+
+  <div class="sq-paired">
+    <figure>
+      <div class="sq-svg-wrap">
+        <svg viewBox="0 0 320 280" class="sq-svg" aria-label="Dense attention, every query attends to every key">
+          <defs>
+            <pattern id="sq-dot-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="10" cy="10" r="2.6" class="fill"/>
+            </pattern>
+          </defs>
+          <text x="160" y="22" text-anchor="middle" class="label-mono">Keys (N tokens)</text>
+          <text x="22" y="160" text-anchor="middle" class="label-mono" transform="rotate(-90 22 160)">Queries (N tokens)</text>
+          <rect x="50" y="35" width="240" height="240" fill="url(#sq-dot-grid)"/>
+          <rect x="50" y="35" width="240" height="240" class="stroke" stroke-width="1" opacity="0.5"/>
+          <text x="160" y="262" text-anchor="middle" class="label-fig">N x N, every cell active</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>Reference</strong>
+        Dense attention. The 2017 Transformer. Cost grows quadratically
+        with context. At 12M tokens, this is the curve SubQ is claiming
+        to bend by three orders of magnitude.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="sq-svg-wrap">
+        <svg viewBox="0 0 320 280" class="sq-svg" aria-label="Subquadratic Selective Attention, content-dependent sparse selection">
+          <!-- Query at top right -->
+          <circle cx="280" cy="40" r="7" class="accent-fill"/>
+          <text x="280" y="22" text-anchor="middle" class="label-mono">Query</text>
+
+          <!-- Key field: 10 columns of dots, most dim, top-k highlighted -->
+          <g>
+            <text x="30" y="98" class="label-mono">Keys</text>
+            <text x="30" y="112" class="label-fig">N tokens</text>
+            <!-- All keys (dim) -->
+            <g class="fill dim">
+              <circle cx="100" cy="106" r="3"/>
+              <circle cx="120" cy="106" r="3"/>
+              <circle cx="160" cy="106" r="3"/>
+              <circle cx="180" cy="106" r="3"/>
+              <circle cx="200" cy="106" r="3"/>
+              <circle cx="220" cy="106" r="3"/>
+              <circle cx="260" cy="106" r="3"/>
+              <circle cx="280" cy="106" r="3"/>
+            </g>
+            <!-- Selected (top-k, accent) -->
+            <g class="accent-fill">
+              <circle cx="140" cy="106" r="4"/>
+              <circle cx="240" cy="106" r="4"/>
+            </g>
+            <!-- Lines: only from selected -->
+            <g class="accent-stroke" stroke-width="0.8" opacity="0.7">
+              <line x1="140" y1="106" x2="280" y2="40"/>
+              <line x1="240" y1="106" x2="280" y2="40"/>
+            </g>
+          </g>
+
+          <!-- Selector module -->
+          <g>
+            <rect x="80" y="160" width="200" height="40" class="stroke" stroke-width="1" fill="none"/>
+            <text x="180" y="178" text-anchor="middle" class="label-fig">Subquadratic selector</text>
+            <text x="180" y="192" text-anchor="middle" class="label-mono">picks top-k, &lt;O(N&sup2;)</text>
+          </g>
+
+          <!-- Arrow from selector to keys -->
+          <line x1="180" y1="160" x2="180" y2="118" class="accent-stroke" stroke-width="0.8"/>
+          <polygon points="178,118 182,118 180,112" class="accent-fill"/>
+
+          <!-- Bottom note -->
+          <text x="160" y="232" text-anchor="middle" class="label-mono">Both selection and attention</text>
+          <text x="160" y="248" text-anchor="middle" class="label-mono">stay subquadratic in N.</text>
+          <text x="160" y="266" text-anchor="middle" class="label-fig" opacity="0.65">(That is the whole pitch.)</text>
+        </svg>
+      </div>
+      <figcaption>
+        <strong>SubQ pitch</strong>
+        Subquadratic Selective Attention (SSA). A content-dependent
+        sparse-attention design where the selection step itself does
+        not become quadratic. Pure, non-hybrid.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="sq-section-prose">
+    <p class="sq-lede">
+      Sparse attention is not new. Longformer, BigBird, Reformer, and
+      DeepSeek Sparse Attention all narrow the cost of attention by
+      letting each query look at only a subset of keys. The hard part is
+      not "be sparse." The hard part is choosing which keys to keep
+      cheaply enough that the choosing step is itself subquadratic, and
+      keeping quality competitive with dense at frontier scale, and not
+      smuggling a quadratic layer back in to make the whole thing work.
+      Three constraints. Most prior work has hit two.
+    </p>
+    <p>
+      SubQ claims all three. It calls its mechanism "Subquadratic
+      Selective Attention," pitched as content-dependent and pure (no
+      hybrid quadratic layers). If true, it would be genuinely novel and
+      structurally different from the prior families. If not, it is a
+      marketing reframing of well-studied techniques. Without an arXiv
+      preprint or open weights, the public has the marketing but not the
+      mechanism.
+    </p>
+    <p>
+      The reason this matters is that the field has a long ledger of
+      claims that did not survive scrutiny. Mamba and RWKV are linear
+      but underperform dense at frontier scale. Mamba-attention hybrids
+      are quadratic in the limit because of their attention layers. Kimi
+      Linear and DeepSeek Sparse Attention are quadratic in the
+      implementations that actually ship, with only constant-factor
+      speedups. The widely-cited LessWrong post on this topic is the
+      prior that technically literate observers are starting from. SubQ's
+      marketing is essentially a direct rebuttal of that prior.
+      <em>Rebuttals require evidence the public can examine.</em>
+    </p>
+  </div>
+
+  <details class="sq-curious">
+    <summary>The subquadratic-attention graveyard</summary>
+    <p>
+      <code>Mamba (2023)</code> &middot; selective state-space model.
+      Linear in sequence length. Underperforms dense attention at
+      frontier scale. Survives in research but not as a frontier
+      replacement.
+    </p>
+    <p>
+      <code>RWKV</code> &middot; recurrent linear-attention variant.
+      Same story. Not used in any frontier model except as a hybrid.
+    </p>
+    <p>
+      <code>Mamba-attention hybrids</code> &middot; quadratic in the
+      limit, because the attention layers themselves remain quadratic.
+      The "linear" branding describes the part of the model that is
+      not the bottleneck.
+    </p>
+    <p>
+      <code>Kimi Linear</code> &middot; advertised linear, implemented
+      with constant-factor speedups in practice.
+    </p>
+    <p>
+      <code>DeepSeek Sparse Attention</code> &middot; the "indexer trap."
+      Sparsifying attention is straightforward; an indexer that picks
+      which tokens to attend to without itself becoming O(N&sup2;) is
+      not. DSA hit this directly.
+    </p>
+  </details>
+
+  <div class="sq-receipts" aria-label="Section III receipts">
+    <div class="sq-receipts-head">Receipts &middot; &sect; III</div>
+    <dl>
+      <dt>Architecture name</dt><dd>Subquadratic Selective Attention (SSA)</dd>
+      <dt>Type</dt><dd>Content-dependent sparse, non-hybrid</dd>
+      <dt>Selection step</dt><dd>Claimed subquadratic (no "indexer trap")</dd>
+      <dt>Hybrid quadratic layers</dt><dd>None (per marketing)</dd>
+      <dt>Public mechanism</dt><dd>Marketing only &middot; no arXiv preprint</dd>
+      <dt>Open weights</dt><dd>Not planned</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — THE MAGIC.DEV PARALLEL
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-section" id="magic">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>TEST. 06.4 &middot; The Magic.dev parallel</span>
+  </h2>
+  <div class="sq-section-head">
+    <h2>The cautionary tale, <span class="sq-section-italic">side by side.</span></h2>
+  </div>
+
+  <div class="sq-section-prose">
+    <p class="sq-lede">
+      In August 2024, Magic.dev announced a one-hundred-million-token
+      context model called LTM-2-mini, claimed roughly thousand-times
+      efficiency advantage, and raised more than five hundred million
+      dollars including from Eric Schmidt and Jane Street. As of early
+      2026, twenty-one months later, there is no public evidence the
+      model is used outside Magic itself. No externally usable product.
+      No arXiv preprint. No third-party benchmarks. No reproductions.
+    </p>
+    <p>
+      The structural similarity to SubQ's pitch (long context, ~1,000x
+      claim, no open weights, partnership with a GPU provider as the main
+      public proof point, headline numbers no third party can run) is
+      what triggered the "AI Theranos" framing on launch day. The
+      parallel is not a verdict. It is a prior. The two timelines, side
+      by side, make the resemblance hard to miss.
+    </p>
+  </div>
+
+  <div class="sq-timeline">
+    <div class="sq-timeline-head">FIG. 06.2 &middot; Two launches, twenty-one months apart</div>
+    <div class="sq-timeline-title serif">Same shape, same claim cluster.</div>
+    <div class="sq-timeline-grid">
+      <div class="sq-timeline-col">
+        <header>
+          Magic.dev &middot; LTM-2-mini
+          <span class="sub">August 2024 &middot; LTM = "long-term memory"</span>
+        </header>
+        <div class="sq-timeline-step">
+          <div class="when">Aug 2024</div>
+          <div class="what">Magic.dev announces LTM-2-mini at <em>100M token context</em>, with claimed <em>~1,000x efficiency advantage</em>.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">Aug 2024</div>
+          <div class="what">Funding round announced. <em>$500M+ raised</em>. Lead names include Eric Schmidt and Jane Street.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">2024 to 2025</div>
+          <div class="what">No arXiv paper. No open weights. No public API access for independent benchmarking.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">Early 2026</div>
+          <div class="what">Twenty-one months later: no externally validated model in use outside Magic. <em>No reproductions. No leaderboard entries.</em></div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">May 2026</div>
+          <div class="what">The New Stack cites Magic.dev as the cautionary tale for SubQ on launch day.</div>
+        </div>
+      </div>
+
+      <div class="sq-timeline-col">
+        <header>
+          Subquadratic &middot; SubQ 1M-Preview
+          <span class="sub">May 2026 &middot; SSA = "Subquadratic Selective Attention"</span>
+        </header>
+        <div class="sq-timeline-step">
+          <div class="when">Feb 2026</div>
+          <div class="what">SEC Form D filed. Subquadratic AI incorporated, Miami HQ.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">Apr 20, 2026</div>
+          <div class="what">$19.6M, 24-month GPU contract signed with Digi Power X (NASDAQ: DGXX). DGXX moves <em>+19% on the announcement</em>.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">May 5, 2026</div>
+          <div class="what">Stealth exit. Coordinated launch in SiliconANGLE, The New Stack, Glitchwire. <em>$29M seed at ~$500M valuation.</em></div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">May 5, 2026</div>
+          <div class="what">Headline claims: <em>12M context, ~1,000x compute reduction, 92.1% NIAH at 12M, 83 on MRCR v2 research</em>. Each run once.</div>
+        </div>
+        <div class="sq-timeline-step">
+          <div class="when">May 6, 2026</div>
+          <div class="what">No arXiv. No open weights. No leaderboard entries on Artificial Analysis, LiveBench, LMArena. <em>Early access only.</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="sq-curious">
+    <summary>Where the parallel is not exact</summary>
+    <p>
+      Subquadratic is on better footing than Magic.dev was, in three
+      ways. <code>1.</code> Production benchmarks are at least
+      third-party verified, if by a single unnamed party. Magic never
+      offered that. <code>2.</code> The CEO has a long verifiable
+      operating record. Magic.dev's leadership was less established at
+      announcement. <code>3.</code> SubQ is at least planning an API
+      with early-access sign-ups, which gives the public a path to
+      independent reproduction in the medium term. Magic positioned
+      itself as an internal-tool play from the start.
+    </p>
+    <p>
+      The parallel is on the shape of the claims and the public
+      verifiability of those claims, not on the legitimacy of the
+      companies.
+    </p>
+  </details>
+
+  <div class="sq-receipts" aria-label="Section IV receipts">
+    <div class="sq-receipts-head">Receipts &middot; &sect; IV</div>
+    <dl>
+      <dt>Magic.dev announce</dt><dd>August 2024</dd>
+      <dt>Magic.dev claim</dt><dd>100M context &middot; ~1,000x efficiency</dd>
+      <dt>Magic.dev funding</dt><dd>$500M+</dd>
+      <dt>Magic.dev externally validated model</dt><dd>None as of May 2026</dd>
+      <dt>SubQ announce</dt><dd>May 5, 2026</dd>
+      <dt>SubQ claim</dt><dd>12M context &middot; ~1,000x compute reduction</dd>
+      <dt>SubQ funding</dt><dd>$29M seed &middot; ~$500M valuation</dd>
+      <dt>SubQ public reproductions</dt><dd>None as of May 6, 2026</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — THE SMELL TEST
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-section" id="smell-test">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>TEST. 06.5 &middot; The smell test</span>
+  </h2>
+  <div class="sq-section-head">
+    <h2>Each claim, scored. <span class="sq-section-italic">Plausible, suspicious, or implausible.</span></h2>
+  </div>
+
+  <div class="sq-section-prose">
+    <p class="sq-lede">
+      Verdicts below are not allegations. They are read priors. Each
+      claim has a status (third-party verified, self-reported, or
+      single-run only) and a smell-test rating against what is
+      structurally plausible for the architecture being described.
+      Nothing here would be load bearing if the technical paper landed on
+      arXiv tomorrow. As of the file date, it has not.
+    </p>
+  </div>
+
+  <div class="sq-scorecard" role="list">
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark ok">&#x2713;</div>
+      <div class="sq-score-claim">
+        <strong>RULER 128K = <span class="sq-score-num">95.0</span></strong>
+        <p>Production model, third-party verified. RULER is approaching saturation at 128K for top frontier models; a small lead for a long-context-specialized model is believable.</p>
+      </div>
+      <div class="sq-score-tag ok">Plausible</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark ok">&#x2713;</div>
+      <div class="sq-score-claim">
+        <strong>MRCR v2 production = <span class="sq-score-num">65.9</span></strong>
+        <p>Third-party verified. Below GPT-5.5's 74. Internally consistent and structurally plausible for a long-context-specialized architecture beating general-purpose models on the benchmark hardest on them.</p>
+      </div>
+      <div class="sq-score-tag ok">Plausible</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark ok">&#x2713;</div>
+      <div class="sq-score-claim">
+        <strong>52x faster than FlashAttention at 1M</strong>
+        <p>Plausible for a sparse architecture vs. dense FlashAttention at 1M. Speedup is exactly what sparse attention is supposed to do. The relevant question is whether quality holds, not whether the speedup is real.</p>
+      </div>
+      <div class="sq-score-tag ok">Plausible</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark warn">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>MRCR v2 research = <span class="sq-score-num">83.0</span></strong>
+        <p>Self-reported. Nine points above GPT-5.5. The seventeen-point gap from the same team's production score (65.9) is itself wider than most differences between frontier models on the same benchmark. Wants reproduction.</p>
+      </div>
+      <div class="sq-score-tag warn">Suspicious</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark warn">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>SWE-Bench Verified = <span class="sq-score-num">81.8 to 82.4</span></strong>
+        <p>Within two points of frontier. The company concedes the result is "harness as much as model." The score reflects the agentic scaffolding around the model. Plausible as a coding-agent system, not a clean architecture comparison.</p>
+      </div>
+      <div class="sq-score-tag warn">Caveat</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark warn">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>NIAH 92.1% at <span class="sq-score-num">12M tokens</span></strong>
+        <p>Self-reported. Needle-in-a-haystack is the easiest long-context benchmark and is widely considered close to solved at any context if position encoding is correct. 92% at 12M is impressive; not extraordinary for a sparse-attention design.</p>
+      </div>
+      <div class="sq-score-tag warn">Looks better than it is</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark flag">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>~1,000x compute reduction at <span class="sq-score-num">12M</span></strong>
+        <p>Self-reported, single-run, on a closed model with no public weights. Mathematically possible if attention is truly linear, but Magic.dev claimed almost the same number twenty-one months ago and never delivered an externally validated model.</p>
+      </div>
+      <div class="sq-score-tag warn">Magic.dev parallel</div>
+    </div>
+
+    <div class="sq-score-row" role="listitem">
+      <div class="sq-score-mark flag">&#x26A0;</div>
+      <div class="sq-score-claim">
+        <strong>"&lt;5% the cost of Opus" / 50x cheaper at 1M</strong>
+        <p>Marketing-style cost claims dependent on internal pricing, not architectural facts. Cost ratios depend on what you bill for and how you bill it. Useful for headlines, not for engineering decisions.</p>
+      </div>
+      <div class="sq-score-tag warn">Marketing math</div>
+    </div>
+  </div>
+
+  <div class="sq-section-prose">
+    <p>
+      The pattern is consistent. Production-mode, third-party-verified
+      numbers are believable and roughly in line with what you would
+      expect from a long-context specialist. Research-mode, self-reported,
+      single-run numbers are exactly the cluster the field has learned to
+      treat as marketing until a public reproduction lands. <em>Both
+      reads can be true at the same time. They are.</em>
+    </p>
+  </div>
+
+  <div class="sq-receipts" aria-label="Section V receipts">
+    <div class="sq-receipts-head">Receipts &middot; &sect; V</div>
+    <dl>
+      <dt>Plausible (third-party or low-risk)</dt><dd>3 of 8 cited claims</dd>
+      <dt>Suspicious or caveat-bound</dt><dd>5 of 8 cited claims</dd>
+      <dt>Outright implausible on current evidence</dt><dd>0 of 8</dd>
+      <dt>Independent reproductions</dt><dd>None as of May 6, 2026</dd>
+      <dt>arXiv paper</dt><dd>Not found</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="sq-method" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, caveats</span>
+  </h2>
+
+  <div class="sq-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five sections, each pinning a SubQ claim or claim cluster to a
+        verification status: third-party verified, self-reported, or
+        single-run only. The two-column receipts panel in &sect; I, the
+        bench chart in &sect; II, the side-by-side timeline in &sect; IV,
+        and the scorecard in &sect; V are designed to make verification
+        status legible at a glance.
+      </p>
+      <p>
+        The diagrams are hand-coded SVG, no charting library. The page
+        is static HTML with vanilla JavaScript only for the dateline
+        and a one-time bar-chart reveal animation. No analytics. No
+        tracking.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Primary launch coverage: <a href="https://siliconangle.com/" target="_blank" rel="noopener">SiliconANGLE</a> (May 5, 2026) and <a href="https://thenewstack.io/" target="_blank" rel="noopener">The New Stack</a> (Frederic Lardinois, May 5, 2026). SubQ's own page is at <a href="https://subq.ai/introducing-subq" target="_blank" rel="noopener">subq.ai/introducing-subq</a>.
+      </p>
+      <p>
+        Funding and incorporation: SEC Form D Subquadratic AI, Feb 2026, via StreetInsider. GPU contract: <a href="https://www.dgxx.com/" target="_blank" rel="noopener">Digi Power X</a> (NASDAQ: DGXX) press release April 20, 2026, reproduced by Stock Titan, ProactiveInvestors, and Data Center Dynamics. Magic.dev parallel: their public Aug 2024 LTM-2-mini announcement.
+      </p>
+      <p>
+        Subquadratic-attention prior art: the widely-circulated LessWrong post "Debunking claims about subquadratic attention" is the position SubQ's pitch is implicitly rebutting.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        This is a <em>snapshot</em>. The picture could change quickly.
+        An arXiv preprint, an open API, or a public reproduction could
+        land within days and reorder the verdict. Treat the page as a
+        read on the May 5 to 6, 2026 launch window, not a final
+        judgment.
+      </p>
+      <p>
+        Two RULER 128K numbers (95.0 and 97.1) and two SWE-Bench numbers
+        (81.8 and 82.4) appear in coverage; these likely reflect different
+        model configurations (production vs. research), but the public
+        materials do not always clearly disambiguate.
+      </p>
+      <p>
+        The "$500M valuation" comes from one outlet (The New Stack) and
+        is not corroborated by the SEC Form D, which reports the size
+        of the offering but not the valuation directly.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a hit piece. Subquadratic is a real company with a credentialed
+        operating team, real funding, a real GPU contract, and at least
+        partial third-party verification of its production benchmark
+        scores. The objection is to the <em>unverified</em> headline
+        numbers, not to the company's existence or intent.
+      </p>
+      <p>
+        Not a defense either. The published numbers should be treated as
+        marketing pending third-party verification on a public API
+        endpoint or an arXiv paper. As of the file date, only one
+        unnamed third party has confirmed the production scores; the
+        bigger research-mode numbers have no independent check.
+      </p>
+    </div>
+  </div>
+
+  <div class="sq-closing">
+    <p>
+      Real company. Real funding. Real GPUs. Real benchmark numbers
+      under one third-party check. And on top of that: a research-mode
+      configuration, single-run, with claims on context, compute, and
+      retrieval that no outsider can examine.
+    </p>
+    <p>
+      The honest read is the boring one. <em>Subquadratic sits in the
+      "real company, overhyped claims, reserve judgment" bucket.</em>
+      Closer to Magic.dev than to OpenAI or Anthropic. It is not a
+      Theranos-style fraud on current evidence. It is also not yet a
+      frontier AI lab with reproducible breakthroughs. It is somewhere
+      in between, and the next few weeks of independent reproduction (or
+      the absence of it) will decide which way it leans.
+    </p>
+    <p>
+      The launch was loud. The receipts are quiet. Watch the receipts.
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="faq-head">FAQ</h2>
+  <details>
+    <summary>Is Subquadratic a real company?</summary>
+    <div class="faq-answer"><p>Yes. Subquadratic AI is a Miami-based startup that filed an SEC Form D in February 2026 and emerged from stealth on May 5, 2026 with a reported $29M seed at a roughly $500M valuation. It has a credentialed CEO and CTO, an active hiring pipeline, an SEC filing on record, and a $19.6M, 24-month GPU rental contract with the NASDAQ-listed Digi Power X. It is not a Theranos-style shell or vaporware fraud. It is a brand-new, unproven, closed-weights lab.</p></div>
+  </details>
+  <details>
+    <summary>What is SubQ?</summary>
+    <div class="faq-answer"><p>SubQ is the brand name for Subquadratic's first model. The production preview, SubQ 1M-Preview, claims a one-million-token context window. A research configuration is claimed to extend to twelve million tokens, with fifty million targeted for Q4 2026. The architecture is called Subquadratic Selective Attention (SSA), pitched as a content-dependent sparse attention with a selection step that itself is subquadratic.</p></div>
+  </details>
+  <details>
+    <summary>Are the SubQ benchmark numbers real?</summary>
+    <div class="faq-answer"><p>Some are third-party verified. The production model's RULER-128K score of 95.0 and MRCR v2 score of 65.9 were confirmed by a single unnamed third party. The bigger numbers (research-mode MRCR v2 of 83.0, the 1,000-times compute reduction at 12M tokens, the 92.1 percent needle-in-a-haystack at 12M) are self-reported, single-run, on a closed model with no public weights, no arXiv paper, and no independent reproduction as of May 2026.</p></div>
+  </details>
+  <details>
+    <summary>Why is the AI community skeptical of SubQ?</summary>
+    <div class="faq-answer"><p>Three reasons. First, prior subquadratic-attention claims (Mamba, RWKV, Kimi Linear, DeepSeek Sparse Attention) have generally been either truly subquadratic but underperforming at frontier scale, or quadratic in actual implementation. Second, Magic.dev made a structurally identical pitch in August 2024 (one-hundred-million-token context, roughly thousand-times efficiency, more than five hundred million in funding) and has not produced an externally validated model in the twenty-one months since. Third, SubQ's own technical paper acknowledges every benchmark was run only once.</p></div>
+  </details>
+  <details>
+    <summary>Is this a hit piece on Subquadratic?</summary>
+    <div class="faq-answer"><p>No. The conclusion of this lab is that Subquadratic is a real, well-funded, recently launched closed-weights AI startup whose benchmark claims are unusually aggressive and have not yet been independently reproduced. It is not a Theranos-style fraud on current evidence, but the published numbers should be treated as marketing pending third-party verification on a public API endpoint or an arXiv paper. The company sits in the "real company with overhyped claims, reserve judgment" bucket: closer to Magic.dev than to OpenAI or Anthropic.</p></div>
+  </details>
+</section>
+
+<!-- ── Related labs ───────────────────────────────────────── -->
+<aside class="related-labs" aria-label="Related labs">
+  <div class="mono related-labs-head">Related labs</div>
+  <ul class="related-labs-list">
+    <li>
+      <a href="/work/deepseek-v4-lab/">
+        <span class="mono related-fig">TEST. 05</span>
+        <span class="serif related-title">Inside DeepSeek-V4</span>
+        <span class="related-line">The other long-context architecture story. CSA, Muon, FP4. Open weights and a published paper. Useful contrast.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/agi-forecast-lab/">
+        <span class="mono related-fig">FIG. 11</span>
+        <span class="serif related-title">AGI Horizon</span>
+        <span class="related-line">Two hundred fifty AGI predictions plotted on year said vs year targeted. AGI has been "twenty years out" since 1965.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/escape-velocity-lab/">
+        <span class="mono related-fig">TEST. 01</span>
+        <span class="serif related-title">Escape Velocity</span>
+        <span class="related-line">The inputs to AI progress are bending up. Is intelligence following? Six measurable curves.</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<nav class="lab-nav mono" aria-label="Test navigation">
+  <a href="/work/deepseek-v4-lab/">&larr; Prev: Inside DeepSeek-V4 (TEST. 05)</a>
+  <span class="lab-nav-meta">Test 06 of 06</span>
+  <a href="/">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/subquadratic-lab.js?v=1"></script>
+</body>
+</html>
