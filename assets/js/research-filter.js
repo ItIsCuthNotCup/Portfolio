@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════
-   RESEARCH FILTER — homepage chips + search
-   - Single-select category chips
-   - Substring search across name + lab-line + tags
-   - URL hash routing (/#research?cat=ai-economy) for deep links
-     from the masthead and from external links
-   - No history pollution; uses replaceState
-   - Pure DOM filter via classList toggle on .lab-card
+   RESEARCH INDEX — search filter across all bands
+   - One sticky search input filters every card by substring
+   - Bands with zero matches collapse via [hidden]
+   - Atlas callout collapses when its band collapses
+   - Live readout of total visible
+   - Hash routing: /#models, /#stories, /#papers, /#primers scroll
+     to the respective band; /#research scrolls to the index head
    ═══════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -18,82 +18,51 @@
     }
   }
 
-  function parseHash() {
-    // Accept patterns: #research, #research?cat=ai-economy, #research?cat=...&q=...
-    var h = window.location.hash || '';
-    var out = { cat: 'all', q: '' };
-    if (!h.startsWith('#research')) return out;
-    var qIdx = h.indexOf('?');
-    if (qIdx === -1) return out;
-    var query = h.slice(qIdx + 1);
-    query.split('&').forEach(function (kv) {
-      var eq = kv.indexOf('=');
-      if (eq === -1) return;
-      var k = decodeURIComponent(kv.slice(0, eq));
-      var v = decodeURIComponent(kv.slice(eq + 1));
-      if (k === 'cat') out.cat = v;
-      else if (k === 'q') out.q = v;
-    });
-    return out;
-  }
-
-  function writeHash(state) {
-    var parts = [];
-    if (state.cat && state.cat !== 'all') parts.push('cat=' + encodeURIComponent(state.cat));
-    if (state.q) parts.push('q=' + encodeURIComponent(state.q));
-    var hash = '#research' + (parts.length ? '?' + parts.join('&') : '');
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, '', hash);
-    } else {
-      window.location.hash = hash;
-    }
-  }
-
   ready(function init() {
-    var grid = document.getElementById('research-grid');
-    if (!grid) return;
-    var chipsEl = document.getElementById('research-chips');
+    var index = document.getElementById('research');
+    if (!index) return;
     var searchEl = document.getElementById('research-search-input');
     var readoutEl = document.getElementById('research-readout');
     var emptyEl = document.getElementById('research-empty');
-    if (!chipsEl || !searchEl) return;
+    var bands = Array.prototype.slice.call(index.querySelectorAll('.research-band'));
 
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.lab-card'));
+    // Build per-card haystacks (lowercased) for fast substring matching
+    var cards = Array.prototype.slice.call(index.querySelectorAll('.lab-card, .primer-row'));
+    var hay = cards.map(function (c) {
+      var name = (c.querySelector('.lab-name, .primer-name') || {}).textContent || '';
+      var line = (c.querySelector('.lab-line, .primer-line') || {}).textContent || '';
+      var metric = (c.querySelector('.lab-metric') || {}).textContent || '';
+      var fig = (c.querySelector('.lab-fig, .primer-fig') || {}).textContent || '';
+      var tags = c.getAttribute('data-tags') || '';
+      return (name + ' ' + line + ' ' + metric + ' ' + fig + ' ' + tags).toLowerCase();
+    });
     var total = cards.length;
 
-    // Pre-build a haystack per card for fast substring search
-    var hayPerCard = cards.map(function (c) {
-      var name = (c.querySelector('.lab-name') || {}).textContent || '';
-      var line = (c.querySelector('.lab-line') || {}).textContent || '';
-      var metric = (c.querySelector('.lab-metric') || {}).textContent || '';
-      var tags = c.getAttribute('data-tags') || '';
-      return (name + ' ' + line + ' ' + metric + ' ' + tags).toLowerCase();
-    });
-
-    var state = parseHash();
-
     function applyFilter() {
-      var cat = state.cat || 'all';
-      var q = (state.q || '').trim().toLowerCase();
+      var q = (searchEl ? searchEl.value : '').trim().toLowerCase();
       var visible = 0;
+
+      // Toggle each card
       for (var i = 0; i < cards.length; i++) {
-        var card = cards[i];
-        var cardCat = card.getAttribute('data-category') || '';
-        var matchesCat = (cat === 'all') || (cardCat === cat);
-        var matchesQ = !q || hayPerCard[i].indexOf(q) !== -1;
-        var visible_i = matchesCat && matchesQ;
-        card.classList.toggle('is-filtered-out', !visible_i);
-        if (visible_i) visible++;
+        var match = !q || hay[i].indexOf(q) !== -1;
+        cards[i].classList.toggle('is-filtered-out', !match);
+        if (match) visible++;
       }
 
-      // Update chip active state
-      Array.prototype.forEach.call(chipsEl.querySelectorAll('.research-chip'), function (b) {
-        b.classList.toggle('is-active', b.getAttribute('data-cat') === cat);
+      // Collapse bands that have no visible cards (when filtering)
+      bands.forEach(function (band) {
+        if (!q) {
+          band.removeAttribute('hidden');
+          return;
+        }
+        var any = band.querySelector('.lab-card:not(.is-filtered-out), .primer-row:not(.is-filtered-out)');
+        if (any) band.removeAttribute('hidden');
+        else band.setAttribute('hidden', '');
       });
 
-      // Update readout
+      // Readout
       if (readoutEl) {
-        if (q || cat !== 'all') {
+        if (q) {
           readoutEl.innerHTML = '<strong>' + visible + '</strong> of ' + total + ' shown';
         } else {
           readoutEl.innerHTML = '<strong>' + total + '</strong> labs';
@@ -106,42 +75,47 @@
       }
     }
 
-    // Wire chip clicks
-    Array.prototype.forEach.call(chipsEl.querySelectorAll('.research-chip'), function (b) {
-      b.addEventListener('click', function () {
-        state.cat = b.getAttribute('data-cat') || 'all';
-        writeHash(state);
-        applyFilter();
+    if (searchEl) {
+      var t;
+      searchEl.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(applyFilter, 80);
+      });
+    }
+
+    // Initial
+    applyFilter();
+
+    // Smooth scroll for in-page jumps
+    function smoothScrollTo(hash) {
+      var el = document.querySelector(hash);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.querySelectorAll('a[href^="/#"], a[href^="#"]').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      var hashOnly = href.startsWith('#') ? href : (href.startsWith('/#') ? href.slice(1) : '');
+      if (!hashOnly || hashOnly.length < 2) return;
+      // Only intercept if the target exists on this page
+      if (!document.querySelector(hashOnly)) return;
+      a.addEventListener('click', function (e) {
+        var t = document.querySelector(hashOnly);
+        if (!t) return;
+        e.preventDefault();
+        smoothScrollTo(hashOnly);
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', hashOnly);
+        }
       });
     });
 
-    // Wire search input
-    if (state.q) searchEl.value = state.q;
-    var searchTimer;
-    searchEl.addEventListener('input', function () {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(function () {
-        state.q = searchEl.value;
-        writeHash(state);
-        applyFilter();
-      }, 90);
-    });
-
-    // Re-apply on hashchange (e.g., user clicks the masthead Research dropdown)
-    window.addEventListener('hashchange', function () {
-      var next = parseHash();
-      state.cat = next.cat;
-      state.q = next.q;
-      if (searchEl.value !== state.q) searchEl.value = state.q;
-      applyFilter();
-      // Scroll into view if hash points to research
-      if (window.location.hash.indexOf('#research') === 0) {
-        var sec = document.getElementById('research');
-        if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-
-    // Initial apply
-    applyFilter();
+    // Honor hash on load
+    if (window.location.hash && document.querySelector(window.location.hash)) {
+      // Defer to after layout settles
+      setTimeout(function () {
+        smoothScrollTo(window.location.hash);
+      }, 50);
+    }
   });
 })();

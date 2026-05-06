@@ -92,7 +92,7 @@
 <body>
 
 <div id="progress" class="progress"></div>
-<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">FIG. 16</span> &middot; MMXXVI &middot; HOW LLMS LEARN</span></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S06</span> &middot; MMXXVI &middot; HOW LLMS LEARN</span></div>
 <div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
 
 <header class="masthead">
@@ -108,14 +108,12 @@
       <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
         Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
       </button>
-      <div class="nav-dropdown-menu nav-research" role="menu">
+            <div class="nav-dropdown-menu nav-research" role="menu">
         <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">36</span></a>
-        <a href="/#research?cat=inference" role="menuitem">Statistical inference <span class="cat-count">4</span></a>
-        <a href="/#research?cat=visual-ml" role="menuitem">Interactive ML <span class="cat-count">3</span></a>
-        <a href="/#research?cat=ai-economy" role="menuitem">AI &amp; economy <span class="cat-count">10</span></a>
-        <a href="/#research?cat=paper-anatomies" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
-        <a href="/#research?cat=algorithm-primers" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
-        <a href="/#research?cat=shipped" role="menuitem">Shipped builds <span class="cat-count">2</span></a>
+        <a href="/#models" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#stories" role="menuitem">Data stories <span class="cat-count">10</span></a>
+        <a href="/#papers" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#primers" role="menuitem">Algorithm primers <span class="cat-count">14</span></a>
       </div>
     </div>
     <a href="/notes/">Notes</a>
@@ -137,7 +135,7 @@
 </nav>
 <section class="llm-hero">
   <h2 class="mono section-label">
-    <span class="idx">FIG. 16</span>
+    <span class="idx">S06</span>
     <span>How LLMs Learn</span>
   </h2>
   <h1 class="serif big-display llm-title">
@@ -182,7 +180,7 @@
     notable models actually land.
   </p>
   <div class="llm-chart-wrap" id="llm-scaling-wrap">
-    <div class="mono llm-chart-title">FIG. 16.1 &middot; Pretraining loss vs training compute (log–log)</div>
+    <div class="mono llm-chart-title">S06.1 &middot; Pretraining loss vs training compute (log–log)</div>
     <svg id="llm-scaling" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Pretraining loss vs compute, log-log"></svg>
   </div>
@@ -219,7 +217,7 @@
     since 2024 — think before responding.
   </p>
   <div class="llm-chart-wrap" id="llm-stack-wrap">
-    <div class="mono llm-chart-title">FIG. 16.2 &middot; Training stages by compute share, dataset size, and what they teach</div>
+    <div class="mono llm-chart-title">S06.2 &middot; Training stages by compute share, dataset size, and what they teach</div>
     <div id="llm-stack" class="llm-stack-grid"></div>
   </div>
 </section>
@@ -240,7 +238,7 @@
     rare characters.
   </p>
   <div class="llm-chart-wrap" id="llm-vocab-wrap">
-    <div class="mono llm-chart-title">FIG. 16.3 &middot; Vocabulary size by model and year</div>
+    <div class="mono llm-chart-title">S06.3 &middot; Vocabulary size by model and year</div>
     <svg id="llm-vocab" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Vocabulary size over time"></svg>
   </div>
@@ -292,7 +290,7 @@
     </div>
   </div>
   <div class="llm-chart-wrap" id="llm-arch-wrap">
-    <div class="mono llm-chart-title">FIG. 16.4 &middot; Llama 3 70B parameter breakdown</div>
+    <div class="mono llm-chart-title">S06.4 &middot; Llama 3 70B parameter breakdown</div>
     <svg id="llm-arch" viewBox="0 0 1100 280" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Parameter share by component"></svg>
   </div>
@@ -326,7 +324,7 @@
     extrapolation dangerous.
   </p>
   <div class="llm-chart-wrap" id="llm-dynamics-wrap">
-    <div class="mono llm-chart-title">FIG. 16.5 &middot; Public training loss curve — log-step axis</div>
+    <div class="mono llm-chart-title">S06.5 &middot; Public training loss curve — log-step axis</div>
     <svg id="llm-dynamics" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Loss curve over training steps"></svg>
   </div>
@@ -352,7 +350,7 @@
     a continuous metric and the curves smooth out.
   </p>
   <div class="llm-chart-wrap" id="llm-emergence-wrap">
-    <div class="mono llm-chart-title">FIG. 16.6 &middot; Same training run, two metrics — discrete vs continuous</div>
+    <div class="mono llm-chart-title">S06.6 &middot; Same training run, two metrics — discrete vs continuous</div>
     <svg id="llm-emergence" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Discrete vs continuous metric on the same training trajectory"></svg>
   </div>
@@ -386,7 +384,7 @@
     modern frontier models stack several of them in sequence.
   </p>
   <div class="llm-table-wrap" id="llm-alignment-wrap">
-    <div class="mono llm-chart-title">FIG. 16.7 &middot; Methods, what they solve, what they cost</div>
+    <div class="mono llm-chart-title">S06.7 &middot; Methods, what they solve, what they cost</div>
     <div id="llm-alignment" class="llm-alignment"></div>
   </div>
 </section>
@@ -407,7 +405,7 @@
     outpace saturation.
   </p>
   <div class="llm-chart-wrap" id="llm-benchmarks-wrap">
-    <div class="mono llm-chart-title">FIG. 16.8 &middot; Frontier scores on six capability benchmarks, 2020 → 2026</div>
+    <div class="mono llm-chart-title">S06.8 &middot; Frontier scores on six capability benchmarks, 2020 → 2026</div>
     <svg id="llm-benchmarks" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Benchmark trajectories over time"></svg>
   </div>
@@ -542,21 +540,21 @@
     <ul class="related-labs-list">
       <li>
         <a href="/work/sketch-lab/">
-          <span class="mono related-fig">FIG. 06</span>
+          <span class="mono related-fig">M06</span>
           <span class="serif related-title">Sketch Recognition</span>
           <span class="related-line">Draw on the canvas. A small AI model on your laptop guesses what it is, in real time.</span>
         </a>
       </li>
       <li>
         <a href="/work/model-picker-lab/">
-          <span class="mono related-fig">FIG. 07</span>
+          <span class="mono related-fig">M07</span>
           <span class="serif related-title">Model Picker</span>
           <span class="related-line">Ask in plain language. Get a side-by-side of the four AI models that fit your job.</span>
         </a>
       </li>
       <li>
         <a href="/work/logistic-regression-lab/">
-          <span class="mono related-fig">FIG. 12</span>
+          <span class="mono related-fig">A02</span>
           <span class="serif related-title">Logistic Regression</span>
           <span class="related-line">The simplest classifier worth deploying. Watch gradient descent slide a boundary into place.</span>
         </a>
@@ -565,7 +563,7 @@
   </aside>
   <nav class="lab-nav mono" aria-label="Lab navigation">
     <a href="/work/productivity-lab/">&larr; The Productivity Mystery</a>
-    <span>Lab 16 of 16</span>
+    <span>Data story 06 of 10</span>
     <a href="/work/imm-lab/">Influencer Mix Modeling &rarr;</a>
   </nav>
 

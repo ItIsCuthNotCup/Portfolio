@@ -121,7 +121,7 @@
 <body>
 
 <div id="progress" class="progress"></div>
-<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">FIG. 14</span> &middot; MMXXVI &middot; INFLUENCER MIX MODELING</span></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">M08</span> &middot; MMXXVI &middot; INFLUENCER MIX MODELING</span></div>
 <div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
 
 <!-- MASTHEAD -->
@@ -138,14 +138,12 @@
       <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
         Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
       </button>
-      <div class="nav-dropdown-menu nav-research" role="menu">
+            <div class="nav-dropdown-menu nav-research" role="menu">
         <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">36</span></a>
-        <a href="/#research?cat=inference" role="menuitem">Statistical inference <span class="cat-count">4</span></a>
-        <a href="/#research?cat=visual-ml" role="menuitem">Interactive ML <span class="cat-count">3</span></a>
-        <a href="/#research?cat=ai-economy" role="menuitem">AI &amp; economy <span class="cat-count">10</span></a>
-        <a href="/#research?cat=paper-anatomies" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
-        <a href="/#research?cat=algorithm-primers" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
-        <a href="/#research?cat=shipped" role="menuitem">Shipped builds <span class="cat-count">2</span></a>
+        <a href="/#models" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#stories" role="menuitem">Data stories <span class="cat-count">10</span></a>
+        <a href="/#papers" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#primers" role="menuitem">Algorithm primers <span class="cat-count">14</span></a>
       </div>
     </div>
     <a href="/notes/">Notes</a>
@@ -167,7 +165,7 @@
 </nav>
 <section class="imm-hero">
   <h2 class="mono section-label">
-    <span class="idx">FIG. 14</span>
+    <span class="idx">M08</span>
     <span>Influencer Mix Modeling</span>
   </h2>
   <h1 class="serif big-display imm-title">
@@ -218,18 +216,18 @@
   </p>
 
   <div class="imm-chart-wrap" id="imm-revenue-wrap">
-    <div class="mono imm-chart-title">FIG. 14.1 &middot; Weekly revenue, 2024-W01 &rarr; 2025-W52</div>
+    <div class="mono imm-chart-title">M08.1 &middot; Weekly revenue, 2024-W01 &rarr; 2025-W52</div>
     <svg id="imm-revenue" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Weekly revenue over 104 weeks"></svg>
   </div>
 
   <div class="imm-twocol">
     <div>
-      <div class="mono imm-chart-title">FIG. 14.2 &middot; Channel total spend, 2-yr panel</div>
+      <div class="mono imm-chart-title">M08.2 &middot; Channel total spend, 2-yr panel</div>
       <div id="imm-spend-table" class="imm-table-wrap"></div>
     </div>
     <div>
-      <div class="mono imm-chart-title">FIG. 14.3 &middot; Representative SQL — base data pull</div>
+      <div class="mono imm-chart-title">M08.3 &middot; Representative SQL — base data pull</div>
       <details class="imm-sql-block" open>
         <summary class="mono">BigQuery &middot; <code>imm_lab.weekly_panel</code></summary>
 <pre class="imm-sql"><code><span class="sql-c">-- Pull 104 weeks of channel spend + revenue for the modeling dataset.
@@ -308,7 +306,7 @@
     </p>
   </div>
 
-  <div class="mono imm-chart-title">FIG. 14.4 &middot; Sampling diagnostics</div>
+  <div class="mono imm-chart-title">M08.4 &middot; Sampling diagnostics</div>
   <div class="imm-diag-grid" id="imm-diag-grid"></div>
 </section>
 
@@ -328,7 +326,7 @@
   </p>
 
   <div class="imm-chart-wrap" id="imm-contrib-wrap">
-    <div class="mono imm-chart-title">FIG. 14.5 &middot; Channel contribution to total revenue ($M, 2-yr)</div>
+    <div class="mono imm-chart-title">M08.5 &middot; Channel contribution to total revenue ($M, 2-yr)</div>
     <svg id="imm-contrib" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Channel contribution to total revenue with credible intervals"></svg>
   </div>
@@ -487,7 +485,7 @@
     </div>
   </div>
 
-  <div class="mono imm-chart-title" style="margin-top:32px;">FIG. 14.6 &middot; Receipts</div>
+  <div class="mono imm-chart-title" style="margin-top:32px;">M08.6 &middot; Receipts</div>
   <div class="imm-receipts" id="imm-receipts"></div>
 
   <div class="imm-caveats">
@@ -527,21 +525,21 @@
     <ul class="related-labs-list">
       <li>
         <a href="/work/churn-lab/">
-          <span class="mono related-fig">FIG. 01</span>
+          <span class="mono related-fig">M01</span>
           <span class="serif related-title">Churn Model</span>
           <span class="related-line">Finds the customers about to leave. Saves revenue already paid to acquire.</span>
         </a>
       </li>
       <li>
         <a href="/work/segmentation-lab/">
-          <span class="mono related-fig">FIG. 02</span>
+          <span class="mono related-fig">M02</span>
           <span class="serif related-title">Customer Segmentation</span>
           <span class="related-line">Sorts customers by value. Aims spend at the 21% who generate 64% of revenue.</span>
         </a>
       </li>
       <li>
         <a href="/work/reco-lab/">
-          <span class="mono related-fig">FIG. 03</span>
+          <span class="mono related-fig">M03</span>
           <span class="serif related-title">Recommendation Engine</span>
           <span class="related-line">Guesses what they’ll watch next. Every basis point of watch-time is a subscription renewed.</span>
         </a>
@@ -550,7 +548,7 @@
   </aside>
   <nav class="lab-nav mono" aria-label="Lab navigation">
     <a href="/work/segmentation-lab/">&larr; Customer Segmentation</a>
-    <span>Lab 11 of 14</span>
+    <span>Working model 08 of 08</span>
     <a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a>
   </nav>
 

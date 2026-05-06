@@ -1,85 +1,60 @@
 /* ═══════════════════════════════════════════════════════════
-   RESEARCH FILTER — homepage chip bar + search
+   RESEARCH INDEX — homepage band layout
    Loaded only from index.html. No cache-bust on main.css needed.
+
+   Four categories, four bands, each with the typographic register
+   that fits the kind of work it contains:
+     - MODELS    : 4-col uniform grid (M01–M08)
+     - STORIES   : 2-col wider cards   (S01–S10)
+     - PAPERS    : 2x2 generous grid   (P01–P04)
+     - PRIMERS   : print-syllabus list (A01–A13) + ATLAS callout
+
+   Plus a sticky toolbar (search + jumps) that bridges them.
    ═══════════════════════════════════════════════════════════ */
 
-.research-filter {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
+/* ── Section opening: header + intro ──────────────────────── */
+.research-intro {
+  max-width: 720px;
   margin: 0 0 36px;
-  padding: 22px 0;
-  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-  border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-  font-family: 'DM Mono', ui-monospace, monospace;
 }
-
-.research-filter-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 24px;
-  align-items: center;
-}
-
-.research-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.research-chip {
-  appearance: none;
-  border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-  background: transparent;
+.research-intro p {
+  margin-top: 18px;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.55;
   color: var(--ink-soft);
-  padding: 7px 14px;
-  font-family: inherit;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
-  white-space: nowrap;
 }
 
-.research-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.research-chip.is-active {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
-}
-
-.research-chip .cat-count {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 1px 6px;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  background: color-mix(in oklab, var(--ink) 8%, transparent);
-  color: var(--ink-dim);
-  font-variant-numeric: tabular-nums;
-}
-
-.research-chip.is-active .cat-count {
-  background: color-mix(in oklab, var(--paper) 18%, transparent);
-  color: color-mix(in oklab, var(--paper) 75%, transparent);
+/* ── Sticky toolbar: search + jumps + count ───────────────── */
+.research-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  margin: 0 0 56px;
+  padding: 16px 0;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto auto;
+  gap: 28px;
+  align-items: center;
 }
 
 .research-search {
   position: relative;
-  min-width: 280px;
+  min-width: 0;
 }
-
 .research-search input {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
-  padding: 9px 0 9px 22px;
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  padding: 8px 0 8px 22px;
   font-family: 'Newsreader', serif;
   font-style: italic;
   font-weight: 300;
@@ -88,32 +63,28 @@
   outline: none;
   transition: border-color 160ms ease;
 }
-
 .research-search input:focus {
   border-bottom-color: var(--accent);
 }
-
 .research-search input::placeholder {
   color: var(--ink-dim);
   font-style: italic;
 }
-
 .research-search::before {
   content: '';
   position: absolute;
   left: 2px;
   top: 50%;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   margin-top: -7px;
   border: 1.5px solid var(--ink-dim);
   border-radius: 50%;
 }
-
 .research-search::after {
   content: '';
   position: absolute;
-  left: 14px;
+  left: 12px;
   top: 50%;
   margin-top: 0;
   width: 6px;
@@ -122,58 +93,474 @@
   transform: rotate(45deg);
 }
 
+.research-jumps {
+  display: flex;
+  gap: 22px;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.research-jumps a {
+  color: var(--ink-soft);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+.research-jumps a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.research-jumps a .jump-count {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  color: var(--ink-dim);
+  vertical-align: 1px;
+}
+
 .research-readout {
   font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-dim);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
 }
-
 .research-readout strong {
   color: var(--ink);
   font-weight: 500;
 }
 
-/* Empty state when filter matches nothing */
+@media (max-width: 980px) {
+  .research-toolbar {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 14px 0;
+  }
+  .research-jumps { flex-wrap: wrap; gap: 14px; }
+  .research-readout { text-align: left; }
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
 .research-empty {
-  grid-column: 1 / -1;
-  padding: 80px 24px;
+  display: none;
+  margin: 80px auto;
+  max-width: 480px;
   text-align: center;
   font-family: 'Newsreader', serif;
   font-style: italic;
   font-weight: 300;
   font-size: 22px;
+  line-height: 1.4;
   color: var(--ink-dim);
-  display: none;
 }
-
 .research-empty.is-visible { display: block; }
 
-/* Hidden cards (filtered out) */
-.lab-card.is-filtered-out {
-  display: none !important;
+/* ── Band frame ───────────────────────────────────────────── */
+.research-band {
+  margin: 0 0 88px;
+  scroll-margin-top: 80px;  /* compensate for sticky toolbar on jumps */
 }
+.research-band[hidden] { display: none; }
 
-/* The intro block under the masthead, before the chips */
-.research-intro {
+.band-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
   margin-bottom: 36px;
+  max-width: 760px;
+}
+.band-header .band-mark {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.band-header .band-mark .band-mark-count {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 1px 6px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  color: var(--ink-dim);
+  vertical-align: 1px;
+}
+.band-header .band-title {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4.2vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 4px 0 0;
+  text-wrap: balance;
+}
+.band-header .band-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.band-header .band-blurb {
+  margin: 12px 0 0;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 560px;
 }
 
-@media (max-width: 900px) {
-  .research-filter-row {
+/* ── Lab card variants ────────────────────────────────────── */
+/* Base card already styled in main.css under .lab-card.
+   We override per-band to give each category its own register. */
+
+.research-band .lab-card {
+  position: relative;
+  scroll-margin-top: 80px;
+}
+
+/* Cards filtered out by search */
+.lab-card.is-filtered-out { display: none !important; }
+
+/* ── MODELS band: 4-col tight uniform grid ────────────────── */
+.band-grid--models {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.band-grid--models .lab-card {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 22px 24px 24px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  transition: background 200ms ease;
+}
+.band-grid--models .lab-card:hover {
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 4%);
+}
+.band-grid--models .lab-card .lab-fig {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.band-grid--models .lab-card .lab-name {
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  font-weight: 400;
+}
+.band-grid--models .lab-card .lab-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+  flex: 1;
+}
+.band-grid--models .lab-card .lab-metric {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.band-grid--models .lab-card .lab-arrow {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.band-grid--models .lab-card:hover .lab-arrow {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 1100px) {
+  .band-grid--models { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .band-grid--models { grid-template-columns: 1fr; }
+}
+
+/* ── STORIES band: 2-col, wider cards, more lab-line space ─ */
+.band-grid--stories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--ink);
+}
+.band-grid--stories .lab-card {
+  padding: 28px 32px 32px;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  transition: background 200ms ease;
+}
+.band-grid--stories .lab-card:nth-child(odd) {
+  border-right: 1px solid var(--ink);
+}
+.band-grid--stories .lab-card:hover {
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 4%);
+}
+.band-grid--stories .lab-card .lab-fig {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.band-grid--stories .lab-card .lab-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.band-grid--stories .lab-card .lab-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  flex: 1;
+}
+.band-grid--stories .lab-card .lab-metric {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+.band-grid--stories .lab-card .lab-arrow {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.band-grid--stories .lab-card:hover .lab-arrow {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .band-grid--stories { grid-template-columns: 1fr; }
+  .band-grid--stories .lab-card:nth-child(odd) { border-right: none; }
+}
+
+/* ── PAPERS band: 2x2 generous grid, P04 visually punchy ──── */
+.band-grid--papers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.band-grid--papers .lab-card {
+  padding: 36px 40px 40px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  transition: background 200ms ease;
+}
+.band-grid--papers .lab-card:hover {
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 4%);
+}
+.band-grid--papers .lab-card .lab-fig {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.band-grid--papers .lab-card .lab-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+}
+.band-grid--papers .lab-card .lab-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 22px;
+  max-width: 38ch;
+  flex: 1;
+}
+.band-grid--papers .lab-card .lab-metric {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.band-grid--papers .lab-card .lab-arrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.band-grid--papers .lab-card:hover .lab-arrow {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .band-grid--papers { grid-template-columns: 1fr; }
+}
+
+/* ── ATLAS callout: full-width, special ──────────────────── */
+.atlas-callout {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr auto;
+  gap: 28px;
+  align-items: center;
+  padding: 24px 32px;
+  margin-bottom: 36px;
+  border: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--ink) 96%, var(--accent) 4%);
+  color: var(--paper);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  text-decoration: none;
+  transition: background 200ms ease;
+}
+.atlas-callout:hover {
+  background: var(--ink);
+}
+.atlas-callout .atlas-mark {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.atlas-callout .atlas-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.3;
+  color: var(--paper);
+  margin: 0;
+}
+.atlas-callout .atlas-name strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--paper);
+  margin-right: 12px;
+}
+.atlas-callout .atlas-arrow {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 70%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--paper) 30%, transparent);
+  padding-bottom: 2px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.atlas-callout:hover .atlas-arrow {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+@media (max-width: 720px) {
+  .atlas-callout {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 10px;
+    padding: 20px 22px;
   }
-  .research-search { min-width: 0; }
-  .research-chip { font-size: 10px; padding: 6px 10px; letter-spacing: 0.1em; }
 }
 
-/* ── Masthead Research dropdown — wider panel with category counts ── */
+/* ── PRIMERS band: print-syllabus reading list ───────────── */
+.band-list--primers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.band-list--primers > li {
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.band-list--primers > li:nth-child(odd) {
+  border-right: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.primer-row {
+  display: grid;
+  grid-template-columns: 56px minmax(140px, auto) 1fr;
+  gap: 18px;
+  align-items: baseline;
+  padding: 16px 24px;
+  text-decoration: none;
+  transition: background 160ms ease;
+}
+.primer-row:hover {
+  background: color-mix(in oklab, var(--ink) 4%, transparent);
+}
+.primer-row .primer-fig {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.primer-row .primer-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.primer-row .primer-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.primer-row:hover .primer-name { color: var(--accent); }
+@media (max-width: 720px) {
+  .band-list--primers { grid-template-columns: 1fr; }
+  .band-list--primers > li:nth-child(odd) { border-right: none; }
+  .primer-row {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+  }
+  .primer-row .primer-line { grid-column: 1 / -1; padding-left: 66px; }
+}
+
+/* ── Masthead Research dropdown — keep wider panel + counts ── */
 .nav-dropdown-menu.nav-research {
   min-width: 280px;
 }
-
 .nav-dropdown-menu.nav-research .cat-count {
   display: inline-block;
   margin-left: 8px;
@@ -185,7 +572,6 @@
   font-variant-numeric: tabular-nums;
   vertical-align: 1px;
 }
-
 .nav-dropdown-menu.nav-research .nav-research-all {
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
   padding-bottom: 12px;

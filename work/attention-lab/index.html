@@ -136,7 +136,7 @@
 <body>
 
 <div id="progress" class="progress"></div>
-<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">TEST. 07</span> &middot; MMXXVI &middot; ATTENTION IS ALL YOU NEED</span></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">P03</span> &middot; MMXXVI &middot; ATTENTION IS ALL YOU NEED</span></div>
 <div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
 
 <header class="masthead">
@@ -152,14 +152,12 @@
       <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
         Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
       </button>
-      <div class="nav-dropdown-menu nav-research" role="menu">
+            <div class="nav-dropdown-menu nav-research" role="menu">
         <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">36</span></a>
-        <a href="/#research?cat=inference" role="menuitem">Statistical inference <span class="cat-count">4</span></a>
-        <a href="/#research?cat=visual-ml" role="menuitem">Interactive ML <span class="cat-count">3</span></a>
-        <a href="/#research?cat=ai-economy" role="menuitem">AI &amp; economy <span class="cat-count">10</span></a>
-        <a href="/#research?cat=paper-anatomies" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
-        <a href="/#research?cat=algorithm-primers" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
-        <a href="/#research?cat=shipped" role="menuitem">Shipped builds <span class="cat-count">2</span></a>
+        <a href="/#models" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#stories" role="menuitem">Data stories <span class="cat-count">10</span></a>
+        <a href="/#papers" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#primers" role="menuitem">Algorithm primers <span class="cat-count">14</span></a>
       </div>
     </div>
     <a href="/notes/">Notes</a>
@@ -187,7 +185,7 @@
 
 <section class="att-hero">
   <h2 class="mono section-label">
-    <span class="idx">TEST. 07</span>
+    <span class="idx">P03</span>
     <span>The Transformer paper, anatomized</span>
   </h2>
   <h1 class="serif big-display att-title">
@@ -231,7 +229,7 @@
 <section class="att-section" id="why">
   <h2 class="mono section-label">
     <span class="idx">&sect; I</span>
-    <span>TEST. 07.1 &middot; Why attention</span>
+    <span>P03.1 &middot; Why attention</span>
   </h2>
   <div class="att-section-head">
     <h2>Two bottlenecks. <span class="att-section-italic">One paper that removed both.</span></h2>
@@ -291,7 +289,7 @@
 <section class="att-section" id="dot-product">
   <h2 class="mono section-label">
     <span class="idx">&sect; II</span>
-    <span>TEST. 07.2 &middot; Scaled dot-product attention</span>
+    <span>P03.2 &middot; Scaled dot-product attention</span>
   </h2>
   <div class="att-section-head">
     <h2>One equation. <span class="att-section-italic">Hover any row to feel it.</span></h2>
@@ -334,7 +332,7 @@
 
   <!-- INTERACTIVE: 6×6 attention heatmap on "the cat sat on the mat" -->
   <div class="att-heatmap-wrap">
-    <div class="att-heatmap-head">FIG. 07.1 &middot; Self-attention weights, hand-tuned for a six-token sentence</div>
+    <div class="att-heatmap-head">M07.1 &middot; Self-attention weights, hand-tuned for a six-token sentence</div>
     <div class="att-heatmap-title serif">"the cat sat on the mat"</div>
     <div class="att-heatmap-sub">Hover or focus a row to see what each query attends to. Each row sums to 1.</div>
     <div class="att-heatmap-grid" id="att-heatmap" role="grid" aria-label="Attention weights, queries by keys">
@@ -383,7 +381,7 @@
 <section class="att-section" id="multi-head">
   <h2 class="mono section-label">
     <span class="idx">&sect; III</span>
-    <span>TEST. 07.3 &middot; Multi-head attention</span>
+    <span>P03.3 &middot; Multi-head attention</span>
   </h2>
   <div class="att-section-head">
     <h2>One layer becomes <span class="att-section-italic">eight parallel views.</span></h2>
@@ -421,7 +419,7 @@
 
   <!-- 8-head strip: each head shows a different attention pattern -->
   <div class="att-heads">
-    <div class="att-heads-head">FIG. 07.2 &middot; Eight heads, eight patterns &middot; same six-token sentence</div>
+    <div class="att-heads-head">M07.2 &middot; Eight heads, eight patterns &middot; same six-token sentence</div>
     <div class="att-heads-title serif">What each head learns to look at.</div>
     <div class="att-heads-strip">
       <!-- HEAD 1: Self / diagonal -->
@@ -561,7 +559,7 @@
 <section class="att-section" id="stack">
   <h2 class="mono section-label">
     <span class="idx">&sect; IV</span>
-    <span>TEST. 07.4 &middot; Encoder, decoder, repeat six times</span>
+    <span>P03.4 &middot; Encoder, decoder, repeat six times</span>
   </h2>
   <div class="att-section-head">
     <h2>Two stacks. Six layers each. <span class="att-section-italic">One residual connection at every step.</span></h2>
@@ -680,7 +678,7 @@
 <section class="att-section" id="why-it-won">
   <h2 class="mono section-label">
     <span class="idx">&sect; V</span>
-    <span>TEST. 07.5 &middot; Why it won</span>
+    <span>P03.5 &middot; Why it won</span>
   </h2>
   <div class="att-section-head">
     <h2>Slide n. <span class="att-section-italic">Watch the answer flip.</span></h2>
@@ -702,7 +700,7 @@
 
   <!-- INTERACTIVE: Complexity slider -->
   <div class="att-slider-wrap">
-    <div class="att-slider-head">FIG. 07.3 &middot; Per-layer FLOPs by sequence length, d = 512</div>
+    <div class="att-slider-head">M07.3 &middot; Per-layer FLOPs by sequence length, d = 512</div>
     <div class="att-slider-title serif">Self-attention is fewer FLOPs whenever n &lt; d.</div>
     <div class="att-slider-sub">Drag the slider. Bars are normalized to the most expensive layer at this n. Numbers are absolute FLOPs per layer.</div>
     <div class="att-slider-control">
@@ -900,21 +898,21 @@
   <ul class="related-labs-list">
     <li>
       <a href="/work/deepseek-v4-lab/">
-        <span class="mono related-fig">TEST. 05</span>
+        <span class="mono related-fig">P01</span>
         <span class="serif related-title">Inside DeepSeek-V4</span>
         <span class="related-line">What a 2026 frontier model keeps from the 2017 design and what it replaces. Compressed sparse attention, hyper-connections, Muon, FP4.</span>
       </a>
     </li>
     <li>
       <a href="/work/subquadratic-lab/">
-        <span class="mono related-fig">TEST. 06</span>
+        <span class="mono related-fig">P02</span>
         <span class="serif related-title">Inside Subquadratic</span>
         <span class="related-line">The latest "post-Transformer" pitch. Real company, $29M seed, claims of 12M context and 1,000× compute reduction. Receipts and red flags.</span>
       </a>
     </li>
     <li>
       <a href="/work/llm-learning-lab/">
-        <span class="mono related-fig">FIG. 16</span>
+        <span class="mono related-fig">S06</span>
         <span class="serif related-title">How LLMs Learn</span>
         <span class="related-line">The four-stage pipeline from a blank Transformer to ChatGPT. Pretraining, supervised fine-tuning, RLHF, evaluation.</span>
       </a>
@@ -923,9 +921,9 @@
 </aside>
 
 <nav class="lab-nav mono" aria-label="Test navigation">
-  <a href="/work/subquadratic-lab/">&larr; Prev: Inside Subquadratic (TEST. 06)</a>
-  <span class="lab-nav-meta">Test 07 of 08</span>
-  <a href="/work/leworldmodel-lab/">Next: Inside LeWorldModel (TEST. 08) &rarr;</a>
+  <a href="/work/subquadratic-lab/">&larr; Prev: Inside Subquadratic (P02)</a>
+  <span class="lab-nav-meta">Paper 03 of 04</span>
+  <a href="/work/leworldmodel-lab/">Next: Inside LeWorldModel (P04) &rarr;</a>
 </nav>
 
 </main>
