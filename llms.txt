@@ -17,7 +17,7 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M07 · Model Picker](https://jakecuth.com/work/model-picker-lab/): RAG over OpenRouter's 300+ model catalog. Ask in plain language, get a recommendation plus a side-by-side of four models that fit.
 - [M08 · Influencer Mix Modeling](https://jakecuth.com/work/imm-lab/): A working Bayesian Marketing Mix Model for a creator-driven D2C brand. 8 channels, 104 weeks, 200 posterior draws.
 
-## Data stories (S01–S10)
+## Data stories (S01–S11)
 
 Editorial pieces. Real data, one thesis each. The longer reads, with charts that argue.
 
@@ -31,6 +31,7 @@ Editorial pieces. Real data, one thesis each. The longer reads, with charts that
 - [S08 · Semiconductor Cartography](https://jakecuth.com/work/semiconductor-lab/): The geography of the AI chip supply chain. Thirty facilities, seven layers, the chokepoints that could stall the industry. Built with Kimi K2.6.
 - [S09 · Tech Predictions](https://jakecuth.com/work/tech-predictions-lab/): A century of confident technology predictions, scored against what actually shipped.
 - [S10 · The Productivity Paradox](https://jakecuth.com/work/productivity-predictions-lab/): Ninety-one confident, dated, named predictions about when IT and AI will show up in BLS productivity statistics. Built with Kimi K2.6.
+- [S11 · The Skills Surge](https://jakecuth.com/work/claude-skills-lab/): Six months after Anthropic's Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Four hand-coded charts: power-law star distribution, surge timeline, architecture quadrant, and the verbs every skill author opens with.
 
 ## Paper anatomies (P01–P04)
 

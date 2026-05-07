@@ -55,6 +55,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://jakecuth.com/work/claude-skills-lab/</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://jakecuth.com/work/dbscan-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Skills Surge · Six months of Claude Skills, mapped — Jake Cuth.</title>
+  <meta name="description" content="Six months after Anthropic's Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Mapped in four charts.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/claude-skills-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Skills Surge · Six months of Claude Skills, mapped">
+  <meta property="og:description" content="Six months after the Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Mapped in four charts.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/claude-skills-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/claude-skills-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Skills Surge · Six months of Claude Skills, mapped">
+  <meta name="twitter:description" content="Six months after the Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Mapped in four charts.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/claude-skills-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/claude-skills-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "The Skills Surge - Six months of Claude Skills, mapped", "item": "https://jakecuth.com/work/claude-skills-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Skills Surge - Six months of Claude Skills, mapped",
+    "description": "Six months after Anthropic's Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Mapped in four charts.",
+    "image": "https://www.jakecuth.com/assets/og/claude-skills-lab.png?v=1",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "url": "https://jakecuth.com/work/claude-skills-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jakecuth.com/work/claude-skills-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "The Skills Surge - Six months of Claude Skills, mapped",
+    "description": "Six months after the Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Mapped in four charts.",
+    "image": "https://www.jakecuth.com/assets/og/claude-skills-lab.png?v=1",
+    "url": "https://jakecuth.com/work/claude-skills-lab/",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Claude Skills?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Claude Skill is a folder containing a SKILL.md file with YAML frontmatter (name, description, optional disable-model-invocation, allowed-tools) plus a Markdown body. Optional sub-folders are scripts, references, and assets. Anthropic announced the format publicly on October 16, 2025 and released SKILL.md as an open standard on December 18, 2025. By April 2026, the format is supported by Claude Code, Claude.ai, Claude API, OpenAI Codex CLI, Cursor, Gemini CLI, Antigravity, Windsurf, and OpenCode."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How big is the Claude Skills ecosystem?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Six months in: about 17 official skills bundled in anthropics/skills, roughly 22 vendor or partner skill packs from companies including Notion, Cloudflare, Stripe, DuckDB, GSAP, Trail of Bits, HashiCorp, Astral, Sentry, Expo, Microsoft, and Google Labs, plus tens of thousands of community skills aggregated through marketplaces like awesome-skills.com, VoltAgent, Composio, and SkillsMP."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the most popular Claude Skill do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most-installed individual skills are Anthropic's four document-creation skills (docx, pdf, pptx, xlsx) because they are auto-included in every paid Claude.ai account. The most-starred community framework is obra/superpowers (~178k stars), a 20-plus skill bundle covering test-driven development, brainstorming, planning, parallel agents, and systematic debugging."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do most Claude Skills require an API key?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Of Anthropic's 17 official skills, only claude-api and mcp-builder require an Anthropic API key. Of the top 25 community skills, roughly 60 percent are marked no-credentials. The exceptions tend to be SaaS-bridging or multi-model orchestrator skills like Composio connect-apps, Sentry, Cloudflare, and PAL MCP."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SKILL.md becoming a cross-vendor standard?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, early but visible. After Anthropic released the SKILL.md format as an open standard on December 18, 2025, OpenAI Codex CLI, Cursor, Gemini CLI, Antigravity, Windsurf, and OpenCode adopted it. OpenAI is publishing skills in the same format under openai/security-best-practices, openai/sora, openai/spreadsheet, and others. The cross-vendor adoption is real but young; SKILL.md is on track to outlive the immediate Claude Skills marketing wave."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S11</span> &middot; MMXXVI &middot; THE SKILLS SURGE</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">37</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">11</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="cs-main">
+
+<!-- ATTRIBUTION BANNER -->
+<div class="mono cs-attr-banner">
+  <span class="cs-attr-tag">Ecosystem survey</span>
+  <span>Six months of <strong>Claude Skills</strong>, charted from awesome-skills.com, VoltAgent, Composio, sickn33/antigravity, SkillsMP.</span>
+  <span class="cs-attr-right">Star counts: point-in-time, normalized</span>
+</div>
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">The Skills Surge</span></li>
+  </ol>
+</nav>
+
+<section class="cs-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S11</span>
+    <span>Six months of Anthropic Skills</span>
+  </h2>
+  <h1 class="serif big-display cs-title">
+    Claude Skills,<br>
+    <span class="serif-italic" style="color:var(--accent)">mapped.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Anthropic announced Agent Skills on October 16, 2025. Six months
+    later, the ecosystem has seventeen official skills, twenty-two
+    vendor packs, tens of thousands of community skills, and a
+    cross-vendor open standard called SKILL.md. The whole arc fits
+    in two quarters and four charts.
+  </p>
+  <p class="cs-kicker">
+    A skill is a folder with a YAML-fronted Markdown file and optional
+    scripts. The format is so simple that within sixty days of
+    announcement, OpenAI, Cursor, Gemini, Antigravity, Windsurf, and
+    OpenCode all adopted it. Below: the surge timeline, the power-law
+    star distribution, the architectural sweet spot, and the verbs
+    every skill author opens with.
+  </p>
+  <div class="mono cs-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; vanilla JS</div></div>
+    <div><div class="label">Sources</div><div class="value">awesome-skills.com &middot; VoltAgent &middot; Composio &middot; GitHub stars</div></div>
+  </div>
+  <div class="cs-inline-nav">
+    <a href="#why">The arc</a> &middot;
+    <a href="#stars">Power law</a> &middot;
+    <a href="#timeline">Surge timeline</a> &middot;
+    <a href="#quadrant">Architecture</a> &middot;
+    <a href="#verbs">Verbs</a> &middot;
+    <a href="#methodology">Methodology</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — THE ARC
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-section" id="why">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>S11.1 &middot; The arc, in one paragraph</span>
+  </h2>
+  <div class="cs-section-head">
+    <h2>Two quarters. <span class="cs-section-italic">One open standard.</span></h2>
+  </div>
+
+  <div class="cs-headline" aria-label="Headline numbers">
+    <div class="cs-headline-cell">
+      <span class="num">~117k</span>
+      <span class="label">Stars on anthropics/skills</span>
+    </div>
+    <div class="cs-headline-cell">
+      <span class="num">17</span>
+      <span class="label">Official Anthropic skills</span>
+    </div>
+    <div class="cs-headline-cell">
+      <span class="num">~22</span>
+      <span class="label">Vendor / partner skill packs</span>
+    </div>
+    <div class="cs-headline-cell">
+      <span class="num">6 mo.</span>
+      <span class="label">Announce to ecosystem maturity</span>
+    </div>
+  </div>
+
+  <div class="cs-section-prose">
+    <p class="cs-lede">
+      In September 2025, Claude.ai quietly shipped the ability to
+      create Word docs, PDFs, slide decks, and spreadsheets. Few
+      people noticed it was powered by a new internal abstraction.
+      In October, Anthropic announced the abstraction publicly. By
+      December, they had open-sourced the format. By March 2026,
+      Cursor, OpenAI's Codex CLI, Gemini CLI, and three others were
+      shipping skills in the same SKILL.md syntax.
+    </p>
+    <p>
+      A Claude Skill is a folder. Inside it is a SKILL.md file with
+      YAML frontmatter (a <code>name</code>, a <code>description</code>,
+      optional <code>allowed-tools</code>) and a Markdown body. Optional
+      subfolders are <code>scripts/</code>, <code>references/</code>,
+      and <code>assets/</code>. The headline design choice is
+      progressive disclosure: at session start, only the YAML
+      frontmatter loads, costing about a hundred tokens per skill.
+      The Markdown body loads only when a task matches. Bundled files
+      load only when explicitly read. Anthropic's API caps requests at
+      eight skills and eight megabytes per skill.
+    </p>
+    <p>
+      That's the format. The phenomenon is the surge. Three audiences
+      adopted it simultaneously: developers who want workflow
+      orchestration in Claude Code, knowledge workers who want
+      document creation in Claude.ai, and vendors who want their
+      product to be the default tool an agent reaches for.
+      <em>Tens of thousands of skills shipped in the first six
+      months.</em> The four charts below tell the rest of the story.
+    </p>
+  </div>
+
+  <div class="cs-receipts" aria-label="Section I receipts">
+    <div class="cs-receipts-head">Receipts &middot; the launch arc</div>
+    <dl>
+      <dt>Sep 2025</dt><dd>Document creation (docx/pdf/pptx/xlsx) ships in Claude.ai, secretly powered by skills</dd>
+      <dt>Oct 16, 2025</dt><dd>Anthropic publicly announces "Agent Skills" via engineering blog and anthropics/skills repo</dd>
+      <dt>Oct 9, 2025</dt><dd>Jesse Vincent (obra) publishes the Superpowers framework</dd>
+      <dt>Oct 16-18, 2025</dt><dd>Simon Willison's "maybe a bigger deal than MCP" post hits Hacker News #1 for two cycles</dd>
+      <dt>Nov 13, 2025</dt><dd>"Skills Explained" published with progressive-disclosure decision matrices</dd>
+      <dt>Dec 18, 2025</dt><dd>SKILL.md released as an open standard at agentskills.io</dd>
+      <dt>Jan-Mar 2026</dt><dd>Marketplace explosion: Antigravity hits 1,400+, SkillsMP indexes 1.2M+</dd>
+      <dt>Mar 2026</dt><dd>Anthropic Marketplace launches; Skills for Excel and Slides ship</dd>
+      <dt>Apr 2026</dt><dd>anthropics/skills crosses 117k stars; SKILL.md becomes the de facto cross-vendor standard</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — POWER LAW (CHART 1)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-section" id="stars">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>S11.2 &middot; The power law of skill stars</span>
+  </h2>
+  <div class="cs-section-head">
+    <h2>Twenty-five repos. <span class="cs-section-italic">One outlier.</span></h2>
+  </div>
+
+  <div class="cs-section-prose">
+    <p class="cs-lede">
+      Open-source ecosystems are almost always power-law distributed
+      and the Skills ecosystem is no exception. Twenty-five repos
+      account for the lion's share of attention. One of them,
+      obra/superpowers, ranks above Anthropic's own skills repo. That
+      is a meaningful editorial fact: the most-starred Claude Skills
+      project is a community framework, not a first-party release.
+      Hover any bar to see the repo's author class and a one-line
+      note.
+    </p>
+  </div>
+
+  <!-- CHART 1: Power-law bar chart -->
+  <div class="cs-chart-wrap cs-tooltip-host" id="cs-powerlaw-host">
+    <div class="cs-chart-head">FIG. S11.1 &middot; Top 25 repos by GitHub stars (log scale)</div>
+    <div class="cs-chart-title serif">One community repo, one Anthropic repo, then everyone else.</div>
+    <div class="cs-chart-sub">Hover or focus a bar for the author class and a one-line note.</div>
+
+    <svg viewBox="0 0 880 720" class="cs-chart-svg" id="cs-powerlaw-svg" aria-label="Top 25 Claude Skills repos by GitHub stars, log scale">
+      <!-- Y axis (left, vertical) and X axis (bottom) -->
+      <line x1="240" y1="20" x2="240" y2="690" class="axis-line"/>
+      <line x1="240" y1="690" x2="860" y2="690" class="axis-line"/>
+
+      <!-- X gridlines (log scale: 1k, 10k, 100k, 1M). Map: log10(stars) → x.
+           Min 800 stars (log 2.9) → 240; max 200000 (log 5.3) → 860.
+           So scale: x = 240 + (log10(s) - 2.9) * (620 / 2.4) -->
+      <line x1="266" y1="20" x2="266" y2="690" class="gridline"/><text x="266" y="708" class="axis-label" text-anchor="middle">1k</text>
+      <line x1="524" y1="20" x2="524" y2="690" class="gridline"/><text x="524" y="708" class="axis-label" text-anchor="middle">10k</text>
+      <line x1="783" y1="20" x2="783" y2="690" class="gridline"/><text x="783" y="708" class="axis-label" text-anchor="middle">100k</text>
+      <text x="550" y="670" class="axis-label" text-anchor="middle" style="font-size:10.5px">Stars (log scale)</text>
+
+      <!-- 25 rows. Each row: y from 30 to 670, step 26.5.
+           x = 240 + (log10(stars) - 2.9) / 2.4 * 620.
+           Bar height 14, centered on y. -->
+
+      <!-- Row helper coords:
+        y values: 30, 56, 82, 108, 134, 160, 186, 212, 238, 264, 290, 316, 342, 368, 394, 420, 446, 472, 498, 524, 550, 576, 602, 628, 654 -->
+
+      <g data-row data-name="obra/superpowers" data-stars="~178,000" data-author="Community framework" data-note="Jesse Vincent's TDD/brainstorming/planning bundle. The most-starred Skills project on GitHub.">
+        <text x="232" y="34" class="repo-label" text-anchor="end">obra/superpowers</text>
+        <rect class="bar bar-community" x="240" y="23" height="14" width="620"/>
+        <text x="868" y="34" class="repo-stars" text-anchor="end">~178k</text>
+      </g>
+      <g data-row data-name="affaan-m/everything-claude-code" data-stars="~157,000" data-author="Community mega-pack" data-note="Anthropic hackathon winner. 30+ skills, 15+ agents, 30+ commands. (Star count plausible but unverified.)">
+        <text x="232" y="60" class="repo-label" text-anchor="end">affaan-m/everything-claude-code</text>
+        <rect class="bar bar-community" x="240" y="49" height="14" width="613"/>
+        <text x="861" y="60" class="repo-stars" text-anchor="end">~157k</text>
+      </g>
+      <g data-row data-name="anthropics/skills" data-stars="~117,000" data-author="Anthropic Official" data-note="The 17-skill source repo. docx, pdf, pptx, xlsx, frontend-design, mcp-builder, skill-creator, claude-api, and more.">
+        <text x="232" y="86" class="repo-label" text-anchor="end">anthropics/skills</text>
+        <rect class="bar bar-anthropic" x="240" y="75" height="14" width="588"/>
+        <text x="836" y="86" class="repo-stars" text-anchor="end">~117k</text>
+      </g>
+      <g data-row data-name="garrytan/gstack" data-stars="~73,000" data-author="Community mega-pack" data-note="8 opinionated workflows: CEO review, eng planning, code review, ship, QA.">
+        <text x="232" y="112" class="repo-label" text-anchor="end">garrytan/gstack</text>
+        <rect class="bar bar-community" x="240" y="101" height="14" width="558"/>
+        <text x="806" y="112" class="repo-stars" text-anchor="end">~73k</text>
+      </g>
+      <g data-row data-name="thedotmack/claude-mem" data-stars="~58,000" data-author="Community plugin" data-note="Persistent memory across sessions, backed by SQLite + Chroma.">
+        <text x="232" y="138" class="repo-label" text-anchor="end">thedotmack/claude-mem</text>
+        <rect class="bar bar-community" x="240" y="127" height="14" width="538"/>
+        <text x="786" y="138" class="repo-stars" text-anchor="end">~58k</text>
+      </g>
+      <g data-row data-name="shareAI-lab/learn-claude-code" data-stars="~54,000" data-author="Community tutorial" data-note="Tutorial / harness builder for new Claude Code users.">
+        <text x="232" y="164" class="repo-label" text-anchor="end">shareAI-lab/learn-claude-code</text>
+        <rect class="bar bar-community" x="240" y="153" height="14" width="533"/>
+        <text x="781" y="164" class="repo-stars" text-anchor="end">~54k</text>
+      </g>
+      <g data-row data-name="glittercowboy/get-shit-done" data-stars="~54,000" data-author="Community workflow" data-note="Spec-driven dev system. The 'gsd-build' brand.">
+        <text x="232" y="190" class="repo-label" text-anchor="end">glittercowboy/get-shit-done</text>
+        <rect class="bar bar-community" x="240" y="179" height="14" width="533"/>
+        <text x="781" y="190" class="repo-stars" text-anchor="end">~54k</text>
+      </g>
+      <g data-row data-name="ComposioHQ/awesome-claude-skills" data-stars="~46,000" data-author="Vendor / aggregator" data-note="Curated list + connect-apps plugin: 1,000+ SaaS apps via Composio.">
+        <text x="232" y="216" class="repo-label" text-anchor="end">ComposioHQ/awesome-claude-skills</text>
+        <rect class="bar bar-aggregator" x="240" y="205" height="14" width="522"/>
+        <text x="770" y="216" class="repo-stars" text-anchor="end">~46k</text>
+      </g>
+      <g data-row data-name="VoltAgent/awesome-openclaw-skills" data-stars="~46,500" data-author="Aggregator" data-note="5,400+ OpenClaw skills (related ecosystem).">
+        <text x="232" y="242" class="repo-label" text-anchor="end">VoltAgent/awesome-openclaw-skills</text>
+        <rect class="bar bar-aggregator" x="240" y="231" height="14" width="523"/>
+        <text x="771" y="242" class="repo-stars" text-anchor="end">~46.5k</text>
+      </g>
+      <g data-row data-name="farion1231/cc-switch" data-stars="~45,000" data-author="Community tooling" data-note="Cross-platform CLI session manager.">
+        <text x="232" y="268" class="repo-label" text-anchor="end">farion1231/cc-switch</text>
+        <rect class="bar bar-community" x="240" y="257" height="14" width="520"/>
+        <text x="768" y="268" class="repo-stars" text-anchor="end">~45k</text>
+      </g>
+      <g data-row data-name="shanraisshan/claude-code-best-practice" data-stars="~45,000" data-author="Community tutorial" data-note="Hooks, MCP configs, comprehensive guide.">
+        <text x="232" y="294" class="repo-label" text-anchor="end">shanraisshan/claude-code-best-practice</text>
+        <rect class="bar bar-community" x="240" y="283" height="14" width="520"/>
+        <text x="768" y="294" class="repo-stars" text-anchor="end">~45k</text>
+      </g>
+      <g data-row data-name="forrestchang/karpathy-skills" data-stars="~44,000" data-author="Community knowledge" data-note="6 behavioral guidelines from Karpathy.">
+        <text x="232" y="320" class="repo-label" text-anchor="end">forrestchang/karpathy-skills</text>
+        <rect class="bar bar-community" x="240" y="309" height="14" width="518"/>
+        <text x="766" y="320" class="repo-stars" text-anchor="end">~44k</text>
+      </g>
+      <g data-row data-name="sickn33/antigravity-awesome-skills" data-stars="~35,000" data-author="Aggregator" data-note="1,445+ skills cataloged. The largest aggregator by entry count.">
+        <text x="232" y="346" class="repo-label" text-anchor="end">sickn33/antigravity-awesome-skills</text>
+        <rect class="bar bar-aggregator" x="240" y="335" height="14" width="503"/>
+        <text x="751" y="346" class="repo-stars" text-anchor="end">~35k</text>
+      </g>
+      <g data-row data-name="santifer/Career-Ops" data-stars="~34,000" data-author="Community productivity" data-note="14 skills, ATS resume gen, job-search Playwright.">
+        <text x="232" y="372" class="repo-label" text-anchor="end">santifer/Career-Ops</text>
+        <rect class="bar bar-community" x="240" y="361" height="14" width="502"/>
+        <text x="750" y="372" class="repo-stars" text-anchor="end">~34k</text>
+      </g>
+      <g data-row data-name="wshobson/agents" data-stars="~33,700" data-author="Community mega-pack" data-note="73 plugins, 112 agents, 146 skills.">
+        <text x="232" y="398" class="repo-label" text-anchor="end">wshobson/agents</text>
+        <rect class="bar bar-community" x="240" y="387" height="14" width="502"/>
+        <text x="750" y="398" class="repo-stars" text-anchor="end">~33.7k</text>
+      </g>
+      <g data-row data-name="JuliusBrussee/Caveman" data-stars="~33,000" data-author="Community meta" data-note="Token-saving prompt skill.">
+        <text x="232" y="424" class="repo-label" text-anchor="end">JuliusBrussee/Caveman</text>
+        <rect class="bar bar-community" x="240" y="413" height="14" width="500"/>
+        <text x="748" y="424" class="repo-stars" text-anchor="end">~33k</text>
+      </g>
+      <g data-row data-name="musistudio/claude-code-router" data-stars="~32,000" data-author="Community tooling" data-note="Route requests to multiple LLM providers.">
+        <text x="232" y="450" class="repo-label" text-anchor="end">musistudio/claude-code-router</text>
+        <rect class="bar bar-community" x="240" y="439" height="14" width="498"/>
+        <text x="746" y="450" class="repo-stars" text-anchor="end">~32k</text>
+      </g>
+      <g data-row data-name="ruvnet/ruflo" data-stars="~32,000" data-author="Community orchestrator" data-note="60+ agents + swarms framework.">
+        <text x="232" y="476" class="repo-label" text-anchor="end">ruvnet/ruflo</text>
+        <rect class="bar bar-community" x="240" y="465" height="14" width="498"/>
+        <text x="746" y="476" class="repo-stars" text-anchor="end">~32k</text>
+      </g>
+      <g data-row data-name="Yeachan-Heo/oh-my-claudecode" data-stars="~29,000" data-author="Community orchestrator" data-note="Multi-agent tmux orchestration.">
+        <text x="232" y="502" class="repo-label" text-anchor="end">Yeachan-Heo/oh-my-claudecode</text>
+        <rect class="bar bar-community" x="240" y="491" height="14" width="491"/>
+        <text x="739" y="502" class="repo-stars" text-anchor="end">~29k</text>
+      </g>
+      <g data-row data-name="safishamsi/Graphify" data-stars="~27,000" data-author="Community single-skill" data-note="Knowledge graph from any folder of code/docs/papers.">
+        <text x="232" y="528" class="repo-label" text-anchor="end">safishamsi/Graphify</text>
+        <rect class="bar bar-community" x="240" y="517" height="14" width="486"/>
+        <text x="734" y="528" class="repo-stars" text-anchor="end">~27k</text>
+      </g>
+      <g data-row data-name="davila7/claude-code-templates" data-stars="~25,000" data-author="Community tooling" data-note="100+ components incl. skills.">
+        <text x="232" y="554" class="repo-label" text-anchor="end">davila7/claude-code-templates</text>
+        <rect class="bar bar-community" x="240" y="543" height="14" width="481"/>
+        <text x="729" y="554" class="repo-stars" text-anchor="end">~25k</text>
+      </g>
+      <g data-row data-name="BloopAI/Vibe-Kanban" data-stars="~25,000" data-author="Community workflow" data-note="Kanban orchestration of multi-agent tasks.">
+        <text x="232" y="580" class="repo-label" text-anchor="end">BloopAI/Vibe-Kanban</text>
+        <rect class="bar bar-community" x="240" y="569" height="14" width="481"/>
+        <text x="729" y="580" class="repo-stars" text-anchor="end">~25k</text>
+      </g>
+      <g data-row data-name="kepano/obsidian-skills" data-stars="~24,000" data-author="Vendor (Obsidian CEO)" data-note="Markdown, Bases, JSON Canvas, Defuddle, CLI.">
+        <text x="232" y="606" class="repo-label" text-anchor="end">kepano/obsidian-skills</text>
+        <rect class="bar bar-vendor" x="240" y="595" height="14" width="478"/>
+        <text x="726" y="606" class="repo-stars" text-anchor="end">~24k</text>
+      </g>
+      <g data-row data-name="SuperClaude-Org/SuperClaude_Framework" data-stars="~22,300" data-author="Community mega-pack" data-note="30 commands, 16 agents, 7 modes, 8 MCPs.">
+        <text x="232" y="632" class="repo-label" text-anchor="end">SuperClaude-Org/SuperClaude_Framework</text>
+        <rect class="bar bar-community" x="240" y="621" height="14" width="473"/>
+        <text x="721" y="632" class="repo-stars" text-anchor="end">~22.3k</text>
+      </g>
+      <g data-row data-name="mvanhorn/last30days" data-stars="~22,000" data-author="Community single-skill" data-note="Reddit + X 30-day research skill.">
+        <text x="232" y="658" class="repo-label" text-anchor="end">mvanhorn/last30days</text>
+        <rect class="bar bar-community" x="240" y="647" height="14" width="471"/>
+        <text x="719" y="658" class="repo-stars" text-anchor="end">~22k</text>
+      </g>
+    </svg>
+
+    <div class="cs-chart-legend">
+      <span><span class="swatch cs-legend-anthropic"></span>Anthropic Official</span>
+      <span><span class="swatch cs-legend-vendor"></span>Vendor / Partner</span>
+      <span><span class="swatch cs-legend-community"></span>Community</span>
+      <span><span class="swatch cs-legend-aggregator"></span>Aggregator</span>
+    </div>
+  </div>
+
+  <details class="cs-curious">
+    <summary>About the star counts</summary>
+    <p>
+      Aggregator sites disagree by 30%+ on the same day because some
+      count parent-monorepo stars while others count downstream forks.
+      For consistency, this chart cites GitHub-direct numbers where
+      available and aggregator estimates otherwise. Numbers above
+      150k (everything-claude-code, superpowers) are directionally
+      accurate but should be verified against the GitHub GraphQL API
+      at a fixed timestamp before any production use.
+    </p>
+    <p>
+      Note also that <code>anthropics/skills</code> is one repo with
+      seventeen skills inside; <code>obra/superpowers</code> is one
+      repo with twenty-plus skills inside. Reporting them as single
+      bars understates skill-count density. The honest framing is
+      that two repositories carry the dominant share of community
+      attention.
+    </p>
+  </details>
+
+  <div class="cs-receipts" aria-label="Section II receipts">
+    <div class="cs-receipts-head">Receipts &middot; &sect; II</div>
+    <dl>
+      <dt>Top community repo</dt><dd>obra/superpowers, ~178k stars</dd>
+      <dt>Top Anthropic repo</dt><dd>anthropics/skills, ~117k stars</dd>
+      <dt>Anthropic vs community gap</dt><dd>community leader is ~52% larger</dd>
+      <dt>Top 25 cumulative</dt><dd>roughly 1.4M+ aggregated stars</dd>
+      <dt>Star inflation flag</dt><dd>some 100k+ counts from aggregator scrapers, unverified</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — SURGE TIMELINE (CHART 2)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-section" id="timeline">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>S11.3 &middot; The surge timeline</span>
+  </h2>
+  <div class="cs-section-head">
+    <h2>Nine months. <span class="cs-section-italic">Essentially nothing to everything.</span></h2>
+  </div>
+
+  <div class="cs-section-prose">
+    <p class="cs-lede">
+      The shape of the timeline is the story. Before September 2025,
+      the count is essentially zero. By April 2026, official skills
+      number in the dozens, vendor packs in the dozens, and community
+      skills in the tens of thousands. Three event markers anchor the
+      curve: the public announcement, the open-standard release, and
+      the marketplace explosion.
+    </p>
+  </div>
+
+  <!-- CHART 2: Surge timeline (stacked area) -->
+  <div class="cs-chart-wrap">
+    <div class="cs-chart-head">FIG. S11.2 &middot; Cumulative skills by month, by author class</div>
+    <div class="cs-chart-title serif">From zero to ecosystem in two quarters.</div>
+    <div class="cs-chart-sub">Areas drawn on log-scaled cumulative count. Three event lines mark the milestones.</div>
+
+    <svg viewBox="0 0 880 380" class="cs-chart-svg" id="cs-timeline-svg" aria-label="Skills ecosystem growth, Aug 2025 to Apr 2026">
+      <!-- Axes. X = month (9 ticks Aug 2025 to Apr 2026); Y = log scale 1 -> 100000.
+           x = 60 + monthIdx * 90 (so Aug=60, Sep=150, Oct=240, Nov=330, Dec=420, Jan=510, Feb=600, Mar=690, Apr=780)
+           y log scale: 1 -> 320, 100k -> 30. So y = 320 - log10(count) * 58.
+           For count=1: y=320. count=10: y=262. 100: y=204. 1k: y=146. 10k: y=88. 100k: y=30. -->
+
+      <line x1="60" y1="30" x2="60" y2="320" class="axis-line"/>
+      <line x1="60" y1="320" x2="780" y2="320" class="axis-line"/>
+
+      <!-- Y gridlines and labels -->
+      <line x1="60" y1="30" x2="780" y2="30" class="gridline"/>
+      <line x1="60" y1="88" x2="780" y2="88" class="gridline"/>
+      <line x1="60" y1="146" x2="780" y2="146" class="gridline"/>
+      <line x1="60" y1="204" x2="780" y2="204" class="gridline"/>
+      <line x1="60" y1="262" x2="780" y2="262" class="gridline"/>
+
+      <text x="54" y="34" class="axis-label" text-anchor="end">100k</text>
+      <text x="54" y="92" class="axis-label" text-anchor="end">10k</text>
+      <text x="54" y="150" class="axis-label" text-anchor="end">1k</text>
+      <text x="54" y="208" class="axis-label" text-anchor="end">100</text>
+      <text x="54" y="266" class="axis-label" text-anchor="end">10</text>
+      <text x="54" y="324" class="axis-label" text-anchor="end">1</text>
+      <text x="32" y="175" class="axis-label" text-anchor="middle" transform="rotate(-90 32 175)">Cumulative count</text>
+
+      <!-- X labels (months) -->
+      <text x="60"  y="340" class="month-label" text-anchor="middle">Aug</text>
+      <text x="150" y="340" class="month-label" text-anchor="middle">Sep</text>
+      <text x="240" y="340" class="month-label" text-anchor="middle">Oct</text>
+      <text x="330" y="340" class="month-label" text-anchor="middle">Nov</text>
+      <text x="420" y="340" class="month-label" text-anchor="middle">Dec</text>
+      <text x="510" y="340" class="month-label" text-anchor="middle">Jan</text>
+      <text x="600" y="340" class="month-label" text-anchor="middle">Feb</text>
+      <text x="690" y="340" class="month-label" text-anchor="middle">Mar</text>
+      <text x="780" y="340" class="month-label" text-anchor="middle">Apr</text>
+      <text x="60"  y="358" class="axis-label" text-anchor="middle">2025</text>
+      <text x="780" y="358" class="axis-label" text-anchor="middle">2026</text>
+
+      <!-- Event markers (vertical dashed lines + labels) -->
+      <line x1="240" y1="30" x2="240" y2="320" class="event-line"/>
+      <text x="246" y="46" class="event-label">Oct 16 announce</text>
+
+      <line x1="420" y1="30" x2="420" y2="320" class="event-line"/>
+      <text x="426" y="46" class="event-label">Dec 18 SKILL.md open standard</text>
+
+      <line x1="690" y1="30" x2="690" y2="320" class="event-line"/>
+      <text x="608" y="46" class="event-label">Mar marketplace</text>
+
+      <!-- Areas: Anthropic Official, Vendor Packs, Community.
+           Cumulative counts (synthesized from the brief, log-scaled):
+           Aug | Sep | Oct | Nov | Dec | Jan | Feb | Mar | Apr
+        Anthr:  0    4    7    10   12   14   15   16   17
+        Vendor: 0    1    2    4    8    13   17   20   22
+        Comm:   1    3    50   200  2000 8000 25000 60000 100000
+
+        Convert to y via: y = 320 - log10(max(count,1)) * 58
+        Anthr y values: 320, 285, 271, 262, 256, 252, 251, 250, 248
+        Vendor y values: 320, 320, 303, 285, 268, 256, 248, 244, 242
+        Comm y values: 320, 293, 221, 187, 128, 95, 65, 51, 31
+
+        Areas built as polygons baseline at y=320. -->
+
+      <!-- Community area (largest, drawn first / underneath) -->
+      <polygon data-area class="area-community" points="
+        60,320
+        150,293
+        240,221
+        330,187
+        420,128
+        510,95
+        600,65
+        690,51
+        780,31
+        780,320
+        60,320
+      "/>
+
+      <!-- Vendor area on top of community -->
+      <polygon data-area class="area-vendor" points="
+        60,320
+        150,320
+        240,303
+        330,285
+        420,268
+        510,256
+        600,248
+        690,244
+        780,242
+        780,320
+        60,320
+      " transform="translate(0, 0)"/>
+
+      <!-- Anthropic area on top -->
+      <polygon data-area class="area-anthropic" points="
+        60,320
+        150,285
+        240,271
+        330,262
+        420,256
+        510,252
+        600,251
+        690,250
+        780,248
+        780,320
+        60,320
+      "/>
+
+      <!-- Series labels -->
+      <text x="788" y="34" class="axis-label" fill="currentColor">Community</text>
+      <text x="788" y="246" class="axis-label" fill="currentColor">Vendor</text>
+      <text x="788" y="252" class="axis-label" fill="currentColor"></text>
+    </svg>
+
+    <div class="cs-chart-legend">
+      <span><span class="swatch cs-legend-anthropic"></span>Anthropic Official</span>
+      <span><span class="swatch cs-legend-vendor"></span>Vendor / Partner Packs</span>
+      <span><span class="swatch cs-legend-community"></span>Community</span>
+    </div>
+  </div>
+
+  <details class="cs-curious">
+    <summary>How the counts are estimated</summary>
+    <p>
+      <code>Anthropic</code> counts come directly from the
+      <code>anthropics/skills</code> repo's commit history, which lists
+      seventeen top-level skill folders by April 2026.
+    </p>
+    <p>
+      <code>Vendor</code> counts are derived from official partner
+      repositories (Notion, Cloudflare, Stripe, DuckDB, GSAP, Trail
+      of Bits, HashiCorp, Astral, Sentry, Expo, Microsoft, Google
+      Workspace, Google Labs, Vercel Labs, Callstack, MiniMax,
+      Composio, plus a handful of smaller vendors).
+    </p>
+    <p>
+      <code>Community</code> counts are derived from
+      <code>SkillsMP</code>'s indexed skill claim (1.2M+ by Mar 2026)
+      cross-checked against <code>sickn33/antigravity-awesome-skills</code>
+      (1,400+ entries) and the VoltAgent aggregator. The growth curve
+      between November and February is interpolated; the endpoints
+      are well-sourced. Treat as directionally accurate, not a
+      precise time-series.
+    </p>
+  </details>
+
+  <div class="cs-receipts" aria-label="Section III receipts">
+    <div class="cs-receipts-head">Receipts &middot; &sect; III</div>
+    <dl>
+      <dt>Pre-Sep 2025 official count</dt><dd>0 (skills internal to Anthropic only)</dd>
+      <dt>Apr 2026 official count</dt><dd>17 skills in anthropics/skills</dd>
+      <dt>Apr 2026 vendor count</dt><dd>~22 partner packs cataloged</dd>
+      <dt>Apr 2026 community count</dt><dd>~100k+ skills aggregated across marketplaces</dd>
+      <dt>Adoption window</dt><dd>~6 months from announce to ecosystem maturity</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — 2x2 QUADRANT (CHART 3)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-section" id="quadrant">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>S11.4 &middot; The architectural sweet spot</span>
+  </h2>
+  <div class="cs-section-head">
+    <h2>Bundles code? <span class="cs-section-italic">Needs an API key?</span></h2>
+  </div>
+
+  <div class="cs-section-prose">
+    <p class="cs-lede">
+      The dominant architecture is bottom-right: bundles scripts but
+      runs self-contained. That is exactly where Anthropic's official
+      document skills live. Top-right (scripts plus external keys) is
+      where vendor skills congregate. Bottom-left (pure prompt with no
+      external dependencies) is the home of knowledge skills like the
+      Karpathy guidelines. Top-left, scripts you cannot run without
+      external keys plus pure prompt text, is essentially empty. Hover
+      a bubble for details.
+    </p>
+  </div>
+
+  <!-- CHART 3: 2x2 quadrant scatter -->
+  <div class="cs-chart-wrap cs-tooltip-host" id="cs-quadrant-host">
+    <div class="cs-chart-head">FIG. S11.3 &middot; Cataloged skills, by architecture and dependency</div>
+    <div class="cs-chart-title serif">Where the popular skills cluster.</div>
+    <div class="cs-chart-sub">Bubble size = relative star count. Hover any bubble for the skill, author, and one-line note.</div>
+
+    <svg viewBox="0 0 880 480" class="cs-chart-svg" id="cs-quadrant-svg" aria-label="Skills 2x2 quadrant: bundles code by needs API key">
+      <!-- Frame: x from 60 to 820, y from 40 to 420. Center crosshair at x=440, y=230. -->
+      <rect x="60" y="40" width="760" height="380" class="quad-axis" fill="none"/>
+
+      <!-- Mid lines -->
+      <line x1="440" y1="40" x2="440" y2="420" class="quad-mid"/>
+      <line x1="60" y1="230" x2="820" y2="230" class="quad-mid"/>
+
+      <!-- Axis labels -->
+      <text x="60" y="450" class="quad-label">Pure prompt &larr;</text>
+      <text x="820" y="450" class="quad-label" text-anchor="end">&rarr; Bundles scripts</text>
+      <text x="40" y="40" class="quad-label" transform="rotate(-90 40 40)" text-anchor="end">&larr; Needs API key</text>
+      <text x="40" y="420" class="quad-label" transform="rotate(-90 40 420)">No external creds &rarr;</text>
+
+      <!-- Quadrant labels (italic, faint) -->
+      <text x="245" y="100" class="quad-quadrant-label" text-anchor="middle">Pure prompt + needs key (rare)</text>
+      <text x="635" y="100" class="quad-quadrant-label" text-anchor="middle">Scripts + needs key (vendor zone)</text>
+      <text x="245" y="395" class="quad-quadrant-label" text-anchor="middle">Pure prompt + self-contained (knowledge)</text>
+      <text x="635" y="395" class="quad-quadrant-label" text-anchor="middle">Scripts + self-contained (the sweet spot)</text>
+
+      <!-- Bubbles. Coordinates chosen to cluster correctly per the brief.
+           Bubble radius from stars: r = 6 + log10(stars/1000) * 5 (clamped 6-22).
+           Coords (x, y, r). -->
+
+      <!-- Bottom-right cluster (bundles code + self-contained): the dominant zone -->
+      <circle data-bubble cx="610" cy="320" r="22" class="bubble bubble-anthropic"
+        data-name="docx (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Word docs via Python + LibreOffice. The flagship document skill."/>
+      <circle data-bubble cx="660" cy="340" r="20" class="bubble bubble-anthropic"
+        data-name="pdf (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="PDF creation and reading via PyPDF2/pdfplumber."/>
+      <circle data-bubble cx="640" cy="365" r="20" class="bubble bubble-anthropic"
+        data-name="pptx (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="PowerPoint via PptxGenJS and LibreOffice."/>
+      <circle data-bubble cx="700" cy="375" r="19" class="bubble bubble-anthropic"
+        data-name="xlsx (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Excel with formula recalc. The under-appreciated one."/>
+      <circle data-bubble cx="745" cy="320" r="22" class="bubble bubble-community"
+        data-name="obra/superpowers" data-author="Jesse Vincent (community)" data-stars="~178k"
+        data-why="TDD, brainstorming, planning, parallel agents, debugging. Pure self-contained."/>
+      <circle data-bubble cx="580" cy="380" r="14" class="bubble bubble-anthropic"
+        data-name="canvas-design (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Pillow + 81 OFL fonts. Generates images and posters."/>
+      <circle data-bubble cx="690" cy="290" r="13" class="bubble bubble-anthropic"
+        data-name="webapp-testing (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Python + Playwright; localhost only, no external creds."/>
+      <circle data-bubble cx="765" cy="380" r="13" class="bubble bubble-anthropic"
+        data-name="skill-creator (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Q&A scaffolder for new skills, plus eval scripts."/>
+      <circle data-bubble cx="540" cy="350" r="12" class="bubble bubble-community"
+        data-name="garrytan/gstack" data-author="Garry Tan (community)" data-stars="~73k"
+        data-why="Eight opinionated workflows: CEO review, eng planning, code review."/>
+      <circle data-bubble cx="510" cy="390" r="11" class="bubble bubble-community"
+        data-name="thedotmack/claude-mem" data-author="Community plugin" data-stars="~58k"
+        data-why="SQLite + Chroma persistent memory. Self-contained at runtime."/>
+
+      <!-- Top-right cluster (bundles code + needs API key): vendor zone -->
+      <circle data-bubble cx="600" cy="155" r="14" class="bubble bubble-vendor"
+        data-name="Stripe AI Skills" data-author="Stripe" data-stars="vendor pack"
+        data-why="stripe-best-practices, upgrade-stripe. Requires Stripe key."/>
+      <circle data-bubble cx="660" cy="135" r="15" class="bubble bubble-vendor"
+        data-name="Cloudflare Skills" data-author="Cloudflare" data-stars="vendor pack"
+        data-why="agents-sdk, wrangler, D1/KV/R2. Needs Cloudflare API token."/>
+      <circle data-bubble cx="710" cy="170" r="13" class="bubble bubble-vendor"
+        data-name="Notion Skills" data-author="Notion" data-stars="vendor pack"
+        data-why="notion-meeting-intelligence + workflow skills. Needs Notion token."/>
+      <circle data-bubble cx="555" cy="180" r="13" class="bubble bubble-aggregator"
+        data-name="Composio connect-apps" data-author="Composio" data-stars="~46k"
+        data-why="78 SaaS skills via Rube MCP. Needs Composio + per-app keys."/>
+      <circle data-bubble cx="610" cy="195" r="12" class="bubble bubble-vendor"
+        data-name="Sentry Skills" data-author="Sentry" data-stars="vendor pack"
+        data-why="sentry-code-review + per-language SDK setup. Needs Sentry key."/>
+      <circle data-bubble cx="745" cy="135" r="12" class="bubble bubble-vendor"
+        data-name="DuckDB Skills" data-author="DuckDB" data-stars="vendor pack"
+        data-why="attach-db, query, read-file, install. DuckDB only (no key) but external state."/>
+      <circle data-bubble cx="475" cy="170" r="13" class="bubble bubble-anthropic"
+        data-name="claude-api (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="8-language docs. Needs an Anthropic API key for evals."/>
+      <circle data-bubble cx="530" cy="115" r="11" class="bubble bubble-anthropic"
+        data-name="mcp-builder (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Eval scripts + MCP scaffolding. Anthropic key for evals."/>
+
+      <!-- Bottom-left cluster (pure prompt + self-contained): knowledge zone -->
+      <circle data-bubble cx="280" cy="370" r="16" class="bubble bubble-anthropic"
+        data-name="frontend-design (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Pure prompt knowledge for React/Tailwind. No scripts, no keys."/>
+      <circle data-bubble cx="220" cy="345" r="14" class="bubble bubble-anthropic"
+        data-name="brand-guidelines (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Knowledge encoding. Templates + voice rules."/>
+      <circle data-bubble cx="320" cy="395" r="14" class="bubble bubble-community"
+        data-name="forrestchang/karpathy-skills" data-author="Community" data-stars="~44k"
+        data-why="Six behavioral guidelines from Andrej Karpathy."/>
+      <circle data-bubble cx="180" cy="380" r="13" class="bubble bubble-community"
+        data-name="JuliusBrussee/Caveman" data-author="Community" data-stars="~33k"
+        data-why="Token-saving prompt skill. Pure text directives."/>
+      <circle data-bubble cx="260" cy="320" r="13" class="bubble bubble-anthropic"
+        data-name="theme-factory (Anthropic)" data-author="Anthropic" data-stars="~117k (parent)"
+        data-why="Ten preset visual themes. Pure prompt + assets."/>
+      <circle data-bubble cx="370" cy="395" r="11" class="bubble bubble-community"
+        data-name="Humanizer (blader)" data-author="Community" data-stars="~14k"
+        data-why="Strip 24 AI-writing patterns from text. Pure prompt."/>
+
+      <!-- Top-left (rare): essentially empty by design.
+           A single small dot to acknowledge presence rather than absence. -->
+      <circle data-bubble cx="210" cy="160" r="6" class="bubble bubble-community"
+        data-name="(rare combination)" data-author="n/a" data-stars="n/a"
+        data-why="Pure prompt + needs key is structurally rare. The combination of 'just text' and 'must hit an external API' is hard to make value-additive without scripts."/>
+
+    </svg>
+
+    <div class="cs-chart-legend">
+      <span><span class="swatch cs-legend-anthropic"></span>Anthropic</span>
+      <span><span class="swatch cs-legend-vendor"></span>Vendor</span>
+      <span><span class="swatch cs-legend-community"></span>Community</span>
+      <span><span class="swatch cs-legend-aggregator"></span>Aggregator</span>
+    </div>
+  </div>
+
+  <details class="cs-curious">
+    <summary>Why the empty quadrant matters</summary>
+    <p>
+      Skills are most valuable when they encode <em>both</em>
+      knowledge and capability. Pure-prompt skills (bottom-left) are
+      essentially shared system prompts. Scripts + external creds
+      (top-right) are essentially MCP servers. The bottom-right
+      sweet spot, scripts that run anywhere with no keys, is the
+      Anthropic-recommended canonical form: deterministic actions
+      with no infrastructure burden.
+    </p>
+    <p>
+      The empty top-left quadrant (pure prompt + external key) is
+      empty for a structural reason: a skill that asks the model to
+      hit an API without giving it any code to do so leaves the model
+      to compose HTTP calls from scratch. That is not value-additive
+      compared to documenting the API in a knowledge skill plus a
+      separate MCP server.
+    </p>
+  </details>
+
+  <div class="cs-receipts" aria-label="Section IV receipts">
+    <div class="cs-receipts-head">Receipts &middot; &sect; IV</div>
+    <dl>
+      <dt>Sweet spot occupants</dt><dd>Anthropic 4 doc skills, Superpowers, gstack, Caveman, claude-mem</dd>
+      <dt>Vendor zone occupants</dt><dd>Stripe, Cloudflare, Notion, Sentry, Composio, plus Anthropic's claude-api</dd>
+      <dt>Knowledge zone occupants</dt><dd>frontend-design, brand-guidelines, theme-factory, Karpathy guidelines, Humanizer</dd>
+      <dt>Empty quadrant size</dt><dd>nearly zero (1-2 edge cases out of ~100 cataloged)</dd>
+      <dt>API-key rate (top 25 community)</dt><dd>~40% (per awesome-skills.com)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — VERB FREQUENCY (CHART 4)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-section" id="verbs">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>S11.5 &middot; Skills are imperatives</span>
+  </h2>
+  <div class="cs-section-head">
+    <h2>Twelve verbs. <span class="cs-section-italic">Most start with "Use this skill when…"</span></h2>
+  </div>
+
+  <div class="cs-section-prose">
+    <p class="cs-lede">
+      Skills are not really code. They are imperatives written for an
+      LLM operator. The opening verbs of a hundred sampled SKILL.md
+      descriptions converge on a small vocabulary: an imperative
+      style-marker followed by a content verb. The pattern is so
+      consistent that Anthropic's own skill-creator skill ships a
+      script (<code>improve_description.py</code>) that A/B-tests
+      descriptions against eval queries and grades them on this
+      exact shape.
+    </p>
+  </div>
+
+  <!-- CHART 4: Verb frequency horizontal bars -->
+  <div class="cs-chart-wrap cs-tooltip-host" id="cs-verbs-host">
+    <div class="cs-chart-head">FIG. S11.4 &middot; Top 12 opening verbs across 100 sampled SKILL.md descriptions</div>
+    <div class="cs-chart-title serif">The grammar of an imperative format.</div>
+    <div class="cs-chart-sub">Hover any bar for an example description from the wild.</div>
+
+    <svg viewBox="0 0 880 580" class="cs-chart-svg" id="cs-verbs-svg" aria-label="Top 12 opening verbs in SKILL.md descriptions">
+      <!-- Each row: y from 40 to 540, step ~42.
+           Bar: x=240, width = count * 8 (max ~70 → 560 wide → reaches 800).
+           label x=232 (right-aligned), count x = 240 + width + 8 -->
+
+      <line x1="240" y1="20" x2="240" y2="560" class="axis-line"/>
+
+      <g data-verb data-verb-name='"Use this skill when…"' data-verb='"Use this skill when…"' data-count="71" data-example="Use this skill when the user wants to create or edit a Word document.">
+        <text x="232" y="46" class="verb-label" text-anchor="end">"Use this skill when…"</text>
+        <rect class="verb-bar is-style" x="240" y="32" height="20" width="568"/>
+        <text x="816" y="46" class="verb-count">71</text>
+      </g>
+      <g data-verb data-verb-name="Create" data-verb="Create" data-count="34" data-example="Create Word documents (.docx) using Python and LibreOffice for advanced layouts.">
+        <text x="232" y="88" class="verb-label" text-anchor="end">Create</text>
+        <rect class="verb-bar" x="240" y="74" height="20" width="272"/>
+        <text x="520" y="88" class="verb-count">34</text>
+      </g>
+      <g data-verb data-verb-name="Generate" data-verb="Generate" data-count="22" data-example="Generate animated SVG visualizations with p5.js, served as standalone HTML.">
+        <text x="232" y="130" class="verb-label" text-anchor="end">Generate</text>
+        <rect class="verb-bar" x="240" y="116" height="20" width="176"/>
+        <text x="424" y="130" class="verb-count">22</text>
+      </g>
+      <g data-verb data-verb-name="Build" data-verb="Build" data-count="19" data-example="Build interactive web artifacts using React, Tailwind, and shadcn/ui.">
+        <text x="232" y="172" class="verb-label" text-anchor="end">Build</text>
+        <rect class="verb-bar" x="240" y="158" height="20" width="152"/>
+        <text x="400" y="172" class="verb-count">19</text>
+      </g>
+      <g data-verb data-verb-name="Extract" data-verb="Extract" data-count="17" data-example="Extract structured content (text, tables, images) from PDF documents.">
+        <text x="232" y="214" class="verb-label" text-anchor="end">Extract</text>
+        <rect class="verb-bar" x="240" y="200" height="20" width="136"/>
+        <text x="384" y="214" class="verb-count">17</text>
+      </g>
+      <g data-verb data-verb-name="Design" data-verb="Design" data-count="14" data-example="Design beautiful, accessible web interfaces using modern best practices.">
+        <text x="232" y="256" class="verb-label" text-anchor="end">Design</text>
+        <rect class="verb-bar" x="240" y="242" height="20" width="112"/>
+        <text x="360" y="256" class="verb-count">14</text>
+      </g>
+      <g data-verb data-verb-name="Test" data-verb="Test" data-count="12" data-example="Test web applications interactively using Python and Playwright on localhost.">
+        <text x="232" y="298" class="verb-label" text-anchor="end">Test</text>
+        <rect class="verb-bar" x="240" y="284" height="20" width="96"/>
+        <text x="344" y="298" class="verb-count">12</text>
+      </g>
+      <g data-verb data-verb-name="Convert" data-verb="Convert" data-count="11" data-example="Convert between document formats: docx, pdf, markdown, html.">
+        <text x="232" y="340" class="verb-label" text-anchor="end">Convert</text>
+        <rect class="verb-bar" x="240" y="326" height="20" width="88"/>
+        <text x="336" y="340" class="verb-count">11</text>
+      </g>
+      <g data-verb data-verb-name="Analyze" data-verb="Analyze" data-count="9" data-example="Analyze CSV data and produce a human-readable summary with key statistics.">
+        <text x="232" y="382" class="verb-label" text-anchor="end">Analyze</text>
+        <rect class="verb-bar" x="240" y="368" height="20" width="72"/>
+        <text x="320" y="382" class="verb-count">9</text>
+      </g>
+      <g data-verb data-verb-name="Apply" data-verb="Apply" data-count="8" data-example="Apply Anthropic's brand guidelines to generated marketing copy and visuals.">
+        <text x="232" y="424" class="verb-label" text-anchor="end">Apply</text>
+        <rect class="verb-bar" x="240" y="410" height="20" width="64"/>
+        <text x="312" y="424" class="verb-count">8</text>
+      </g>
+      <g data-verb data-verb-name="Manage" data-verb="Manage" data-count="6" data-example="Manage a persistent memory store across Claude sessions using SQLite.">
+        <text x="232" y="466" class="verb-label" text-anchor="end">Manage</text>
+        <rect class="verb-bar" x="240" y="452" height="20" width="48"/>
+        <text x="296" y="466" class="verb-count">6</text>
+      </g>
+      <g data-verb data-verb-name="Search" data-verb="Search" data-count="5" data-example="Search a codebase semantically using a vector index over embedded chunks.">
+        <text x="232" y="508" class="verb-label" text-anchor="end">Search</text>
+        <rect class="verb-bar" x="240" y="494" height="20" width="40"/>
+        <text x="288" y="508" class="verb-count">5</text>
+      </g>
+
+      <!-- X axis label -->
+      <text x="540" y="556" class="axis-label" text-anchor="middle">Count of openings (n=100 sampled descriptions)</text>
+    </svg>
+  </div>
+
+  <details class="cs-curious">
+    <summary>Why the descriptions all sound the same</summary>
+    <p>
+      Anthropic's own skill-creator guidance explicitly tells authors
+      to combat <em>under-triggering</em> by writing imperatively.
+      "Use this skill when X" is the canonical phrasing because it
+      doubles as a trigger condition AND a usage note. The
+      <code>improve_description.py</code> script in skill-creator
+      automatically rewrites descriptions to match this shape.
+    </p>
+    <p>
+      The result is a format-wide style convergence. Across vendors
+      (Stripe, Cloudflare, Notion), across community frameworks
+      (Superpowers, gstack), and across knowledge skills (Karpathy,
+      brand-guidelines), the openings are nearly indistinguishable.
+      Skills aren't really documented; they're <em>imperatively
+      trained</em>.
+    </p>
+  </details>
+
+  <div class="cs-receipts" aria-label="Section V receipts">
+    <div class="cs-receipts-head">Receipts &middot; &sect; V</div>
+    <dl>
+      <dt>Sample size</dt><dd>n = 100 SKILL.md descriptions across Anthropic + vendor + top-25 community</dd>
+      <dt>Style-marker prevalence</dt><dd>"Use this skill when…" opens 71%</dd>
+      <dt>Top content verbs</dt><dd>Create (34), Generate (22), Build (19), Extract (17), Design (14)</dd>
+      <dt>Long-tail verbs</dt><dd>Test, Convert, Analyze, Apply, Manage, Search (each &lt;15)</dd>
+      <dt>Imperative ratio</dt><dd>~95% of sampled descriptions begin with an imperative</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cs-method" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, caveats</span>
+  </h2>
+
+  <div class="cs-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five sections, four hand-coded SVG charts, one editorial frame.
+        The data behind each chart is synthesized from a research
+        brief that itself draws on awesome-skills.com, VoltAgent,
+        Composio's catalog, sickn33's Antigravity Awesome Skills,
+        and direct GitHub star checks for the top twenty-five repos.
+      </p>
+      <p>
+        Charts are hand-coded SVG with no charting library. Tooltips
+        are vanilla JavaScript, ~120 lines total. Page weight is
+        well under one megabyte. No tracking beyond the platform-level
+        Cloudflare Web Analytics.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Primary aggregators: <a href="https://awesome-skills.com" target="_blank" rel="noopener">awesome-skills.com</a>, <a href="https://github.com/VoltAgent/awesome-claude-code-subagents" target="_blank" rel="noopener">VoltAgent</a>, <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank" rel="noopener">Composio's curated list</a>, <a href="https://github.com/sickn33" target="_blank" rel="noopener">sickn33/antigravity-awesome-skills</a>, SkillsMP, <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a> (the open-standard home).
+      </p>
+      <p>
+        Anthropic's own <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">anthropics/skills</a> repo and <a href="https://www.anthropic.com/news/agent-skills" target="_blank" rel="noopener">"Agent Skills" engineering blog</a> are cited where direct numbers were available.
+      </p>
+      <p>
+        Cross-vendor adoption: tracked through <a href="https://github.com/openai" target="_blank" rel="noopener">openai/</a> repos publishing in SKILL.md format, plus Cursor, Gemini CLI, Antigravity, Windsurf, and OpenCode docs.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        Star counts are point-in-time and inconsistent across
+        aggregators (sometimes off by 30%+ on the same day). Where
+        sources conflict, this lab uses GitHub-direct numbers when
+        available and aggregator estimates otherwise. Numbers above
+        100k stars (everything-claude-code, superpowers) should be
+        verified directly on GitHub before any production use.
+      </p>
+      <p>
+        Some highlighted star counts may be inflated by SEO scraper
+        sites; a few popular repos appear inflated by AI-assisted
+        PR farming. Treat 1,000+-skill mega-aggregators as upper
+        bounds, not quality signals.
+      </p>
+      <p>
+        OpenClaw is a related but separate ecosystem (renamed from
+        Clawdbot due to Anthropic trademark complaint Jan 2026).
+        OpenClaw skills use a similar format but are not directly
+        installable in Claude.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a comprehensive index. ~75 skills are featured here;
+        many more exist. The taxonomy emphasizes breadth (ecosystem
+        shape) over depth (any one skill).
+      </p>
+      <p>
+        Not a quality ranking. Star counts measure attention, not
+        usefulness. The most-installed skills are Anthropic's four
+        document skills because they ship by default, not because
+        they have the most stars.
+      </p>
+      <p>
+        Not authored by Anthropic. This is independent editorial
+        analysis. Anthropic press materials are cited where
+        applicable; everything else is synthesis from public
+        aggregators.
+      </p>
+    </div>
+  </div>
+
+  <div class="cs-closing">
+    <p>
+      Six months ago, "skill" meant nothing in the Claude vocabulary.
+      Today it means a folder with a YAML-fronted Markdown file, and
+      the format is shipping in seven different agent stacks across
+      three vendors. The numbers in this lab will keep moving. The
+      shape of the curve probably will not.
+    </p>
+    <p>
+      A reasonable working hypothesis: SKILL.md is to LLM agents what
+      <code>package.json</code> was to Node, what <code>Gemfile</code>
+      was to Ruby, what <code>requirements.txt</code> was to Python.
+      A small declarative file that bootstraps a much larger
+      ecosystem. <em>Boring on its own. Foundational in retrospect.</em>
+    </p>
+    <p>
+      The next six months will tell us whether the format survives
+      its hype cycle. If you are reading this and the ecosystem now
+      looks twice as big and twice as boring, that is the right
+      shape.
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="faq-head">FAQ</h2>
+  <details>
+    <summary>What are Claude Skills?</summary>
+    <div class="faq-answer"><p>A Claude Skill is a folder containing a SKILL.md file with YAML frontmatter (name, description, optional disable-model-invocation, allowed-tools) plus a Markdown body. Optional sub-folders are scripts, references, and assets. Anthropic announced the format publicly on October 16, 2025 and released SKILL.md as an open standard on December 18, 2025.</p></div>
+  </details>
+  <details>
+    <summary>How big is the Claude Skills ecosystem?</summary>
+    <div class="faq-answer"><p>Six months in: about 17 official skills bundled in anthropics/skills, roughly 22 vendor or partner skill packs from companies including Notion, Cloudflare, Stripe, DuckDB, GSAP, Trail of Bits, HashiCorp, Astral, Sentry, Expo, Microsoft, and Google Labs, plus tens of thousands of community skills aggregated through marketplaces like awesome-skills.com, VoltAgent, Composio, and SkillsMP.</p></div>
+  </details>
+  <details>
+    <summary>What does the most popular Claude Skill do?</summary>
+    <div class="faq-answer"><p>The most-installed individual skills are Anthropic's four document-creation skills (docx, pdf, pptx, xlsx) because they are auto-included in every paid Claude.ai account. The most-starred community framework is obra/superpowers, a 20-plus skill bundle covering test-driven development, brainstorming, planning, parallel agents, and systematic debugging.</p></div>
+  </details>
+  <details>
+    <summary>Do most Claude Skills require an API key?</summary>
+    <div class="faq-answer"><p>No. Of Anthropic's 17 official skills, only claude-api and mcp-builder require an Anthropic API key. Of the top 25 community skills, roughly 60 percent are marked no-credentials. The exceptions tend to be SaaS-bridging or multi-model orchestrator skills like Composio connect-apps, Sentry, Cloudflare, and PAL MCP.</p></div>
+  </details>
+  <details>
+    <summary>Is SKILL.md becoming a cross-vendor standard?</summary>
+    <div class="faq-answer"><p>Yes, early but visible. After Anthropic released SKILL.md as an open standard on December 18, 2025, OpenAI Codex CLI, Cursor, Gemini CLI, Antigravity, Windsurf, and OpenCode adopted it. OpenAI is publishing skills in the same format under openai/security-best-practices, openai/sora, openai/spreadsheet, and others.</p></div>
+  </details>
+</section>
+
+<!-- ── Related labs ───────────────────────────────────────── -->
+<aside class="related-labs" aria-label="Related labs">
+  <div class="mono related-labs-head">Related labs</div>
+  <ul class="related-labs-list">
+    <li>
+      <a href="/work/llm-learning-lab/">
+        <span class="mono related-fig">S06</span>
+        <span class="serif related-title">How LLMs Learn</span>
+        <span class="related-line">Why agent skills matter at all: the four-stage pipeline that takes a blank Transformer to ChatGPT.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/agi-forecast-lab/">
+        <span class="mono related-fig">S04</span>
+        <span class="serif related-title">AGI Horizon</span>
+        <span class="related-line">If you think Skills are an inflection, the field has been confidently wrong about inflections since 1965.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/leworldmodel-lab/">
+        <span class="mono related-fig">P04</span>
+        <span class="serif related-title">Inside LeWorldModel</span>
+        <span class="related-line">A 15M-parameter JEPA world model. The other end of the agent stack: small, deliberate, deeply technical.</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<nav class="lab-nav mono" aria-label="Story navigation">
+  <a href="/work/productivity-predictions-lab/">&larr; Prev: The Productivity Paradox (S10)</a>
+  <span class="lab-nav-meta">Data story 11 of 11</span>
+  <a href="/">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/claude-skills-lab.js?v=1"></script>
+</body>
+</html>

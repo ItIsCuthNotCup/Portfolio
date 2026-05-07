@@ -1,0 +1,484 @@
+/* ═══════════════════════════════════════════════════════════
+   CLAUDE SKILLS LAB — S11
+   The Skills Surge — six months after Anthropic's Oct 16, 2025
+   announcement. Four hand-coded SVG charts plus an editorial
+   wrapper.
+   ═══════════════════════════════════════════════════════════ */
+
+.cs-main { background: var(--paper); color: var(--ink); }
+
+/* ── Attribution banner ───────────────────────────────────── */
+.cs-attr-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 48px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.cs-attr-banner strong { color: var(--accent); font-weight: 500; }
+.cs-attr-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  flex-shrink: 0;
+}
+.cs-attr-right { opacity: 0.7; flex-shrink: 0; }
+@media (max-width: 720px) {
+  .cs-attr-banner { flex-wrap: wrap; padding: 10px 20px; gap: 6px; }
+  .cs-attr-right { width: 100%; opacity: 0.5; }
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.cs-hero {
+  padding: 120px 56px 60px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.cs-title { margin-top: 22px; }
+.cs-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.cs-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.cs-dateline .label { color: var(--ink-dim); }
+.cs-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+.cs-inline-nav {
+  margin-top: 28px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.cs-inline-nav a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+  margin: 0 6px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.cs-inline-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Section frame ────────────────────────────────────────── */
+.cs-section {
+  padding: 80px 56px 80px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.cs-section-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 900px;
+  margin-bottom: 36px;
+}
+.cs-section-head h2 {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+.cs-section-head .cs-section-italic {
+  font-style: italic;
+  color: var(--accent);
+}
+.cs-section-prose {
+  max-width: 720px;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.cs-section-prose p { margin: 0 0 18px; }
+.cs-section-prose p:last-child { margin-bottom: 0; }
+.cs-section-prose strong { font-weight: 500; }
+.cs-section-prose em { font-style: italic; color: var(--ink-soft); }
+.cs-section-prose code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  padding: 1px 5px;
+  font-size: 14px;
+}
+
+.cs-lede::first-letter {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-style: normal;
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  margin: 0.05em 0.06em 0 0;
+  color: var(--ink);
+}
+
+/* ── Headline panel ───────────────────────────────────────── */
+.cs-headline {
+  margin: 32px 0;
+  padding: 28px 32px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.cs-headline-cell .num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: clamp(36px, 4.4vw, 52px);
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  display: block;
+}
+.cs-headline-cell .label {
+  display: block;
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+@media (max-width: 900px) {
+  .cs-headline { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Receipts box ─────────────────────────────────────────── */
+.cs-receipts {
+  margin-top: 36px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 6%);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.cs-receipts-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.cs-receipts dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 6px 24px;
+}
+.cs-receipts dt { color: var(--ink-dim); }
+.cs-receipts dd { margin: 0; color: var(--ink); }
+@media (max-width: 720px) {
+  .cs-receipts dl { grid-template-columns: 1fr; gap: 2px; }
+  .cs-receipts dd { margin-bottom: 8px; }
+}
+
+/* ── For-the-curious expander ─────────────────────────────── */
+.cs-curious {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border-left: 2px solid var(--ink-dim);
+  background: transparent;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.cs-curious summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  list-style: none;
+  outline: none;
+}
+.cs-curious summary::-webkit-details-marker { display: none; }
+.cs-curious summary::before {
+  content: '▸ ';
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 200ms ease;
+}
+.cs-curious[open] summary::before { transform: rotate(90deg); }
+.cs-curious p { margin: 14px 0 0; }
+.cs-curious code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 10%, transparent);
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART FRAMES (each chart in its own panel)
+   ═══════════════════════════════════════════════════════════ */
+.cs-chart-wrap {
+  margin: 36px 0 12px;
+  padding: 28px 32px;
+  border: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  background: color-mix(in oklab, var(--paper) 92%, var(--ink) 4%);
+}
+.cs-chart-head {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.cs-chart-title {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+.cs-chart-sub {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+.cs-chart-svg { display: block; width: 100%; height: auto; user-select: none; }
+.cs-chart-legend {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.cs-chart-legend .swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ── Chart 1: Power-law bar chart ─────────────────────────── */
+.cs-chart-svg .axis-line { stroke: var(--ink); stroke-width: 1; }
+.cs-chart-svg .gridline { stroke: var(--ink-dim); stroke-width: 0.5; opacity: 0.35; }
+.cs-chart-svg .axis-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  fill: var(--ink-dim);
+  letter-spacing: 0.04em;
+}
+.cs-chart-svg .repo-label {
+  font-family: 'Newsreader', serif;
+  font-size: 12px;
+  fill: var(--ink);
+  cursor: default;
+}
+.cs-chart-svg .repo-stars {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.cs-chart-svg .bar-anthropic { fill: var(--accent); }
+.cs-chart-svg .bar-vendor    { fill: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); }
+.cs-chart-svg .bar-community { fill: var(--ink); opacity: 0.7; }
+.cs-chart-svg .bar-aggregator { fill: var(--ink-dim); opacity: 0.85; }
+.cs-chart-svg [data-row]:hover .bar { filter: brightness(1.1); }
+.cs-chart-svg [data-row]:hover .repo-label { fill: var(--accent); }
+
+.cs-legend-anthropic    { background: var(--accent); }
+.cs-legend-vendor       { background: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); }
+.cs-legend-community    { background: var(--ink); opacity: 0.7; }
+.cs-legend-aggregator   { background: var(--ink-dim); opacity: 0.85; }
+
+/* Tooltip overlay */
+.cs-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  padding: 10px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--accent);
+  max-width: 280px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.cs-tooltip.is-visible { opacity: 1; transform: translateY(0); }
+.cs-tooltip strong { color: var(--accent); font-weight: 500; }
+.cs-tooltip-host { position: relative; }
+
+/* ── Chart 2: Surge timeline (stacked area) ──────────────── */
+.cs-chart-svg .timeline-baseline { stroke: var(--ink); stroke-width: 1; }
+.cs-chart-svg .area-anthropic { fill: var(--accent); fill-opacity: 0.85; }
+.cs-chart-svg .area-vendor    { fill: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); fill-opacity: 0.75; }
+.cs-chart-svg .area-community { fill: var(--ink); fill-opacity: 0.55; }
+.cs-chart-svg .event-line { stroke: var(--accent); stroke-dasharray: 3 3; stroke-width: 1; opacity: 0.7; }
+.cs-chart-svg .event-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  fill: var(--accent);
+  text-transform: uppercase;
+}
+.cs-chart-svg .month-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  fill: var(--ink-dim);
+}
+
+/* ── Chart 3: 2x2 quadrant scatter ───────────────────────── */
+.cs-chart-svg .quad-axis { stroke: var(--ink); stroke-width: 1; }
+.cs-chart-svg .quad-mid { stroke: var(--ink-dim); stroke-width: 0.5; stroke-dasharray: 2 4; }
+.cs-chart-svg .quad-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--ink-dim);
+}
+.cs-chart-svg .quad-quadrant-label {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 12px;
+  fill: var(--ink-dim);
+  opacity: 0.55;
+}
+.cs-chart-svg .bubble {
+  cursor: pointer;
+  transition: r 180ms ease, fill-opacity 180ms ease;
+}
+.cs-chart-svg .bubble-anthropic    { fill: var(--accent); fill-opacity: 0.8; }
+.cs-chart-svg .bubble-vendor       { fill: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); fill-opacity: 0.7; }
+.cs-chart-svg .bubble-community    { fill: var(--ink); fill-opacity: 0.55; }
+.cs-chart-svg .bubble-aggregator   { fill: var(--ink-dim); fill-opacity: 0.65; }
+.cs-chart-svg .bubble:hover { fill-opacity: 1; stroke: var(--accent); stroke-width: 1.5; }
+
+/* ── Chart 4: Verb frequency bars ────────────────────────── */
+.cs-chart-svg .verb-bar { fill: var(--ink); transition: fill 160ms ease; }
+.cs-chart-svg .verb-bar.is-style { fill: var(--accent); }
+.cs-chart-svg [data-verb]:hover .verb-bar { fill: var(--accent); }
+.cs-chart-svg .verb-label {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 14px;
+  fill: var(--ink);
+}
+.cs-chart-svg .verb-count {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Methodology / closing ────────────────────────────────── */
+.cs-method {
+  padding: 80px 56px 80px 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.cs-method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px 48px;
+}
+.cs-method-grid h3 {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.cs-method-grid p {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.cs-method-grid a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.cs-method-grid a:hover { color: var(--accent); border-color: var(--accent); }
+.cs-closing {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 720px;
+}
+.cs-closing p { margin: 0 0 16px; }
+
+/* ── Lab nav ───────────────────────────────────────────────── */
+.lab-nav {
+  margin: 0 88px 80px;
+  padding: 22px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.lab-nav a { color: var(--ink); border-bottom: 1px solid transparent; transition: border-color 180ms ease; }
+.lab-nav a:hover { border-bottom-color: var(--ink); }
+.lab-nav-meta { color: var(--ink-dim); }
+
+@media (max-width: 900px) {
+  .cs-hero { padding: 100px 24px 40px; }
+  .cs-section { padding: 60px 24px; }
+  .cs-method { padding: 60px 24px; }
+  .cs-method-grid { grid-template-columns: 1fr; gap: 28px; }
+  .cs-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .lab-nav { flex-direction: column; gap: 10px; align-items: flex-start; margin: 0 24px 60px; }
+}
