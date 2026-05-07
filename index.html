@@ -35,7 +35,7 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="assets/css/main.css?v=41">
-  <link rel="stylesheet" href="assets/css/research-filter.css?v=3">
+  <link rel="stylesheet" href="assets/css/research-filter.css?v=4">
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
   <link rel="canonical" href="https://jakecuth.com">
@@ -123,12 +123,13 @@
       <button class="nav-dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
         Research <span class="nav-caret" aria-hidden="true">▾</span>
       </button>
-            <div class="nav-dropdown-menu nav-research" role="menu">
+                  <div class="nav-dropdown-menu nav-research" role="menu">
         <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">36</span></a>
-        <a href="/#models" role="menuitem">Working models <span class="cat-count">8</span></a>
-        <a href="/#stories" role="menuitem">Data stories <span class="cat-count">10</span></a>
-        <a href="/#papers" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
-        <a href="/#primers" role="menuitem">Algorithm primers <span class="cat-count">14</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">10</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
       </div>
     </div>
     <a href="/notes/">Notes</a>
@@ -225,31 +226,33 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     RESEARCH INDEX — four kinds of work, four bands
+     RESEARCH INDEX — periodic-table tile grid
+     One dense grid, color-tinted by category, hover to expand.
      ═══════════════════════════════════════════════════════════ -->
-<section id="research" class="labs-section">
+<section id="research" class="labs-section research-index">
   <div class="labs-intro research-intro">
     <h2 class="mono section-label">
       <span class="idx">§ I</span>
       <span>The research index</span>
     </h2>
     <h2 class="serif big-display">
-      Thirty-six labs.<br><span class="serif-italic">Four kinds of work.</span>
+      Thirty-six labs.<br><span class="serif-italic">Hover any tile.</span>
     </h2>
     <p>
-      Pick a kind, scroll to it, or search by topic. Each category has the
-      shape of work it contains. Models run live. Stories argue. Papers
-      anatomize. Primers teach.
+      Color tells you what kind of work it is. Hover for the details. Click
+      to open. Filter by category, or search by topic.
     </p>
   </div>
 
-  <!-- Toolbar: chip jumps + search + count -->
+  <!-- Toolbar: category chips + search + count -->
   <div class="research-toolbar">
-    <div class="research-chips" id="research-chips" role="tablist" aria-label="Jump to category">
-      <a class="research-chip" href="#models" role="tab">Models <span class="chip-count">8</span></a>
-      <a class="research-chip" href="#stories" role="tab">Stories <span class="chip-count">10</span></a>
-      <a class="research-chip" href="#papers" role="tab">Papers <span class="chip-count">4</span></a>
-      <a class="research-chip" href="#primers" role="tab">Primers <span class="chip-count">14</span></a>
+    <div class="research-chips" id="research-chips" role="tablist" aria-label="Filter by category">
+      <button class="research-chip is-active" type="button" data-cat="all" role="tab">All <span class="chip-count">36</span></button>
+      <button class="research-chip" type="button" data-cat="m" role="tab">Models <span class="chip-count">8</span></button>
+      <button class="research-chip" type="button" data-cat="s" role="tab">Stories <span class="chip-count">10</span></button>
+      <button class="research-chip" type="button" data-cat="p" role="tab">Papers <span class="chip-count">4</span></button>
+      <button class="research-chip" type="button" data-cat="atlas" role="tab">Atlas <span class="chip-count">1</span></button>
+      <button class="research-chip" type="button" data-cat="a" role="tab">Primers <span class="chip-count">13</span></button>
     </div>
     <div class="research-search">
       <input type="search" id="research-search-input" placeholder="Search labs..." aria-label="Search labs">
@@ -258,318 +261,275 @@
   </div>
 
   <div class="research-empty" id="research-empty">
-    No labs match. Try a shorter query or a different keyword.
+    No labs match. Try a shorter query or a different category.
   </div>
 
-  <!-- ─────────────────── M · WORKING MODELS ─────────────────── -->
-  <section id="models" class="research-band">
-    <header class="band-header">
-      <div class="mono band-mark">M &middot; Working models <span class="band-mark-count">8</span></div>
-      <h2 class="serif band-title">Live ML, <em>in browsers.</em></h2>
-      <p class="band-blurb">
-        Eight working models. Move sliders, watch the economics change.
-        Each one is a portfolio piece showing one applied-ML chop end to end.
-      </p>
-    </header>
-    <div class="band-grid--models">
-      <a class="lab-card" href="/work/churn-lab/" data-tags="classification,gradient-boosting,shap,fairness,customer">
-        <div class="mono lab-fig">M01</div>
-        <h3 class="serif lab-name">Churn Model</h3>
-        <p class="lab-line">Finds the customers about to leave. Saves revenue already paid to acquire.</p>
-        <div class="mono lab-metric">3 models &middot; ROC overlaid &middot; disparate-impact audit</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/segmentation-lab/" data-tags="clustering,kmeans,dbscan,rfm,customer">
-        <div class="mono lab-fig">M02</div>
-        <h3 class="serif lab-name">Customer Segmentation</h3>
-        <p class="lab-line">Sorts customers by value. Aims spend at the 21% who generate 64% of revenue.</p>
-        <div class="mono lab-metric">Drag the cost &middot; live recompute</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/reco-lab/" data-tags="recommender,collaborative-filtering,content-based,movies">
-        <div class="mono lab-fig">M03</div>
-        <h3 class="serif lab-name">Recommendation Engine</h3>
-        <p class="lab-line">Guesses what they'll watch next. Every basis point of watch-time is a subscription renewed.</p>
-        <div class="mono lab-metric">3 reco models &middot; same likes, three answers</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/ab-test-lab/" data-tags="bayesian,frequentist,experimentation,p-value,peeking">
-        <div class="mono lab-fig">M04</div>
-        <h3 class="serif lab-name">A/B Test Simulator</h3>
-        <p class="lab-line">Shows when a winning version is real and when it's noise. Stops losing tests early.</p>
-        <div class="mono lab-metric">Bayesian + frequentist &middot; adjustable priors</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/funnel-sim-lab/" data-tags="funnel,monte-carlo,simulation,segments,conversion">
-        <div class="mono lab-fig">M05</div>
-        <h3 class="serif lab-name">Funnel Simulation</h3>
-        <p class="lab-line">Finds the one customer segment quietly killing conversion without breaking the rest.</p>
-        <div class="mono lab-metric">4 levers &middot; monte-carlo &middot; segment-aware</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/sketch-lab/" data-tags="onnx,neural-network,quickdraw,classification,browser">
-        <div class="mono lab-fig">M06</div>
-        <h3 class="serif lab-name">Sketch Recognition</h3>
-        <p class="lab-line">Draw anything on the canvas. A small AI model running on your laptop guesses what it is, in real time.</p>
-        <div class="mono lab-metric">30 classes &middot; ~930KB ONNX &middot; runs in your browser</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/model-picker-lab/" data-tags="rag,llm,openrouter,recommender,api">
-        <div class="mono lab-fig">M07</div>
-        <h3 class="serif lab-name">Model Picker</h3>
-        <p class="lab-line">Ask in plain language: "cheapest model good at code." Get a side-by-side comparison of the four AI models that fit.</p>
-        <div class="mono lab-metric">300+ models &middot; OpenRouter catalog &middot; refreshed weekly</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-      <a class="lab-card" href="/work/imm-lab/" data-tags="bayesian,marketing-mix,causal,meridian,influencer">
-        <div class="mono lab-fig">M08</div>
-        <h3 class="serif lab-name">Influencer Mix Modeling</h3>
-        <p class="lab-line">A Bayesian Marketing Mix Model for a creator-driven D2C brand. Eight channels, 104 weeks, full posterior intervals on every coefficient, ground-truth recovered.</p>
-        <div class="mono lab-metric">8 channels &middot; 104 weeks &middot; Meridian on GCP</div>
-        <div class="mono lab-arrow">Open the lab →</div>
-      </a>
-    </div>
-  </section>
+  <!-- THE GRID — 36 tiles in category groups, each tinted by category -->
+  <div class="tile-grid" id="tile-grid">
 
-  <!-- ─────────────────── S · DATA STORIES ─────────────────── -->
-  <section id="stories" class="research-band">
-    <header class="band-header">
-      <div class="mono band-mark">S &middot; Data stories <span class="band-mark-count">10</span></div>
-      <h2 class="serif band-title">Editorial, <em>with receipts.</em></h2>
-      <p class="band-blurb">
-        Ten data essays. One thesis each. All public datasets. The longer
-        reads, with charts that argue, not just decorate.
-      </p>
-    </header>
-    <div class="band-grid--stories">
-      <a class="lab-card" href="/work/jobs-lab/" data-tags="bls,occupations,automation,robotics,labor">
-        <div class="mono lab-fig">S01</div>
-        <h3 class="serif lab-name">AI &amp; Jobs</h3>
-        <p class="lab-line">Type your job. See how exposed it is to AI and to robotics, and what the BLS projects through 2030. The two pressures hit opposite ends of the workforce.</p>
-        <div class="mono lab-metric">888 occupations &middot; 3 exposure measures &middot; BLS through 2030</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/time-use-lab/" data-tags="bls,atus,daily-life,demographics,clock">
-        <div class="mono lab-fig">S02</div>
-        <h3 class="serif lab-name">Time-Use Atlas</h3>
-        <p class="lab-line">How Americans actually spend 24 hours, drawn as a clock. Pick an age, an employment status, or a parenting situation. Watch the day redraw.</p>
-        <div class="mono lab-metric">13 cohorts &middot; 13 categories &middot; BLS ATUS 2023</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/watchdog-lab/" data-tags="youtube,recommender,algorithm,daily,cron">
-        <div class="mono lab-fig">S03</div>
-        <h3 class="serif lab-name">Algorithm Watchdog</h3>
-        <p class="lab-line">A daily-refreshed read on what YouTube's algorithm is rewarding right now. Video length, posting times, category mix, channel concentration.</p>
-        <div class="mono lab-metric">30 days &middot; 50 videos/day &middot; daily 11:00 UTC cron</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/agi-forecast-lab/" data-tags="agi,predictions,forecasting,history,timeline">
-        <div class="mono lab-fig">S04</div>
-        <h3 class="serif lab-name">AGI Horizon</h3>
-        <p class="lab-line">Two hundred fifty AGI predictions plotted on the year they were said and the year they targeted. The future has been "twenty years out" since 1965.</p>
-        <div class="mono lab-metric">250 predictions &middot; 140 figures &middot; 1950 → 2026</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/productivity-lab/" data-tags="productivity,bls,history,economy,g7">
-        <div class="mono lab-fig">S05</div>
-        <h3 class="serif lab-name">The Productivity Mystery</h3>
-        <p class="lab-line">U.S. labor productivity broke in 1973 and again in 2004. Seven public datasets, seven competing explanations, and a hypothesis-scoring matrix that says only one of them survives the data.</p>
-        <div class="mono lab-metric">8 charts &middot; 1947 → 2025 &middot; G7 panel</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/llm-learning-lab/" data-tags="llm,training,scaling-laws,transformer,alignment">
-        <div class="mono lab-fig">S06</div>
-        <h3 class="serif lab-name">How LLMs Learn</h3>
-        <p class="lab-line">A trillion words, a handful of equations. Eight charts on what actually happens inside a large language model. Scaling laws, the training stack, tokenization, the Transformer, training dynamics, emergence, alignment, benchmarks.</p>
-        <div class="mono lab-metric">8 charts &middot; 2017 → 2026 &middot; Vaswani · Kaplan · Schaeffer</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/escape-velocity-lab/" data-tags="agi,singularity,kimi,charts,exponential">
-        <div class="mono lab-fig">S07</div>
-        <h3 class="serif lab-name">Escape Velocity</h3>
-        <p class="lab-line">Are we approaching the singularity? Seven charts drawn from public data. The inputs are bending up. Is intelligence following?</p>
-        <div class="mono lab-metric">7 charts &middot; 11 datasets &middot; 1950 → 2030</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/semiconductor-lab/" data-tags="chips,supply-chain,tsmc,asml,geopolitics">
-        <div class="mono lab-fig">S08</div>
-        <h3 class="serif lab-name">Semiconductor Cartography</h3>
-        <p class="lab-line">Thirty facilities, seven supply-chain layers, and the chokepoints that could stall the AI chip industry. One interactive map, one flow diagram, one dashboard.</p>
-        <div class="mono lab-metric">30 nodes &middot; 7 layers &middot; 36 connections</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/tech-predictions-lab/" data-tags="predictions,forecasting,history,technology,vaporware">
-        <div class="mono lab-fig">S09</div>
-        <h3 class="serif lab-name">Tech Predictions That Never Happened</h3>
-        <p class="lab-line">Eighty-two confident, dated technology predictions made between 1940 and 2026. Each named a year. The year came. Most of the predictions did not.</p>
-        <div class="mono lab-metric">82 predictions &middot; 9 categories &middot; 1940 → 2026</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-      <a class="lab-card" href="/work/productivity-predictions-lab/" data-tags="predictions,productivity,bls,it,kimi">
-        <div class="mono lab-fig">S10</div>
-        <h3 class="serif lab-name">The Productivity Paradox</h3>
-        <p class="lab-line">Ninety-one confident, dated predictions about when IT and then AI would show up in aggregate productivity statistics, plotted against the actual BLS series underneath.</p>
-        <div class="mono lab-metric">91 predictions &middot; 1978 → 2025 &middot; BLS overlay</div>
-        <div class="mono lab-arrow">Open the story →</div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ─────────────────── P · PAPER ANATOMIES ─────────────────── -->
-  <section id="papers" class="research-band">
-    <header class="band-header">
-      <div class="mono band-mark">P &middot; Paper anatomies <span class="band-mark-count">4</span></div>
-      <h2 class="serif band-title">Close-readings, <em>line by line.</em></h2>
-      <p class="band-blurb">
-        Four papers and product launches, anatomized. Each one is a
-        structured walk through a primary source, with hand-coded
-        diagrams and receipts pinned to specific sections.
-      </p>
-    </header>
-    <div class="band-grid--papers">
-      <a class="lab-card" href="/work/leworldmodel-lab/" data-tags="jepa,world-model,sigreg,lecun,balestriero,planning">
-        <div class="mono lab-fig">P04 &middot; NEW</div>
-        <h3 class="serif lab-name">Inside LeWorldModel</h3>
-        <p class="lab-line">The 15M-parameter JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer.</p>
-        <div class="mono lab-metric">2 interactives &middot; 192-d CLS &middot; 48× faster planning</div>
-        <div class="mono lab-arrow">Open the paper →</div>
-      </a>
-      <a class="lab-card" href="/work/attention-lab/" data-tags="transformer,attention,vaswani,multi-head,paper">
-        <div class="mono lab-fig">P03</div>
-        <h3 class="serif lab-name">Attention Is All You Need</h3>
-        <p class="lab-line">An interactive infographic of the 2017 Transformer paper. A 6×6 attention heatmap you can hover, eight learned heads, and a complexity slider that flips at n = d.</p>
-        <div class="mono lab-metric">2 interactives &middot; 28.4 BLEU EN-DE &middot; 8 heads</div>
-        <div class="mono lab-arrow">Open the paper →</div>
-      </a>
-      <a class="lab-card" href="/work/subquadratic-lab/" data-tags="llm,subq,attention,sparse,benchmark,launch">
-        <div class="mono lab-fig">P02</div>
-        <h3 class="serif lab-name">Inside Subquadratic</h3>
-        <p class="lab-line">A real Miami AI startup, $29M seed, $19.6M GPU contract, and benchmark numbers no one has reproduced.</p>
-        <div class="mono lab-metric">9 claims scored &middot; 12M context &middot; 1,000× compute</div>
-        <div class="mono lab-arrow">Open the paper →</div>
-      </a>
-      <a class="lab-card" href="/work/deepseek-v4-lab/" data-tags="llm,deepseek,csa,muon,fp4,attention,transformer">
-        <div class="mono lab-fig">P01</div>
-        <h3 class="serif lab-name">Inside DeepSeek-V4</h3>
-        <p class="lab-line">Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead. Compressed sparse attention, hyper-connections, Muon, FP4.</p>
-        <div class="mono lab-metric">5 paired comparisons &middot; 27% FLOPs &middot; 10% KV cache</div>
-        <div class="mono lab-arrow">Open the paper →</div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ─────────────────── A · ALGORITHM PRIMERS ─────────────────── -->
-  <section id="primers" class="research-band">
-    <header class="band-header">
-      <div class="mono band-mark">A &middot; Algorithm primers <span class="band-mark-count">14</span></div>
-      <h2 class="serif band-title">The textbook, <em>drawn live.</em></h2>
-      <p class="band-blurb">
-        Thirteen algorithm primers, each a single canvas demo of one ML
-        technique. Plus the Atlas, an expert system that picks one for
-        you in five questions.
-      </p>
-    </header>
-
-    <a class="atlas-callout" href="/work/model-atlas-lab/" data-tags="expert-system,decision-tree,classifier,index,taxonomy">
-      <div class="atlas-mark">ATLAS &middot; the index</div>
-      <p class="atlas-name"><strong>An expert system over 13 ML models.</strong> Five questions, one match, with reasons.</p>
-      <span class="atlas-arrow">Open the Atlas →</span>
+    <!-- M · Working models (8) -->
+    <a class="tile" data-cat="m" data-tags="classification,gradient-boosting,shap,fairness,customer" href="/work/churn-lab/">
+      <div><span class="tile-fig">M01</span><h3 class="tile-name">Churn Model</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Finds the customers about to leave. Saves revenue already paid to acquire.</p>
+        <div class="tile-meta-row"><span class="tile-metric">3 models · ROC overlay · fairness audit</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="clustering,kmeans,dbscan,rfm,customer" href="/work/segmentation-lab/">
+      <div><span class="tile-fig">M02</span><h3 class="tile-name">Customer Segmentation</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Sorts customers by value. Aims spend at the 21% who generate 64% of revenue.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Drag the cost · live recompute</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="recommender,collaborative-filtering,content-based,movies" href="/work/reco-lab/">
+      <div><span class="tile-fig">M03</span><h3 class="tile-name">Recommendation Engine</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Guesses what they'll watch next. Every basis point of watch-time is a subscription renewed.</p>
+        <div class="tile-meta-row"><span class="tile-metric">3 reco models · same likes</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="bayesian,frequentist,experimentation,p-value,peeking" href="/work/ab-test-lab/">
+      <div><span class="tile-fig">M04</span><h3 class="tile-name">A/B Test Simulator</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Shows when a winning version is real and when it's noise. Stops losing tests early.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Bayesian + frequentist · priors</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="funnel,monte-carlo,simulation,segments,conversion" href="/work/funnel-sim-lab/">
+      <div><span class="tile-fig">M05</span><h3 class="tile-name">Funnel Simulation</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Finds the one customer segment quietly killing conversion without breaking the rest.</p>
+        <div class="tile-meta-row"><span class="tile-metric">4 levers · monte-carlo · segment-aware</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="onnx,neural-network,quickdraw,classification,browser" href="/work/sketch-lab/">
+      <div><span class="tile-fig">M06</span><h3 class="tile-name">Sketch Recognition</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Draw anything. A small neural network running on your laptop guesses what it is, in real time.</p>
+        <div class="tile-meta-row"><span class="tile-metric">30 classes · ~930KB ONNX · in-browser</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="rag,llm,openrouter,recommender,api" href="/work/model-picker-lab/">
+      <div><span class="tile-fig">M07</span><h3 class="tile-name">Model Picker</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Ask in plain language: "cheapest model good at code." Get a side-by-side comparison.</p>
+        <div class="tile-meta-row"><span class="tile-metric">300+ models · OpenRouter · weekly</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="bayesian,marketing-mix,causal,meridian,influencer" href="/work/imm-lab/">
+      <div><span class="tile-fig">M08</span><h3 class="tile-name">Influencer Mix Modeling</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A working Bayesian Marketing Mix Model for a creator-driven D2C brand. Eight channels, 104 weeks, full posterior intervals.</p>
+        <div class="tile-meta-row"><span class="tile-metric">8 channels · 104 weeks · Meridian on GCP</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
     </a>
 
-    <ul class="band-list--primers">
-      <li>
-        <a class="primer-row" href="/work/linear-regression-lab/" data-tags="regression,least-squares,line,coefficients">
-          <span class="primer-fig">A01</span>
-          <span class="serif primer-name">Linear regression</span>
-          <span class="primer-line">Fitting a line. Drag points, watch coefficients update.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/logistic-regression-lab/" data-tags="classifier,gradient-descent,boundary,linear">
-          <span class="primer-fig">A02</span>
-          <span class="serif primer-name">Logistic regression</span>
-          <span class="primer-line">The simplest classifier worth deploying. Live gradient descent.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/ridge-lasso-lab/" data-tags="regularization,ridge,lasso,l1,l2,polynomial">
-          <span class="primer-fig">A03</span>
-          <span class="serif primer-name">Ridge &amp; Lasso</span>
-          <span class="primer-line">Two regularizers side by side. Watch coefficients shrink.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/decision-tree-lab/" data-tags="tree,splits,classification,recursive,interpretable">
-          <span class="primer-fig">A04</span>
-          <span class="serif primer-name">Decision Tree</span>
-          <span class="primer-line">Recursive splits made visible. Depth slider shows over- and underfit.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/random-forest-lab/" data-tags="ensemble,bagging,trees,tabular">
-          <span class="primer-fig">A05</span>
-          <span class="serif primer-name">Random Forest</span>
-          <span class="primer-line">Bagging in motion. Many imperfect trees beat one perfect one.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/gradient-boosting-lab/" data-tags="ensemble,boosting,xgboost,residuals,sequential">
-          <span class="primer-fig">A06</span>
-          <span class="serif primer-name">Gradient Boosting</span>
-          <span class="primer-line">Each tree fixes the last tree's mistakes. The technique behind XGBoost.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/svm-lab/" data-tags="svm,margin,hinge-loss,support-vectors,classifier">
-          <span class="primer-fig">A07</span>
-          <span class="serif primer-name">Support Vector Machine</span>
-          <span class="primer-line">The widest margin wins. Soft-margin linear SVM, live SGD on hinge loss.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/mlp-lab/" data-tags="neural-network,backprop,mlp,nonlinear,deep-learning">
-          <span class="primer-fig">A08</span>
-          <span class="serif primer-name">Multi-Layer Perceptron</span>
-          <span class="primer-line">Layers of nonlinearity. Live backprop, one batch at a time.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/naive-bayes-lab/" data-tags="bayes,gaussian,independence,probabilistic">
-          <span class="primer-fig">A09</span>
-          <span class="serif primer-name">Naive Bayes</span>
-          <span class="primer-line">Bayes' theorem applied bluntly. Wrong assumption, useful answer.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/knn-lab/" data-tags="knn,distance,non-parametric,memory">
-          <span class="primer-fig">A10</span>
-          <span class="serif primer-name">K-Nearest Neighbors</span>
-          <span class="primer-line">No training. Just memory. Predict by voting among k neighbors.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/kmeans-lab/" data-tags="clustering,kmeans,lloyd,unsupervised">
-          <span class="primer-fig">A11</span>
-          <span class="serif primer-name">K-Means</span>
-          <span class="primer-line">Lloyd's algorithm, drawn live. Pick k, watch points snap to centroids.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/dbscan-lab/" data-tags="clustering,dbscan,density,unsupervised,no-k">
-          <span class="primer-fig">A12</span>
-          <span class="serif primer-name">DBSCAN</span>
-          <span class="primer-line">Density-based clustering, no k needed. Eps and minPts control everything.</span>
-        </a>
-      </li>
-      <li>
-        <a class="primer-row" href="/work/isolation-forest-lab/" data-tags="anomaly,isolation,forest,outliers,unsupervised">
-          <span class="primer-fig">A13</span>
-          <span class="serif primer-name">Isolation Forest</span>
-          <span class="primer-line">Outliers are easy to isolate. Random splits, short paths to anomalies.</span>
-        </a>
-      </li>
-    </ul>
-  </section>
+    <!-- S · Data stories (10) -->
+    <a class="tile" data-cat="s" data-tags="bls,occupations,automation,robotics,labor" href="/work/jobs-lab/">
+      <div><span class="tile-fig">S01</span><h3 class="tile-name">AI &amp; Jobs</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Type your job. See its AI exposure, robotics exposure, and BLS projection through 2030.</p>
+        <div class="tile-meta-row"><span class="tile-metric">888 occupations · 3 measures</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="bls,atus,daily-life,demographics,clock" href="/work/time-use-lab/">
+      <div><span class="tile-fig">S02</span><h3 class="tile-name">Time-Use Atlas</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">How Americans actually spend 24 hours, drawn as a clock. Pick a cohort, watch the day redraw.</p>
+        <div class="tile-meta-row"><span class="tile-metric">13 cohorts · 13 categories · ATUS</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="youtube,recommender,algorithm,daily,cron" href="/work/watchdog-lab/">
+      <div><span class="tile-fig">S03</span><h3 class="tile-name">Algorithm Watchdog</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A daily-refreshed read on what YouTube's algorithm is rewarding right now.</p>
+        <div class="tile-meta-row"><span class="tile-metric">30 days · 50 videos/day · 11:00 UTC</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="agi,predictions,forecasting,history,timeline" href="/work/agi-forecast-lab/">
+      <div><span class="tile-fig">S04</span><h3 class="tile-name">AGI Horizon</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Two hundred fifty AGI predictions plotted on year said vs year targeted. Twenty years out, since 1965.</p>
+        <div class="tile-meta-row"><span class="tile-metric">250 predictions · 1950 → 2026</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="productivity,bls,history,economy,g7" href="/work/productivity-lab/">
+      <div><span class="tile-fig">S05</span><h3 class="tile-name">The Productivity Mystery</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">U.S. labor productivity broke in 1973 and again in 2004. Seven datasets, seven explanations, one survives.</p>
+        <div class="tile-meta-row"><span class="tile-metric">8 charts · 1947 → 2025 · G7 panel</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="llm,training,scaling-laws,transformer,alignment" href="/work/llm-learning-lab/">
+      <div><span class="tile-fig">S06</span><h3 class="tile-name">How LLMs Learn</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A trillion words, a handful of equations. Eight charts on what actually happens inside an LLM.</p>
+        <div class="tile-meta-row"><span class="tile-metric">8 charts · Vaswani · Kaplan · Schaeffer</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="agi,singularity,kimi,charts,exponential" href="/work/escape-velocity-lab/">
+      <div><span class="tile-fig">S07</span><h3 class="tile-name">Escape Velocity</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Are we approaching the singularity? Seven charts. The inputs are bending up. Is intelligence following?</p>
+        <div class="tile-meta-row"><span class="tile-metric">7 charts · 11 datasets · 1950 → 2030</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="chips,supply-chain,tsmc,asml,geopolitics" href="/work/semiconductor-lab/">
+      <div><span class="tile-fig">S08</span><h3 class="tile-name">Semiconductor Cartography</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Thirty facilities, seven supply-chain layers, the chokepoints that could stall the AI chip industry.</p>
+        <div class="tile-meta-row"><span class="tile-metric">30 nodes · 7 layers · 36 connections</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="predictions,forecasting,history,technology,vaporware" href="/work/tech-predictions-lab/">
+      <div><span class="tile-fig">S09</span><h3 class="tile-name">Tech Predictions That Never Happened</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Eighty-two confident, dated technology predictions. Each named a year. The year came. Most did not.</p>
+        <div class="tile-meta-row"><span class="tile-metric">82 predictions · 1940 → 2026</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="s" data-tags="predictions,productivity,bls,it,kimi" href="/work/productivity-predictions-lab/">
+      <div><span class="tile-fig">S10</span><h3 class="tile-name">The Productivity Paradox</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Ninety-one predictions about when IT and AI would show up in productivity statistics, against the BLS series.</p>
+        <div class="tile-meta-row"><span class="tile-metric">91 predictions · 1978 → 2025 · BLS</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+
+    <!-- P · Paper anatomies (4) — IN ORDER P01 → P04 -->
+    <a class="tile" data-cat="p" data-tags="llm,deepseek,csa,muon,fp4,attention,transformer" href="/work/deepseek-v4-lab/">
+      <div><span class="tile-fig">P01</span><h3 class="tile-name">Inside DeepSeek-V4</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.</p>
+        <div class="tile-meta-row"><span class="tile-metric">5 paired comparisons · 27% FLOPs</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="p" data-tags="llm,subq,attention,sparse,benchmark,launch" href="/work/subquadratic-lab/">
+      <div><span class="tile-fig">P02</span><h3 class="tile-name">Inside Subquadratic</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A real Miami AI startup, $29M seed, $19.6M GPU contract, benchmark numbers no one has reproduced.</p>
+        <div class="tile-meta-row"><span class="tile-metric">9 claims scored · 12M context</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="p" data-tags="transformer,attention,vaswani,multi-head,paper" href="/work/attention-lab/">
+      <div><span class="tile-fig">P03</span><h3 class="tile-name">Attention Is All You Need</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">An interactive infographic of the 2017 Transformer paper. 6×6 attention heatmap, 8 heads, complexity slider.</p>
+        <div class="tile-meta-row"><span class="tile-metric">2 interactives · 28.4 BLEU EN-DE</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="p" data-tags="jepa,world-model,sigreg,lecun,balestriero,planning" href="/work/leworldmodel-lab/">
+      <div><span class="tile-fig">P04 · NEW</span><h3 class="tile-name">Inside LeWorldModel</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">The 15M JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer.</p>
+        <div class="tile-meta-row"><span class="tile-metric">2 interactives · 192-d CLS · 48× planning</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+
+    <!-- ATLAS — the index page for primers -->
+    <a class="tile" data-cat="atlas" data-tags="expert-system,decision-tree,classifier,index,taxonomy" href="/work/model-atlas-lab/">
+      <div><span class="tile-fig">ATLAS</span><h3 class="tile-name">The Model Atlas</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">An expert system over 13 ML models. Five questions, one match, with reasons.</p>
+        <div class="tile-meta-row"><span class="tile-metric">13 models · 5 questions</span><span class="tile-arrow">Open the Atlas →</span></div>
+      </div></div>
+    </a>
+
+    <!-- A · Algorithm primers (13) -->
+    <a class="tile" data-cat="a" data-tags="regression,least-squares,line,coefficients" href="/work/linear-regression-lab/">
+      <div><span class="tile-fig">A01</span><h3 class="tile-name">Linear Regression</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Fitting a line. Drag points, watch coefficients update in real time.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Live demo · from the Atlas</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="classifier,gradient-descent,boundary,linear" href="/work/logistic-regression-lab/">
+      <div><span class="tile-fig">A02</span><h3 class="tile-name">Logistic Regression</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">The simplest classifier worth deploying. Plant points, watch gradient descent slide a probability boundary into place.</p>
+        <div class="tile-meta-row"><span class="tile-metric">3 weights · live SGD · 0 deps</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="regularization,ridge,lasso,l1,l2,polynomial" href="/work/ridge-lasso-lab/">
+      <div><span class="tile-fig">A03</span><h3 class="tile-name">Ridge &amp; Lasso</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Two regularizers, side by side. Watch coefficients shrink, and Lasso zero them out.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Two regularizers · live shrinkage</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="tree,splits,classification,recursive,interpretable" href="/work/decision-tree-lab/">
+      <div><span class="tile-fig">A04</span><h3 class="tile-name">Decision Tree</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Recursive splits made visible. Depth slider shows over- and underfit.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Depth slider · partition + tree</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="ensemble,bagging,trees,tabular" href="/work/random-forest-lab/">
+      <div><span class="tile-fig">A05</span><h3 class="tile-name">Random Forest</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A committee of decision trees. Many imperfect trees beat one perfect one.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Many trees · one good answer</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="ensemble,boosting,xgboost,residuals,sequential" href="/work/gradient-boosting-lab/">
+      <div><span class="tile-fig">A06</span><h3 class="tile-name">Gradient Boosting</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Each tree fixes the last tree's mistakes. The technique behind XGBoost.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Sequential trees · residual fit</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="svm,margin,hinge-loss,support-vectors,classifier" href="/work/svm-lab/">
+      <div><span class="tile-fig">A07</span><h3 class="tile-name">Support Vector Machine</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">The widest margin wins. Soft-margin linear SVM, live SGD on hinge loss.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Hinge loss · live SGD</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="neural-network,backprop,mlp,nonlinear,deep-learning" href="/work/mlp-lab/">
+      <div><span class="tile-fig">A08</span><h3 class="tile-name">Multi-Layer Perceptron</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Layers of nonlinearity. Live backprop, one batch at a time.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Live backprop · one batch at a time</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="bayes,gaussian,independence,probabilistic" href="/work/naive-bayes-lab/">
+      <div><span class="tile-fig">A09</span><h3 class="tile-name">Naive Bayes</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Bayes' theorem applied bluntly. Wrong assumption, surprisingly useful answer.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Conditional independence · live</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="knn,distance,non-parametric,memory" href="/work/knn-lab/">
+      <div><span class="tile-fig">A10</span><h3 class="tile-name">K-Nearest Neighbors</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">No training. Just memory. Predict by voting among k neighbors.</p>
+        <div class="tile-meta-row"><span class="tile-metric">k slider · 3 datasets</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="clustering,kmeans,lloyd,unsupervised" href="/work/kmeans-lab/">
+      <div><span class="tile-fig">A11</span><h3 class="tile-name">K-Means</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Lloyd's algorithm, drawn live. Pick k, watch points snap to centroids.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Live iteration · pick k</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="clustering,dbscan,density,unsupervised,no-k" href="/work/dbscan-lab/">
+      <div><span class="tile-fig">A12</span><h3 class="tile-name">DBSCAN</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Density-based clustering, no k needed. Eps and minPts control everything.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Eps + minPts · live cluster</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="a" data-tags="anomaly,isolation,forest,outliers,unsupervised" href="/work/isolation-forest-lab/">
+      <div><span class="tile-fig">A13</span><h3 class="tile-name">Isolation Forest</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">Outliers are easy to isolate. Random splits, short paths to anomalies.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Random splits · live score</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+
+  </div>
 </section>
 
 
@@ -791,6 +751,6 @@
 
 <!-- JS (after DOM) -->
 <script src="assets/js/main.js?v=16"></script>
-<script src="assets/js/research-filter.js?v=1"></script>
+<script src="assets/js/research-filter.js?v=4"></script>
 </body>
 </html>

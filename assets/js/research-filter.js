@@ -1,11 +1,12 @@
 /* ═══════════════════════════════════════════════════════════
-   RESEARCH INDEX — search filter across all bands
-   - One sticky search input filters every card by substring
-   - Bands with zero matches collapse via [hidden]
-   - Atlas callout collapses when its band collapses
-   - Live readout of total visible
-   - Hash routing: /#models, /#stories, /#papers, /#primers scroll
-     to the respective band; /#research scrolls to the index head
+   RESEARCH INDEX — chip filter + search + click animation
+
+   - Single-select category chips. Active chip filters the grid.
+   - Substring search across name + line + metric + tags.
+   - Hash routing: /#research?cat=p loads with Papers preselected.
+   - Click animation: tile zooms into viewport (is-launching), then
+     navigates. Disabled with prefers-reduced-motion.
+   - Stagger entry via --idx custom property on each tile.
    ═══════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -18,52 +19,90 @@
     }
   }
 
+  function parseHash() {
+    var h = window.location.hash || '';
+    var out = { cat: 'all', q: '' };
+    if (!h.startsWith('#research')) return out;
+    var qIdx = h.indexOf('?');
+    if (qIdx === -1) return out;
+    h.slice(qIdx + 1).split('&').forEach(function (kv) {
+      var eq = kv.indexOf('=');
+      if (eq === -1) return;
+      var k = decodeURIComponent(kv.slice(0, eq));
+      var v = decodeURIComponent(kv.slice(eq + 1));
+      if (k === 'cat') out.cat = v;
+      else if (k === 'q') out.q = v;
+    });
+    return out;
+  }
+
+  function writeHash(state) {
+    var parts = [];
+    if (state.cat && state.cat !== 'all') parts.push('cat=' + encodeURIComponent(state.cat));
+    if (state.q) parts.push('q=' + encodeURIComponent(state.q));
+    var hash = '#research' + (parts.length ? '?' + parts.join('&') : '');
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', hash);
+    }
+  }
+
   ready(function init() {
     var index = document.getElementById('research');
     if (!index) return;
+
+    var grid = document.getElementById('tile-grid');
+    var chipsEl = document.getElementById('research-chips');
     var searchEl = document.getElementById('research-search-input');
     var readoutEl = document.getElementById('research-readout');
     var emptyEl = document.getElementById('research-empty');
-    var bands = Array.prototype.slice.call(index.querySelectorAll('.research-band'));
+    if (!grid || !chipsEl) return;
 
-    // Build per-card haystacks (lowercased) for fast substring matching
-    var cards = Array.prototype.slice.call(index.querySelectorAll('.lab-card, .primer-row'));
-    var hay = cards.map(function (c) {
-      var name = (c.querySelector('.lab-name, .primer-name') || {}).textContent || '';
-      var line = (c.querySelector('.lab-line, .primer-line') || {}).textContent || '';
-      var metric = (c.querySelector('.lab-metric') || {}).textContent || '';
-      var fig = (c.querySelector('.lab-fig, .primer-fig') || {}).textContent || '';
-      var tags = c.getAttribute('data-tags') || '';
-      return (name + ' ' + line + ' ' + metric + ' ' + fig + ' ' + tags).toLowerCase();
+    var tiles = Array.prototype.slice.call(grid.querySelectorAll('.tile'));
+
+    // Pre-build per-tile haystacks for fast substring search
+    var hay = tiles.map(function (t) {
+      var name = (t.querySelector('.tile-name') || {}).textContent || '';
+      var fig = (t.querySelector('.tile-fig') || {}).textContent || '';
+      var line = (t.querySelector('.tile-line') || {}).textContent || '';
+      var metric = (t.querySelector('.tile-metric') || {}).textContent || '';
+      var tags = t.getAttribute('data-tags') || '';
+      var cat = t.getAttribute('data-cat') || '';
+      return (name + ' ' + fig + ' ' + line + ' ' + metric + ' ' + tags + ' ' + cat).toLowerCase();
     });
-    var total = cards.length;
+
+    var total = tiles.length;
+
+    // Set --idx on each tile for the staggered entry animation
+    tiles.forEach(function (t, i) {
+      t.style.setProperty('--idx', String(i));
+    });
+
+    var state = parseHash();
+    if (searchEl && state.q) searchEl.value = state.q;
 
     function applyFilter() {
-      var q = (searchEl ? searchEl.value : '').trim().toLowerCase();
+      var cat = state.cat || 'all';
+      var q = (state.q || '').trim().toLowerCase();
       var visible = 0;
 
-      // Toggle each card
-      for (var i = 0; i < cards.length; i++) {
-        var match = !q || hay[i].indexOf(q) !== -1;
-        cards[i].classList.toggle('is-filtered-out', !match);
-        if (match) visible++;
+      for (var i = 0; i < tiles.length; i++) {
+        var tCat = tiles[i].getAttribute('data-cat') || '';
+        var matchCat = (cat === 'all') || (tCat === cat);
+        var matchQ = !q || hay[i].indexOf(q) !== -1;
+        var visible_i = matchCat && matchQ;
+        tiles[i].classList.toggle('is-filtered-out', !visible_i);
+        if (visible_i) visible++;
       }
 
-      // Collapse bands that have no visible cards (when filtering)
-      bands.forEach(function (band) {
-        if (!q) {
-          band.removeAttribute('hidden');
-          return;
-        }
-        var any = band.querySelector('.lab-card:not(.is-filtered-out), .primer-row:not(.is-filtered-out)');
-        if (any) band.removeAttribute('hidden');
-        else band.setAttribute('hidden', '');
+      // Update chip active state
+      Array.prototype.forEach.call(chipsEl.querySelectorAll('.research-chip'), function (b) {
+        b.classList.toggle('is-active', (b.getAttribute('data-cat') || 'all') === cat);
       });
 
       // Readout
       if (readoutEl) {
-        if (q) {
-          readoutEl.innerHTML = '<strong>' + visible + '</strong> of ' + total + ' shown';
+        if (q || cat !== 'all') {
+          readoutEl.innerHTML = '<strong>' + visible + '</strong> of ' + total;
         } else {
           readoutEl.innerHTML = '<strong>' + total + '</strong> labs';
         }
@@ -75,47 +114,71 @@
       }
     }
 
+    // Wire chip clicks
+    Array.prototype.forEach.call(chipsEl.querySelectorAll('.research-chip'), function (b) {
+      b.addEventListener('click', function () {
+        state.cat = b.getAttribute('data-cat') || 'all';
+        writeHash(state);
+        applyFilter();
+      });
+    });
+
+    // Wire search input (debounced)
     if (searchEl) {
       var t;
       searchEl.addEventListener('input', function () {
         clearTimeout(t);
-        t = setTimeout(applyFilter, 80);
+        t = setTimeout(function () {
+          state.q = searchEl.value;
+          writeHash(state);
+          applyFilter();
+        }, 80);
       });
     }
 
-    // Initial
-    applyFilter();
+    // Hash change → re-apply (for back/forward nav and external links)
+    window.addEventListener('hashchange', function () {
+      var next = parseHash();
+      state.cat = next.cat;
+      state.q = next.q;
+      if (searchEl && searchEl.value !== state.q) searchEl.value = state.q;
+      applyFilter();
+    });
 
-    // Smooth scroll for in-page jumps
-    function smoothScrollTo(hash) {
-      var el = document.querySelector(hash);
-      if (!el) return;
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    /* ── Click animation: zoom into page ────────────────────
+       Intercept primary left-clicks. Add .is-launching to the
+       tile (CSS scales it up + fades to 0). After the animation
+       completes, navigate. Right-click, middle-click, modifier-
+       click bypass (browser handles natively).
+    ──────────────────────────────────────────────────────── */
+    var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var LAUNCH_MS = REDUCE_MOTION ? 0 : 380;
 
-    document.querySelectorAll('a[href^="/#"], a[href^="#"]').forEach(function (a) {
-      var href = a.getAttribute('href') || '';
-      var hashOnly = href.startsWith('#') ? href : (href.startsWith('/#') ? href.slice(1) : '');
-      if (!hashOnly || hashOnly.length < 2) return;
-      // Only intercept if the target exists on this page
-      if (!document.querySelector(hashOnly)) return;
-      a.addEventListener('click', function (e) {
-        var t = document.querySelector(hashOnly);
-        if (!t) return;
+    tiles.forEach(function (t) {
+      t.addEventListener('click', function (e) {
+        // Bypass for non-primary, modifier, or auxiliary clicks
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (e.button !== undefined && e.button !== 0) return;
+
+        var href = t.getAttribute('href');
+        if (!href) return;
+
+        if (REDUCE_MOTION) return;  // let normal navigation happen
+
         e.preventDefault();
-        smoothScrollTo(hashOnly);
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', hashOnly);
-        }
+        t.classList.add('is-launching');
+
+        // Slightly dim other tiles for focus
+        tiles.forEach(function (other) {
+          if (other !== t) other.style.opacity = '0.4';
+        });
+
+        setTimeout(function () {
+          window.location.href = href;
+        }, LAUNCH_MS);
       });
     });
 
-    // Honor hash on load
-    if (window.location.hash && document.querySelector(window.location.hash)) {
-      // Defer to after layout settles
-      setTimeout(function () {
-        smoothScrollTo(window.location.hash);
-      }, 50);
-    }
+    applyFilter();
   });
 })();

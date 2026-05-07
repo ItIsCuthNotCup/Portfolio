@@ -1,49 +1,80 @@
 /* ═══════════════════════════════════════════════════════════
-   RESEARCH INDEX — homepage band layout
-   Loaded only from index.html. No cache-bust on main.css needed.
+   RESEARCH INDEX — periodic-table grid
+   Loaded only from index.html.
 
-   Four categories, four bands, each with the typographic register
-   that fits the kind of work it contains:
-     - MODELS    : 4-col uniform grid (M01–M08)
-     - STORIES   : 2-col wider cards   (S01–S10)
-     - PAPERS    : 2x2 generous grid   (P01–P04)
-     - PRIMERS   : print-syllabus list (A01–A13) + ATLAS callout
+   Design: a dense grid of small tiles. Each tile shows just its
+   prefix and title, subtly tinted by category. Hover → tile
+   scales 1.5x, fills with full category color, reveals details.
+   Click → soft depression before navigation.
 
-   Toolbar: chip-style category buttons + search + count.
-   No sticky positioning (avoids backdrop-filter quirks).
+   Easing: ease-out-expo throughout, no bounce.
+   Color: only paper / ink / ink-soft / accent — no new hues.
+   Grid: auto-fill, 180px tiles, tight gap. ~36 tiles fit in
+   one screen on a typical desktop.
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Section opening: header + intro ──────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   CATEGORY PALETTE
+   Four categories + ATLAS, all derived from existing tokens.
+   ═══════════════════════════════════════════════════════════ */
+.research-index {
+  /* M = neutral working models (cool, technical) */
+  --cat-m-tint: color-mix(in oklab, var(--paper) 95%, var(--ink) 5%);
+  --cat-m-fill: color-mix(in oklab, var(--ink) 92%, var(--accent) 8%);
+
+  /* S = warm data stories (editorial argument) */
+  --cat-s-tint: color-mix(in oklab, var(--paper) 91%, var(--accent) 9%);
+  --cat-s-fill: color-mix(in oklab, var(--accent) 60%, var(--ink) 40%);
+
+  /* P = full red paper anatomies (the deepest, freshest reads) */
+  --cat-p-tint: color-mix(in oklab, var(--paper) 84%, var(--accent) 16%);
+  --cat-p-fill: var(--accent);
+
+  /* A = soft graphite algorithm primers (the textbook) */
+  --cat-a-tint: color-mix(in oklab, var(--paper) 94%, var(--ink-soft) 6%);
+  --cat-a-fill: color-mix(in oklab, var(--ink-soft) 70%, var(--ink) 30%);
+
+  /* ATLAS = inverted (always assertive — it's the index) */
+  --cat-atlas-tint: var(--ink);
+  --cat-atlas-fill: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INTRO
+   ═══════════════════════════════════════════════════════════ */
 .research-intro {
   max-width: 720px;
   margin: 0 0 28px;
 }
 .research-intro p {
-  margin-top: 18px;
+  margin-top: 16px;
   font-family: 'Newsreader', serif;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.55;
   color: var(--ink-soft);
+  max-width: 60ch;
 }
 
-/* ── Toolbar: chip jumps + search + count ─────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   TOOLBAR — chip filters + search + count
+   ═══════════════════════════════════════════════════════════ */
 .research-toolbar {
-  margin: 0 0 64px;
-  padding: 18px 0;
+  margin: 0 0 32px;
+  padding: 14px 0;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   font-family: 'DM Mono', ui-monospace, monospace;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px 28px;
+  gap: 14px 24px;
 }
 
 .research-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -52,19 +83,21 @@
   appearance: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid color-mix(in oklab, var(--ink) 28%, transparent);
+  gap: 7px;
+  border: 1px solid color-mix(in oklab, var(--ink) 26%, transparent);
   background: transparent;
   color: var(--ink);
-  padding: 7px 14px;
+  padding: 6px 12px;
   font-family: inherit;
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
-  text-decoration: none;
   white-space: nowrap;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition:
+    background 220ms cubic-bezier(0.19, 1, 0.22, 1),
+    border-color 220ms cubic-bezier(0.19, 1, 0.22, 1),
+    color 220ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 .research-chip:hover {
   border-color: var(--accent);
@@ -77,9 +110,9 @@
 }
 .research-chip .chip-count {
   display: inline-block;
-  padding: 1px 6px;
+  padding: 0 5px;
   font-size: 9px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   background: color-mix(in oklab, var(--ink) 8%, transparent);
   color: var(--ink-dim);
   font-variant-numeric: tabular-nums;
@@ -91,22 +124,22 @@
 
 .research-search {
   position: relative;
-  flex: 0 1 280px;
-  min-width: 220px;
+  flex: 0 1 240px;
+  min-width: 200px;
 }
 .research-search input {
   width: 100%;
   background: transparent;
   border: none;
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-  padding: 6px 0 6px 22px;
+  padding: 5px 0 5px 20px;
   font-family: 'Newsreader', serif;
   font-style: italic;
   font-weight: 300;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--ink);
   outline: none;
-  transition: border-color 160ms ease;
+  transition: border-color 220ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 .research-search input:focus {
   border-bottom-color: var(--accent);
@@ -120,8 +153,8 @@
   position: absolute;
   left: 2px;
   top: 50%;
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   margin-top: -7px;
   border: 1.5px solid var(--ink-dim);
   border-radius: 50%;
@@ -130,7 +163,7 @@
 .research-search::after {
   content: '';
   position: absolute;
-  left: 11px;
+  left: 10px;
   top: 50%;
   margin-top: 1px;
   width: 5px;
@@ -141,7 +174,7 @@
 }
 
 .research-readout {
-  font-size: 10px;
+  font-size: 9.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-dim);
@@ -154,7 +187,243 @@
   font-weight: 500;
 }
 
-/* ── Empty state ──────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   THE GRID
+   ═══════════════════════════════════════════════════════════ */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+  /* Padding ensures hover-scaled tiles don't get clipped at edges */
+  padding: 24px 0;
+  /* Allow the grid container to overflow its scaled children */
+  overflow: visible;
+}
+
+@media (max-width: 720px) {
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 4px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE TILE
+   ═══════════════════════════════════════════════════════════ */
+.tile {
+  /* Per-tile vars overridden via [data-cat] below */
+  --tint: var(--cat-m-tint);
+  --fill: var(--cat-m-fill);
+
+  position: relative;
+  aspect-ratio: 5 / 3;
+  padding: 13px 14px 12px;
+  background: var(--tint);
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  overflow: hidden;
+  isolation: isolate;
+
+  transform-origin: center center;
+  transform: scale(1);
+  z-index: 1;
+
+  transition:
+    transform 320ms cubic-bezier(0.19, 1, 0.22, 1),
+    background 240ms cubic-bezier(0.19, 1, 0.22, 1),
+    color 240ms cubic-bezier(0.19, 1, 0.22, 1),
+    border-color 240ms cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 320ms cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Pre-paint reveal: stagger via --idx set in JS */
+  animation: tile-in 520ms cubic-bezier(0.19, 1, 0.22, 1) backwards;
+  animation-delay: calc(var(--idx, 0) * 14ms);
+
+  will-change: transform;
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Per-category tints + fills */
+.tile[data-cat="m"] { --tint: var(--cat-m-tint); --fill: var(--cat-m-fill); }
+.tile[data-cat="s"] { --tint: var(--cat-s-tint); --fill: var(--cat-s-fill); }
+.tile[data-cat="p"] { --tint: var(--cat-p-tint); --fill: var(--cat-p-fill); }
+.tile[data-cat="a"] { --tint: var(--cat-a-tint); --fill: var(--cat-a-fill); }
+.tile[data-cat="atlas"] {
+  --tint: var(--cat-atlas-tint);
+  --fill: var(--cat-atlas-fill);
+  color: var(--paper);  /* Atlas is dark by default */
+  border-color: var(--ink);
+}
+.tile[data-cat="atlas"] .tile-fig {
+  color: var(--accent);
+}
+.tile[data-cat="atlas"] .tile-name {
+  color: var(--paper);
+}
+
+/* Hover: scale up, fill with category color, reveal details */
+.tile:hover,
+.tile:focus-visible {
+  transform: scale(1.5);
+  background: var(--fill);
+  color: var(--paper);
+  border-color: var(--fill);
+  box-shadow:
+    0 18px 40px -12px color-mix(in oklab, var(--ink) 35%, transparent),
+    0 4px 12px -4px color-mix(in oklab, var(--ink) 25%, transparent);
+  z-index: 100;
+  outline: none;
+}
+
+/* Click: brief depression mid-hover */
+.tile:active {
+  transform: scale(1.46);
+  transition-duration: 90ms;
+}
+
+/* Tile content elements */
+.tile-fig {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  transition: color 240ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.tile:hover .tile-fig,
+.tile:focus-visible .tile-fig {
+  color: color-mix(in oklab, var(--paper) 85%, transparent);
+}
+.tile[data-cat="p"]:hover .tile-fig {
+  color: var(--paper);  /* full white on red */
+}
+
+.tile-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin: 6px 0 0;
+
+  /* Two-line clamp by default */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 240ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.tile:hover .tile-name,
+.tile:focus-visible .tile-name {
+  color: var(--paper);
+  -webkit-line-clamp: unset;
+}
+.tile[data-cat="atlas"] .tile-name {
+  font-style: italic;
+}
+
+.tile-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  opacity: 0;
+  transition:
+    grid-template-rows 320ms cubic-bezier(0.19, 1, 0.22, 1),
+    margin-top 320ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 240ms 100ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.tile-detail-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tile:hover .tile-detail,
+.tile:focus-visible .tile-detail {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.tile-line {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin: 0;
+  color: color-mix(in oklab, var(--paper) 88%, transparent);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tile-meta-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tile-metric {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 60%, transparent);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tile-arrow {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 80%, transparent);
+  flex-shrink: 0;
+}
+
+/* Hide tiles that don't match active filter or search */
+.tile.is-filtered-out {
+  display: none;
+}
+
+/* When the user navigates away (click triggered), the tile expands further
+   and fades — this gives a satisfying "zooming into the page" effect that
+   completes just as the new page loads. */
+.tile.is-launching {
+  transform: scale(1.8);
+  opacity: 0;
+  transition:
+    transform 380ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 380ms cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════════ */
 .research-empty {
   display: none;
   margin: 80px auto;
@@ -169,463 +438,30 @@
 }
 .research-empty.is-visible { display: block; }
 
-/* ── Band frame ───────────────────────────────────────────── */
-.research-band {
-  margin: 0 0 96px;
-  scroll-margin-top: 24px;
-}
-.research-band[hidden] { display: none; }
-
-.band-header {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-  margin-bottom: 32px;
-  max-width: 760px;
-}
-.band-header .band-mark {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.band-header .band-mark-count {
-  display: inline-block;
-  padding: 1px 7px;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  background: color-mix(in oklab, var(--ink) 8%, transparent);
-  color: var(--ink-dim);
-  font-variant-numeric: tabular-nums;
-  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
-}
-.band-header .band-title {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: clamp(30px, 4vw, 44px);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  margin: 6px 0 0;
-  text-wrap: balance;
-}
-.band-header .band-title em {
-  font-style: italic;
-  color: var(--accent);
-}
-.band-header .band-blurb {
-  margin: 12px 0 0;
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 560px;
-}
-
-/* Cards filtered out by search */
-.lab-card.is-filtered-out,
-.primer-row.is-filtered-out { display: none !important; }
-
-/* ── MODELS band: 4-col uniform grid ──────────────────────── */
-/* IMPORTANT: declare ALL grid+border properties here; do NOT
-   inherit from .labs-grid which is unscoped in main.css. */
-.band-grid--models {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--ink);
-  border-left: 1px solid var(--ink);
-}
-.band-grid--models > .lab-card {
-  margin: 0;
-  border-right: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  padding: 22px 24px;
-  background: var(--paper);
-  display: flex;
-  flex-direction: column;
-  min-height: 220px;
-  text-decoration: none;
-  color: inherit;
-  transition: background 200ms ease, color 200ms ease;
-}
-.band-grid--models > .lab-card:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
-.band-grid--models > .lab-card .lab-fig {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
-}
-.band-grid--models > .lab-card .lab-name {
-  font-family: 'Newsreader', serif;
-  font-size: clamp(18px, 1.6vw, 22px);
-  line-height: 1.15;
-  margin: 0 0 10px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-.band-grid--models > .lab-card .lab-line {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  margin: 0 0 14px;
-  flex: 1;
-}
-.band-grid--models > .lab-card .lab-metric {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  color: var(--ink-dim);
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed color-mix(in oklab, var(--ink) 22%, transparent);
-}
-.band-grid--models > .lab-card .lab-arrow {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink);
-  align-self: flex-start;
-}
-.band-grid--models > .lab-card:hover .lab-fig,
-.band-grid--models > .lab-card:hover .lab-name,
-.band-grid--models > .lab-card:hover .lab-line,
-.band-grid--models > .lab-card:hover .lab-metric,
-.band-grid--models > .lab-card:hover .lab-arrow {
-  color: var(--paper);
-}
-.band-grid--models > .lab-card:hover .lab-fig { color: var(--accent); }
-.band-grid--models > .lab-card:hover .lab-metric {
-  border-top-color: color-mix(in oklab, var(--paper) 30%, transparent);
-}
-
-@media (max-width: 1100px) {
-  .band-grid--models { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-@media (max-width: 600px) {
-  .band-grid--models { grid-template-columns: 1fr !important; }
-}
-
-/* ── STORIES band: 2-col, wider, more lab-line space ─────── */
-.band-grid--stories {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--ink);
-  border-left: 1px solid var(--ink);
-}
-.band-grid--stories > .lab-card {
-  margin: 0;
-  padding: 28px 32px 28px;
-  border-right: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  background: var(--paper);
-  display: flex;
-  flex-direction: column;
-  min-height: 240px;
-  text-decoration: none;
-  color: inherit;
-  transition: background 200ms ease, color 200ms ease;
-}
-.band-grid--stories > .lab-card:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
-.band-grid--stories > .lab-card .lab-fig {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-.band-grid--stories > .lab-card .lab-name {
-  font-family: 'Newsreader', serif;
-  font-weight: 400;
-  font-size: clamp(22px, 2vw, 28px);
-  line-height: 1.1;
-  margin: 0 0 12px;
-  letter-spacing: -0.015em;
-}
-.band-grid--stories > .lab-card .lab-line {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--ink-soft);
-  margin: 0 0 16px;
-  flex: 1;
-}
-.band-grid--stories > .lab-card .lab-metric {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--ink-dim);
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed color-mix(in oklab, var(--ink) 22%, transparent);
-}
-.band-grid--stories > .lab-card .lab-arrow {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink);
-  align-self: flex-start;
-}
-.band-grid--stories > .lab-card:hover .lab-fig,
-.band-grid--stories > .lab-card:hover .lab-name,
-.band-grid--stories > .lab-card:hover .lab-line,
-.band-grid--stories > .lab-card:hover .lab-metric,
-.band-grid--stories > .lab-card:hover .lab-arrow {
-  color: var(--paper);
-}
-.band-grid--stories > .lab-card:hover .lab-fig { color: var(--accent); }
-.band-grid--stories > .lab-card:hover .lab-metric {
-  border-top-color: color-mix(in oklab, var(--paper) 30%, transparent);
-}
-
-@media (max-width: 720px) {
-  .band-grid--stories { grid-template-columns: 1fr !important; }
-}
-
-/* ── PAPERS band: 2x2 generous ─────────────────────────────── */
-.band-grid--papers {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--ink);
-  border-left: 1px solid var(--ink);
-}
-.band-grid--papers > .lab-card {
-  margin: 0;
-  padding: 36px 40px 36px;
-  border-right: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  background: var(--paper);
-  display: flex;
-  flex-direction: column;
-  min-height: 280px;
-  text-decoration: none;
-  color: inherit;
-  transition: background 200ms ease, color 200ms ease;
-}
-.band-grid--papers > .lab-card:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
-.band-grid--papers > .lab-card .lab-fig {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-.band-grid--papers > .lab-card .lab-name {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: clamp(28px, 2.8vw, 36px);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  margin: 0 0 16px;
-}
-.band-grid--papers > .lab-card .lab-line {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-style: italic;
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--ink);
-  margin: 0 0 18px;
-  max-width: 38ch;
-  flex: 1;
-}
-.band-grid--papers > .lab-card .lab-metric {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--ink-dim);
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  margin-bottom: 12px;
-  padding-top: 12px;
-  border-top: 1px dashed color-mix(in oklab, var(--ink) 22%, transparent);
-}
-.band-grid--papers > .lab-card .lab-arrow {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink);
-  align-self: flex-start;
-}
-.band-grid--papers > .lab-card:hover .lab-fig,
-.band-grid--papers > .lab-card:hover .lab-name,
-.band-grid--papers > .lab-card:hover .lab-line,
-.band-grid--papers > .lab-card:hover .lab-metric,
-.band-grid--papers > .lab-card:hover .lab-arrow {
-  color: var(--paper);
-}
-.band-grid--papers > .lab-card:hover .lab-fig { color: var(--accent); }
-.band-grid--papers > .lab-card:hover .lab-metric {
-  border-top-color: color-mix(in oklab, var(--paper) 30%, transparent);
-}
-
-@media (max-width: 720px) {
-  .band-grid--papers { grid-template-columns: 1fr !important; }
-}
-
-/* ── ATLAS callout: full-width pill above primers ─────────── */
-.atlas-callout {
-  display: grid;
-  grid-template-columns: minmax(120px, auto) 1fr auto;
-  gap: 28px;
-  align-items: center;
-  padding: 22px 32px;
-  margin: 0 0 28px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-  font-family: 'DM Mono', ui-monospace, monospace;
-  text-decoration: none;
-  transition: background 200ms ease;
-}
-.atlas-callout:hover {
-  background: color-mix(in oklab, var(--ink) 80%, var(--accent) 20%);
-}
-.atlas-callout .atlas-mark {
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.atlas-callout .atlas-name {
-  font-family: 'Newsreader', serif;
-  font-weight: 400;
-  font-style: italic;
-  font-size: clamp(17px, 1.5vw, 21px);
-  line-height: 1.3;
-  color: var(--paper);
-  margin: 0;
-}
-.atlas-callout .atlas-name strong {
-  font-style: normal;
-  font-weight: 500;
-  color: var(--paper);
-  margin-right: 12px;
-}
-.atlas-callout .atlas-arrow {
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--paper) 70%, transparent);
-  border-bottom: 1px solid color-mix(in oklab, var(--paper) 30%, transparent);
-  padding-bottom: 2px;
-  transition: color 200ms ease, border-color 200ms ease;
-  white-space: nowrap;
-}
-.atlas-callout:hover .atlas-arrow {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-@media (max-width: 720px) {
-  .atlas-callout {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 20px 22px;
+/* ═══════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    animation: none;
+    transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .tile:hover,
+  .tile:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+  .tile-detail {
+    transition: opacity 150ms ease;
+  }
+  .tile.is-launching {
+    transform: none;
   }
 }
 
-/* ── PRIMERS band: print-syllabus reading list ───────────── */
-.band-list--primers {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-}
-.band-list--primers > li {
-  margin: 0;
-  border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-}
-.band-list--primers > li:nth-child(odd) {
-  border-right: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-}
-
-.primer-row {
-  display: grid;
-  grid-template-columns: 56px minmax(140px, auto) 1fr;
-  gap: 18px;
-  align-items: baseline;
-  padding: 14px 24px;
-  text-decoration: none;
-  transition: background 160ms ease;
-}
-.primer-row:hover {
-  background: color-mix(in oklab, var(--ink) 5%, transparent);
-}
-.primer-row .primer-fig {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-.primer-row .primer-name {
-  font-family: 'Newsreader', serif;
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.2;
-  color: var(--ink);
-  white-space: nowrap;
-  letter-spacing: -0.01em;
-}
-.primer-row .primer-line {
-  font-family: 'Newsreader', serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--ink-soft);
-  font-style: italic;
-}
-.primer-row:hover .primer-name { color: var(--accent); }
-
-@media (max-width: 720px) {
-  .band-list--primers { grid-template-columns: 1fr; }
-  .band-list--primers > li:nth-child(odd) { border-right: none; }
-  .primer-row {
-    grid-template-columns: 48px 1fr;
-    grid-template-rows: auto auto;
-    row-gap: 4px;
-  }
-  .primer-row .primer-line { grid-column: 1 / -1; padding-left: 66px; }
-}
-
-/* ── Masthead Research dropdown — wider panel + counts ───── */
+/* ═══════════════════════════════════════════════════════════
+   MASTHEAD RESEARCH DROPDOWN — keep wider panel + counts
+   ═══════════════════════════════════════════════════════════ */
 .nav-dropdown-menu.nav-research {
   min-width: 280px;
 }
