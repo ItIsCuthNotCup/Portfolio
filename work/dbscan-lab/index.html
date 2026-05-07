@@ -164,7 +164,7 @@
   <h1 class="serif big-display mc-title" data-scramble data-scramble-duration="1200">Clusters without<br><span class="serif-italic" style="color:var(--accent)">committing to k.</span></h1>
   <p class="lab-biz-line">
     Density-based clustering. Points in dense neighborhoods form
-    clusters. <mark class="ink-mark">Sparse points get labeled noise — and that's a useful signal</mark>,
+    clusters. <mark class="ink-mark">Sparse points get labeled noise &middot; and that's a useful signal</mark>,
     not a failure mode. No need to pick k. Two parameters take its place.
   </p>
   <p class="mc-kicker">
@@ -257,7 +257,7 @@
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Non-convex clusters</h3>
       <p>Try the rings preset. K-Means slices the plane with straight lines and gets the wrong answer. DBSCAN follows density and finds the two rings as separate clusters. Anything spatial that isn't roughly globular is DBSCAN's territory.</p></div>
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Noise as signal</h3>
-      <p>Outlier detection comes free. The points labeled noise are points DBSCAN couldn't fit into any dense region — frequently exactly the points you want to flag. Fraud detection, sensor anomaly, industrial QC.</p></div>
+      <p>Outlier detection comes free. The points labeled noise are points DBSCAN couldn't fit into any dense region, frequently exactly the points you want to flag. Fraud detection, sensor anomaly, industrial QC.</p></div>
     <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Variable-density clusters</h3>
       <p>One eps for the whole dataset. If you have a dense cluster nested inside a sparse one, eps either splits the dense cluster or merges everything together. HDBSCAN was specifically designed to handle this.</p></div>
     <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">High dimensions</h3>

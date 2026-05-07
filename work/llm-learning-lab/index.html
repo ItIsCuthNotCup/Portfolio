@@ -146,15 +146,15 @@
   <p class="lab-biz-line">
     Eight charts of real numbers on what actually happens inside a large
     language model when it learns. Scaling laws. The training stack.
-    Tokenization. The Transformer. Training dynamics. Emergence — real
+    Tokenization. The Transformer. Training dynamics. Emergence, real
     or measurement artifact. Alignment. Benchmark saturation.
   </p>
   <p class="llm-kicker">
     The page assumes you've heard the words but not necessarily seen the
     math behind them. Equations show up where they earn their keep, then
     get a sentence in plain language. Where the field is genuinely
-    divided — emergence, the data wall, next-token prediction as a
-    sufficient objective — both sides get the floor.
+    divided (emergence, the data wall, next-token prediction as a
+    sufficient objective), both sides get the floor.
   </p>
   <div class="mono llm-dateline">
     <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
@@ -170,7 +170,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; I</span>
-    <span>Scaling laws — the closest thing ML has to a physical law</span>
+    <span>Scaling laws &middot; the closest thing ML has to a physical law</span>
   </h2>
   <p class="llm-prose">
     Plot training compute on a log axis, plot pretraining loss on the other
@@ -190,8 +190,8 @@
     <p>
       The Chinchilla rule: for a fixed compute budget, you should train on
       <strong>~20 tokens per parameter</strong>. GPT-3 had 175B params and
-      300B tokens — only 1.7 tokens per param, far below the optimum.
-      Llama 3 70B trained on <strong>15T tokens</strong> — 214 tokens per
+      300B tokens, only 1.7 tokens per param, far below the optimum.
+      Llama 3 70B trained on <strong>15T tokens</strong>, 214 tokens per
       param, ten times past the Chinchilla point. Why the overshoot? Because
       Chinchilla is training-optimal, not <em>inference</em>-optimal: a
       smaller, more-trained model is cheaper to run forever even if it
@@ -207,15 +207,14 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; II</span>
-    <span>The training stack — what data goes in, in what order</span>
+    <span>The training stack &middot; what data goes in, in what order</span>
   </h2>
   <p class="llm-prose">
     A modern frontier model goes through four training stages, and they
     are not equal. <strong>96% of compute</strong> is spent on
-    pretraining — the model reads a substantial fraction of the public
+    pretraining, the model reads a substantial fraction of the public
     internet, predicting the next token at every step. The remaining 4%
-    teaches it to talk like an assistant, prefer helpful answers, and —
-    since 2024 — think before responding.
+    teaches it to talk like an assistant, prefer helpful answers, and, since 2024, think before responding.
   </p>
   <div class="llm-chart-wrap" id="llm-stack-wrap">
     <div class="mono llm-chart-title">S06.2 &middot; Training stages by compute share, dataset size, and what they teach</div>
@@ -229,7 +228,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; III</span>
-    <span>Tokenization — how language becomes integers</span>
+    <span>Tokenization &middot; how language becomes integers</span>
   </h2>
   <p class="llm-prose">
     Before a model sees a word, the word becomes a number. Byte-pair
@@ -248,7 +247,7 @@
     <p class="mono llm-readout-label">Why it matters</p>
     <p>
       <strong>Math:</strong> GPT-2 splits "1234567890" into <em>123 / 45 /
-      678 / 90</em> — irregular, with a 2-digit chunk wedged between 3-digit
+      678 / 90</em>, irregular, with a 2-digit chunk wedged between 3-digit
       ones. GPT-4 produces clean three-digit groups <em>(123 / 456 / 789 /
       0)</em>. Both still split numbers more than humans would, which is one
       reason multi-digit arithmetic is a recurring failure mode. (Verified
@@ -268,7 +267,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; IV</span>
-    <span>The Transformer — the one architectural idea that worked</span>
+    <span>The Transformer &middot; the one architectural idea that worked</span>
   </h2>
   <p class="llm-prose">
     Vaswani et al. (2017) replaced the recurrence in RNN/LSTM language
@@ -301,8 +300,8 @@
     <p>
       Most readers picture an LLM as "a giant attention machine." It isn't.
       Attention takes about <strong>14% of the parameters</strong>. The
-      MLP — two big linear layers per block, with a non-linearity in
-      between — takes about <strong>83%</strong>. The MLP is where most
+      MLP, two big linear layers per block, with a non-linearity in
+      between, takes about <strong>83%</strong>. The MLP is where most
       learned facts live; attention just decides which facts are
       relevant to which token.
     </p>
@@ -315,7 +314,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; V</span>
-    <span>What learning actually looks like — training dynamics</span>
+    <span>What learning actually looks like &middot; training dynamics</span>
   </h2>
   <p class="llm-prose">
     Pretraining loss falls along a startlingly clean line on a log-step
@@ -325,7 +324,7 @@
     extrapolation dangerous.
   </p>
   <div class="llm-chart-wrap" id="llm-dynamics-wrap">
-    <div class="mono llm-chart-title">S06.5 &middot; Public training loss curve — log-step axis</div>
+    <div class="mono llm-chart-title">S06.5 &middot; Public training loss curve &middot; log-step axis</div>
     <svg id="llm-dynamics" viewBox="0 0 1100 360" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Loss curve over training steps"></svg>
   </div>
@@ -338,12 +337,12 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; VI</span>
-    <span>Emergence — real, or a measurement artifact?</span>
+    <span>Emergence &middot; real, or a measurement artifact?</span>
   </h2>
   <p class="llm-prose">
-    Wei et al. (2022) coined the term: certain capabilities — multi-digit
+    Wei et al. (2022) coined the term: certain capabilities, multi-digit
     arithmetic, MMLU at threshold sizes, instruction-following on novel
-    tasks — appeared to <em>emerge</em> suddenly past a specific compute
+    tasks, appeared to <em>emerge</em> suddenly past a specific compute
     threshold. Below that threshold, models scored near zero; above it,
     performance jumped to non-trivial levels. Schaeffer, Miranda &amp;
     Koyejo (2023, NeurIPS Best Paper) argued the jumps largely come from
@@ -351,7 +350,7 @@
     a continuous metric and the curves smooth out.
   </p>
   <div class="llm-chart-wrap" id="llm-emergence-wrap">
-    <div class="mono llm-chart-title">S06.6 &middot; Same training run, two metrics — discrete vs continuous</div>
+    <div class="mono llm-chart-title">S06.6 &middot; Same training run, two metrics &middot; discrete vs continuous</div>
     <svg id="llm-emergence" viewBox="0 0 1100 380" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Discrete vs continuous metric on the same training trajectory"></svg>
   </div>
@@ -360,7 +359,7 @@
     <p>
       Most working researchers now treat both papers as partly right.
       Schaeffer's mirage critique is convincing for many specific
-      "emergence" claims — the apparent jumps were artifacts of
+      "emergence" claims, the apparent jumps were artifacts of
       thresholded metrics. But Olsson et al.'s induction-head work
       (Anthropic, 2022) found <em>real</em>, sharp circuit-formation
       events during training that aren't artifacts of measurement.
@@ -376,7 +375,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; VII</span>
-    <span>Alignment — the post-pretraining toolkit</span>
+    <span>Alignment &middot; the post-pretraining toolkit</span>
   </h2>
   <p class="llm-prose">
     A fresh pretrained model knows the internet but doesn't yet know how
@@ -396,7 +395,7 @@
 <section class="llm-section">
   <h2 class="mono section-label">
     <span class="idx">&sect; VIII</span>
-    <span>The benchmark race — what 'better' has actually meant</span>
+    <span>The benchmark race &middot; what 'better' has actually meant</span>
   </h2>
   <p class="llm-prose">
     For most of the field's history, a new benchmark would last 4–5 years
@@ -415,9 +414,8 @@
     <p>
       MMLU went from random-chance (44% at GPT-3) to past the human
       baseline (~89.8%) in four years. HumanEval, MATH, and the older
-      benchmarks have all saturated. The newer ones — GPQA Diamond,
-      SWE-Bench Verified, ARC-AGI-2/3, FrontierMath, Humanity's Last Exam —
-      were specifically designed to <em>not</em> saturate quickly. As of
+      benchmarks have all saturated. The newer ones. GPQA Diamond,
+      SWE-Bench Verified, ARC-AGI-2/3, FrontierMath, Humanity's Last Exam, were specifically designed to <em>not</em> saturate quickly. As of
       April 2026, frontier scores are still under 1% on ARC-AGI-3 and
       under 17% on FrontierMath.
     </p>
@@ -461,8 +459,7 @@
       <p>
         Model parameter and token counts: official model cards (Llama 3,
         DeepSeek-V3) and Epoch AI's notable-models database. GPT-4
-        architecture details are press estimates, not confirmed by OpenAI
-        — labelled as such in the chart. Loss values are pretraining
+        architecture details are press estimates, not confirmed by OpenAI, labelled as such in the chart. Loss values are pretraining
         cross-entropy as reported in the relevant papers.
       </p>
     </div>

@@ -237,7 +237,7 @@
 <section class="fs-section fs-section-sim">
   <h2 class="mono section-label">
     <span class="idx">§ II · M05.1</span>
-    <span>The simulator — run a funnel</span>
+    <span>The simulator &middot; run a funnel</span>
   </h2>
   <p class="fs-note">
     Agents enter at awareness, advance probabilistically, and exit when
@@ -355,7 +355,7 @@
       <p>
         Every dot is an agent with a segment, a stage, and a fatigue
         counter. Each tick, each agent rolls for advance, drop, or
-        stay — probabilities pulled from a 4 × 5 matrix (segment by
+        stay, probabilities pulled from a 4 × 5 matrix (segment by
         stage), modulated by the lever settings. No equations of
         motion, no ML: just explicit transition probabilities you can
         derive on paper.
@@ -377,7 +377,7 @@
       <h3 class="serif how-title">Metrics as emergence</h3>
       <p>
         Conversion, CAC, LTV, and payback aren't computed from formulas
-        after the fact — they emerge from the population as it moves.
+        after the fact, they emerge from the population as it moves.
         The closed-form math in the
         <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/funnel_sim_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebook</a>
         confirms the live numbers are internally consistent to within
@@ -397,7 +397,7 @@
   </h2>
   <p class="fs-note">
     The same model under four preset lever configurations. Each scenario
-    has a characteristic metric signature — learn the shape once and
+    has a characteristic metric signature, learn the shape once and
     you'll spot it in a real dashboard the week after.
   </p>
   <div class="fingerprint-grid" id="fingerprint-grid"><!-- built by JS --></div>
@@ -455,7 +455,7 @@
     <div>
       <div class="mono method-head">Limitations</div>
       <p>
-        Segment membership is fixed at entry — no crossover. No network
+        Segment membership is fixed at entry, no crossover. No network
         effects or word-of-mouth (a natural extension). No competitor
         dynamics; inflow rate is a function of ad spend only. Time is
         compressed (one sim-tick ≈ one customer-day), so payback

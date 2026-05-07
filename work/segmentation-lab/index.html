@@ -209,7 +209,7 @@
     <p class="seg-lede">
       Mass marketing dilutes both signal and budget. A
       <span class="headline-num">1%</span> response rate from a blanket email
-      is a <span class="headline-num">99%</span> waste — and the 1% who
+      is a <span class="headline-num">99%</span> waste, and the 1% who
       responded were going to buy anyway. Segmentation replaces that with
       targeted outreach: the right message to the right subset, priced against
       the revenue each segment actually produces.
@@ -218,8 +218,8 @@
     <p>
       Well-run segmentation programs routinely deliver double-digit
       percentage-point lift in campaign ROI over blanket sends. This page
-      shows the <em>method</em> — <span data-glossary="Recency, Frequency, Monetary — three columns derived from each customer's transaction history. The ML literature's standard feature set for value-based segmentation.">RFM</span> features, three clustering algorithms
-      compared, each segment profiled against its revenue contribution — run
+      shows the <em>method</em>, <span data-glossary="Recency, Frequency, Monetary — three columns derived from each customer's transaction history. The ML literature's standard feature set for value-based segmentation.">RFM</span> features, three clustering algorithms
+      compared, each segment profiled against its revenue contribution, run
       against the public UCI <span class="serif-italic">Online Retail II</span>
       dataset so every number is reproducible from the linked script.
     </p>
@@ -227,7 +227,7 @@
     <p class="seg-footnote">
       The winning model here is K-Means at k=<span id="meta-k">4</span>. Four
       segments unpack a real 1M-transaction book into groups with dramatically
-      different economics — as you're about to see, one of them earns roughly
+      different economics, as you're about to see, one of them earns roughly
       <span class="headline-num" id="meta-top-rev">64%</span> of revenue on
       <span class="headline-num" id="meta-top-pct">21%</span> of customers.
     </p>
@@ -260,8 +260,7 @@
   </h2>
   <p class="seg-note">
     Run on the same log+scaled R/F/M matrix. Higher silhouette and Calinski-Harabasz
-    are better; lower Davies-Bouldin is better. No single metric decides —
-    silhouette is the primary criterion here. The
+    are better; lower Davies-Bouldin is better. No single metric decides, silhouette is the primary criterion here. The
     <span class="headline-num">winner</span> row is highlighted.
   </p>
   <div class="table-wrap">
@@ -290,14 +289,14 @@
 <section class="seg-section">
   <h2 class="mono section-label">
     <span class="idx">§ IV · M02.1</span>
-    <span>K selection — silhouette and elbow, all three methods</span>
+    <span>K selection &middot; silhouette and elbow, all three methods</span>
   </h2>
   <p class="seg-note">
-    Left: silhouette score vs k — higher is tighter clusters. Accent dot marks
+    Left: silhouette score vs k, higher is tighter clusters. Accent dot marks
     the chosen operational k. The k=2 column is shaded and labeled
     <em class="mono">(degenerate)</em>: it wins on score because RFM data has
     a strong bimodal Pareto split, but two clusters is operationally useless
-    for targeted outreach. Right: K-Means inertia elbow — diminishing returns
+    for targeted outreach. Right: K-Means inertia elbow, diminishing returns
     after the operational k.
   </p>
   <div class="k-grid">
@@ -323,7 +322,7 @@
 <section class="seg-section" id="sec-map">
   <h2 class="mono section-label">
     <span class="idx">§ V · M02.2</span>
-    <span>The segment map — 2,000 customers, PCA(2)</span>
+    <span>The segment map &middot; 2,000 customers, PCA(2)</span>
   </h2>
   <p class="seg-note">
     Each point is one customer. Axes are the top two principal components of
@@ -335,7 +334,7 @@
     <div class="mono frame-label">Fig. 02.2 · Segment scatter (PCA)</div>
     <svg id="seg-map" class="chart-svg" viewBox="0 0 900 560" role="img" aria-label="PCA scatter of customer segments"></svg>
     <div class="chart-readout mono" id="seg-map-readout">
-      <span class="label">HOVER</span> <span class="value">— for R / F / M on this customer</span>
+      <span class="label">HOVER</span> <span class="value">, for R / F / M on this customer</span>
     </div>
   </div>
   <div class="seg-map-legend" id="seg-map-legend"><!-- JS --></div>
@@ -354,7 +353,7 @@
   <p class="seg-note">
     Inputs are log1p-transformed and standardized with the same scaler the
     model was trained on, then assigned to the nearest K-Means centroid by
-    Euclidean distance. Move the sliders — assignment updates in real time.
+    Euclidean distance. Move the sliders, assignment updates in real time.
   </p>
   <div class="classify-grid">
     <div class="classify-inputs" id="classify-inputs"><!-- JS --></div>
@@ -423,7 +422,7 @@
   <p class="seg-note">
     Pick a segment, set a per-customer campaign cost and an expected lift
     multiplier. The baseline response rate is the segment's own measured 60-day
-    repurchase rate — not a fabricated number. The ROI math and all intermediates
+    repurchase rate, not a fabricated number. The ROI math and all intermediates
     are computed live.
   </p>
 
@@ -446,22 +445,22 @@
     <div class="sim-flow">
       <div class="sim-step">
         <div class="mono sim-step-lbl">contacted</div>
-        <div class="serif sim-step-val" id="sim-contacted">—</div>
+        <div class="serif sim-step-val" id="sim-contacted"> &middot; </div>
       </div>
       <div class="sim-arrow mono">→</div>
       <div class="sim-step">
         <div class="mono sim-step-lbl">baseline buyers<br><span class="sub">size × repurchase rate</span></div>
-        <div class="serif sim-step-val" id="sim-baseline">—</div>
+        <div class="serif sim-step-val" id="sim-baseline"> &middot; </div>
       </div>
       <div class="sim-arrow mono">→</div>
       <div class="sim-step">
         <div class="mono sim-step-lbl">with-campaign buyers<br><span class="sub">baseline × lift</span></div>
-        <div class="serif sim-step-val" id="sim-with-campaign">—</div>
+        <div class="serif sim-step-val" id="sim-with-campaign"> &middot; </div>
       </div>
       <div class="sim-arrow mono">→</div>
       <div class="sim-step accent">
         <div class="mono sim-step-lbl">incremental buyers</div>
-        <div class="serif sim-step-val" id="sim-incremental">—</div>
+        <div class="serif sim-step-val" id="sim-incremental"> &middot; </div>
       </div>
     </div>
 
@@ -484,9 +483,8 @@
     </div>
 
     <p class="sim-honesty mono">
-      The <em>60-day repurchase rate</em> is measured directly from the data —
-      fraction of each segment's customers who bought in the last 60 days of
-      the snapshot. The <em>lift multiplier</em> is user-adjustable — industry
+      The <em>60-day repurchase rate</em> is measured directly from the data, fraction of each segment's customers who bought in the last 60 days of
+      the snapshot. The <em>lift multiplier</em> is user-adjustable, industry
       direct-response benchmarks typically land between
       <span class="headline-num">1.3×</span> and
       <span class="headline-num">2.0×</span> for win-back campaigns. Your
@@ -510,16 +508,14 @@
     <div>
       <div class="mono method-head">Dataset</div>
       <p>
-        <a href="https://archive.ics.uci.edu/dataset/502/online+retail+ii" target="_blank" rel="noopener" style="border-bottom:1px solid">UCI ML Repository · Online Retail II ↗</a>
-        — two years of UK online retail transactions, roughly 1M rows before
+        <a href="https://archive.ics.uci.edu/dataset/502/online+retail+ii" target="_blank" rel="noopener" style="border-bottom:1px solid">UCI ML Repository · Online Retail II ↗</a>, two years of UK online retail transactions, roughly 1M rows before
         cleaning.
       </p>
     </div>
     <div>
       <div class="mono method-head">Pipeline script</div>
       <p>
-        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/segmentation_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/segmentation_model.py ↗</a>
-        — RFM aggregation, log1p + StandardScaler, three clustering methods ×
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/segmentation_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/segmentation_model.py ↗</a>. RFM aggregation, log1p + StandardScaler, three clustering methods ×
         k grid, silhouette / Calinski-Harabasz / Davies-Bouldin, PCA(2) for the
         map, deterministic percentile-band auto-namer.
       </p>
@@ -536,11 +532,11 @@
     <div>
       <div class="mono method-head">Limitations</div>
       <p>
-        Static snapshot — no drift between training and today. RFM captures
+        Static snapshot, no drift between training and today. RFM captures
         transaction pattern but misses product affinity and channel mix.
         The live classifier snaps a new customer to the nearest frozen
         centroid; a production program would retrain on a schedule. Four
-        segments is deliberately few for readability — real programs
+        segments is deliberately few for readability, real programs
         usually run a dozen or more.
       </p>
     </div>

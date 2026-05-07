@@ -216,20 +216,20 @@
       departing customer, that's
       <span class="headline-num" id="biz-baseline">$100,000</span> of revenue
       walking out the door for every
-      <span class="headline-num">1,000</span> customers on the books — before
+      <span class="headline-num">1,000</span> customers on the books, before
       anyone has a chance to intervene.
     </p>
 
     <p>
       <em>A churn model fixes that by scoring every customer on how likely they
       are to leave next.</em> Retention teams then spend a small outreach budget
-      on the customers most at risk — rather than blanketing everyone, or
+      on the customers most at risk, rather than blanketing everyone, or
       (more commonly) finding out too late. Tuned against real dollars
       (see <a href="#sec-threshold" class="section-link">§ VI</a>), the model on this page cuts
       the expected loss from about
       <span class="headline-num" id="biz-baseline-2">$100,000</span> per 1,000
       customers down to
-      <span class="headline-num" id="biz-best">$28,000</span> — a
+      <span class="headline-num" id="biz-best">$28,000</span>, a
       <span class="headline-num" id="biz-reduction">72%</span> reduction.
       At a 10,000-customer book that's roughly
       <span class="headline-num" id="biz-total-savings">$740,000</span>
@@ -239,7 +239,7 @@
     <p class="churn-footnote">
       Everything below is computed live in your browser from the linked
       <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">Python script</a>.
-      The point here isn't absolute accuracy — it's the
+      The point here isn't absolute accuracy, it's the
       <em>shape of a responsible workflow:</em>
       compare several models, explain the winner, audit it for disparate
       impact, and tune the threshold against the dollars that actually matter.
@@ -304,7 +304,7 @@
 <section class="churn-section">
   <h2 class="mono section-label">
     <span class="idx">§ IV · M01.1</span>
-    <span>ROC curves — all three models overlaid</span>
+    <span>ROC curves &middot; all three models overlaid</span>
   </h2>
   <div class="chart-frame" id="roc-frame">
     <div class="chart-corners">
@@ -313,12 +313,12 @@
     </div>
     <svg id="roc-chart" class="chart-svg" viewBox="0 0 900 560" role="img" aria-label="ROC curves for LR, RF, XGB"></svg>
     <div class="chart-readout mono" id="roc-readout">
-      <span class="label">HOVER</span> <span class="value">— for threshold / TPR / FPR</span>
+      <span class="label">HOVER</span> <span class="value">, for threshold / TPR / FPR</span>
     </div>
     <div class="chart-legend mono" id="roc-legend"></div>
   </div>
   <p class="fig-caption mono">
-    Fig. 01.1 — Higher = better. Diagonal would be a coin flip. Each curve traces
+    Fig. 01.1 &middot; Higher = better. Diagonal would be a coin flip. Each curve traces
     the trade-off between catching churners (TPR) and wrongly flagging loyal
     customers (FPR) as the decision threshold sweeps from 1 to 0.
   </p>
@@ -375,7 +375,7 @@
       <p class="score-footnote mono">
         Live scoring uses the <span style="color:var(--accent)">logistic regression</span>
         model for interpretability. XGBoost performs better on aggregate metrics
-        (see § III) but its prediction is a sum over 300 trees — not something a
+        (see § III) but its prediction is a sum over 300 trees, not something a
         slider explains.
       </p>
     </div>
@@ -450,7 +450,7 @@
 <section class="churn-section">
   <h2 class="mono section-label">
     <span class="idx">§ VII · M01.4</span>
-    <span>Feature importance — mean |SHAP|, XGBoost</span>
+    <span>Feature importance &middot; mean |SHAP|, XGBoost</span>
   </h2>
   <p class="churn-note">
     Tree SHAP decomposes each XGBoost prediction into per-feature contributions
@@ -474,12 +474,12 @@
 <section class="churn-section">
   <h2 class="mono section-label">
     <span class="idx">§ VIII · M01.5</span>
-    <span>SHAP dependence — top two features</span>
+    <span>SHAP dependence &middot; top two features</span>
   </h2>
   <p class="churn-note">
     X-axis: the raw feature value for one customer. Y-axis: how much that
     feature moved their churn score, positive or negative. Non-linearity shows
-    up as curves — something a linear model can't see.
+    up as curves, something a linear model can't see.
   </p>
   <div class="dep-grid">
     <div class="chart-frame">
@@ -503,10 +503,10 @@
 <section class="churn-section">
   <h2 class="mono section-label">
     <span class="idx">§ IX · M01.6</span>
-    <span>Fairness audit — by Geography &amp; Gender</span>
+    <span>Fairness audit &middot; by Geography &amp; Gender</span>
   </h2>
   <p class="churn-note">
-    Disparate impact is a live concern in regulated banking — the OCC and FDIC
+    Disparate impact is a live concern in regulated banking, the OCC and FDIC
     examine retention models for fair-lending proxies. This panel shows the
     same model sliced by protected-attribute-adjacent fields. Even on a public
     dataset, gaps show up.
@@ -529,15 +529,13 @@
     <div>
       <div class="mono method-head">Dataset</div>
       <p>
-        <a href="https://www.kaggle.com/datasets/shrutimechlearn/churn-modelling" target="_blank" rel="noopener" style="border-bottom:1px solid">Kaggle · shrutimechlearn/churn-modelling ↗</a>
-        — 10,000 synthetic bank customers across France, Germany, Spain.
+        <a href="https://www.kaggle.com/datasets/shrutimechlearn/churn-modelling" target="_blank" rel="noopener" style="border-bottom:1px solid">Kaggle · shrutimechlearn/churn-modelling ↗</a>, 10,000 synthetic bank customers across France, Germany, Spain.
       </p>
     </div>
     <div>
       <div class="mono method-head">Pipeline script</div>
       <p>
-        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/churn_model.py ↗</a>
-        — drop IDs, label-encode Gender, one-hot Geography, stratified 80/20 split,
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/churn_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/churn_model.py ↗</a>, drop IDs, label-encode Gender, one-hot Geography, stratified 80/20 split,
         StandardScaler on numeric features, three models, SHAP on XGB, fairness
         slice on the best model, threshold sweep 0.05 → 0.95.
       </p>
@@ -554,10 +552,10 @@
     <div>
       <div class="mono method-head">Limitations</div>
       <p>
-        Synthetic Kaggle dataset — small by production standards. Live
+        Synthetic Kaggle dataset, small by production standards. Live
         scoring uses logistic regression for interpretability, which misses
         non-linear interactions the tree models catch (see § III for the
-        gap). No retraining schedule or drift detection — both essential in
+        gap). No retraining schedule or drift detection, both essential in
         anything that actually runs.
       </p>
     </div>

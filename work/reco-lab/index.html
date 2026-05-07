@@ -222,7 +222,7 @@
     <p>
       The interesting question is never <em>whether</em> to build one.
       It's <em>which signal</em> to trust: the content itself, the
-      behaviour of similar users, or some blend of both — and how
+      behaviour of similar users, or some blend of both, and how
       honest you are with the user about which of those the system
       leaned on for any given suggestion. This page exposes all three,
       side by side, and lets you feel the difference.
@@ -243,7 +243,7 @@
 <section class="reco-section reco-section-marquee">
   <h2 class="mono section-label">
     <span class="idx">§ II · M03.1</span>
-    <span>The Marquee — a working recommender</span>
+    <span>The Marquee &middot; a working recommender</span>
   </h2>
   <p class="reco-note">
     Click any poster to mark it as something you liked. The
@@ -281,7 +281,7 @@
 
     <!-- Empty-state caption when no likes yet -->
     <p class="flixer-caption mono" id="flixer-caption">
-      Seeded with globally top-rated titles. Start clicking — the top row will become yours.
+      Seeded with globally top-rated titles. Start clicking, the top row will become yours.
     </p>
   </div>
 </section>
@@ -305,7 +305,7 @@
         Each movie becomes a TF-IDF vector over its genres and the most
         common user tags. Cosine similarity in that space tells us
         "this movie looks like that one on paper." Good at new
-        releases, blind to taste — it'll happily recommend a 30-year-old
+        releases, blind to taste, it'll happily recommend a 30-year-old
         film you've never heard of if the tags match.
       </p>
     </div>
@@ -314,7 +314,7 @@
       <h3 class="serif algo-card-title">Collaborative</h3>
       <p>
         We build a user-by-movie matrix of mean-centred ratings, then
-        cosine on the <em>columns</em> — so movies are similar when the
+        cosine on the <em>columns</em>, so movies are similar when the
         same users rated them the same way. Learns taste patterns
         humans don't articulate, but can't say anything about a movie
         nobody's rated yet (cold-start).
@@ -325,7 +325,7 @@
       <h3 class="serif algo-card-title">Hybrid</h3>
       <p>
         A simple weighted blend: <span class="mono">α · content + (1−α) · collab</span>,
-        at <span class="mono" id="hybrid-alpha-val">α = 0.5</span>. Nothing clever — and
+        at <span class="mono" id="hybrid-alpha-val">α = 0.5</span>. Nothing clever, and
         often, that's the production answer. Content gives cold-start
         coverage; collab gives taste depth; the blend smooths both.
       </p>
@@ -344,15 +344,15 @@
     <span>Your taste, decomposed</span>
   </h2>
   <p class="reco-note">
-    The model doesn't see a list of movies — it sees a vector. Every
+    The model doesn't see a list of movies, it sees a vector. Every
     click updates the implicit genre weights below. Watch for the
     weights you didn't think you'd emit.
   </p>
   <div class="chart-frame taste-frame">
     <div class="chart-corners"><span class="cc tl"></span><span class="cc tr"></span><span class="cc bl"></span><span class="cc br"></span></div>
-    <div class="mono frame-label">Fig. 03.2 — genre weights from your likes</div>
+    <div class="mono frame-label">Fig. 03.2 &middot; genre weights from your likes</div>
     <svg id="taste-chart" class="chart-svg" viewBox="0 0 900 420" role="img" aria-label="Live taste vector"></svg>
-    <p class="taste-empty mono" id="taste-empty">— click some posters above —</p>
+    <p class="taste-empty mono" id="taste-empty">Click some posters above to start.</p>
   </div>
 </section>
 
@@ -369,12 +369,12 @@
   <p class="reco-note">
     The same likes, fed to three different models, yield three
     top-10 lists. Overlap is expected; the interesting signal is the
-    <em>gap</em> — where one algorithm sees something the others don't.
+    <em>gap</em>, where one algorithm sees something the others don't.
     That gap is a real product question: do you ensemble the three,
     pick one, or show all three for transparency?
   </p>
   <div class="divergence-wrap" id="divergence-wrap">
-    <p class="divergence-empty mono" id="divergence-empty">— click some posters above —</p>
+    <p class="divergence-empty mono" id="divergence-empty">Click some posters above to start.</p>
   </div>
 </section>
 
@@ -407,8 +407,7 @@
       <div class="mono method-head">Dataset &amp; posters</div>
       <p>
         Ratings and tags:
-        <a href="https://grouplens.org/datasets/movielens/latest/" target="_blank" rel="noopener" style="border-bottom:1px solid">MovieLens ml-latest-small ↗</a>
-        — 100k ratings, 600 users, 9,700 films. Filtered to titles with
+        <a href="https://grouplens.org/datasets/movielens/latest/" target="_blank" rel="noopener" style="border-bottom:1px solid">MovieLens ml-latest-small ↗</a>, 100k ratings, 600 users, 9,700 films. Filtered to titles with
         ≥50 ratings and ≥3.3 average. Poster art from
         <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="border-bottom:1px solid">TMDB ↗</a>,
         fetched at build time and lazy-loaded at runtime. TMDB does not
@@ -418,8 +417,7 @@
     <div>
       <div class="mono method-head">Pipeline script</div>
       <p>
-        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/reco_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/reco_model.py ↗</a>
-        — downloads MovieLens, fits TF-IDF and item-item CF, precomputes
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/notebooks/reco_model.py" target="_blank" rel="noopener" style="border-bottom:1px solid">notebooks/reco_model.py ↗</a>, downloads MovieLens, fits TF-IDF and item-item CF, precomputes
         top-20 neighbours under each algorithm, writes six JSON files to
         <span class="mono">/assets/data/reco/</span>. Re-run any time with
         <span class="mono">python notebooks/reco_model.py</span>.
@@ -437,11 +435,11 @@
     <div>
       <div class="mono method-head">Limitations</div>
       <p>
-        Cold-start for new users — the page seeds with global top-rated,
+        Cold-start for new users, the page seeds with global top-rated,
         but until a visitor clicks there is no personalization. Cold-start
         for new movies is worse: a brand-new film has no ratings, and if
         its tags are sparse the content model has nothing to grab. No
-        dislike signal, no temporal decay, no contextual features — all
+        dislike signal, no temporal decay, no contextual features, all
         standard pieces of a production recommender, all out of scope here.
       </p>
     </div>

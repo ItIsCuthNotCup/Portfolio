@@ -185,7 +185,7 @@
 
 <section class="mc-section">
   <h2 class="mono section-label"><span class="idx">&sect; I</span><span>The boundary, learned</span></h2>
-  <p class="mc-note">Each Run epoch shrinks loss. Different seeds and hyperparameters land on different boundaries — try Reset a few times.</p>
+  <p class="mc-note">Each Run epoch shrinks loss. Different seeds and hyperparameters land on different boundaries, try Reset a few times.</p>
   <div class="mc-demo">
     <figure class="mc-demo-canvas">
       <svg id="mlp-canvas" viewBox="0 0 720 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="MLP decision boundary"></svg>
@@ -257,7 +257,7 @@
     <span class="formula formula-block">L = −[y log ŷ + (1 − y) log(1 − ŷ)]</span>
     <p>Backprop, working back from the output:</p>
     <span class="formula formula-block">∂L/∂z₂ = ŷ − y<br>∂L/∂W₂ = (∂L/∂z₂) · h<br>∂L/∂h = (∂L/∂z₂) · W₂<br>∂L/∂z₁ = ∂L/∂h · (1 − tanh²(z₁))<br>∂L/∂W₁ = ∂L/∂z₁ · xᵀ</span>
-    <p>Apply with stochastic gradient descent. The same chain rule, scaled, runs every neural network in production. Convolutions, attention, layer norm — all pieces that fit into this skeleton.</p>
+    <p>Apply with stochastic gradient descent. The same chain rule, scaled, runs every neural network in production. Convolutions, attention, layer norm, all pieces that fit into this skeleton.</p>
   </div></details>
 </section>
 
@@ -267,7 +267,7 @@
   <h2 class="mono section-label"><span class="idx">&sect; III</span><span>Where it shines, where it breaks</span></h2>
   <div class="mc-grid-2">
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Big data, complex truth</h3>
-      <p>Image, audio, text — anywhere the relationship between input and label is too convoluted for a tree or linear model and you have hundreds of thousands of examples to train on. Modern deep learning IS this scaled to billions of parameters.</p></div>
+      <p>Image, audio, text, anywhere the relationship between input and label is too convoluted for a tree or linear model and you have hundreds of thousands of examples to train on. Modern deep learning IS this scaled to billions of parameters.</p></div>
     <div class="mc-block"><div class="mc-block-tag">Shines</div><h3 class="mc-block-title">Smooth boundaries</h3>
       <p>Try the spiral preset above. A decision tree gets there with stair-steps; an MLP carves a smooth, continuous surface that follows the data's shape. For applications where boundary smoothness matters (signal processing, perception), MLPs are unmatched.</p></div>
     <div class="mc-block"><div class="mc-block-tag" style="color: var(--ink-dim);">Breaks</div><h3 class="mc-block-title">Tabular data</h3>
@@ -312,7 +312,7 @@
   <p class="mc-real">
     <strong>Every production neural network in the world.</strong>
     Image classifiers, speech recognizers, language models, recommendation
-    rerankers — every modern deep learning system is a multilayer
+    rerankers, every modern deep learning system is a multilayer
     perceptron with structural assumptions added (convolutions for
     images, attention for text, ResNet-style residual connections
     everywhere). Scale up the same forward + backward you ran in this
