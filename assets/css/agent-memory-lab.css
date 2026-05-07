@@ -1,0 +1,519 @@
+/* ═══════════════════════════════════════════════════════════
+   AGENT MEMORY LAB — S12
+   The 2026 map of agent memory: MEMORY.md, frameworks, vector
+   DBs, and the hybrids in between. Four hand-coded SVG charts,
+   one decision matrix, one editorial wrapper.
+   ═══════════════════════════════════════════════════════════ */
+
+.am-main { background: var(--paper); color: var(--ink); }
+
+/* ── Attribution banner ───────────────────────────────────── */
+.am-attr-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 48px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.am-attr-banner strong { color: var(--accent); font-weight: 500; }
+.am-attr-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  flex-shrink: 0;
+}
+.am-attr-right { opacity: 0.7; flex-shrink: 0; }
+@media (max-width: 720px) {
+  .am-attr-banner { flex-wrap: wrap; padding: 10px 20px; gap: 6px; }
+  .am-attr-right { width: 100%; opacity: 0.5; }
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.am-hero {
+  padding: 120px 56px 60px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.am-title { margin-top: 22px; }
+.am-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.am-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.am-dateline .label { color: var(--ink-dim); }
+.am-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+.am-inline-nav {
+  margin-top: 28px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.am-inline-nav a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+  margin: 0 6px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.am-inline-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Section frame ────────────────────────────────────────── */
+.am-section {
+  padding: 80px 56px 80px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.am-section-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 900px;
+  margin-bottom: 36px;
+}
+.am-section-head h2 {
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+.am-section-head .am-section-italic {
+  font-style: italic;
+  color: var(--accent);
+}
+.am-section-prose {
+  max-width: 720px;
+  font-family: 'Newsreader', serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.am-section-prose p { margin: 0 0 18px; }
+.am-section-prose p:last-child { margin-bottom: 0; }
+.am-section-prose strong { font-weight: 500; }
+.am-section-prose em { font-style: italic; color: var(--ink-soft); }
+.am-section-prose code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  padding: 1px 5px;
+  font-size: 14px;
+}
+
+.am-lede::first-letter {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-style: normal;
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  margin: 0.05em 0.06em 0 0;
+  color: var(--ink);
+}
+
+/* ── Headline panel ───────────────────────────────────────── */
+.am-headline {
+  margin: 32px 0;
+  padding: 28px 32px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.am-headline-cell .num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: clamp(36px, 4.4vw, 52px);
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  display: block;
+}
+.am-headline-cell .label {
+  display: block;
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+@media (max-width: 900px) {
+  .am-headline { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Receipts box ─────────────────────────────────────────── */
+.am-receipts {
+  margin-top: 36px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 6%);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.am-receipts-head {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.am-receipts dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 6px 24px;
+}
+.am-receipts dt { color: var(--ink-dim); }
+.am-receipts dd { margin: 0; color: var(--ink); }
+@media (max-width: 720px) {
+  .am-receipts dl { grid-template-columns: 1fr; gap: 2px; }
+  .am-receipts dd { margin-bottom: 8px; }
+}
+
+/* ── For-the-curious expander ─────────────────────────────── */
+.am-curious {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border-left: 2px solid var(--ink-dim);
+  background: transparent;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.am-curious summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  list-style: none;
+  outline: none;
+}
+.am-curious summary::-webkit-details-marker { display: none; }
+.am-curious summary::before {
+  content: '\25B8 ';
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 200ms ease;
+}
+.am-curious[open] summary::before { transform: rotate(90deg); }
+.am-curious p { margin: 14px 0 0; }
+.am-curious code {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  background: color-mix(in oklab, var(--ink) 10%, transparent);
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART FRAMES (each chart in its own panel)
+   ═══════════════════════════════════════════════════════════ */
+.am-chart-wrap {
+  margin: 36px 0 12px;
+  padding: 28px 32px;
+  border: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  background: color-mix(in oklab, var(--paper) 92%, var(--ink) 4%);
+}
+.am-chart-head {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.am-chart-title {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+.am-chart-sub {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+.am-chart-svg { display: block; width: 100%; height: auto; user-select: none; }
+.am-chart-legend {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.am-chart-legend .swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ── Shared SVG primitives ────────────────────────────────── */
+.am-chart-svg .axis-line { stroke: var(--ink); stroke-width: 1; }
+.am-chart-svg .gridline { stroke: var(--ink-dim); stroke-width: 0.5; opacity: 0.35; }
+.am-chart-svg .axis-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  fill: var(--ink-dim);
+  letter-spacing: 0.04em;
+}
+.am-chart-svg .approach-label {
+  font-family: 'Newsreader', serif;
+  font-size: 12px;
+  fill: var(--ink);
+  cursor: default;
+}
+.am-chart-svg .approach-score {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Bar fills (used in §II and §V) ───────────────────────── */
+.am-chart-svg .bar-frontier   { fill: var(--accent); }
+.am-chart-svg .bar-framework  { fill: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); }
+.am-chart-svg .bar-graph      { fill: color-mix(in oklab, var(--accent) 25%, var(--ink) 75%); }
+.am-chart-svg .bar-vector     { fill: var(--ink); opacity: 0.7; }
+.am-chart-svg .bar-naive      { fill: var(--ink-dim); opacity: 0.85; }
+.am-chart-svg .bar-oracle     { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.am-chart-svg .bar-anchor     { fill: color-mix(in oklab, var(--accent) 18%, var(--ink-dim) 82%); opacity: 0.9; }
+.am-chart-svg [data-row]:hover .bar { filter: brightness(1.12); }
+.am-chart-svg [data-row]:hover .approach-label { fill: var(--accent); }
+
+/* Oracle ceiling marker on Chart 1 */
+.am-chart-svg .ceiling-line {
+  stroke: var(--accent);
+  stroke-dasharray: 3 3;
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.am-chart-svg .ceiling-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  fill: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ── Legend swatches (matches bar fills) ──────────────────── */
+.am-legend-frontier   { background: var(--accent); }
+.am-legend-framework  { background: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); }
+.am-legend-graph      { background: color-mix(in oklab, var(--accent) 25%, var(--ink) 75%); }
+.am-legend-vector     { background: var(--ink); opacity: 0.7; }
+.am-legend-naive      { background: var(--ink-dim); opacity: 0.85; }
+.am-legend-oracle     { background: transparent; border: 1.5px dashed var(--accent); }
+.am-legend-anchor     { background: color-mix(in oklab, var(--accent) 18%, var(--ink-dim) 82%); }
+.am-legend-file       { background: color-mix(in oklab, var(--accent) 35%, var(--ink) 65%); }
+.am-legend-hybrid     { background: color-mix(in oklab, var(--accent) 60%, var(--ink) 40%); }
+.am-legend-native     { background: var(--ink-dim); }
+
+/* ── Tooltip overlay ──────────────────────────────────────── */
+.am-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  padding: 10px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--accent);
+  max-width: 320px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.am-tooltip.is-visible { opacity: 1; transform: translateY(0); }
+.am-tooltip strong { color: var(--accent); font-weight: 500; }
+.am-tooltip-host { position: relative; }
+
+/* ── Chart 2: Pareto scatter ──────────────────────────────── */
+.am-chart-svg .quad-axis { stroke: var(--ink); stroke-width: 1; }
+.am-chart-svg .quad-mid { stroke: var(--ink-dim); stroke-width: 0.5; stroke-dasharray: 2 4; }
+.am-chart-svg .pareto-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+  opacity: 0.55;
+}
+.am-chart-svg .quad-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--ink-dim);
+}
+.am-chart-svg .quad-quadrant-label {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 12px;
+  fill: var(--ink-dim);
+  opacity: 0.7;
+}
+.am-chart-svg .bubble {
+  cursor: pointer;
+  transition: r 180ms ease, fill-opacity 180ms ease;
+}
+.am-chart-svg .bubble-file       { fill: color-mix(in oklab, var(--accent) 35%, var(--ink) 65%); fill-opacity: 0.78; }
+.am-chart-svg .bubble-framework  { fill: color-mix(in oklab, var(--accent) 40%, var(--ink) 60%); fill-opacity: 0.7; }
+.am-chart-svg .bubble-graph      { fill: color-mix(in oklab, var(--accent) 25%, var(--ink) 75%); fill-opacity: 0.7; }
+.am-chart-svg .bubble-vector     { fill: var(--ink); fill-opacity: 0.55; }
+.am-chart-svg .bubble-naive      { fill: var(--ink-dim); fill-opacity: 0.7; }
+.am-chart-svg .bubble-frontier   { fill: var(--accent); fill-opacity: 0.85; }
+.am-chart-svg .bubble:hover { fill-opacity: 1; stroke: var(--accent); stroke-width: 1.5; }
+
+/* ── Chart 3: 2x2 quadrant pills ──────────────────────────── */
+.am-chart-svg .quad-pill {
+  cursor: pointer;
+  fill-opacity: 0.18;
+  stroke-width: 1.5;
+  transition: fill-opacity 200ms ease;
+}
+.am-chart-svg .quad-pill-file      { fill: color-mix(in oklab, var(--accent) 35%, var(--ink) 65%); stroke: color-mix(in oklab, var(--accent) 50%, var(--ink) 50%); }
+.am-chart-svg .quad-pill-hybrid    { fill: color-mix(in oklab, var(--accent) 60%, var(--ink) 40%); stroke: color-mix(in oklab, var(--accent) 75%, var(--ink) 25%); }
+.am-chart-svg .quad-pill-native    { fill: var(--ink-dim); stroke: var(--ink-dim); }
+.am-chart-svg .quad-pill-framework { fill: var(--accent); stroke: var(--accent); }
+.am-chart-svg [data-quad-item]:hover .quad-pill { fill-opacity: 0.45; }
+.am-chart-svg .quad-pill-name {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 14px;
+  fill: var(--ink);
+  pointer-events: none;
+}
+.am-chart-svg .quad-pill-sub {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-soft);
+  pointer-events: none;
+}
+.am-chart-svg .quad-pill-note {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  fill: var(--ink-dim);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* ── Methodology / closing ────────────────────────────────── */
+.am-method {
+  padding: 80px 56px 80px 88px;
+  max-width: 1080px;
+  margin: 0 auto;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+}
+.am-method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px 48px;
+}
+.am-method-grid h3 {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.am-method-grid p {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.am-method-grid a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.am-method-grid a:hover { color: var(--accent); border-color: var(--accent); }
+.am-closing {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 720px;
+}
+.am-closing p { margin: 0 0 16px; }
+
+/* ── Lab nav (story-style) ────────────────────────────────── */
+.lab-nav {
+  margin: 0 88px 80px;
+  padding: 22px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.lab-nav a { color: var(--ink); border-bottom: 1px solid transparent; transition: border-color 180ms ease; }
+.lab-nav a:hover { border-bottom-color: var(--ink); }
+.lab-nav-meta { color: var(--ink-dim); }
+
+@media (max-width: 900px) {
+  .am-hero { padding: 100px 24px 40px; }
+  .am-section { padding: 60px 24px; }
+  .am-method { padding: 60px 24px; }
+  .am-method-grid { grid-template-columns: 1fr; gap: 28px; }
+  .am-dateline { grid-template-columns: 1fr; gap: 14px; }
+  .lab-nav { flex-direction: column; gap: 10px; align-items: flex-start; margin: 0 24px 60px; }
+}

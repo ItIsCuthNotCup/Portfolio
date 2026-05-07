@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Memory in 2026 · MEMORY.md, frameworks, vector DBs, and hybrids — Jake Cuth.</title>
+  <meta name="description" content="How AI agents remember in 2026. MEMORY.md beats vector DBs for solo coders. Mem0 and Zep dominate above 10k users. The middle is consolidating.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/agent-memory-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Agent Memory in 2026 · MEMORY.md, frameworks, vector DBs, and hybrids">
+  <meta property="og:description" content="How AI agents remember in 2026. MEMORY.md beats vector DBs for solo coders. Mem0 and Zep dominate above 10k users. The middle is consolidating.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/agent-memory-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/agent-memory-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-07T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-07T00:00:00Z">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent Memory in 2026 · MEMORY.md, frameworks, vector DBs, and hybrids">
+  <meta name="twitter:description" content="How AI agents remember in 2026. MEMORY.md beats vector DBs for solo coders. Mem0 and Zep dominate above 10k users. The middle is consolidating.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/agent-memory-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/agent-memory-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Agent Memory in 2026 - MEMORY.md, frameworks, vector DBs, and hybrids", "item": "https://jakecuth.com/work/agent-memory-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Agent Memory in 2026 - MEMORY.md, frameworks, vector DBs, and hybrids",
+    "description": "How AI agents remember in 2026. MEMORY.md beats vector DBs for solo coders. Mem0 and Zep dominate above 10k users. The middle is consolidating.",
+    "image": "https://www.jakecuth.com/assets/og/agent-memory-lab.png?v=1",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "url": "https://jakecuth.com/work/agent-memory-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jakecuth.com/work/agent-memory-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Agent Memory in 2026 - MEMORY.md, frameworks, vector DBs, and hybrids",
+    "description": "How AI agents remember in 2026. MEMORY.md beats vector DBs for solo coders. Mem0 and Zep dominate above 10k users. The middle is consolidating.",
+    "image": "https://www.jakecuth.com/assets/og/agent-memory-lab.png?v=1",
+    "url": "https://jakecuth.com/work/agent-memory-lab/",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is MEMORY.md actually a viable memory architecture for AI agents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For solo coding agents on a single repo, yes. Letta's own evaluation showed a stock filesystem agent (GPT-4o-mini) hitting 74.0% on LoCoMo, beating Mem0's top graph variant at 68.5%. Anthropic's September 2025 memory tool is itself a file directory, not a vector database. With prompt caching, file-based memory is on the Pareto frontier for ~80% of solo workflows. Above that threshold (multi-user, evolving facts, hundreds of sessions per user), file-based memory degrades non-linearly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the highest LongMemEval score published?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mastra Observational Memory hit 94.87% with GPT-5-mini, the highest published independent score. OMEGA reports 95.4% on GPT-4.1, agentmemory V4 reports 96.2%, but these are single-author or vendor publications without independent replication. For comparison: naive full-context GPT-4o lands at 60.2-64%, Mem0 v1 at 49.0% (independent test), Zep/Graphiti at 71.2%, Mem0 v2 token-efficient at 93.4% (self-reported). Treat any single-vendor benchmark as directional, not gospel."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why are vector databases losing pricing power?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pinecone introduced a $50/month minimum in September 2025; Weaviate followed at $25/month. Hobby and small workloads moved to pgvector and Chroma. Independent benchmarks show pgvectorscale at 471 QPS at 99% recall on 50M vectors, against Qdrant at 41.47 QPS, and Pinecone serverless at 1,763ms p95 vs pgvector's 63ms. Postgres-with-pgvector is now the default for any team that already runs Postgres up to ~10M vectors."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does long context window solve memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Chroma's Context Rot report (July 2025, 18 LLMs) found models do not process context uniformly as input length grows, even on simple repeated-words tasks. On LongMemEval-S (~115K tokens), GPT-4o full-context drops to 60.2-64% versus 87-92% oracle. Long context is a complement, not a substitute. Claude Sonnet 4 holds <5% degradation across 200K, and Claude Opus 4.6 hit 76% on 8-needle MRCR at 1M tokens, but most other frontier models still show the U-shape Liu et al. described in 'Lost in the Middle' (2023)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which memory framework should I use for a multi-user chatbot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mem0 if you want managed and a fast extract-and-update layer; Zep/Graphiti if you need temporal reasoning over evolving facts (sales, compliance, healthcare). Mem0 has 48-54k GitHub stars, raised $24M Seed+Series A in October 2025, and is AWS Strands SDK's exclusive memory provider. Zep gains +17.3pp on temporal LongMemEval queries vs full-context, with 90% latency reduction. For a knowledge base over 10M docs, use a vector DB (Qdrant or pgvector self-hosted) plus a reranker."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S12</span> &middot; MMXXVI &middot; AGENT MEMORY, MAPPED</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">38</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">12</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="am-main">
+
+<!-- ATTRIBUTION BANNER -->
+<div class="mono am-attr-banner">
+  <span class="am-attr-tag">Field survey</span>
+  <span>2026 map of <strong>agent memory</strong>, charted from LongMemEval, LoCoMo, BEAM, RULER, ANN-Benchmarks, Stack Overflow 2025, Datadog AI 2026.</span>
+  <span class="am-attr-right">Benchmarks: vendor-reported unless noted</span>
+</div>
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Agent Memory in 2026</span></li>
+  </ol>
+</nav>
+
+<section class="am-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S12</span>
+    <span>FIG. S12 &middot; The 2026 map of agent memory</span>
+  </h2>
+  <h1 class="serif big-display am-title">
+    Agent memory,<br>
+    <span class="serif-italic" style="color:var(--accent)">mapped.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Anthropic's CLAUDE.md is one extreme. A managed temporal knowledge graph
+    is the other. Between them sit vector DBs, framework memory layers,
+    long context windows, and the hybrids that ship in production. Four
+    charts, one decision matrix, and a defensible answer to the question:
+    is MEMORY.md really so bad?
+  </p>
+  <p class="am-kicker">
+    The honest synthesis: MEMORY.md is the right answer for roughly 80%
+    of solo coding-agent workflows and 0% of consumer chat products,
+    with a large messy middle where hybrids dominate. Below: the
+    benchmark scoreboard, the cost-vs-latency Pareto frontier, the
+    when-to-use-what quadrant, and the adoption signals that matter.
+  </p>
+  <div class="mono am-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Hand-coded SVG &middot; vanilla JS</div></div>
+    <div><div class="label">Sources</div><div class="value">LongMemEval &middot; LoCoMo &middot; ANN-Benchmarks &middot; Datadog &middot; Stack Overflow</div></div>
+  </div>
+  <div class="am-inline-nav">
+    <a href="#why">The arc</a> &middot;
+    <a href="#scoreboard">Scoreboard</a> &middot;
+    <a href="#pareto">Cost vs latency</a> &middot;
+    <a href="#quadrant">When to use what</a> &middot;
+    <a href="#adoption">Adoption</a> &middot;
+    <a href="#methodology">Methodology</a>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § I — THE ARC
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-section" id="why">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>FIG. S12.0 &middot; The arc, in one paragraph</span>
+  </h2>
+  <div class="am-section-head">
+    <h2>Below a threshold, MEMORY.md is fine. <span class="am-section-italic">Above it, fragments fast.</span></h2>
+  </div>
+
+  <div class="am-headline" aria-label="Headline numbers">
+    <div class="am-headline-cell">
+      <span class="num">74.0%</span>
+      <span class="label">Letta filesystem agent on LoCoMo</span>
+    </div>
+    <div class="am-headline-cell">
+      <span class="num">94.87%</span>
+      <span class="label">Mastra Observational on LongMemEval</span>
+    </div>
+    <div class="am-headline-cell">
+      <span class="num">91%</span>
+      <span class="label">Mem0 p95 latency cut vs full context</span>
+    </div>
+    <div class="am-headline-cell">
+      <span class="num">$24M</span>
+      <span class="label">Mem0 Seed + Series A, Oct 2025</span>
+    </div>
+  </div>
+
+  <div class="am-section-prose">
+    <p class="am-lede">
+      In September 2025, Anthropic shipped a memory tool. It is a
+      directory. It supports five operations: view, create, str_replace,
+      insert, delete. There is no vector store. There is no graph
+      backend. It is a folder of files, edited by the model. By April
+      2026, a stock filesystem agent built on this primitive scored
+      74.0% on LoCoMo, beating Mem0's purpose-built graph variant at
+      68.5%. The result is awkward for the dedicated-memory category.
+    </p>
+    <p>
+      But it does not generalize. On LongMemEval, full-context GPT-4o
+      lands at 60.2% to 64%, Mem0 v1 at 49.0% in independent re-tests,
+      Zep/Graphiti at 71.2%, and the 2026 frontier (Mastra Observational,
+      Mem0 v2, EverMemOS, TiMem) at 83% to 95%. The gap shows up
+      whenever facts evolve, conflicts need resolving, or hundreds of
+      sessions stack against the same user. File-based memory degrades
+      non-linearly above that threshold.
+    </p>
+    <p>
+      The field is consolidating around a hybrid. Claude Code, Cursor,
+      and Windsurf all combine a static instruction file (CLAUDE.md,
+      .cursor/rules, global_rules.md) with just-in-time retrieval and,
+      for some, a learned memory store. Vector DBs are roughly 78%
+      enterprise-adopted but losing pricing power at the bottom; long
+      context windows reach 1M to 10M tokens but suffer measurable
+      <em>context rot</em>; dedicated frameworks (Mem0, Zep, Letta) are
+      converging on roughly the same architecture. <em>Below the
+      threshold, plain files. Above it, hybrid.</em>
+    </p>
+  </div>
+
+  <div class="am-receipts" aria-label="Section I receipts">
+    <div class="am-receipts-head">Receipts &middot; the launch arc</div>
+    <dl>
+      <dt>2023</dt><dd>Liu et al. publish "Lost in the Middle" with a 15-30% drop on middle-of-context retrieval</dd>
+      <dt>Apr 2024</dt><dd>OpenAI ships ChatGPT Memory (rolling-summary list, not vector DB)</dd>
+      <dt>Jan 2025</dt><dd>Zep/Graphiti paper: 94.8% DMR, 71.2% LongMemEval, 90% latency cut</dd>
+      <dt>Jul 2025</dt><dd>Chroma releases Context Rot report (18 LLMs, non-uniform degradation confirmed)</dd>
+      <dt>Sep 2025</dt><dd>Anthropic ships memory tool: a file directory, not a database</dd>
+      <dt>Sep 2025</dt><dd>Pinecone $50/month minimum, Weaviate $25/month. Hobby economics shift</dd>
+      <dt>Oct 2025</dt><dd>Mem0 raises $24M Seed + Series A; named exclusive memory provider for AWS Strands SDK</dd>
+      <dt>Jan 2026</dt><dd>TiMem (76.88%), EverMemOS (83.0%) push the frontier on benchmarks</dd>
+      <dt>Q1 2026</dt><dd>Mastra Observational hits 94.87% on LongMemEval with GPT-5-mini</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § II — SCOREBOARD (CHART 1)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-section" id="scoreboard">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II</span>
+    <span>FIG. S12.1 &middot; The benchmark scoreboard</span>
+  </h2>
+  <div class="am-section-head">
+    <h2>Twelve approaches. <span class="am-section-italic">One benchmark.</span></h2>
+  </div>
+
+  <div class="am-section-prose">
+    <p class="am-lede">
+      LongMemEval (Wu et al., ICLR 2025) is the closest thing the field
+      has to a fair comparison. It tests cross-session memory,
+      knowledge updates, temporal reasoning, and long-form QA. Naive
+      full-context lands in the low 60s. Vector RAG with a single
+      retrieval call lands lower. Knowledge graphs (Zep/Graphiti) push
+      past 70%. Token-efficient and observational architectures cross
+      90%. The 2026 frontier is approaching the oracle ceiling, with
+      caveats below. Hover any bar for the configuration and source.
+    </p>
+  </div>
+
+  <!-- CHART 1: Horizontal bar chart -->
+  <div class="am-chart-wrap am-tooltip-host" id="am-scoreboard-host">
+    <div class="am-chart-head">FIG. S12.1 &middot; LongMemEval-S overall score by approach</div>
+    <div class="am-chart-title serif">Naive full-context to OMEGA, in twelve bars.</div>
+    <div class="am-chart-sub">Hover or focus a bar for the model class, source, and notes.</div>
+
+    <svg viewBox="0 0 880 600" class="am-chart-svg" id="am-scoreboard-svg" aria-label="LongMemEval-S overall score by approach">
+      <!-- Frame: x from 280 to 840, y from 20 to 560. Bars 22 high, 24 spacing.
+           x = 280 + (score / 100) * 560. So 0% → 280, 50% → 560, 100% → 840. -->
+      <line x1="280" y1="20" x2="280" y2="560" class="axis-line"/>
+      <line x1="280" y1="560" x2="840" y2="560" class="axis-line"/>
+
+      <!-- X gridlines at 20, 40, 60, 80, 100% -->
+      <line x1="392" y1="20" x2="392" y2="560" class="gridline"/><text x="392" y="578" class="axis-label" text-anchor="middle">20</text>
+      <line x1="504" y1="20" x2="504" y2="560" class="gridline"/><text x="504" y="578" class="axis-label" text-anchor="middle">40</text>
+      <line x1="616" y1="20" x2="616" y2="560" class="gridline"/><text x="616" y="578" class="axis-label" text-anchor="middle">60</text>
+      <line x1="728" y1="20" x2="728" y2="560" class="gridline"/><text x="728" y="578" class="axis-label" text-anchor="middle">80</text>
+      <line x1="840" y1="20" x2="840" y2="560" class="gridline"/><text x="840" y="578" class="axis-label" text-anchor="middle">100</text>
+      <text x="560" y="595" class="axis-label" text-anchor="middle" style="font-size:10.5px">LongMemEval-S overall accuracy (%)</text>
+
+      <!-- Oracle ceiling line at 82.4 -->
+      <line x1="741.4" y1="20" x2="741.4" y2="560" class="ceiling-line"/>
+      <text x="745" y="32" class="ceiling-label">Oracle ceiling 82.4%</text>
+
+      <!-- 12 rows. y starts at 30, step 42. -->
+      <!-- Row layout: label (right-aligned at x=272), bar from x=280, score text after bar. -->
+
+      <g data-row data-name="OMEGA (GPT-4.1)" data-score="95.4" data-class="2026 token-efficient" data-source="Self-reported, no independent replication" data-note="Single-author paper from early 2026. Treat as upper bound, not oracle.">
+        <text x="272" y="44" class="approach-label" text-anchor="end">OMEGA (GPT-4.1)</text>
+        <rect class="bar bar-frontier" x="280" y="30" height="22" width="534"/>
+        <text x="822" y="44" class="approach-score" text-anchor="end">95.4</text>
+      </g>
+      <g data-row data-name="Mastra Observational (GPT-5-mini)" data-score="94.87" data-class="2026 observational" data-source="Mastra publication, Q1 2026" data-note="Highest peer-published score. Stable cacheable context, constant tokens per call.">
+        <text x="272" y="86" class="approach-label" text-anchor="end">Mastra OM (GPT-5-mini)</text>
+        <rect class="bar bar-frontier" x="280" y="72" height="22" width="531"/>
+        <text x="819" y="86" class="approach-score" text-anchor="end">94.87</text>
+      </g>
+      <g data-row data-name="Mem0 v2 token-efficient" data-score="93.4" data-class="2026 hybrid framework" data-source="Mem0 v2 self-report" data-note="Multi-signal retrieval. &lt;7K tokens/call. Knowledge-update +53.6pp vs v1.">
+        <text x="272" y="128" class="approach-label" text-anchor="end">Mem0 v2 (token-efficient)</text>
+        <rect class="bar bar-framework" x="280" y="114" height="22" width="523"/>
+        <text x="811" y="128" class="approach-score" text-anchor="end">93.4</text>
+      </g>
+      <g data-row data-name="Emergence AI (RAG-style, gpt-4o)" data-score="86.0" data-class="RAG + reranker" data-source="Emergence AI publication" data-note="5.65s/item median. Retrieval augmented generation with dedicated reranker.">
+        <text x="272" y="170" class="approach-label" text-anchor="end">Emergence AI (gpt-4o)</text>
+        <rect class="bar bar-framework" x="280" y="156" height="22" width="481"/>
+        <text x="769" y="170" class="approach-score" text-anchor="end">86.0</text>
+      </g>
+      <g data-row data-name="Mastra Observational (gpt-4o)" data-score="84.23" data-class="2026 observational" data-source="Mastra publication" data-note="Same architecture as the top row, weaker base model.">
+        <text x="272" y="212" class="approach-label" text-anchor="end">Mastra OM (gpt-4o)</text>
+        <rect class="bar bar-framework" x="280" y="198" height="22" width="471"/>
+        <text x="759" y="212" class="approach-score" text-anchor="end">84.23</text>
+      </g>
+      <g data-row data-name="EverMemOS" data-score="83.0" data-class="2026 framework" data-source="EverMemOS Jan 2026 paper" data-note="+5.2pp over MemOS predecessor. Full-research publication.">
+        <text x="272" y="254" class="approach-label" text-anchor="end">EverMemOS</text>
+        <rect class="bar bar-framework" x="280" y="240" height="22" width="465"/>
+        <text x="753" y="254" class="approach-score" text-anchor="end">83.0</text>
+      </g>
+      <g data-row data-name="Oracle (gpt-4o, evidence sessions only)" data-score="82.4" data-class="upper bound" data-source="LongMemEval paper authors" data-note="Theoretical ceiling. Only evidence sessions in context, no irrelevant noise.">
+        <text x="272" y="296" class="approach-label" text-anchor="end">Oracle (gpt-4o)</text>
+        <rect class="bar bar-oracle" x="280" y="282" height="22" width="461"/>
+        <text x="749" y="296" class="approach-score" text-anchor="end">82.4</text>
+      </g>
+      <g data-row data-name="TiMem (gpt-4o-mini)" data-score="76.88" data-class="2026 framework" data-source="TiMem Jan 2026 paper" data-note="-27% memory footprint. Knowledge update +9.49pp, multi-session +12.03pp.">
+        <text x="272" y="338" class="approach-label" text-anchor="end">TiMem (gpt-4o-mini)</text>
+        <rect class="bar bar-framework" x="280" y="324" height="22" width="431"/>
+        <text x="719" y="338" class="approach-score" text-anchor="end">76.88</text>
+      </g>
+      <g data-row data-name="Zep / Graphiti (gpt-4o)" data-score="71.2" data-class="temporal knowledge graph" data-source="Zep paper, Jan 2025" data-note="+17.3pp on temporal queries vs full-context. ~2% of full-context tokens.">
+        <text x="272" y="380" class="approach-label" text-anchor="end">Zep / Graphiti (gpt-4o)</text>
+        <rect class="bar bar-graph" x="280" y="366" height="22" width="399"/>
+        <text x="687" y="380" class="approach-score" text-anchor="end">71.2</text>
+      </g>
+      <g data-row data-name="Naive full-context (GPT-4o, 115K tokens)" data-score="62.1" data-class="long context only" data-source="LongMemEval paper, two prompt variants" data-note="60.2-64% range. Drops 30-45pp vs oracle on the same 115K input.">
+        <text x="272" y="422" class="approach-label" text-anchor="end">Full-context (GPT-4o, 115K)</text>
+        <rect class="bar bar-naive" x="280" y="408" height="22" width="348"/>
+        <text x="636" y="422" class="approach-score" text-anchor="end">62.1</text>
+      </g>
+      <g data-row data-name="Mem0 v1 (independent test, gpt-4o)" data-score="49.0" data-class="vector + extract" data-source="Vectorize.io re-evaluation" data-note="Independent re-test of Mem0 v1. Original Mem0 paper reports higher; treat both as directional.">
+        <text x="272" y="464" class="approach-label" text-anchor="end">Mem0 v1 (independent)</text>
+        <rect class="bar bar-naive" x="280" y="450" height="22" width="274"/>
+        <text x="562" y="464" class="approach-score" text-anchor="end">49.0</text>
+      </g>
+      <g data-row data-name="Llama-3.1-8B full-context (115K tokens)" data-score="43.5" data-class="long context only (8B)" data-source="LongMemEval paper" data-note="42-45% range across two prompts. Oracle for same model: 71%.">
+        <text x="272" y="506" class="approach-label" text-anchor="end">Llama-3.1-8B full-context</text>
+        <rect class="bar bar-naive" x="280" y="492" height="22" width="244"/>
+        <text x="532" y="506" class="approach-score" text-anchor="end">43.5</text>
+      </g>
+
+    </svg>
+
+    <div class="am-chart-legend">
+      <span><span class="swatch am-legend-frontier"></span>2026 frontier</span>
+      <span><span class="swatch am-legend-framework"></span>Memory framework</span>
+      <span><span class="swatch am-legend-graph"></span>Temporal graph</span>
+      <span><span class="swatch am-legend-naive"></span>Long context / vector</span>
+      <span><span class="swatch am-legend-oracle"></span>Oracle ceiling</span>
+    </div>
+  </div>
+
+  <details class="am-curious">
+    <summary>About the LongMemEval benchmark</summary>
+    <p>
+      LongMemEval-S has roughly 115K tokens of context and tests across
+      five categories: single-session-assistant, multi-session,
+      knowledge-update, temporal-reasoning, and single-session-user.
+      Most quoted scores use LLM-as-judge, which introduces ~10% swing
+      depending on judge prompt. Wu et al.'s ICLR 2025 standardized
+      prompts are the closest thing to a fair-comparison anchor.
+    </p>
+    <p>
+      Self-reported "highest ever" claims (Mastra 94.87%, OMEGA 95.4%,
+      <code>agentmemory V4</code> 96.2%) are vendor or single-author
+      publications without independent replication. The original
+      LongMemEval paper authors and the Letta team have flagged that
+      single-pass scores often do not generalize. The honest framing
+      is: 2026 frontier is approaching oracle, but the gap is narrower
+      than vendor pages suggest.
+    </p>
+  </details>
+
+  <div class="am-receipts" aria-label="Section II receipts">
+    <div class="am-receipts-head">Receipts &middot; &sect; II</div>
+    <dl>
+      <dt>Highest published score</dt><dd>Mastra OM 94.87% with GPT-5-mini, OMEGA 95.4% (self-reported)</dd>
+      <dt>Naive full-context (GPT-4o)</dt><dd>60.2-64% on the same 115K inputs</dd>
+      <dt>Oracle ceiling</dt><dd>82.4% (evidence sessions only, gpt-4o)</dd>
+      <dt>Vector RAG (Mem0 v1, independent)</dt><dd>49.0% in re-test by vectorize.io</dd>
+      <dt>Largest temporal-reasoning gain</dt><dd>Mem0 old to new: 51.1 to 93.2 (+42.1pp)</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § III — COST VS LATENCY (CHART 2)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-section" id="pareto">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>FIG. S12.2 &middot; The cost-vs-latency Pareto frontier</span>
+  </h2>
+  <div class="am-section-head">
+    <h2>Cheaper. Faster. <span class="am-section-italic">Pick two.</span></h2>
+  </div>
+
+  <div class="am-section-prose">
+    <p class="am-lede">
+      The benchmark scoreboard ignores money and clock time. This chart
+      restores both. Each bubble is one approach, plotted by tokens-per-query
+      against median latency. Bubble size encodes the LongMemEval score
+      where available. The Pareto frontier (the dotted line) shows the
+      best you can get for any given cost or latency. Approaches above
+      and to the right of the frontier are dominated.
+    </p>
+  </div>
+
+  <!-- CHART 2: Scatter -->
+  <div class="am-chart-wrap am-tooltip-host" id="am-pareto-host">
+    <div class="am-chart-head">FIG. S12.2 &middot; Tokens per query vs median latency</div>
+    <div class="am-chart-title serif">Where each architecture sits on the cost / latency map.</div>
+    <div class="am-chart-sub">Bubble size = LongMemEval score. Hover any bubble for benchmark and price details.</div>
+
+    <svg viewBox="0 0 880 480" class="am-chart-svg" id="am-pareto-svg" aria-label="Cost vs latency scatter">
+      <!-- Frame: x = log10(tokens), 100 → 60, 1M → 820. So scale: x = 60 + (log10(t) - 2) * 760/4 = 60 + (log10(t) - 2) * 190.
+           y = log10(latency_ms), 10 → 40, 30000 → 420. Scale: y = 40 + (log10(ms) - 1) * 380/3.5 = 40 + (log10(ms)-1)*108.57.
+           For ms=10: y=40. ms=100: y=148.57. ms=1000: y=257.14. ms=10000: y=365.7. ms=30000: y=410.5.
+           For tokens=100: x=60. 1k: x=250. 10k: x=440. 100k: x=630. 1M: x=820. -->
+
+      <rect x="60" y="40" width="760" height="380" class="quad-axis" fill="none"/>
+
+      <!-- X gridlines (token count, log scale) -->
+      <line x1="250" y1="40" x2="250" y2="420" class="gridline"/><text x="250" y="438" class="axis-label" text-anchor="middle">1K</text>
+      <line x1="440" y1="40" x2="440" y2="420" class="gridline"/><text x="440" y="438" class="axis-label" text-anchor="middle">10K</text>
+      <line x1="630" y1="40" x2="630" y2="420" class="gridline"/><text x="630" y="438" class="axis-label" text-anchor="middle">100K</text>
+      <text x="60"  y="438" class="axis-label" text-anchor="middle">100</text>
+      <text x="820" y="438" class="axis-label" text-anchor="middle">1M</text>
+      <text x="440" y="458" class="axis-label" text-anchor="middle" style="font-size:10.5px">Tokens per query (log)</text>
+
+      <!-- Y gridlines (latency, log scale) -->
+      <line x1="60" y1="148.57" x2="820" y2="148.57" class="gridline"/><text x="54" y="152" class="axis-label" text-anchor="end">100ms</text>
+      <line x1="60" y1="257.14" x2="820" y2="257.14" class="gridline"/><text x="54" y="261" class="axis-label" text-anchor="end">1s</text>
+      <line x1="60" y1="365.71" x2="820" y2="365.71" class="gridline"/><text x="54" y="369" class="axis-label" text-anchor="end">10s</text>
+      <text x="54" y="44" class="axis-label" text-anchor="end">10ms</text>
+      <text x="32" y="230" class="axis-label" text-anchor="middle" transform="rotate(-90 32 230)">Median latency (log)</text>
+
+      <!-- Pareto frontier (rough) -->
+      <polyline points="170,365 280,310 400,260 540,220" class="pareto-line"/>
+      <text x="180" y="380" class="quad-quadrant-label">Pareto frontier</text>
+
+      <!-- Approaches as bubbles. (x, y) computed; r from LongMemEval score. -->
+      <!-- File-based / CLAUDE.md (~5K tokens, 1500ms median, ~74% LoCoMo / informal) -->
+      <circle data-bubble cx="358" cy="280" r="20" class="bubble bubble-file"
+        data-name="File-based (CLAUDE.md + grep)" data-tokens="~5,000 tokens"
+        data-latency="1-3s median" data-cost="$0.0015 with prompt caching"
+        data-score="74.0% on LoCoMo (filesystem)"
+        data-why="Letta filesystem agent: GPT-4o-mini, file ops only. Cheapest sustained setup; on the frontier for solo coding."/>
+
+      <!-- Mem0 v1 (~7K tokens, 1440ms p95, 49% indep, but 67% original) -->
+      <circle data-bubble cx="390" cy="265" r="14" class="bubble bubble-framework"
+        data-name="Mem0 v1" data-tokens="~7,000 tokens"
+        data-latency="1.44s p95" data-cost="$0.002 with caching"
+        data-score="49.0% (vectorize.io); 66.9% (Mem0 paper)"
+        data-why="91% lower p95 latency vs full-context. Independent re-test scores lower than Mem0's self-report."/>
+
+      <!-- Mem0 v2 (~7K tokens, similar latency, 93.4%) -->
+      <circle data-bubble cx="395" cy="240" r="20" class="bubble bubble-frontier"
+        data-name="Mem0 v2 token-efficient" data-tokens="&lt;7,000 tokens"
+        data-latency="comparable to v1" data-cost="$0.002 with caching"
+        data-score="93.4% (self-reported)"
+        data-why="Multi-signal retrieval. Most token-efficient frontier system, on the Pareto-optimal corner."/>
+
+      <!-- Zep / Graphiti (~1.6K tokens, 2.6s, 71.2%) -->
+      <circle data-bubble cx="265" cy="298" r="16" class="bubble bubble-graph"
+        data-name="Zep / Graphiti" data-tokens="~1,600 tokens"
+        data-latency="2.6s median" data-cost="$0.0005 with caching"
+        data-score="71.2% LongMemEval"
+        data-why="~2% of full-context tokens. Bitemporal knowledge graph. Best for evolving facts and temporal queries."/>
+
+      <!-- Pinecone serverless RAG (~10K tokens, 60ms search + ~1s LLM, generic RAG) -->
+      <circle data-bubble cx="440" cy="148" r="11" class="bubble bubble-vector"
+        data-name="Pinecone serverless RAG" data-tokens="~10,000 tokens"
+        data-latency="60ms search + ~1s LLM"
+        data-cost="$0.030 + $50/mo minimum"
+        data-score="varies by chunking; not LongMemEval-tuned"
+        data-why="Zero-ops vector retrieval. Strong for generic RAG; underperforms on agent memory benchmarks."/>
+
+      <!-- Qdrant self-hosted (~10K tokens, 5ms search + ~1s LLM) -->
+      <circle data-bubble cx="450" cy="120" r="10" class="bubble bubble-vector"
+        data-name="Qdrant self-hosted" data-tokens="~10,000 tokens"
+        data-latency="5ms search + ~1s LLM"
+        data-cost="$100-300/mo cluster"
+        data-score="~1,840 QPS at 1M vectors (ANN-Bench)"
+        data-why="Production sweet spot for vector DBs. p50 latency &lt;5ms at high recall."/>
+
+      <!-- pgvector (5-8ms HNSW, $0 storage) -->
+      <circle data-bubble cx="445" cy="135" r="9" class="bubble bubble-vector"
+        data-name="pgvector + pgvectorscale" data-tokens="~10,000 tokens"
+        data-latency="5-8ms HNSW + ~1s LLM"
+        data-cost="$0 storage; runs in Postgres"
+        data-score="471 QPS @ 99% recall on 50M vectors"
+        data-why="Now the default for any team already running Postgres. ~16x throughput of Pinecone serverless at 99% recall."/>
+
+      <!-- Full-context Sonnet 4.6 (~115K tokens, 5-10s, 62%) -->
+      <circle data-bubble cx="640" cy="375" r="14" class="bubble bubble-naive"
+        data-name="Claude Sonnet 4.6 full-context" data-tokens="~115,000 tokens"
+        data-latency="5-10s median" data-cost="$0.034 per call (cached)"
+        data-score="60.2-64% LongMemEval (GPT-4o equiv)"
+        data-why="Caching cuts $0.345 to $0.034 per call after 2 hits. Still loses on quality vs structured memory."/>
+
+      <!-- Anthropic memory tool (file-directory, similar to file-based but managed) -->
+      <circle data-bubble cx="350" cy="290" r="16" class="bubble bubble-file"
+        data-name="Anthropic memory tool" data-tokens="~5,000 tokens"
+        data-latency="comparable to file-based"
+        data-cost="standard rates + ~2,500 token system overhead"
+        data-score="+39% combined with context editing (Anthropic internal)"
+        data-why="Sept 2025 release. File directory (view/create/str_replace/insert/delete). Pairs with context editing for 84% token reduction over 100 turns."/>
+
+      <!-- Letta filesystem agent (74% LoCoMo, similar to file-based but with Letta runtime) -->
+      <circle data-bubble cx="365" cy="295" r="18" class="bubble bubble-file"
+        data-name="Letta filesystem agent" data-tokens="~5,000 tokens"
+        data-latency="depends on tool calls"
+        data-cost="comparable to file-based"
+        data-score="74.0% LoCoMo (file ops only)"
+        data-why="Beat Mem0 graph variant (68.5%) on the same benchmark. The data point that started the MEMORY.md debate."/>
+
+      <!-- Mastra Observational (constant tokens, cacheable, 94.87%) -->
+      <circle data-bubble cx="410" cy="225" r="22" class="bubble bubble-frontier"
+        data-name="Mastra Observational Memory" data-tokens="constant (cacheable)"
+        data-latency="stable" data-cost="amortized via caching"
+        data-score="94.87% (GPT-5-mini)"
+        data-why="Reflection-based memory. Constant context window, fully prompt-cacheable. Highest published score."/>
+
+    </svg>
+
+    <div class="am-chart-legend">
+      <span><span class="swatch am-legend-file"></span>File-based</span>
+      <span><span class="swatch am-legend-framework"></span>Framework (extract + retrieve)</span>
+      <span><span class="swatch am-legend-graph"></span>Temporal graph</span>
+      <span><span class="swatch am-legend-vector"></span>Vector DB</span>
+      <span><span class="swatch am-legend-naive"></span>Long context only</span>
+      <span><span class="swatch am-legend-frontier"></span>2026 frontier</span>
+    </div>
+  </div>
+
+  <details class="am-curious">
+    <summary>How prompt caching changes the cost calculus</summary>
+    <p>
+      Anthropic prompt caching makes the first call to a long static
+      prefix cost full price, then drops subsequent calls to roughly
+      10% of base. Break-even arrives at ~2 cache hits. For a CLAUDE.md
+      file that is read every session, caching takes the cost from
+      $3.00/M input tokens (Sonnet 4.6) to $0.30/M, and the
+      time-to-first-token by up to 85%.
+    </p>
+    <p>
+      That changes the answer to "is full-context too expensive?" The
+      static answer was yes. The cached answer is "competitive on cost
+      for repeated queries against the same history." For one-shot
+      queries, file-based and structured memory still dominate.
+    </p>
+  </details>
+
+  <div class="am-receipts" aria-label="Section III receipts">
+    <div class="am-receipts-head">Receipts &middot; &sect; III</div>
+    <dl>
+      <dt>Cheapest sustainable setup</dt><dd>File-based + caching at ~$0.0015/query</dd>
+      <dt>Lowest latency</dt><dd>pgvector / Qdrant at 5-8ms search + LLM time</dd>
+      <dt>Highest accuracy per token</dt><dd>Mastra Observational (94.87% at constant context)</dd>
+      <dt>Worst dominated</dt><dd>Naive full-context: pays for tokens, gets oracle minus 22pp</dd>
+      <dt>Frontier corner</dt><dd>Mem0 v2, Zep, Mastra OM all sit close to the optimum</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § IV — DECISION QUADRANT (CHART 3)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-section" id="quadrant">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV</span>
+    <span>FIG. S12.3 &middot; The when-to-use-what quadrant</span>
+  </h2>
+  <div class="am-section-head">
+    <h2>One user or many? <span class="am-section-italic">Static facts or evolving?</span></h2>
+  </div>
+
+  <div class="am-section-prose">
+    <p class="am-lede">
+      Most "which memory system" arguments collapse once you fix two
+      variables: how many users you serve, and how often the facts they
+      depend on change. File-based memory dominates one quadrant. Native
+      product memory dominates another. Hybrid layers and temporal graphs
+      split the remaining two. Hover a label for the recommended stack
+      and the published evidence behind it.
+    </p>
+  </div>
+
+  <!-- CHART 3: 2x2 quadrant -->
+  <div class="am-chart-wrap am-tooltip-host" id="am-quadrant-host">
+    <div class="am-chart-head">FIG. S12.3 &middot; Recommendation matrix by user count and fact volatility</div>
+    <div class="am-chart-title serif">The four quadrants of agent memory.</div>
+    <div class="am-chart-sub">Hover any quadrant or item for the stack recommendation and the data that supports it.</div>
+
+    <svg viewBox="0 0 880 520" class="am-chart-svg" id="am-quadrant-svg" aria-label="Decision quadrant">
+      <rect x="80" y="40" width="720" height="420" class="quad-axis" fill="none"/>
+      <line x1="440" y1="40" x2="440" y2="460" class="quad-mid"/>
+      <line x1="80" y1="250" x2="800" y2="250" class="quad-mid"/>
+
+      <!-- Axis labels -->
+      <text x="80" y="490" class="quad-label">Static facts &larr;</text>
+      <text x="800" y="490" class="quad-label" text-anchor="end">&rarr; Evolving facts</text>
+      <text x="60" y="40" class="quad-label" transform="rotate(-90 60 40)" text-anchor="end">&larr; Single user</text>
+      <text x="60" y="460" class="quad-label" transform="rotate(-90 60 460)">Many users &rarr;</text>
+
+      <!-- Quadrant headlines -->
+      <text x="260" y="80" class="quad-quadrant-label" text-anchor="middle">Single user, static facts</text>
+      <text x="620" y="80" class="quad-quadrant-label" text-anchor="middle">Single user, evolving facts</text>
+      <text x="260" y="290" class="quad-quadrant-label" text-anchor="middle">Many users, static facts</text>
+      <text x="620" y="290" class="quad-quadrant-label" text-anchor="middle">Many users, evolving facts</text>
+
+      <!-- Quadrant items -->
+      <!-- Top-left: single user, static facts → MEMORY.md -->
+      <g data-quad-item data-name="MEMORY.md / CLAUDE.md / AGENTS.md"
+         data-stack="Plain instruction file + grep + prompt caching"
+         data-evidence="Letta filesystem agent 74.0% LoCoMo. Anthropic memory tool +39% on internal evals.">
+        <circle cx="260" cy="150" r="46" class="quad-pill quad-pill-file"/>
+        <text x="260" y="146" class="quad-pill-name" text-anchor="middle">MEMORY.md</text>
+        <text x="260" y="166" class="quad-pill-sub" text-anchor="middle">+ grep + caching</text>
+      </g>
+      <text x="260" y="220" class="quad-pill-note" text-anchor="middle">~80% of solo coding-agent workflows</text>
+
+      <!-- Top-right: single user, evolving facts → Hybrid (file + memory layer) -->
+      <g data-quad-item data-name="Hybrid (file + memory layer)"
+         data-stack="CLAUDE.md hierarchy + Mem0 or Letta core memory for preferences"
+         data-evidence="Cursor's .cursor/rules with paths frontmatter; Mem0 v2 hits 93.4% LongMemEval.">
+        <circle cx="620" cy="150" r="50" class="quad-pill quad-pill-hybrid"/>
+        <text x="620" y="142" class="quad-pill-name" text-anchor="middle">Hybrid</text>
+        <text x="620" y="162" class="quad-pill-sub" text-anchor="middle">file + memory layer</text>
+      </g>
+      <text x="620" y="220" class="quad-pill-note" text-anchor="middle">Coding agent across many repos</text>
+
+      <!-- Bottom-left: many users, static facts → Native product memory + retrieval -->
+      <g data-quad-item data-name="Native product memory"
+         data-stack="ChatGPT-style rolling summaries + retrieval over saved memories"
+         data-evidence="OpenAI bio tool architecture is the empirical winner; ChatGPT memory works without any vector DB.">
+        <circle cx="260" cy="370" r="50" class="quad-pill quad-pill-native"/>
+        <text x="260" y="362" class="quad-pill-name" text-anchor="middle">Native memory</text>
+        <text x="260" y="382" class="quad-pill-sub" text-anchor="middle">summaries + retrieval</text>
+      </g>
+      <text x="260" y="440" class="quad-pill-note" text-anchor="middle">ChatGPT, Claude.ai, Cursor Memories</text>
+
+      <!-- Bottom-right: many users, evolving facts → Mem0 / Zep / Graphiti -->
+      <g data-quad-item data-name="Mem0 (managed) or Zep / Graphiti"
+         data-stack="Hybrid extract-and-update memory + temporal graph for relationship questions"
+         data-evidence="Mem0 graph at $249/mo Pro. Zep +17.3pp on temporal LongMemEval. AWS Strands SDK exclusive.">
+        <circle cx="620" cy="370" r="56" class="quad-pill quad-pill-framework"/>
+        <text x="620" y="362" class="quad-pill-name" text-anchor="middle">Mem0 / Zep</text>
+        <text x="620" y="382" class="quad-pill-sub" text-anchor="middle">framework + KG</text>
+      </g>
+      <text x="620" y="450" class="quad-pill-note" text-anchor="middle">10K+ users, sales, compliance, healthcare</text>
+
+    </svg>
+
+    <div class="am-chart-legend">
+      <span><span class="swatch am-legend-file"></span>File-based</span>
+      <span><span class="swatch am-legend-hybrid"></span>Hybrid</span>
+      <span><span class="swatch am-legend-native"></span>Native product memory</span>
+      <span><span class="swatch am-legend-framework"></span>Memory framework</span>
+    </div>
+  </div>
+
+  <details class="am-curious">
+    <summary>Why "long context" is a complement, not a quadrant winner</summary>
+    <p>
+      Long context windows (1M to 10M tokens) get treated as a substitute
+      for memory, but the data does not support it. Chroma's Context Rot
+      report (July 2025, 18 LLMs including GPT-4.1, Claude 4, Gemini 2.5,
+      Qwen3) found non-uniform degradation as input length grows, even
+      on simple repeated-words tasks.
+    </p>
+    <p>
+      Claude Opus 4.6 hits 76% on 8-needle MRCR at 1M tokens, vs Sonnet
+      4.5 at 18.5%, a 4x generation-on-generation jump. Claude Sonnet 4
+      holds &lt;5% degradation across its 200K window. RULER (NVIDIA)
+      shows only ~half of models claiming 32K+ context maintain quality
+      at that length on multi-hop tasks. <em>Long context belongs
+      stacked with memory, not in place of it.</em>
+    </p>
+  </details>
+
+  <div class="am-receipts" aria-label="Section IV receipts">
+    <div class="am-receipts-head">Receipts &middot; &sect; IV</div>
+    <dl>
+      <dt>Solo coder threshold</dt><dd>~30 facts, ~300 lines of MEMORY.md before quality degrades</dd>
+      <dt>Multi-user inflection</dt><dd>~10K users; below that, native memory wins, above it, frameworks</dd>
+      <dt>Temporal-reasoning king</dt><dd>Zep / Graphiti, +17.3pp LongMemEval vs full-context</dd>
+      <dt>Empty quadrant</dt><dd>None; every cell has at least one production-grade default</dd>
+      <dt>Cross-quadrant winner</dt><dd>Hybrid, in some form, ships in Claude Code, Cursor, Windsurf</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § V — ADOPTION SIGNAL (CHART 4)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-section" id="adoption">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>FIG. S12.4 &middot; The adoption signal</span>
+  </h2>
+  <div class="am-section-head">
+    <h2>Mindshare. Funding. <span class="am-section-italic">Stack Overflow.</span></h2>
+  </div>
+
+  <div class="am-section-prose">
+    <p class="am-lede">
+      Benchmarks measure quality. Funding and stars measure where the
+      field thinks the bets are. Mem0 leads dedicated-memory mindshare;
+      Letta is positioning around stateful coding agents; Graphiti
+      crossed 20K stars in November 2025. Vector DBs (Milvus, Qdrant,
+      Weaviate, Chroma, pgvector) split the infrastructure layer.
+      Stack Overflow's 2025 survey puts <strong>Redis at 43%</strong>
+      as the top AI-agent data store, ahead of every dedicated vector
+      database.
+    </p>
+  </div>
+
+  <!-- CHART 4: Adoption bars -->
+  <div class="am-chart-wrap am-tooltip-host" id="am-adoption-host">
+    <div class="am-chart-head">FIG. S12.4 &middot; GitHub stars by project (April 2026 snapshot)</div>
+    <div class="am-chart-title serif">Where the dollars and the stars are pointing.</div>
+    <div class="am-chart-sub">Hover any bar for funding rounds and other adoption signals.</div>
+
+    <svg viewBox="0 0 880 520" class="am-chart-svg" id="am-adoption-svg" aria-label="GitHub stars by memory and vector DB project">
+      <!-- 11 rows, y from 30 to 480, step 42. x = 240 + (stars/55000) * 580. So 55k → 820 (max). -->
+      <line x1="240" y1="20" x2="240" y2="490" class="axis-line"/>
+      <line x1="240" y1="490" x2="820" y2="490" class="axis-line"/>
+
+      <!-- X gridlines -->
+      <line x1="345" y1="20" x2="345" y2="490" class="gridline"/><text x="345" y="508" class="axis-label" text-anchor="middle">10k</text>
+      <line x1="450" y1="20" x2="450" y2="490" class="gridline"/><text x="450" y="508" class="axis-label" text-anchor="middle">20k</text>
+      <line x1="555" y1="20" x2="555" y2="490" class="gridline"/><text x="555" y="508" class="axis-label" text-anchor="middle">30k</text>
+      <line x1="660" y1="20" x2="660" y2="490" class="gridline"/><text x="660" y="508" class="axis-label" text-anchor="middle">40k</text>
+      <line x1="765" y1="20" x2="765" y2="490" class="gridline"/><text x="765" y="508" class="axis-label" text-anchor="middle">50k</text>
+      <text x="530" y="494" class="axis-label" text-anchor="middle" style="font-size:10.5px; fill:transparent">.</text>
+
+      <!-- Mem0 ~51k -->
+      <g data-row data-name="Mem0" data-stars="~48-54k" data-class="Memory framework"
+         data-funding="$24M Seed + Series A (Oct 2025)"
+         data-note="14M PyPI downloads. 35M to 186M API calls Q1 to Q3 2025. AWS Strands SDK exclusive memory provider.">
+        <text x="232" y="44" class="approach-label" text-anchor="end">Mem0</text>
+        <rect class="bar bar-framework" x="240" y="30" height="22" width="535"/>
+        <text x="783" y="44" class="approach-score" text-anchor="end">~51k</text>
+      </g>
+      <!-- Milvus ~25k -->
+      <g data-row data-name="Milvus" data-stars="~25k" data-class="Vector DB"
+         data-funding="Zilliz Series B"
+         data-note="700k Docker pulls/month. Most-pulled vector DB.">
+        <text x="232" y="86" class="approach-label" text-anchor="end">Milvus</text>
+        <rect class="bar bar-vector" x="240" y="72" height="22" width="263"/>
+        <text x="511" y="86" class="approach-score" text-anchor="end">~25k</text>
+      </g>
+      <!-- Graphiti / Zep ~21k -->
+      <g data-row data-name="Graphiti / Zep" data-stars="~21k" data-class="Temporal knowledge graph"
+         data-funding="private"
+         data-note="25k weekly PyPI. Service usage 30x in two weeks (summer 2025). MCP server is a major adoption driver.">
+        <text x="232" y="128" class="approach-label" text-anchor="end">Graphiti / Zep</text>
+        <rect class="bar bar-graph" x="240" y="114" height="22" width="221"/>
+        <text x="469" y="128" class="approach-score" text-anchor="end">~21k</text>
+      </g>
+      <!-- Letta-code + MemGPT ~30k -->
+      <g data-row data-name="Letta (MemGPT + letta-code)" data-stars="~30k combined" data-class="Stateful coding agent + memory"
+         data-funding="$10M seed, Felicis (Sept 2024)"
+         data-note="Letta Code: #1 model-agnostic OSS on Terminal-Bench. Filesystem agent 74.0% LoCoMo.">
+        <text x="232" y="170" class="approach-label" text-anchor="end">Letta</text>
+        <rect class="bar bar-framework" x="240" y="156" height="22" width="316"/>
+        <text x="564" y="170" class="approach-score" text-anchor="end">~30k</text>
+      </g>
+      <!-- Cognee ~12k -->
+      <g data-row data-name="Cognee" data-stars="~12k" data-class="Memory framework (BYODB)"
+         data-funding="private"
+         data-note="30+ data connectors. Apache-2.0. Runs fully local for EU / on-prem.">
+        <text x="232" y="212" class="approach-label" text-anchor="end">Cognee</text>
+        <rect class="bar bar-framework" x="240" y="198" height="22" width="126"/>
+        <text x="374" y="212" class="approach-score" text-anchor="end">~12k</text>
+      </g>
+      <!-- Qdrant ~9k -->
+      <g data-row data-name="Qdrant" data-stars="~9k" data-class="Vector DB"
+         data-funding="Series A"
+         data-note="1,840 QPS at 1M vectors. p50 latency &lt;5ms at high recall.">
+        <text x="232" y="254" class="approach-label" text-anchor="end">Qdrant</text>
+        <rect class="bar bar-vector" x="240" y="240" height="22" width="95"/>
+        <text x="343" y="254" class="approach-score" text-anchor="end">~9k</text>
+      </g>
+      <!-- Weaviate ~8k -->
+      <g data-row data-name="Weaviate" data-stars="~8k" data-class="Vector DB"
+         data-funding="Series B ($40M Feb 2024)"
+         data-note="&gt;1M Docker pulls/month. Moved to $25/month minimum after Pinecone shifted pricing.">
+        <text x="232" y="296" class="approach-label" text-anchor="end">Weaviate</text>
+        <rect class="bar bar-vector" x="240" y="282" height="22" width="84"/>
+        <text x="332" y="296" class="approach-score" text-anchor="end">~8k</text>
+      </g>
+      <!-- Chroma ~6k -->
+      <g data-row data-name="Chroma" data-stars="~6k" data-class="Vector DB"
+         data-funding="Series A"
+         data-note="Chroma Cloud serverless launched 2025. 20% on Stack Overflow's AI-agent data store survey.">
+        <text x="232" y="338" class="approach-label" text-anchor="end">Chroma</text>
+        <rect class="bar bar-vector" x="240" y="324" height="22" width="63"/>
+        <text x="311" y="338" class="approach-score" text-anchor="end">~6k</text>
+      </g>
+      <!-- Hindsight ~4k -->
+      <g data-row data-name="Hindsight" data-stars="~4k" data-class="Memory framework"
+         data-funding="Vectorize.io"
+         data-note="MIT-licensed. Independent re-evaluations of Mem0, Zep, and Letta come from this project.">
+        <text x="232" y="380" class="approach-label" text-anchor="end">Hindsight</text>
+        <rect class="bar bar-framework" x="240" y="366" height="22" width="42"/>
+        <text x="290" y="380" class="approach-score" text-anchor="end">~4k</text>
+      </g>
+      <!-- pgvector ~4k -->
+      <g data-row data-name="pgvector" data-stars="~4k" data-class="Postgres extension"
+         data-funding="OSS"
+         data-note='"Postgres is enough" narrative. 18% on Stack Overflow AI-agent data store survey. 471 QPS at 99% recall on 50M vectors with pgvectorscale.'>
+        <text x="232" y="422" class="approach-label" text-anchor="end">pgvector</text>
+        <rect class="bar bar-vector" x="240" y="408" height="22" width="42"/>
+        <text x="290" y="422" class="approach-score" text-anchor="end">~4k</text>
+      </g>
+      <!-- Redis (43% on Stack Overflow) - shown as anchor for context -->
+      <g data-row data-name="Redis (top AI-agent data store)" data-stars="not direct comparison" data-class="In-memory store"
+         data-funding="public company"
+         data-note='Stack Overflow 2025 (49,000 respondents): 43% of AI-agent builders use Redis as primary data store. Top spot, ahead of every dedicated vector DB.'>
+        <text x="232" y="464" class="approach-label" text-anchor="end">Redis (43% SO survey)</text>
+        <rect class="bar bar-anchor" x="240" y="450" height="22" width="335"/>
+        <text x="583" y="464" class="approach-score" text-anchor="end">43%</text>
+      </g>
+
+      <text x="540" y="490" class="axis-label" text-anchor="middle" style="font-size:10.5px">GitHub stars (K), April 2026 snapshot</text>
+    </svg>
+
+    <div class="am-chart-legend">
+      <span><span class="swatch am-legend-framework"></span>Memory framework</span>
+      <span><span class="swatch am-legend-graph"></span>Temporal graph</span>
+      <span><span class="swatch am-legend-vector"></span>Vector DB</span>
+      <span><span class="swatch am-legend-anchor"></span>Adoption anchor (non-star)</span>
+    </div>
+  </div>
+
+  <details class="am-curious">
+    <summary>What the survey data really says</summary>
+    <p>
+      Stack Overflow Developer Survey 2025 (49,000+ respondents): 84%
+      use or plan to use AI tools, up from 76% in 2024. 51% of
+      professional developers use AI tools daily. <em>But:</em>
+      AI agent adoption is 52% don't use them, 38% have no plans.
+      Only 39.7% of AI engineering teams report using vector DBs / AI
+      memory in their stack (Arize survey).
+    </p>
+    <p>
+      Datadog's State of AI Engineering (March 2026, telemetry from
+      1,000+ customers): AI agent framework adoption nearly doubled
+      year-over-year (~9% to ~18%). Claude Sonnet 4.6 hit 17%
+      adoption in its first month. No single model dominates: GPT-4o
+      22%, Sonnet 4.5 19%, Sonnet 4.6 17%, GPT-5.4 similar.
+    </p>
+  </details>
+
+  <div class="am-receipts" aria-label="Section V receipts">
+    <div class="am-receipts-head">Receipts &middot; &sect; V</div>
+    <dl>
+      <dt>Largest funding round</dt><dd>Mem0 $24M Seed + Series A (Oct 2025)</dd>
+      <dt>Most-pulled vector DB</dt><dd>Milvus, ~700k Docker pulls/month</dd>
+      <dt>Top AI-agent data store</dt><dd>Redis, 43% (Stack Overflow 2025)</dd>
+      <dt>Pricing-driven migration</dt><dd>Pinecone $50/mo minimum (Sept 2025) drove hobby workloads to pgvector and Chroma</dd>
+      <dt>Vector-DB market</dt><dd>$2.38B (2025), projected $18.86B (2035), ~23% CAGR</dd>
+    </dl>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     § VI — METHODOLOGY + CLOSING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="am-method" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology, sources, caveats</span>
+  </h2>
+
+  <div class="am-method-grid" style="margin-top:32px;">
+    <div>
+      <h3>Method</h3>
+      <p>
+        Five sections, four hand-coded SVG charts, one decision matrix.
+        The data behind each chart is synthesized from a research brief
+        spanning the LongMemEval and LoCoMo benchmark publications,
+        ANN-Benchmarks, vendor papers (Mem0, Zep, Letta, Mastra,
+        EverMemOS, TiMem, OMEGA), the Stack Overflow 2025 Developer
+        Survey, and Datadog's March 2026 State of AI Engineering.
+      </p>
+      <p>
+        Charts are hand-coded SVG with no charting library. Tooltips
+        are vanilla JavaScript, ~120 lines total. Page weight is well
+        under one megabyte. No tracking beyond the platform-level
+        Cloudflare Web Analytics.
+      </p>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <p>
+        Benchmarks: <a href="https://arxiv.org/abs/2410.10813" target="_blank" rel="noopener">LongMemEval (Wu et al., ICLR 2025)</a>, LoCoMo, BEAM-1M / 10M, RULER (NVIDIA), <a href="https://research.trychroma.com/context-rot" target="_blank" rel="noopener">Chroma Context Rot report</a>.
+      </p>
+      <p>
+        Frameworks: <a href="https://arxiv.org/abs/2504.19413" target="_blank" rel="noopener">Mem0 paper (Chhikara et al., ECAI 2025)</a>, <a href="https://github.com/getzep/graphiti" target="_blank" rel="noopener">Zep / Graphiti</a>, <a href="https://github.com/letta-ai/letta" target="_blank" rel="noopener">Letta</a>, Mastra Observational, EverMemOS, TiMem.
+      </p>
+      <p>
+        Adoption: <a href="https://survey.stackoverflow.co/2025" target="_blank" rel="noopener">Stack Overflow Developer Survey 2025</a> (49,000+ respondents), Datadog State of AI Engineering 2026 (1,000+ customers), Arize State of AI Engineering, Amplify Partners 2025 (n=500).
+      </p>
+      <p>
+        Anthropic: <a href="https://www.anthropic.com/news/memory-tool" target="_blank" rel="noopener">Memory tool announcement (Sept 2025)</a>, prompt caching docs, context editing reports.
+      </p>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>
+        Vendor benchmarks are contested. Mem0, Zep, and Letta have
+        publicly criticized each other's methodologies. Letta could
+        not reproduce Mem0's MemGPT configuration; Zep accuses Mem0
+        of misconfiguring concurrent search; Mem0's CTO has
+        counter-published. Treat any single-vendor LongMemEval or
+        LoCoMo number as directional, not gospel. LLM-as-judge
+        variation alone causes ~10% score swings.
+      </p>
+      <p>
+        Self-reported "highest ever" claims (Mastra 94.87%, OMEGA
+        95.4%, agentmemory V4 96.2%) are vendor or single-author
+        publications without independent replication. Pricing is
+        volatile: LLM API pricing dropped ~12x in 36 months, with
+        80% in the last year alone. Pinecone moved to $50/month
+        minimum in September 2025; Weaviate followed at $25/month.
+      </p>
+      <p>
+        Context rot is real but model-dependent. Gemini 2.5 Flash
+        shows near-perfect single-needle retrieval at 1M tokens
+        (Google research, Nov 2025); Claude Sonnet 4 holds &lt;5%
+        degradation across 200K. Most other frontier models show the
+        U-shape Liu et al. described. Don't generalize "context rot"
+        to every frontier model, but don't dismiss it either.
+      </p>
+    </div>
+    <div>
+      <h3>What this lab is not</h3>
+      <p>
+        Not a production benchmark. Numbers are synthesized from a
+        research brief. Before any production deployment decision,
+        validate the relevant LongMemEval / LoCoMo configuration for
+        your actual workload.
+      </p>
+      <p>
+        Not a recommendation against vector DBs. Vector RAG remains
+        the default for &gt;10M-document corpora. The argument is
+        narrower: for cross-session agent memory, vector RAG alone
+        underperforms hybrid memory layers by double-digit points on
+        published benchmarks.
+      </p>
+      <p>
+        Not authored by any vendor. This is independent editorial
+        analysis. Vendor materials are cited where applicable; the
+        synthesis is the author's.
+      </p>
+    </div>
+  </div>
+
+  <div class="am-closing">
+    <p>
+      For the question "is there really a better solution than 'if you
+      think something is important, keep it in MEMORY.md'?" the
+      empirically-correct answer in 2026 is yes, but only above a
+      clearly defined threshold.
+    </p>
+    <p>
+      Below the threshold (one user, one project, deterministic
+      preferences, fewer than 30 facts, queries that fit in context
+      after caching), MEMORY.md is not just adequate. It is on the
+      Pareto frontier. The Letta filesystem result (74.0% LoCoMo,
+      beating purpose-built memory frameworks) and Anthropic's
+      decision to ship a literal file directory as their memory tool
+      are the two strongest data points.
+    </p>
+    <p>
+      Above the threshold (multi-user, evolving facts, temporal
+      reasoning, hundreds of sessions per user, conflicting updates
+      that need to replace not append), file-based memory degrades
+      non-linearly. Mem0 gained 53.6 percentage points on
+      assistant-memory recall by moving from flat extract-and-store
+      to v2 multi-signal retrieval. Zep gains 17.3pp on temporal
+      queries by modeling fact validity windows. <em>MEMORY.md is
+      the right answer for ~80% of solo coding-agent workflows and
+      ~0% of consumer chat products. The middle is where the field
+      is consolidating.</em>
+    </p>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="faq-head">FAQ</h2>
+  <details>
+    <summary>Is MEMORY.md actually a viable memory architecture for AI agents?</summary>
+    <div class="faq-answer"><p>For solo coding agents on a single repo, yes. Letta's own evaluation showed a stock filesystem agent (GPT-4o-mini) hitting 74.0% on LoCoMo, beating Mem0's top graph variant at 68.5%. Anthropic's September 2025 memory tool is itself a file directory, not a vector database. With prompt caching, file-based memory is on the Pareto frontier for ~80% of solo workflows.</p></div>
+  </details>
+  <details>
+    <summary>What's the highest LongMemEval score published?</summary>
+    <div class="faq-answer"><p>Mastra Observational Memory hit 94.87% with GPT-5-mini, the highest published score. OMEGA reports 95.4% on GPT-4.1. For comparison: naive full-context GPT-4o lands at 60.2-64%, Mem0 v1 at 49.0% (independent test), Zep / Graphiti at 71.2%, Mem0 v2 token-efficient at 93.4% (self-reported). Treat any single-vendor benchmark as directional, not gospel.</p></div>
+  </details>
+  <details>
+    <summary>Why are vector databases losing pricing power?</summary>
+    <div class="faq-answer"><p>Pinecone introduced a $50/month minimum in September 2025; Weaviate followed at $25/month. Hobby and small workloads moved to pgvector and Chroma. Independent benchmarks show pgvectorscale at 471 QPS at 99% recall on 50M vectors, against Qdrant at 41.47 QPS, and Pinecone serverless at 1,763ms p95 vs pgvector's 63ms.</p></div>
+  </details>
+  <details>
+    <summary>Does long context window solve memory?</summary>
+    <div class="faq-answer"><p>No. Chroma's Context Rot report (July 2025, 18 LLMs) found models do not process context uniformly as input length grows. On LongMemEval-S (~115K tokens), GPT-4o full-context drops to 60.2-64% versus 87-92% oracle. Claude Sonnet 4 holds &lt;5% degradation across 200K, and Claude Opus 4.6 hit 76% on 8-needle MRCR at 1M tokens, but most other frontier models still show the U-shape Liu et al. described in "Lost in the Middle" (2023).</p></div>
+  </details>
+  <details>
+    <summary>Which memory framework should I use for a multi-user chatbot?</summary>
+    <div class="faq-answer"><p>Mem0 if you want managed and a fast extract-and-update layer. Zep / Graphiti if you need temporal reasoning over evolving facts (sales, compliance, healthcare). Mem0 has 48-54k GitHub stars, raised $24M Seed + Series A in October 2025, and is AWS Strands SDK's exclusive memory provider. Zep gains +17.3pp on temporal LongMemEval queries vs full-context, with 90% latency reduction.</p></div>
+  </details>
+</section>
+
+<!-- ── Related labs ───────────────────────────────────────── -->
+<aside class="related-labs" aria-label="Related labs">
+  <div class="mono related-labs-head">Related labs</div>
+  <ul class="related-labs-list">
+    <li>
+      <a href="/work/claude-skills-lab/">
+        <span class="mono related-fig">S11</span>
+        <span class="serif related-title">The Skills Surge</span>
+        <span class="related-line">The other half of the agent stack: how Claude Skills, OpenAI codex, and SKILL.md became the cross-vendor open standard.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/llm-learning-lab/">
+        <span class="mono related-fig">S06</span>
+        <span class="serif related-title">How LLMs Learn</span>
+        <span class="related-line">What memory has to plug into. The four-stage training pipeline that takes a blank Transformer to ChatGPT.</span>
+      </a>
+    </li>
+    <li>
+      <a href="/work/agi-forecast-lab/">
+        <span class="mono related-fig">S04</span>
+        <span class="serif related-title">AGI Horizon</span>
+        <span class="related-line">If you think the memory wars are settled, the field has been confidently wrong about inflections since 1965.</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<nav class="lab-nav mono" aria-label="Story navigation">
+  <a href="/work/claude-skills-lab/">&larr; Prev: The Skills Surge (S11)</a>
+  <span class="lab-nav-meta">Data story 12 of 12</span>
+  <a href="/">Return to the masthead &rarr;</a>
+</nav>
+
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/agent-memory-lab.js?v=1"></script>
+</body>
+</html>
