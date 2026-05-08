@@ -333,42 +333,55 @@
 
 /* ═══════════════════════════════════════════════════════════
    CHART 1 — Inventory map
+   Real-geometry world map: Natural Earth 110m land, public
+   domain, equirectangular projection.
    ═══════════════════════════════════════════════════════════ */
 .uf-chart-svg .map-frame {
-  fill: color-mix(in oklab, var(--ink) 6%, var(--paper) 94%);
+  fill: color-mix(in oklab, var(--ink) 4%, var(--paper) 96%);
   stroke: var(--ink-dim);
   stroke-width: 0.75;
 }
-.uf-chart-svg .map-grid {
+.uf-chart-svg .map-graticule {
   stroke: var(--ink-dim);
   stroke-width: 0.4;
-  stroke-dasharray: 2 4;
-  opacity: 0.4;
+  stroke-dasharray: 1.5 3;
+  opacity: 0.35;
+  fill: none;
 }
-.uf-chart-svg .map-land {
-  fill: color-mix(in oklab, var(--ink) 18%, var(--paper) 82%);
-  stroke: color-mix(in oklab, var(--ink) 30%, transparent);
-  stroke-width: 0.6;
-}
-.uf-chart-svg .map-moon {
-  fill: color-mix(in oklab, var(--paper) 80%, var(--ink) 20%);
-  stroke: var(--accent);
-  stroke-width: 1;
-  stroke-dasharray: 2 2;
-}
-.uf-chart-svg .map-moon-label {
+.uf-chart-svg .map-graticule-label {
   font-family: 'DM Mono', ui-monospace, monospace;
   font-size: 8px;
-  letter-spacing: 0.18em;
-  fill: var(--accent);
-}
-.uf-chart-svg .map-region-label {
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   fill: var(--ink-dim);
   opacity: 0.6;
+}
+.uf-chart-svg .map-land {
+  fill: color-mix(in oklab, var(--ink) 16%, var(--paper) 84%);
+  stroke: color-mix(in oklab, var(--ink) 38%, transparent);
+  stroke-width: 0.45;
+  stroke-linejoin: round;
+}
+.uf-chart-svg .map-moon-inset {
+  fill: color-mix(in oklab, var(--ink) 12%, var(--paper) 88%);
+  stroke: var(--accent);
+  stroke-width: 0.75;
+  stroke-dasharray: 2 2;
+  opacity: 0.85;
+}
+.uf-chart-svg .map-moon-inset-label {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 7.5px;
+  letter-spacing: 0.18em;
+  fill: var(--accent);
+}
+.uf-chart-svg .map-moon {
+  fill: color-mix(in oklab, var(--paper) 78%, var(--ink) 22%);
+  stroke: color-mix(in oklab, var(--ink) 50%, transparent);
+  stroke-width: 0.6;
+}
+.uf-chart-svg .map-moon-crater {
+  fill: color-mix(in oklab, var(--ink) 35%, transparent);
 }
 .uf-chart-svg .pin {
   cursor: pointer;
