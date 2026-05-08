@@ -110,7 +110,8 @@
   //    its length. Inspired by stitch.withgoogle.com.
   (function initCursorGrid() {
     if (matchMedia('(hover: none)').matches) return;
-    if (document.documentElement.getAttribute('data-theme') !== 'graphite') return;
+    var t0 = document.documentElement.getAttribute('data-theme');
+    if (t0 !== 'graphite' && t0 !== 'midnight') return;
 
     var canvas = document.createElement('canvas');
     canvas.className = 'cursor-grid';

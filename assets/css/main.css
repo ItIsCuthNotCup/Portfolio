@@ -62,6 +62,11 @@
   --chart-5: #C66E6E;  /* terra rose */
 }
 
+/* Midnight tokens are defined in the 1-bit dither override block
+   below. See the AESTHETIC EXPERIMENT section near the bottom of
+   this file. Both graphite and midnight share the dither aesthetic;
+   only the brightness polarity differs. */
+
 /* ── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
@@ -602,7 +607,9 @@ main { position: relative; }
   opacity: 0.3;
   filter: grayscale(1);
 }
-[data-theme="graphite"] .exp-logo {
+[data-theme="graphite"] .exp-logo,
+[data-theme="midnight"] .exp-logo,
+[data-theme="midnight"] .exp-logo {
   filter: grayscale(1) invert(1);
 }
 
@@ -1221,6 +1228,7 @@ main > .breadcrumb ~ section[class*="-hero"]:first-of-type {
 .theme-btn[data-t="paper"]     { background: #F1ECE1; }
 .theme-btn[data-t="blueprint"] { background: #E8E9E4; }
 .theme-btn[data-t="graphite"]  { background: #141311; }
+.theme-btn[data-t="midnight"]  { background: #07070A; }
 
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -1434,6 +1442,35 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   --chart-4: #9A9382;
   --chart-5: #C5BEA9;
 }
+/* MIDNIGHT — the inverted-polarity twin of the 1-bit graphite theme.
+   Same dither aesthetic, every color value flipped across luminance.
+   First-paint default for the site (set in the html data-theme attr).
+   Contrast against #0A0907 background:
+     ink     #ECE6D8 → 17.5:1   (AAA)
+     ink-soft#D6CFBE → 14.6:1   (AAA)
+     ink-dim #A09885 →  6.8:1   (AA at all sizes)
+   Chart palette is the inverse-luminance map of graphite's grayscale
+   (#C5BEA9 / #9A9382 / #6B6359 / #3A352A / #ECE6D8 reordered to keep
+   the brightest series first, matching the visual weight of graphite). */
+[data-theme="midnight"] {
+  /* Near-black "ink" base — the OLED inversion of snowy paper */
+  --paper:    #0A0907;
+  --paper-2:  #15130E;
+  --ink:      #ECE6D8;
+  --ink-soft: #D6CFBE;
+  --ink-dim:  #A09885;
+  --rule:     #ECE6D8;
+  /* Pure W&B — no color accent (inverted from graphite's pure B&W) */
+  --accent:   #ECE6D8;
+  --accent-2: #C5BEA9;
+  --mark-bg:  rgba(236, 230, 216, 0.88);
+  /* Greyscale chart palette — luminance-flipped from graphite */
+  --chart-1: #ECE6D8;
+  --chart-2: #C5BEA9;
+  --chart-3: #9A9382;
+  --chart-4: #6B6359;
+  --chart-5: #3A352A;
+}
 
 /* Replace the soft grain with a Bayer-style dither tile. 4×4 with two
    filled cells = 12.5% coverage; multiply blend over the paper tone
@@ -1446,22 +1483,40 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   mix-blend-mode: multiply;
   image-rendering: pixelated;
 }
+/* Midnight body::before — same Bayer dither as graphite but with
+   the dot color and blend mode flipped. Cream dots on near-black,
+   blended via screen so they brighten the paper instead of darken. */
+[data-theme="midnight"] body::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'><rect x='0' y='0' width='1' height='1' fill='%23ECE6D8'/><rect x='2' y='2' width='1' height='1' fill='%23ECE6D8'/></svg>");
+  background-size: 4px 4px;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  image-rendering: pixelated;
+}
+
 
 /* Sharp 1-bit framing: kill rounding everywhere. */
 [data-theme="graphite"] *,
+[data-theme="midnight"] *,
 [data-theme="graphite"] *::before,
-[data-theme="graphite"] *::after {
+[data-theme="midnight"] *::before,
+[data-theme="graphite"] *::after,
+[data-theme="midnight"] *::after,
+[data-theme="midnight"] *::after {
   border-radius: 0 !important;
 }
 
 /* Make borders feel hand-drawn / 1-bit by hardening their color */
-[data-theme="graphite"] {
+[data-theme="graphite"],
+[data-theme="midnight"] {
   --border-1: 1px solid var(--ink);
   --border-thick: 2px solid var(--ink);
 }
 
 /* Section labels, datelines, mono chrome get a touch of pixel weight */
-[data-theme="graphite"] .mono {
+[data-theme="graphite"] .mono,
+[data-theme="midnight"] .mono,
+[data-theme="midnight"] .mono {
   letter-spacing: 0.06em;
   font-feature-settings: "ss01" on;
 }
@@ -1469,29 +1524,41 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 /* Buttons / pills: no fill on default, 1px solid frame, invert on hover.
    Scoped to common button patterns across the labs. */
 [data-theme="graphite"] .btn-pill,
+[data-theme="midnight"] .btn-pill,
 [data-theme="graphite"] .btn-outline,
-[data-theme="graphite"] .btn-primary {
+[data-theme="midnight"] .btn-outline,
+[data-theme="graphite"] .btn-primary,
+[data-theme="midnight"] .btn-primary,
+[data-theme="midnight"] .btn-primary {
   border: 1px solid var(--ink) !important;
   background: transparent !important;
   color: var(--ink) !important;
 }
 [data-theme="graphite"] .btn-pill:hover,
+[data-theme="midnight"] .btn-pill:hover,
 [data-theme="graphite"] .btn-outline:hover,
-[data-theme="graphite"] .btn-primary:hover {
+[data-theme="midnight"] .btn-outline:hover,
+[data-theme="graphite"] .btn-primary:hover,
+[data-theme="midnight"] .btn-primary:hover,
+[data-theme="midnight"] .btn-primary:hover {
   background: var(--ink) !important;
   color: var(--paper) !important;
 }
 
 /* The .ink-mark highlight (used in homepage hero copy) becomes a
    solid black knockout — text reads as paper inside the mark. */
-[data-theme="graphite"] .ink-mark {
+[data-theme="graphite"] .ink-mark,
+[data-theme="midnight"] .ink-mark,
+[data-theme="midnight"] .ink-mark {
   background: var(--ink) !important;
   color: var(--paper) !important;
   padding: 0 4px;
 }
 
 /* Section labels get a heavier, more "1-bit" feel */
-[data-theme="graphite"] .section-label .idx {
+[data-theme="graphite"] .section-label .idx,
+[data-theme="midnight"] .section-label .idx,
+[data-theme="midnight"] .section-label .idx {
   background: var(--ink);
   color: var(--paper);
   padding: 2px 6px;
@@ -1499,21 +1566,30 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 
 /* Lab cards, dropdowns, panels — override any soft greys with paper-2
    so the dither shows through cleanly. */
-[data-theme="graphite"] .nav-dropdown-menu {
+[data-theme="graphite"] .nav-dropdown-menu,
+[data-theme="midnight"] .nav-dropdown-menu,
+[data-theme="midnight"] .nav-dropdown-menu {
   background: var(--paper) !important;
   border: 1px solid var(--ink) !important;
 }
-[data-theme="graphite"] .nav-dropdown-menu a {
+[data-theme="graphite"] .nav-dropdown-menu a,
+[data-theme="midnight"] .nav-dropdown-menu a,
+[data-theme="midnight"] .nav-dropdown-menu a {
   color: var(--ink) !important;
 }
 [data-theme="graphite"] .nav-dropdown-menu a:hover,
-[data-theme="graphite"] .nav-dropdown-menu a.active {
+[data-theme="midnight"] .nav-dropdown-menu a:hover,
+[data-theme="graphite"] .nav-dropdown-menu a.active,
+[data-theme="midnight"] .nav-dropdown-menu a.active,
+[data-theme="midnight"] .nav-dropdown-menu a.active {
   background: var(--ink) !important;
   color: var(--paper) !important;
 }
 
 /* The cursor-dot uses --accent — kill the red dot */
-[data-theme="graphite"] .cursor-dot {
+[data-theme="graphite"] .cursor-dot,
+[data-theme="midnight"] .cursor-dot,
+[data-theme="midnight"] .cursor-dot {
   background: var(--ink);
 }
 
@@ -1521,13 +1597,25 @@ hr.rule.is-drawn, hr.hair.is-drawn {
    white on the old charcoal background. With paper-light graphite, that
    inversion turns the logos white-on-cream and they vanish. Drop the
    invert and bump opacity so they read as solid-ink silhouettes. */
-[data-theme="graphite"] .logo-track img {
+[data-theme="graphite"] .logo-track img,
+[data-theme="midnight"] .logo-track img,
+[data-theme="midnight"] .logo-track img {
   filter: grayscale(1) brightness(0) !important;
   opacity: 0.55 !important;
 }
+/* Midnight logo carousel: re-add invert(1) (graphite dropped it
+   because its base is light cream; midnight's base is near-black,
+   so we need the inversion back to get light silhouettes). */
+[data-theme="midnight"] .logo-track img {
+  filter: grayscale(1) brightness(0) invert(1) !important;
+  opacity: 0.55 !important;
+}
+
 
 /* Selection */
-[data-theme="graphite"] ::selection {
+[data-theme="graphite"] ::selection,
+[data-theme="midnight"] ::selection,
+[data-theme="midnight"] ::selection {
   background: var(--ink);
   color: var(--paper);
 }
@@ -1590,7 +1678,9 @@ hr.rule.is-drawn, hr.hair.is-drawn {
       paper-on-ink invert.
    ─────────────────────────────────────────────────────────── */
 
-[data-theme="graphite"] .btn-pill {
+[data-theme="graphite"] .btn-pill,
+[data-theme="midnight"] .btn-pill,
+[data-theme="midnight"] .btn-pill {
   border-radius: 999px !important;
   padding: 10px 18px;
   letter-spacing: 0.04em;
@@ -1598,27 +1688,42 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   background: transparent !important;
   color: var(--ink) !important;
 }
-[data-theme="graphite"] .btn-pill:hover {
+[data-theme="graphite"] .btn-pill:hover,
+[data-theme="midnight"] .btn-pill:hover,
+[data-theme="midnight"] .btn-pill:hover {
   background: var(--ink) !important;
   color: var(--paper) !important;
 }
 
 [data-theme="graphite"] .big-display,
+[data-theme="midnight"] .big-display,
 [data-theme="graphite"] .imm-title,
+[data-theme="midnight"] .imm-title,
 [data-theme="graphite"] .prod-title,
+[data-theme="midnight"] .prod-title,
 [data-theme="graphite"] .llm-title,
+[data-theme="midnight"] .llm-title,
 [data-theme="graphite"] .ev-title,
-[data-theme="graphite"] .sc-title {
+[data-theme="midnight"] .ev-title,
+[data-theme="graphite"] .sc-title,
+[data-theme="midnight"] .sc-title,
+[data-theme="midnight"] .sc-title {
   letter-spacing: -0.012em;
 }
 
 [data-theme="graphite"] .nav-dropdown-menu a.active,
-[data-theme="graphite"] .nav-dropdown-menu a[aria-current="page"] {
+[data-theme="midnight"] .nav-dropdown-menu a.active,
+[data-theme="graphite"] .nav-dropdown-menu a[aria-current="page"],
+[data-theme="midnight"] .nav-dropdown-menu a[aria-current="page"],
+[data-theme="midnight"] .nav-dropdown-menu a[aria-current="page"] {
   position: relative;
   padding-left: 28px;
 }
 [data-theme="graphite"] .nav-dropdown-menu a.active::before,
-[data-theme="graphite"] .nav-dropdown-menu a[aria-current="page"]::before {
+[data-theme="midnight"] .nav-dropdown-menu a.active::before,
+[data-theme="graphite"] .nav-dropdown-menu a[aria-current="page"]::before,
+[data-theme="midnight"] .nav-dropdown-menu a[aria-current="page"]::before,
+[data-theme="midnight"] .nav-dropdown-menu a[aria-current="page"]::before {
   content: "";
   position: absolute;
   left: 8px; top: 10px; bottom: 10px;
@@ -1642,7 +1747,9 @@ hr.rule.is-drawn, hr.hair.is-drawn {
         <span class="spark">η</span>
    ─────────────────────────────────────────────────────────── */
 
-[data-theme="graphite"] .lab-rail {
+[data-theme="graphite"] .lab-rail,
+[data-theme="midnight"] .lab-rail,
+[data-theme="midnight"] .lab-rail {
   position: fixed;
   /* Live in the content band only — clear of the masthead chrome
      (top ~64px) and the theme-switcher (bottom ~80px). */
@@ -1663,12 +1770,16 @@ hr.rule.is-drawn, hr.hair.is-drawn {
    Done with margin-left rather than padding so the existing rules
    keep working. */
 [data-theme="graphite"] .masthead { padding-left: 48px; }
+[data-theme="midnight"] .masthead { padding-left: 48px; }
 [data-theme="graphite"] .theme-switcher { left: 48px !important; }
+[data-theme="midnight"] .theme-switcher { left: 48px !important; }
 /* Outer span absolutely-positioned at the centre of the rail and
    rotated around its own centre — avoids the flex-bounding-box trap
    where long horizontal text inside a 32px-wide flex container spills
    off-screen *before* the transform applies. */
-[data-theme="graphite"] .lab-rail span {
+[data-theme="graphite"] .lab-rail span,
+[data-theme="midnight"] .lab-rail span,
+[data-theme="midnight"] .lab-rail span {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) rotate(-90deg);
@@ -1676,13 +1787,17 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   white-space: nowrap;
   display: inline-block;
 }
-[data-theme="graphite"] .lab-rail .rail-fig {
+[data-theme="graphite"] .lab-rail .rail-fig,
+[data-theme="midnight"] .lab-rail .rail-fig,
+[data-theme="midnight"] .lab-rail .rail-fig {
   color: var(--spark);
   font-weight: 500;
 }
 
 /* Spark highlight for one symbol per equation (editorial-poster move) */
-[data-theme="graphite"] .spark {
+[data-theme="graphite"] .spark,
+[data-theme="midnight"] .spark,
+[data-theme="midnight"] .spark {
   color: var(--spark);
   font-style: italic;
   font-weight: 500;
@@ -1690,6 +1805,7 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 
 @media (max-width: 720px) {
   [data-theme="graphite"] .lab-rail { display: none; }
+  [data-theme="midnight"] .lab-rail { display: none; }
 }
 
 /* ── CURSOR GRID — canvas-rendered gravity-grid + chromatic-aberration
@@ -1703,7 +1819,9 @@ hr.rule.is-drawn, hr.hair.is-drawn {
    colored dots overdraw the local static dots inside the radius.
    Outside the radius the canvas pixels are transparent so the
    static dither shows through unchanged. */
-[data-theme="graphite"] .cursor-grid {
+[data-theme="graphite"] .cursor-grid,
+[data-theme="midnight"] .cursor-grid,
+[data-theme="midnight"] .cursor-grid {
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -1716,4 +1834,5 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 
 @media (hover: none) {
   [data-theme="graphite"] .cursor-grid { display: none; }
+  [data-theme="midnight"] .cursor-grid { display: none; }
 }
