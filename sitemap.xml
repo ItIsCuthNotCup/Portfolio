@@ -253,6 +253,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://jakecuth.com/work/uap-files-lab/</loc>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://jakecuth.com/work/watchdog-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
