@@ -1,0 +1,425 @@
+/* ═══════════════════════════════════════════════════════════
+   DIFFUSION LAB — page-specific styles. Editorial chrome inherits
+   from main.css; this file adds the demo, schedule explorer,
+   receipts grid, and how-it-works cards.
+   ═══════════════════════════════════════════════════════════ */
+
+.df-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.df-hero {
+  padding: 120px 48px 60px;
+  max-width: 1200px;
+}
+.df-title {
+  margin-top: 22px;
+}
+.df-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.df-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.df-dateline .label {
+  color: var(--ink-dim);
+}
+.df-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ───────────────────────────────────────── */
+.df-section {
+  padding: 80px 48px;
+  max-width: 1200px;
+}
+.df-section .section-label {
+  margin-bottom: 28px;
+}
+.df-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+  max-width: 720px;
+  margin-bottom: 18px;
+}
+.df-prose {
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-top: 18px;
+}
+.df-note {
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+}
+
+/* ── Demo: canvas + controls side-by-side ──────────────────── */
+.df-demo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  gap: 40px;
+  align-items: start;
+}
+
+.df-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.df-canvas-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--ink);
+  background: var(--paper-2);
+  overflow: hidden;
+}
+#df-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  image-rendering: pixelated;
+}
+.df-canvas-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  pointer-events: none;
+  transition: opacity 200ms;
+}
+.df-canvas-overlay.hidden {
+  opacity: 0;
+}
+
+.df-canvas-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.df-tool-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 4px;
+}
+.df-tool-btn {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 8px 14px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms, color 180ms, opacity 180ms;
+}
+.df-tool-btn:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+.df-tool-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.df-tool-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.df-btn-primary {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.df-btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* ── Controls panel ────────────────────────────────────────── */
+.df-controls {
+  border: 1px solid var(--ink);
+  padding: 24px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.df-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.df-control-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.df-control-val {
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.df-schedule-toggle {
+  display: flex;
+  gap: 8px;
+}
+.df-pill {
+  background: transparent;
+  border: 1px solid var(--ink-dim);
+  color: var(--ink-soft);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms, color 180ms, border-color 180ms;
+}
+.df-pill:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.df-pill.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.df-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--ink-dim);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+.df-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.df-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.df-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.1em;
+}
+
+.df-action-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.df-step-display {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid var(--ink-dim);
+  border-bottom: 1px solid var(--ink-dim);
+}
+
+.df-equation-box {
+  border: 1px solid var(--ink-dim);
+  padding: 14px;
+  background: var(--paper-2);
+}
+.df-eq-label {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 6px;
+}
+.df-eq {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* ── How it works grid ────────────────────────────────────── */
+.df-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 12px;
+}
+.df-how-card {
+  border-top: 1px solid var(--ink);
+  padding-top: 18px;
+}
+.df-how-fig {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.df-how-title {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  margin: 0 0 12px;
+}
+.df-how-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ── Schedule explorer ────────────────────────────────────── */
+.df-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 16px;
+}
+.df-schedule-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.df-schedule-head {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.df-schedule-col canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+  image-rendering: pixelated;
+}
+.df-schedule-meta {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ── Receipts grid ────────────────────────────────────────── */
+.df-receipts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--ink);
+  margin-top: 16px;
+}
+.df-receipt {
+  padding: 22px 20px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.df-receipt:nth-child(3n) { border-right: none; }
+.df-receipt:nth-last-child(-n+3) { border-bottom: none; }
+.df-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.df-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+}
+.df-receipt-value .small {
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+
+.df-colophon-section {
+  padding-bottom: 80px;
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .df-hero, .df-section { padding-left: 24px; padding-right: 24px; }
+  .df-demo-layout { grid-template-columns: 1fr; }
+  .df-dateline { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .df-how-grid { grid-template-columns: 1fr; gap: 24px; }
+  .df-schedule-grid { grid-template-columns: 1fr; }
+  .df-receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .df-receipt:nth-child(3n) { border-right: 1px solid var(--ink); }
+  .df-receipt:nth-child(2n) { border-right: none; }
+  .df-receipt:nth-last-child(-n+3) { border-bottom: 1px solid var(--ink); }
+  .df-receipt:nth-last-child(-n+2) { border-bottom: none; }
+}
+@media (max-width: 540px) {
+  .df-receipts { grid-template-columns: 1fr; }
+  .df-receipt { border-right: none; }
+  .df-receipt:nth-last-child(-n+2) { border-bottom: 1px solid var(--ink); }
+  .df-receipt:last-child { border-bottom: none; }
+  .df-dateline { grid-template-columns: 1fr; }
+}

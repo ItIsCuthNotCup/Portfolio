@@ -1,0 +1,333 @@
+/* ═══════════════════════════════════════════════════════════════
+   BANDIT LAB — page-specific styles
+   Inherits typography + color tokens from main.css.
+   ═══════════════════════════════════════════════════════════════ */
+
+.bd-main { position: relative; z-index: 1; }
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+.bd-hero { padding: 140px 48px 64px; max-width: 1080px; }
+.bd-title { margin-top: 18px; }
+.bd-kicker {
+  margin-top: 32px; max-width: 680px;
+  font-size: 18px; line-height: 1.55; color: var(--ink-soft);
+}
+.bd-dateline {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--ink-dim); border: 1px solid var(--ink-dim);
+  max-width: 900px;
+}
+.bd-dateline > div {
+  background: var(--paper); padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.bd-dateline .label {
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bd-dateline .value {
+  font-size: 11px; color: var(--ink); text-transform: none;
+  letter-spacing: 0.02em;
+}
+.bd-stamp {
+  margin-top: 14px;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ── Generic section ─────────────────────────────────────────── */
+.bd-section { padding: 64px 48px; max-width: 1200px; }
+.bd-section .section-label { margin-bottom: 24px; }
+.bd-prose { max-width: 680px; font-size: 17px; line-height: 1.55; }
+.bd-prose p + p { margin-top: 20px; }
+.bd-lede { font-size: 20px; line-height: 1.5; }
+
+/* ── Buttons (ctl-btn shared pattern) ───────────────────────── */
+.ctl-btn {
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 7px 14px;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ctl-btn:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ctl-btn:disabled {
+  opacity: 0.35; cursor: not-allowed;
+}
+.ctl-btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ctl-btn.primary:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Simulator controls ──────────────────────────────────────── */
+.bd-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 48px;
+  padding: 24px 28px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+.bd-control-col { display: flex; flex-direction: column; gap: 18px; }
+.bd-field { display: flex; flex-direction: column; gap: 6px; }
+.bd-field-label {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bd-field-row { display: flex; align-items: center; gap: 14px; }
+.bd-field-row input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: var(--ink-dim);
+  outline: none;
+  cursor: pointer;
+}
+.bd-field-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 0;
+  cursor: pointer;
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.bd-field-row input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--accent);
+  border-radius: 0;
+  cursor: pointer;
+}
+.bd-field-val {
+  font-size: 13px; min-width: 56px; text-align: right;
+  color: var(--ink); letter-spacing: 0.04em;
+}
+.bd-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.bd-round-readout {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ── Strategy cards ──────────────────────────────────────────── */
+.bd-strategies {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.bd-strat-card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bd-strat-head {
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.bd-strat-sub {
+  font-size: 10px; color: var(--ink-dim); text-transform: none;
+  letter-spacing: 0.06em;
+}
+.bd-strat-stats {
+  font-size: 11px; letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.bd-regret-val {
+  color: var(--ink); font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.bd-chart-wrap {
+  margin-top: 4px;
+}
+.bd-chart-wrap svg {
+  width: 100%; height: auto; display: block;
+  background: var(--paper);
+  border: 1px solid var(--ink-dim);
+}
+.bd-chart-label {
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 4px;
+}
+.bd-betas-wrap { margin-top: 8px; }
+
+/* ── How it works ────────────────────────────────────────────── */
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+.how-card {
+  padding: 28px 24px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+}
+.how-fig {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.how-title {
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  margin: 8px 0 12px;
+  font-weight: 300;
+}
+.how-card p {
+  font-size: 14px; line-height: 1.55; color: var(--ink-soft);
+}
+
+/* ── Scenario explorer ───────────────────────────────────────── */
+.bd-scenario-controls {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 16px 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  margin: 24px 0;
+}
+.bd-preset-group { display: flex; align-items: center; gap: 10px; }
+.bd-control-label {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bd-toggle {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+}
+.bd-toggle input {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.bd-toggle-label {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.bd-mc-status {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bd-mc-results { margin-top: 24px; }
+.bd-mc-results[hidden] { display: none; }
+.bd-mc-table-wrap {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+.bd-mc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.bd-mc-table th,
+.bd-mc-table td {
+  padding: 10px 14px;
+  text-align: right;
+  border: 1px solid var(--rule);
+}
+.bd-mc-table th:first-child,
+.bd-mc-table td:first-child { text-align: left; }
+.bd-mc-table th {
+  background: var(--paper-2);
+  color: var(--ink-dim);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.bd-mc-table td {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Receipts & Methodology (shared pattern) ─────────────────── */
+.bd-section .metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+@media (max-width: 720px) {
+  .bd-section .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+  .bd-section .metrics-grid { grid-template-columns: 1fr; }
+}
+.bd-section .metric {
+  padding: 20px 22px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+}
+.bd-section .metric-value {
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.bd-section .metric-label {
+  margin-top: 4px;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.bd-colophon-section { max-width: 1200px; }
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 48px;
+  margin-top: 24px;
+}
+.method-head {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.method-grid p { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+.method-ctas {
+  margin-top: 48px;
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .bd-strategies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .bd-hero { padding: 120px 24px 48px; }
+  .bd-section { padding: 48px 24px; }
+  .bd-dateline { grid-template-columns: repeat(2, 1fr); }
+  .bd-controls { grid-template-columns: 1fr; }
+  .how-grid,
+  .method-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .bd-strategies { grid-template-columns: 1fr; }
+  .bd-dateline { grid-template-columns: 1fr; }
+  .bd-section { padding: 40px 16px; }
+  .bd-scenario-controls { flex-direction: column; align-items: flex-start; }
+}

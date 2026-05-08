@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite" data-cat="m">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diffusion Lab · A toy diffusion model in your browser — Jake Cuth.</title>
+  <meta name="description" content="A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into noise, then guide the reverse process until structure re-emerges.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Diffusion Lab · A toy diffusion model in your browser">
+  <meta property="og:description" content="A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into noise, then guide the reverse process until structure re-emerges.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/diffusion-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/diffusion-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/diffusion-lab.css?v=1">
+
+  <!-- SEO: canonical, twitter card, JSON-LD -->
+  <link rel="canonical" href="https://jakecuth.com/work/diffusion-lab/">
+  <meta property="article:published_time" content="2026-05-08T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-08T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Diffusion Lab · A toy diffusion model in your browser">
+  <meta name="twitter:description" content="A toy diffusion model in two dimensions. Draw a shape, watch noise dissolve it, then guide the reverse process until structure re-emerges.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/diffusion-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://jakecuth.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Research",
+        "item": "https://jakecuth.com/#research"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Diffusion Lab \u2014 a toy diffusion model in your browser",
+        "item": "https://jakecuth.com/work/diffusion-lab/"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Diffusion Lab \u2014 a toy diffusion model in your browser",
+    "description": "A toy diffusion model in two dimensions. Draw a shape, watch noise dissolve it, then guide the reverse process until structure re-emerges.",
+    "image": "https://www.jakecuth.com/assets/og/diffusion-lab.png?v=1",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "url": "https://jakecuth.com/work/diffusion-lab/",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://jakecuth.com/work/diffusion-lab/"
+    }
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Diffusion Lab \u2014 a toy diffusion model in your browser",
+    "description": "A toy diffusion model in two dimensions. Draw a shape, watch noise dissolve it, then guide the reverse process until structure re-emerges.",
+    "image": "https://www.jakecuth.com/assets/og/diffusion-lab.png?v=1",
+    "url": "https://jakecuth.com/work/diffusion-lab/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">M11</span> &middot; MMXXVI &middot; DIFFUSION LAB</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">42</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">11</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">13</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="df-main">
+
+<!-- HERO -->
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Diffusion Lab</span></li>
+  </ol>
+</nav>
+
+<section class="df-hero">
+  <h2 class="mono section-label">
+    <span class="idx">M11</span>
+    <span>Diffusion Lab</span>
+  </h2>
+  <h1 class="serif big-display df-title">
+    Noise, guided back<br>
+    <span class="serif-italic" style="color:var(--accent)">to structure it never knew.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A toy diffusion model in two dimensions. Place points on a canvas, watch the forward process dissolve them into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion, DALL-E, and every modern image generator.
+  </p>
+  <p class="df-kicker">
+    The canvas below runs a simplified diffusion process. You draw a simple shape (or pick a preset). The forward pass adds noise according to a beta schedule. The reverse pass uses an oracle denoiser to predict and subtract noise at each step. Twenty steps from chaos to coherence. All in your browser.
+  </p>
+  <div class="mono df-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; Canvas 2D &middot; Toy diffusion</div></div>
+    <div><div class="label">Resolution</div><div class="value">32 &times; 32 (display 512 &times; 512)</div></div>
+    <div><div class="label">Steps</div><div class="value">20 forward / 20 reverse</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I · Why noise is the medium -->
+<section class="df-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Why noise is the medium</span>
+  </h2>
+  <p class="df-lede">
+    The most powerful image generators do not paint. They unerase.
+  </p>
+  <p class="df-prose">
+    Instead of learning the probability of an image directly. A problem so vast it is practically intractable. Diffusion models learn the opposite: how to take a noisy image and make it slightly less noisy. Repeat this guess thousands of times and you can turn static into a photograph. The insight, first formalized by Sohl-Dickstein et al. in 2015 and later refined by Ho et al. in 2020, is that adding noise is easy. Learning to undo it is hard, but tractable.
+  </p>
+  <p class="df-prose">
+    The forward process is pure physics. At each step, a small amount of Gaussian noise is added to the image. After enough steps, the original signal is drowned in randomness and the result is indistinguishable from pure noise. The reverse process is where the model lives. It learns to estimate the noise that was added, the <em>score function</em>, and subtracts it, walking backward from chaos toward structure one careful step at a time. What looks like generation is really guided reconstruction.
+  </p>
+  <p class="df-prose">
+    The demo below strips this down to its skeleton. A 32-by-32 grid, a fixed beta schedule, and an oracle denoiser that cheats by remembering the exact noise it added. The result is not DALL-E. But every concept is there: the forward corruption, the iterative reverse walk, the re-emergence of form from noise. Watch it once and the papers will read differently.
+  </p>
+</section>
+
+<hr class="hair">
+
+<!-- § II · M11.1 · The canvas -->
+<section class="df-section df-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II &middot; M11.1</span>
+    <span>The canvas &middot; draw, diffuse, denoise</span>
+  </h2>
+  <p class="df-note">
+    Click cells to toggle them, or pick a preset. The forward pass dissolves your drawing into noise. The reverse pass walks back step by step. The denoiser is an oracle. It knows the exact noise that was added, so the reconstruction is perfect. Real diffusion models learn this instead.
+  </p>
+
+  <div class="df-demo-layout">
+    <div class="df-canvas-wrap">
+      <div class="df-canvas-frame">
+        <canvas id="df-canvas" width="512" height="512" aria-label="Diffusion canvas"></canvas>
+        <div class="mono df-canvas-overlay" id="df-canvas-overlay">Click to draw &middot; or pick a preset</div>
+      </div>
+      <div class="mono df-canvas-tools">
+        <span class="df-tool-label">Preset</span>
+        <button type="button" class="df-tool-btn" data-preset="smiley">Smiley</button>
+        <button type="button" class="df-tool-btn" data-preset="checkerboard">Checkerboard</button>
+        <button type="button" class="df-tool-btn" data-preset="spiral">Spiral</button>
+        <button type="button" class="df-tool-btn" data-preset="heart">Heart</button>
+        <button type="button" class="df-tool-btn" data-preset="clear">Clear</button>
+      </div>
+    </div>
+
+    <aside class="df-controls">
+      <div class="df-control-group">
+        <div class="mono df-control-label">Beta schedule</div>
+        <div class="df-schedule-toggle">
+          <button type="button" class="df-pill active" data-schedule="linear">Linear</button>
+          <button type="button" class="df-pill" data-schedule="cosine">Cosine</button>
+        </div>
+      </div>
+
+      <div class="df-control-group">
+        <div class="mono df-control-label">Total steps <span class="df-control-val">T = <span id="df-total-steps">20</span></span></div>
+        <input type="range" id="df-t-slider" class="df-slider" min="0" max="20" value="0" step="1">
+        <div class="mono df-slider-labels"><span>0</span><span>10</span><span>20</span></div>
+      </div>
+
+      <div class="df-control-group">
+        <div class="mono df-control-label">Current step <span class="df-control-val">t = <span id="df-current-step">0</span></span></div>
+        <input type="range" id="df-step-slider" class="df-slider" min="0" max="20" value="0" step="1">
+        <div class="mono df-slider-labels"><span>0</span><span>10</span><span>20</span></div>
+      </div>
+
+      <div class="df-control-group df-action-row">
+        <button type="button" id="df-diffuse-btn" class="df-tool-btn df-btn-primary">Diffuse</button>
+        <button type="button" id="df-denoise-btn" class="df-tool-btn df-btn-primary">Denoise</button>
+        <button type="button" id="df-reset-btn" class="df-tool-btn">Reset</button>
+      </div>
+
+      <div class="df-step-display mono">
+        <div>Step <span id="df-step-display">0</span> / 20</div>
+        <div id="df-process-label">Clean image</div>
+      </div>
+
+      <div class="df-equation-box">
+        <div class="mono df-eq-label">Forward</div>
+        <div class="df-eq">x<sub>t</sub> = &radic;<span style="text-decoration:overline">&alpha;</span><sub>t</sub> &middot; x<sub>0</sub> + &radic;(1 &minus; <span style="text-decoration:overline">&alpha;</span><sub>t</sub>) &middot; &epsilon;</div>
+        <div class="mono df-eq-label" style="margin-top:10px">Reverse (oracle)</div>
+        <div class="df-eq">x<sub>0</sub> = (x<sub>t</sub> &minus; &radic;(1 &minus; <span style="text-decoration:overline">&alpha;</span><sub>t</sub>) &middot; &epsilon;) / &radic;<span style="text-decoration:overline">&alpha;</span><sub>t</sub></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · How it works -->
+<section class="df-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>How it works</span>
+  </h2>
+
+  <div class="df-how-grid">
+    <div class="df-how-card">
+      <div class="mono df-how-fig">Fig. A &middot; The forward pass</div>
+      <h3 class="serif df-how-title">Corrupt with grace</h3>
+      <p>
+        Starting from a clean image x<sub>0</sub>, the forward process adds a small amount of Gaussian noise at each timestep. The amount is controlled by a beta schedule. After T steps, the image is mathematically indistinguishable from pure noise. The key trick is that x<sub>t</sub> can be sampled in one shot from x<sub>0</sub>. No need to simulate every intermediate step.
+      </p>
+    </div>
+
+    <div class="df-how-card">
+      <div class="mono df-how-fig">Fig. B &middot; Learn the score</div>
+      <h3 class="serif df-how-title">Estimate the noise</h3>
+      <p>
+        A neural network is trained to look at a noisy image x<sub>t</sub> and predict the noise &epsilon; that was added. This is equivalent to learning the score function of the data distribution, the gradient of log-probability with respect to the image. In this toy demo, the oracle knows &epsilon; exactly. Real models learn it from millions of examples.
+      </p>
+    </div>
+
+    <div class="df-how-card">
+      <div class="mono df-how-fig">Fig. C &middot; The reverse walk</div>
+      <h3 class="serif df-how-title">Walk back from chaos</h3>
+      <p>
+        With the noise predicted, the model estimates x<sub>0</sub>, then re-noises it to the previous timestep's distribution. Repeating this T times walks from pure Gaussian noise back to a structured image. The walk is stochastic. Run it twice and you get two different results. That randomness is the source of diffusion's creative range.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · M11.2 · The schedule explorer -->
+<section class="df-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV &middot; M11.2</span>
+    <span>The schedule explorer</span>
+  </h2>
+  <p class="df-note">
+    The same image, noised under two different beta schedules. Linear spreads noise evenly. Cosine front-loads it, preserving structure longer and collapsing faster at the end. Nichol and Dhariwal showed that the cosine schedule improves sample quality and training stability.
+  </p>
+
+  <div class="df-schedule-grid">
+    <div class="df-schedule-col">
+      <div class="mono df-schedule-head">Linear schedule</div>
+      <canvas id="df-schedule-linear" width="256" height="256" aria-label="Linear schedule result"></canvas>
+      <canvas id="df-beta-linear" width="256" height="80" aria-label="Linear beta curve"></canvas>
+      <div class="mono df-schedule-meta">MSE vs clean: <span id="df-mse-linear">--</span></div>
+    </div>
+    <div class="df-schedule-col">
+      <div class="mono df-schedule-head">Cosine schedule</div>
+      <canvas id="df-schedule-cosine" width="256" height="256" aria-label="Cosine schedule result"></canvas>
+      <canvas id="df-beta-cosine" width="256" height="80" aria-label="Cosine beta curve"></canvas>
+      <div class="mono df-schedule-meta">MSE vs clean: <span id="df-mse-cosine">--</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · Receipts -->
+<section class="df-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts</span>
+  </h2>
+  <div class="df-receipts">
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Forward steps</div>
+      <div class="serif df-receipt-value">20</div>
+    </div>
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Resolution</div>
+      <div class="serif df-receipt-value">32<span class="small">&times;32</span></div>
+    </div>
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Beta range</div>
+      <div class="serif df-receipt-value">1e-4<span class="small"> to 0.02</span></div>
+    </div>
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Algorithm</div>
+      <div class="serif df-receipt-value">DDPM<span class="small"> simplified</span></div>
+    </div>
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Inference time</div>
+      <div class="serif df-receipt-value">&lt;50<span class="small"> ms / step</span></div>
+    </div>
+    <div class="df-receipt">
+      <div class="mono df-receipt-label">Denoiser</div>
+      <div class="serif df-receipt-value">Oracle<span class="small"> (cheats)</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · Methodology & Colophon -->
+<section class="df-section df-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript running in a single Canvas 2D context. No WebGL, no
+        WASM, no server. The diffusion math is implemented directly from the
+        DDPM equations using Float32Arrays for the 32&times;32 grid. Beta
+        schedules are precomputed; the forward pass samples x<sub>t</sub> in
+        closed form; the reverse pass uses the stored noise vector as an oracle
+        predictor. Everything updates in real time.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Model spec</div>
+      <p>
+        32&times;32 binary grid input, values in {0, 1}. T = 20 timesteps.
+        Linear schedule: &beta;<sub>t</sub> ranges from 1&times;10<sup>-4</sup>
+        to 0.02. Cosine schedule: improved schedule from Nichol &amp; Dhariwal
+        2021 with offset s = 0.008. Noise &epsilon; ~ N(0, 1) drawn once per
+        session with Box-Muller. Forward and reverse are deterministic given
+        the seed.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://arxiv.org/abs/2006.11239" target="_blank" rel="noopener" style="border-bottom:1px solid">Ho et al. &middot; Denoising Diffusion Probabilistic Models (NeurIPS 2020) &#8599;</a><br>
+        <a href="https://arxiv.org/abs/2102.09672" target="_blank" rel="noopener" style="border-bottom:1px solid">Nichol &amp; Dhariwal &middot; Improved Denoising Diffusion Probabilistic Models (2021) &#8599;</a><br>
+        <a href="https://arxiv.org/abs/1503.03585" target="_blank" rel="noopener" style="border-bottom:1px solid">Sohl-Dickstein et al. &middot; Deep Unsupervised Learning using Nonequilibrium Thermodynamics (ICML 2015) &#8599;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        The oracle denoiser is not a learned model. It cheats by using the
+        exact noise vector from the forward pass. Real diffusion models must
+        learn this from data, which is why they need millions of images and
+        days of GPU time. The 32&times;32 resolution is far below production
+        image generators. Only two beta schedules are shown; there are dozens
+        of variants (sigmoid, polynomial, learned) with subtle trade-offs.
+      </p>
+    </div>
+  </div>
+
+  <!-- Related labs -->
+  <aside class="related-labs" aria-label="Related labs">
+    <div class="mono related-labs-head">Related labs</div>
+    <ul class="related-labs-list">
+      <li>
+        <a href="/work/sketch-lab/">
+          <span class="mono related-fig">M06</span>
+          <span class="serif related-title">Sketch Recognition</span>
+          <span class="related-line">A small neural network running entirely in your browser. Draw, classify, repeat.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/attention-lab/">
+          <span class="mono related-fig">P03</span>
+          <span class="serif related-title">Attention Is All You Need</span>
+          <span class="related-line">An interactive infographic of the 2017 Transformer paper. The mechanism every diffusion U-Net cross-attends with.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/llm-learning-lab/">
+          <span class="mono related-fig">S06</span>
+          <span class="serif related-title">How LLMs Learn</span>
+          <span class="related-line">The four-stage pipeline from a blank model to ChatGPT. Same training-time math, different inference shape.</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/bandit-lab/">&larr; Prev: Bandit Lab (M10)</a>
+    <span>Working model 11 of 11</span>
+    <a href="/work/churn-lab/">Back to Lab 01: Churn &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks/diffusion" target="_blank" rel="noopener" class="btn-outline">View the notebook on GitHub &#8599;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/diffusion-lab.js?v=1"></script>
+</body>
+</html>

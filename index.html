@@ -124,8 +124,8 @@
         Research <span class="nav-caret" aria-hidden="true">▾</span>
       </button>
                   <div class="nav-dropdown-menu nav-research" role="menu">
-        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">39</span></a>
-        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">8</span></a>
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">42</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">11</span></a>
         <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">13</span></a>
         <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
         <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
@@ -163,7 +163,7 @@
     <p class="hero-sub">
       The kind that pay for themselves. Models that keep the accounts
       worth keeping, aim spend at the customers who convert, and stop
-      losing tests before they cost a quarter. <mark class="ink-mark">Thirty-nine live labs</mark> below, filterable.
+      losing tests before they cost a quarter. <mark class="ink-mark">Forty-two live labs</mark> below, filterable.
       Click anything.
     </p>
     <div class="hero-ctas">
@@ -236,7 +236,7 @@
       <span>The research index</span>
     </h2>
     <h2 class="serif big-display">
-      Thirty-nine labs.<br><span class="serif-italic">Hover any tile.</span>
+      Forty-two labs.<br><span class="serif-italic">Hover any tile.</span>
     </h2>
     <p>
       Color tells you what kind of work it is. Hover for the details. Click
@@ -247,8 +247,8 @@
   <!-- Toolbar: category chips + search + count -->
   <div class="research-toolbar">
     <div class="research-chips" id="research-chips" role="tablist" aria-label="Filter by category">
-      <button class="research-chip is-active" type="button" data-cat="all" role="tab">All <span class="chip-count">39</span></button>
-      <button class="research-chip" type="button" data-cat="m" role="tab">Models <span class="chip-count">8</span></button>
+      <button class="research-chip is-active" type="button" data-cat="all" role="tab">All <span class="chip-count">42</span></button>
+      <button class="research-chip" type="button" data-cat="m" role="tab">Models <span class="chip-count">11</span></button>
       <button class="research-chip" type="button" data-cat="s" role="tab">Stories <span class="chip-count">13</span></button>
       <button class="research-chip" type="button" data-cat="p" role="tab">Papers <span class="chip-count">4</span></button>
       <button class="research-chip" type="button" data-cat="atlas" role="tab">Atlas <span class="chip-count">1</span></button>
@@ -257,7 +257,7 @@
     <div class="research-search">
       <input type="search" id="research-search-input" placeholder="Search labs..." aria-label="Search labs">
     </div>
-    <div class="research-readout" id="research-readout"><strong>39</strong> labs</div>
+    <div class="research-readout" id="research-readout"><strong>42</strong> labs</div>
   </div>
 
   <div class="research-empty" id="research-empty">
@@ -267,7 +267,7 @@
   <!-- THE GRID — 36 tiles in category groups, each tinted by category -->
   <div class="tile-grid" id="tile-grid">
 
-    <!-- M · Working models (8) -->
+    <!-- M · Working models (11) -->
     <a class="tile" data-cat="m" data-tags="classification,gradient-boosting,shap,fairness,customer" href="/work/churn-lab/">
       <div><span class="tile-fig">M01</span><h3 class="tile-name">Churn Model</h3></div>
       <div class="tile-detail"><div class="tile-detail-inner">
@@ -322,6 +322,27 @@
       <div class="tile-detail"><div class="tile-detail-inner">
         <p class="tile-line">A working Bayesian Marketing Mix Model for a creator-driven D2C brand. Eight channels, 104 weeks, full posterior intervals.</p>
         <div class="tile-meta-row"><span class="tile-metric">8 channels · 104 weeks · Meridian on GCP</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="tokenization,bpe,tokenizer,nlp,llm" href="/work/tokenization-lab/">
+      <div><span class="tile-fig">M09 · NEW</span><h3 class="tile-name">Token Lab</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A live Byte Pair Encoding visualizer. Type text, watch merges happen step by step, see exactly how GPT turns words into numbers.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Pure JS · BPE algorithm · 50K vocab</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="bandit,thompson-sampling,ucb,explore-exploit,reinforcement-learning" href="/work/bandit-lab/">
+      <div><span class="tile-fig">M10 · NEW</span><h3 class="tile-name">Bandit Lab</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A live multi-armed bandit simulator. Four strategies, hidden reward probabilities, and real-time regret curves that prove why exploration matters.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Pure JS · Monte Carlo · Beta posteriors</span><span class="tile-arrow">Open →</span></div>
+      </div></div>
+    </a>
+    <a class="tile" data-cat="m" data-tags="diffusion,generative-ai,ddpm,denoising,canvas" href="/work/diffusion-lab/">
+      <div><span class="tile-fig">M11 · NEW</span><h3 class="tile-name">Diffusion Lab</h3></div>
+      <div class="tile-detail"><div class="tile-detail-inner">
+        <p class="tile-line">A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into noise, then walk it back step by step. The engine behind DALL-E.</p>
+        <div class="tile-meta-row"><span class="tile-metric">Pure JS · Canvas 2D · DDPM toy</span><span class="tile-arrow">Open →</span></div>
       </div></div>
     </a>
 
@@ -411,7 +432,7 @@
       </div></div>
     </a>
     <a class="tile" data-cat="s" data-tags="uap,ufo,pursue,war-gov,nasa,fbi,aaro,disclosure,trump,apollo" href="/work/uap-files-lab/">
-      <div><span class="tile-fig">S13 · NEW</span><h3 class="tile-name">The PURSUE Files</h3></div>
+      <div><span class="tile-fig">S13</span><h3 class="tile-name">The PURSUE Files</h3></div>
       <div class="tile-detail"><div class="tile-detail-inner">
         <p class="tile-line">Inside Trump's May 8, 2026 UAP drop at war.gov/UFO. 17 newly declassified pages, 162 multimedia files, 79 years of cases, 0 confirmed extraterrestrial.</p>
         <div class="tile-meta-row"><span class="tile-metric">4 charts · 17 inventory items · 14,500+ cases · 0 ET</span><span class="tile-arrow">Open →</span></div>
@@ -441,7 +462,7 @@
       </div></div>
     </a>
     <a class="tile" data-cat="p" data-tags="jepa,world-model,sigreg,lecun,balestriero,planning" href="/work/leworldmodel-lab/">
-      <div><span class="tile-fig">P04 · NEW</span><h3 class="tile-name">Inside LeWorldModel</h3></div>
+      <div><span class="tile-fig">P04</span><h3 class="tile-name">Inside LeWorldModel</h3></div>
       <div class="tile-detail"><div class="tile-detail-inner">
         <p class="tile-line">The 15M JEPA world model that replaced seven loss terms with one Gaussian-matching regularizer.</p>
         <div class="tile-meta-row"><span class="tile-metric">2 interactives · 192-d CLS · 48× planning</span><span class="tile-arrow">Open →</span></div>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Lab · Byte Pair Encoding visualizer — Jake Cuth.</title>
+  <meta name="description" content="A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Token Lab · Byte Pair Encoding visualizer">
+  <meta property="og:description" content="A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/tokenization-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/tokenization-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/tokenization-lab.css?v=1">
+
+  <!-- SEO: canonical, twitter card, JSON-LD -->
+  <link rel="canonical" href="https://jakecuth.com/work/tokenization-lab/">
+  <meta property="article:published_time" content="2026-05-08T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-08T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Token Lab · Byte Pair Encoding visualizer">
+  <meta name="twitter:description" content="A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/tokenization-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://jakecuth.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Research",
+        "item": "https://jakecuth.com/#research"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Token Lab \u2014 Jake Cuth.",
+        "item": "https://jakecuth.com/work/tokenization-lab/"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Token Lab \u2014 Jake Cuth.",
+    "description": "A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time.",
+    "image": "https://www.jakecuth.com/assets/og/tokenization-lab.png?v=1",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "url": "https://jakecuth.com/work/tokenization-lab/",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://jakecuth.com/work/tokenization-lab/"
+    }
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Token Lab \u2014 Jake Cuth.",
+    "description": "A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time.",
+    "image": "https://www.jakecuth.com/assets/og/tokenization-lab.png?v=1",
+    "url": "https://jakecuth.com/work/tokenization-lab/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">M09</span> &middot; MMXXVI &middot; TOKEN LAB</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">42</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">11</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">13</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="tk-main">
+
+<!-- HERO -->
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Token Lab</span></li>
+  </ol>
+</nav>
+
+<section class="tk-hero">
+  <h2 class="mono section-label">
+    <span class="idx">M09</span>
+    <span>Token Lab</span>
+  </h2>
+  <h1 class="serif big-display tk-title">
+    Text, chopped into<br>
+    <span class="serif-italic" style="color:var(--accent)">pieces an LLM can count.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens, one greedy step at a time. The same process that turns Shakespeare into 50,257 vocabulary slots inside GPT-2.
+  </p>
+  <p class="tk-kicker">
+    Enter text below. The algorithm starts with individual bytes (256 possible values), then iteratively merges the most frequent pair into a new token. Watch the vocabulary grow, the token count shrink, and the compression ratio climb. Every modern LLM does this before it sees a single parameter.
+  </p>
+  <div class="mono tk-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; No model &middot; BPE algorithm</div></div>
+    <div><div class="label">Base vocab</div><div class="value">256 byte tokens</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I · Why LLMs do not read words -->
+<section class="tk-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Why LLMs do not read words</span>
+  </h2>
+  <div class="tk-prose">
+    <p class="tk-lede">
+      Large language models do not see words. They see integers.
+    </p>
+    <p>
+      Before a transformer processes a single sentence, a tokenizer breaks the raw text into a sequence of tokens. Each token is an integer index into a fixed vocabulary. The model never encounters the string "hello". It encounters token 23748, or whatever integer the training run assigned to that byte sequence. This mapping is learned, not designed, and it is learned by the same greedy algorithm running below.
+    </p>
+    <p>
+      Byte Pair Encoding, introduced for machine translation by Sennrich et al. in 2016 and later adopted by OpenAI for GPT-2, starts with the 256 possible byte values. It scans the training corpus, counts every adjacent pair, and merges the most common pair into a new token. Repeat this 50,000 times and you have a vocabulary that can represent common words in one slot, rare words in several, and never-seen characters by falling back to raw bytes. The result is a compression scheme that happens to be useful for language modeling.
+    </p>
+    <p>
+      Why does this matter? Because tokenization is where many LLM behaviors originate. A model struggles with arithmetic because numbers get split into individual digits. It handles Python better than English because code has more repeating substrings. And it sees "SolidGoldMagikarp" as a single token not because the name is famous, but because that exact string appeared often enough in the training data to earn its own slot. Understanding tokenization is the first step toward understanding what the model actually receives.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · M09.1 · The tokenizer -->
+<section class="tk-section tk-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II &middot; M09.1</span>
+    <span>The tokenizer &middot; type something</span>
+  </h2>
+  <p class="tk-note">
+    The text is first encoded as UTF-8 bytes. Each byte becomes its own token. Press <em>Step</em> to perform one merge, or toggle <em>Auto-play</em> to watch the algorithm run. The slider sets a target vocabulary size. The algorithm stops when it reaches that size or when no pair appears more than once.
+  </p>
+
+  <div class="tk-demo-layout">
+    <!-- Left panel: input + controls -->
+    <div class="tk-input-panel">
+      <label class="tk-field">
+        <div class="mono field-label">Input text</div>
+        <textarea id="tk-textarea" class="tk-textarea" rows="6" spellcheck="false">We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America.</textarea>
+      </label>
+
+      <div class="tk-controls mono">
+        <button type="button" class="tk-ctl-btn primary" id="tk-step">Step</button>
+        <button type="button" class="tk-ctl-btn" id="tk-autoplay">Auto-play</button>
+        <button type="button" class="tk-ctl-btn" id="tk-reset">Reset</button>
+      </div>
+
+      <label class="tk-field">
+        <div class="mono field-label">Target vocabulary size</div>
+        <div class="field-row">
+          <input type="range" id="tk-vocab-slider" min="4" max="9" step="1" value="6">
+          <span class="mono field-val" id="tk-vocab-val">64</span>
+        </div>
+        <div class="tk-slider-labels mono">
+          <span>16</span><span>32</span><span>64</span><span>128</span><span>256</span><span>512</span>
+        </div>
+      </label>
+
+      <div class="tk-merge-status mono" id="tk-merge-status">Ready. 256 tokens in vocabulary.</div>
+    </div>
+
+    <!-- Right panel: tokens + history + stats -->
+    <div class="tk-output-panel">
+      <div class="tk-token-wrap">
+        <div class="mono tk-panel-head">Token stream &middot; <span id="tk-token-count">0</span> tokens</div>
+        <div class="tk-token-stream" id="tk-token-stream">
+          <div class="tk-token-empty mono">Enter text and press Step to begin.</div>
+        </div>
+      </div>
+
+      <div class="tk-history-wrap">
+        <div class="mono tk-panel-head">Merge history</div>
+        <ol class="tk-history-list" id="tk-history-list">
+          <li class="tk-history-empty mono">No merges yet.</li>
+        </ol>
+      </div>
+
+      <div class="tk-stats-bar mono">
+        <div class="tk-stat">
+          <div class="tk-stat-label">Tokens</div>
+          <div class="tk-stat-value" id="tk-stat-tokens">0</div>
+        </div>
+        <div class="tk-stat">
+          <div class="tk-stat-label">Vocab size</div>
+          <div class="tk-stat-value" id="tk-stat-vocab">256</div>
+        </div>
+        <div class="tk-stat">
+          <div class="tk-stat-label">Compression</div>
+          <div class="tk-stat-value" id="tk-stat-compression">1.00&times;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · How it works -->
+<section class="tk-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>How it works</span>
+  </h2>
+
+  <div class="tk-how-grid">
+    <div class="tk-how-card">
+      <div class="mono tk-how-fig">Fig. A &middot; Start with bytes</div>
+      <h3 class="serif tk-how-title">Every character is a sequence of bytes</h3>
+      <p>
+        The tokenizer encodes the input as UTF-8, turning each character into one to four raw byte values. At the start, the vocabulary contains exactly 256 tokens, one for each possible byte. The token sequence is identical to the byte sequence.
+      </p>
+    </div>
+    <div class="tk-how-card">
+      <div class="mono tk-how-fig">Fig. B &middot; Merge the winners</div>
+      <h3 class="serif tk-how-title">Greedy frequency counting</h3>
+      <p>
+        On every iteration, the algorithm counts all adjacent token pairs in the current sequence. The pair that appears most often is replaced everywhere by a brand-new token ID. That new token is added to the vocabulary, and the sequence shrinks.
+      </p>
+    </div>
+    <div class="tk-how-card">
+      <div class="mono tk-how-fig">Fig. C &middot; Stop when rich enough</div>
+      <h3 class="serif tk-how-title">Vocabulary size is a hyperparameter</h3>
+      <p>
+        Training stops after a preset number of merges. GPT-2 used 50,257 total tokens. GPT-4 uses roughly 100,256. The vocabulary is saved as a lookup table, and every future string is tokenized by greedily matching the longest learned token first.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · M09.2 · The edge cases -->
+<section class="tk-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV &middot; M09.2</span>
+    <span>The edge cases &middot; GPT-2 reference</span>
+  </h2>
+  <p class="tk-note">
+    These are the token counts <em>GPT-2 would produce</em> after training on its full 8 GB corpus, not what the demo above produces. The demo trains BPE on whatever you type, so on a single short string it has nothing to merge against and falls back to one token per byte. Click any row to load the text into the demo and watch what BPE on one input actually does.
+  </p>
+
+  <div class="tk-edge-grid">
+    <div class="tk-edge-card" data-text="hello">
+      <div class="mono tk-edge-fig">01</div>
+      <div class="tk-edge-input mono">hello</div>
+      <div class="tk-edge-tokens mono">GPT-2: 1 token</div>
+      <div class="tk-edge-note">Common word. Earned its own slot early in training.</div>
+    </div>
+    <div class="tk-edge-card" data-text="Tokenization">
+      <div class="mono tk-edge-fig">02</div>
+      <div class="tk-edge-input mono">Tokenization</div>
+      <div class="tk-edge-tokens mono">GPT-2: 2 tokens</div>
+      <div class="tk-edge-note">Token + ization. The suffix is common enough to split off.</div>
+    </div>
+    <div class="tk-edge-card" data-text="127381">
+      <div class="mono tk-edge-fig">03</div>
+      <div class="tk-edge-input mono">127381</div>
+      <div class="tk-edge-tokens mono">GPT-2: 5 tokens</div>
+      <div class="tk-edge-note">Numbers split per digit. Large integers are expensive for LLMs.</div>
+    </div>
+    <div class="tk-edge-card" data-text="&#128640;">
+      <div class="mono tk-edge-fig">04</div>
+      <div class="tk-edge-input mono">&#128640;</div>
+      <div class="tk-edge-tokens mono">GPT-2: 4 tokens</div>
+      <div class="tk-edge-note">Emoji into UTF-8 bytes. A single glyph becomes four integers.</div>
+    </div>
+    <div class="tk-edge-card" data-text="aaaaaaaaaa">
+      <div class="mono tk-edge-fig">05</div>
+      <div class="tk-edge-input mono">aaaaaaaaaa</div>
+      <div class="tk-edge-tokens mono">GPT-2: 1 token</div>
+      <div class="tk-edge-note">Repeating patterns compress beautifully. Ten bytes, one slot.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · Receipts -->
+<section class="tk-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts</span>
+  </h2>
+  <div class="tk-receipts">
+    <div class="tk-receipt">
+      <div class="mono tk-receipt-label">Base tokens</div>
+      <div class="tk-receipt-value">256</div>
+    </div>
+    <div class="tk-receipt">
+      <div class="mono tk-receipt-label">GPT-2 vocabulary</div>
+      <div class="tk-receipt-value">50,257</div>
+    </div>
+    <div class="tk-receipt">
+      <div class="mono tk-receipt-label">GPT-4 vocabulary</div>
+      <div class="tk-receipt-value">~100,256</div>
+    </div>
+    <div class="tk-receipt">
+      <div class="mono tk-receipt-label">Avg English tokens / word</div>
+      <div class="tk-receipt-value">1.3</div>
+    </div>
+    <div class="tk-receipt">
+      <div class="mono tk-receipt-label">Avg tokens / emoji</div>
+      <div class="tk-receipt-value">3&ndash;5</div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · Methodology & Colophon -->
+<section class="tk-section tk-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript implementation of the original BPE training loop. Each character is encoded via <span class="mono">TextEncoder</span> into UTF-8 bytes. The algorithm maintains a token sequence, a vocabulary map, and a merge ledger. At every step it counts adjacent pairs with a frequency map, selects the maximum, and performs a global replacement. Runs at 60 merges per second in auto-play mode.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Inference</div>
+      <p>
+        The demo visualizes the training process, not the inference pass. Real-world tokenizers use the learned merge list in reverse: given a new string, they encode it to bytes, then greedily apply the merges in the order they were learned. The result is deterministic and subword. No neural network is involved in tokenization itself.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://arxiv.org/abs/1508.07909" target="_blank" rel="noopener" style="border-bottom:1px solid">Sennrich et al. &middot; Neural Machine Translation of Rare Words with Subword Units (2016) &#8599;</a><br>
+        <a href="https://www.youtube.com/watch?v=zduSFxRajkE" target="_blank" rel="noopener" style="border-bottom:1px solid">Karpathy &middot; Let's build the GPT Tokenizer (2024) &#8599;</a><br>
+        <a href="https://github.com/openai/gpt-2/blob/master/src/encoder.py" target="_blank" rel="noopener" style="border-bottom:1px solid">OpenAI &middot; GPT-2 tokenizer source &#8599;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        This is the original BPE training algorithm, not the exact GPT-2 tokenizer. Real tokenizers include regex-based pre-tokenization splits, special tokens for padding and end-of-text, and byte-fallback handling for characters outside the vocabulary. The visualizer also omits the ranking tie-breaking rules used in production. It is accurate enough to teach the concept, not to reproduce OpenAI's outputs bit-for-bit.
+      </p>
+    </div>
+  </div>
+
+  <!-- Related labs -->
+  <aside class="related-labs" aria-label="Related labs">
+    <div class="mono related-labs-head">Related labs</div>
+    <ul class="related-labs-list">
+      <li>
+        <a href="/work/sketch-lab/">
+          <span class="mono related-fig">M06</span>
+          <span class="serif related-title">Sketch Recognition</span>
+          <span class="related-line">A neural net in your browser. Draw on the canvas, watch a classifier predict your sketch in real time.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/model-picker-lab/">
+          <span class="mono related-fig">M07</span>
+          <span class="serif related-title">Model Picker</span>
+          <span class="related-line">Ask in plain language. Get a side-by-side of the four AI models that fit your job.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/imm-lab/">
+          <span class="mono related-fig">M08</span>
+          <span class="serif related-title">Influencer Mix Modeling</span>
+          <span class="related-line">Eight channels, one budget, and an honest answer. Bayesian MMM for creator-driven D2C brands.</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/imm-lab/">&larr; Prev: Influencer Mix Modeling (M08)</a>
+    <span>Working model 09 of 11</span>
+    <a href="/work/bandit-lab/">Next: Bandit Lab (M10) &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/tokenization-lab.js?v=1"></script>
+</body>
+</html>

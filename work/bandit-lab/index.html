@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="graphite" data-cat="m">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bandit Lab · Multi-armed bandit simulator — Jake Cuth.</title>
+  <meta name="description" content="A live multi-armed bandit simulator. Four strategies on hidden reward distributions. Real-time regret curves prove why exploration matters.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bandit Lab · Multi-armed bandit simulator">
+  <meta property="og:description" content="A live multi-armed bandit simulator. Four strategies on hidden reward distributions. Real-time regret curves prove why exploration matters.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/bandit-lab.png?v=1">
+  <meta property="og:url" content="https://jakecuth.com/work/bandit-lab/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=41">
+  <link rel="stylesheet" href="/assets/css/bandit-lab.css?v=1">
+
+  <!-- SEO: canonical, twitter card, JSON-LD -->
+  <link rel="canonical" href="https://jakecuth.com/work/bandit-lab/">
+  <meta property="article:published_time" content="2026-05-08T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-08T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bandit Lab · Multi-armed bandit simulator">
+  <meta name="twitter:description" content="A live multi-armed bandit simulator. Tests four strategies side by side on the same hidden reward distribution. Thompson Sampling, UCB1, Epsilon-Greedy, and Random.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/bandit-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://jakecuth.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Research",
+        "item": "https://jakecuth.com/#research"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Bandit Lab \u2014 Jake Cuth.",
+        "item": "https://jakecuth.com/work/bandit-lab/"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Bandit Lab \u2014 Jake Cuth.",
+    "description": "A live multi-armed bandit simulator. Tests four strategies side by side on the same hidden reward distribution. Thompson Sampling, UCB1, Epsilon-Greedy, and Random.",
+    "image": "https://www.jakecuth.com/assets/og/bandit-lab.png?v=1",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "url": "https://jakecuth.com/work/bandit-lab/",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://jakecuth.com/work/bandit-lab/"
+    }
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Bandit Lab \u2014 Jake Cuth.",
+    "description": "A live multi-armed bandit simulator. Tests four strategies side by side on the same hidden reward distribution. Thompson Sampling, UCB1, Epsilon-Greedy, and Random.",
+    "image": "https://www.jakecuth.com/assets/og/bandit-lab.png?v=1",
+    "url": "https://jakecuth.com/work/bandit-lab/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson",
+      "url": "https://jakecuth.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Jacob Cuthbertson"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">M10</span> &middot; MMXXVI &middot; BANDIT LAB</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">42</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">11</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">13</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="bd-main">
+
+<!-- HERO -->
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Bandit Lab</span></li>
+  </ol>
+</nav>
+
+<section class="bd-hero">
+  <h2 class="mono section-label">
+    <span class="idx">M10</span>
+    <span>Bandit Lab</span>
+  </h2>
+  <h1 class="serif big-display bd-title">
+    The best lever is<br>
+    <span class="serif-italic" style="color:var(--accent)">not the one that paid last.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A live multi-armed bandit simulator. Tests four strategies side by side
+    on the same hidden reward distribution. Shows why the slot machine that
+    paid most recently is rarely the one that pays most overall, and how
+    much that mistake costs.
+  </p>
+  <p class="bd-kicker">
+    Five arms. Hidden reward probabilities. Pull levers, watch algorithms
+    learn, and compare cumulative regret in real time. Thompson Sampling,
+    UCB1, Epsilon-Greedy, and Random play 500 rounds on identical ground
+    truth. Nothing is preloaded. Every run is new.
+  </p>
+  <div class="mono bd-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time"></div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; Monte Carlo &middot; Beta distributions</div></div>
+    <div><div class="label">Arms</div><div class="value" id="bd-arms-display">5</div></div>
+    <div><div class="label">Rounds</div><div class="value" id="bd-rounds-display">500</div></div>
+  </div>
+  <p class="mono bd-stamp">
+    Nothing is preloaded. Every run is new. Ground-truth probabilities
+    documented in <a href="#methodology" style="border-bottom:1px solid">&sect; VI</a>.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- § I -->
+<section class="bd-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Why the winning variant is usually a trap</span>
+  </h2>
+  <div class="bd-prose">
+    <p class="bd-lede">
+      The slot machine that just paid out is not more likely to pay again.
+    </p>
+    <p>
+      This is the explore-exploit dilemma in its purest form. You have
+      several options, you don't know which is best, and every pull of a
+      suboptimal arm costs you the difference between the best possible
+      reward and what you actually got. The temptation is to keep pulling
+      whatever paid last. The math says that strategy is usually wrong.
+    </p>
+    <p>
+      A/B testing falls into the same trap. Run a test for two weeks,
+      declare a winner, and deploy it forever. But early winners often
+      regress. The variant that looked best at week two may have been
+      lucky, not good. A bandit algorithm, by contrast, never stops
+      exploring. It reduces the rate of exploration as evidence accumulates,
+      but it never locks in a premature winner.
+    </p>
+    <p>
+      The cost of impatience is measured in <em>regret</em>: the cumulative
+      difference between the reward you earned and the reward you would
+      have earned had you known the best arm from the start. A good
+      algorithm keeps regret low. A bad one lets it grow linearly with
+      time.
+    </p>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II -->
+<section class="bd-section bd-section-sim">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II &middot; M10.1</span>
+    <span>The casino &middot; pull the levers</span>
+  </h2>
+
+  <div class="bd-controls">
+    <div class="bd-control-col">
+      <label class="bd-field">
+        <div class="mono bd-field-label">Number of arms</div>
+        <div class="bd-field-row">
+          <input type="range" id="bd-arms-slider" min="3" max="10" step="1" value="5">
+          <span class="mono bd-field-val" id="bd-arms-val">5</span>
+        </div>
+      </label>
+      <label class="bd-field">
+        <div class="mono bd-field-label">Number of rounds</div>
+        <div class="bd-field-row">
+          <input type="range" id="bd-rounds-slider" min="100" max="5000" step="100" value="500">
+          <span class="mono bd-field-val" id="bd-rounds-val">500</span>
+        </div>
+      </label>
+    </div>
+    <div class="bd-control-col">
+      <div class="bd-buttons">
+        <button type="button" class="ctl-btn primary" id="bd-newgame">New Game</button>
+        <button type="button" class="ctl-btn primary" id="bd-runall">Run All</button>
+        <button type="button" class="ctl-btn" id="bd-step">Step</button>
+        <button type="button" class="ctl-btn" id="bd-reset">Reset</button>
+      </div>
+      <div class="mono bd-round-readout">Round <span id="bd-current-round">0</span> / <span id="bd-max-rounds">500</span></div>
+    </div>
+  </div>
+
+  <div class="bd-strategies">
+    <!-- Random -->
+    <div class="bd-strat-card" id="bd-strat-random">
+      <div class="bd-strat-head mono">Random <span class="bd-strat-sub">baseline</span></div>
+      <div class="bd-strat-stats mono">
+        <span>Regret: <span class="bd-regret-val" id="bd-regret-random-val">0.00</span></span>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Cumulative regret</div>
+        <svg id="bd-regret-random" viewBox="0 0 280 160" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Random strategy cumulative regret"></svg>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Pulls per arm</div>
+        <svg id="bd-bars-random" viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Random strategy pulls per arm"></svg>
+      </div>
+    </div>
+
+    <!-- Epsilon-Greedy -->
+    <div class="bd-strat-card" id="bd-strat-eg">
+      <div class="bd-strat-head mono">Epsilon-Greedy <span class="bd-strat-sub">&epsilon; = 0.1</span></div>
+      <div class="bd-strat-stats mono">
+        <span>Regret: <span class="bd-regret-val" id="bd-regret-eg-val">0.00</span></span>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Cumulative regret</div>
+        <svg id="bd-regret-eg" viewBox="0 0 280 160" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Epsilon-Greedy cumulative regret"></svg>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Pulls per arm</div>
+        <svg id="bd-bars-eg" viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Epsilon-Greedy pulls per arm"></svg>
+      </div>
+    </div>
+
+    <!-- UCB1 -->
+    <div class="bd-strat-card" id="bd-strat-ucb">
+      <div class="bd-strat-head mono">UCB1 <span class="bd-strat-sub">optimism</span></div>
+      <div class="bd-strat-stats mono">
+        <span>Regret: <span class="bd-regret-val" id="bd-regret-ucb-val">0.00</span></span>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Cumulative regret</div>
+        <svg id="bd-regret-ucb" viewBox="0 0 280 160" preserveAspectRatio="xMidYMid meet" role="img" aria-label="UCB1 cumulative regret"></svg>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Pulls per arm</div>
+        <svg id="bd-bars-ucb" viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="UCB1 pulls per arm"></svg>
+      </div>
+    </div>
+
+    <!-- Thompson Sampling -->
+    <div class="bd-strat-card" id="bd-strat-thompson">
+      <div class="bd-strat-head mono">Thompson <span class="bd-strat-sub">sampling</span></div>
+      <div class="bd-strat-stats mono">
+        <span>Regret: <span class="bd-regret-val" id="bd-regret-thompson-val">0.00</span></span>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Cumulative regret</div>
+        <svg id="bd-regret-thompson" viewBox="0 0 280 160" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Thompson Sampling cumulative regret"></svg>
+      </div>
+      <div class="bd-chart-wrap">
+        <div class="mono bd-chart-label">Pulls per arm</div>
+        <svg id="bd-bars-thompson" viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Thompson Sampling pulls per arm"></svg>
+      </div>
+      <div class="bd-chart-wrap bd-betas-wrap">
+        <div class="mono bd-chart-label">Beta posteriors</div>
+        <svg id="bd-betas-thompson" viewBox="0 0 280 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Thompson Sampling Beta posteriors"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III -->
+<section class="bd-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III</span>
+    <span>How it works</span>
+  </h2>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="mono how-fig">Fig. A</div>
+      <h3 class="serif how-title">The explore-exploit dilemma</h3>
+      <p>
+        Every pull is a choice between gathering information (explore) and
+        using what you know (exploit). Explore too much and you waste pulls
+        on bad arms. Exploit too early and you lock in a suboptimal choice
+        before the data is clear. The optimal balance changes over time:
+        explore heavily at first, then gradually shift to exploitation as
+        confidence grows.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. B</div>
+      <h3 class="serif how-title">Optimism in the face of uncertainty</h3>
+      <p>
+        UCB1 adds an optimism bonus to every arm's empirical mean. Arms
+        that have been pulled less often get a larger bonus, which forces
+        exploration of the unknown. The bonus shrinks as the pull count
+        grows, so no arm is neglected forever. The result is a principled
+        upper confidence bound that automatically balances explore and
+        exploit.
+      </p>
+    </div>
+    <div class="how-card">
+      <div class="mono how-fig">Fig. C</div>
+      <h3 class="serif how-title">Probability matching</h3>
+      <p>
+        Thompson Sampling does not compute a single best guess for each
+        arm. It draws a random sample from each arm's posterior
+        distribution, then picks the arm with the highest draw. This
+        means an arm with a wide posterior (high uncertainty) still has a
+        chance of winning the sample, which drives exploration. As the
+        posterior tightens, the best arm wins almost every time.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV -->
+<section class="bd-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV &middot; M10.2</span>
+    <span>The cost of impatience</span>
+  </h2>
+  <p class="bd-prose">
+    Not all bandit problems are equally hard. When one arm dominates,
+    even a naive strategy finds it quickly. When two arms are close,
+    the cost of confusion compounds. And when the best arm starts with
+    a string of bad luck, only the patient algorithms recover.
+  </p>
+
+  <div class="bd-scenario-controls">
+    <div class="bd-preset-group">
+      <span class="mono bd-control-label">Preset</span>
+      <button type="button" class="ctl-btn" data-preset="easy">Easy</button>
+      <button type="button" class="ctl-btn" data-preset="close">Close call</button>
+      <button type="button" class="ctl-btn" data-preset="deceptive">Deceptive</button>
+    </div>
+    <label class="bd-toggle">
+      <input type="checkbox" id="bd-nonstationary">
+      <span class="mono bd-toggle-label">Non-stationary (reward drift)</span>
+    </label>
+    <button type="button" class="ctl-btn primary" id="bd-mc-run">Run 100 Monte Carlo simulations</button>
+    <div class="mono bd-mc-status" id="bd-mc-status">idle</div>
+  </div>
+
+  <div class="bd-mc-results" id="bd-mc-results" hidden>
+    <div class="mono bd-chart-label">Final regret (mean across 100 runs)</div>
+    <div class="bd-mc-table-wrap">
+      <table class="mono bd-mc-table" id="bd-mc-table">
+        <thead>
+          <tr><th>Scenario</th><th>Random</th><th>Epsilon-Greedy</th><th>UCB1</th><th>Thompson</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V -->
+<section class="bd-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts</span>
+  </h2>
+  <div class="metrics-grid" id="bd-receipts-grid"></div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI -->
+<section class="bd-section bd-colophon-section" id="methodology">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Pure JavaScript. Each arm is a Bernoulli trial with a hidden
+        probability sampled from <span class="mono">Beta(2, 2)</span>.
+        Four strategies update their beliefs and choose arms every frame.
+        Regret is computed against the ground-truth best arm. All
+        randomness is seeded by <span class="mono">Math.random()</span>;
+        no server calls, no precomputed data.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Model spec</div>
+      <p>
+        <span class="mono">K</span> arms, <span class="mono">T</span>
+        rounds, binary rewards. Random and Epsilon-Greedy are frequentist
+        baselines. UCB1 uses optimism in the face of uncertainty.
+        Thompson Sampling maintains a Beta posterior per arm and samples
+        from it. Non-stationary mode adds a Gaussian random walk to each
+        hidden probability after every pull.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        Lattimore &amp; Szepesvari, <em>Bandit Algorithms</em> (Cambridge, 2020)<br>
+        Chapelle &amp; Li, An Empirical Evaluation of Thompson Sampling (NIPS 2011)<br>
+        Auer et al., Finite-time Analysis of the Multiarmed Bandit Problem (ML 2002)
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Stationary environment by default; non-stationary toggle is a
+        simple random walk. Binary rewards only. No contextual features,
+        no batched updates, no delayed feedback. The Beta(2,2) prior for
+        ground-truth generation is arbitrary; real-world reward
+        distributions are rarely symmetric.
+      </p>
+    </div>
+  </div>
+
+  <!-- Related labs -->
+  <aside class="related-labs" aria-label="Related labs">
+    <div class="mono related-labs-head">Related labs</div>
+    <ul class="related-labs-list">
+      <li>
+        <a href="/work/ab-test-lab/">
+          <span class="mono related-fig">M04</span>
+          <span class="serif related-title">A/B Test Simulator</span>
+          <span class="related-line">Live Beta posteriors, frequentist and Bayesian decisions side by side.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/funnel-sim-lab/">
+          <span class="mono related-fig">M05</span>
+          <span class="serif related-title">Funnel Simulation</span>
+          <span class="related-line">Model a conversion funnel, watch users drop off, and find the biggest leak.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/work/reco-lab/">
+          <span class="mono related-fig">M03</span>
+          <span class="serif related-title">Recommendation Engine</span>
+          <span class="related-line">Guesses what they will watch next. Every basis point of watch-time is a subscription renewed.</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <nav class="lab-nav mono" aria-label="Lab navigation">
+    <a href="/work/tokenization-lab/">&larr; Token Lab (M09)</a>
+    <span>Working model 10 of 11</span>
+    <a href="/work/diffusion-lab/">Diffusion Lab (M11) &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/notebooks" target="_blank" rel="noopener" class="btn-outline">View the notebook on GitHub &#8599;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Theme switcher -->
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn active" data-t="graphite" title="Graphite + Acid"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script src="/assets/js/bandit-lab.js?v=1"></script>
+</body>
+</html>

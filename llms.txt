@@ -2,9 +2,9 @@
 
 > Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, a senior data analyst. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
 
-The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 39 active lab pages organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
+The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 42 active lab pages organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
 
-## Working models (M01–M08)
+## Working models (M01–M11)
 
 Live ML demos. Move sliders, watch the economics change. Each one is a portfolio piece showing one applied-ML chop end to end.
 
@@ -16,6 +16,9 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M06 · Sketch Recognition](https://jakecuth.com/work/sketch-lab/): A 30-class sketch classifier running entirely in your browser via ONNX. ~930 KB model, no API calls.
 - [M07 · Model Picker](https://jakecuth.com/work/model-picker-lab/): RAG over OpenRouter's 300+ model catalog. Ask in plain language, get a recommendation plus a side-by-side of four models that fit.
 - [M08 · Influencer Mix Modeling](https://jakecuth.com/work/imm-lab/): A working Bayesian Marketing Mix Model for a creator-driven D2C brand. 8 channels, 104 weeks, 200 posterior draws.
+- [M09 · Token Lab](https://jakecuth.com/work/tokenization-lab/): A live Byte Pair Encoding visualizer. Type any text and watch the algorithm merge the most frequent adjacent pairs into new tokens. The same process that turns Shakespeare into 50,257 vocabulary slots inside GPT-2.
+- [M10 · Bandit Lab](https://jakecuth.com/work/bandit-lab/): A live multi-armed bandit simulator. Four strategies on identical hidden reward distributions. Real-time regret curves prove why the slot machine that paid most recently is rarely the one that pays most overall.
+- [M11 · Diffusion Lab](https://jakecuth.com/work/diffusion-lab/): A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion and DALL-E.
 
 ## Data stories (S01–S13)
 
