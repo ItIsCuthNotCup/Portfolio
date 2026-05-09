@@ -30,16 +30,22 @@ const ESTIMATED_COST_PER_CALL_USD = 0.0003;
 // allowed through — the per-IP rate limit and daily spend cap defend
 // against those. Browser-based abuse from foreign origins is blocked
 // here; browsers cannot forge the Origin header from JS.
+//
+// SECURITY: the previous wildcard `^https://[a-z0-9.-]+\.pages\.dev$`
+// matched ANY *.pages.dev subdomain — anyone could create a free Pages
+// site to forge calls. Narrowed to this project's preview URLs only,
+// which follow the `<branch>.jakecuth.pages.dev` and `jakecuth.pages.dev`
+// patterns. Cloudflare guarantees the project subdomain so this is the
+// tightest possible match that still allows preview deploys to work.
 const ALLOWED_ORIGINS = new Set([
   'https://jakecuth.com',
   'https://www.jakecuth.com',
 ]);
+const PREVIEW_ORIGIN_RE = /^https:\/\/(?:[a-z0-9-]{1,63}\.)?jakecuth\.pages\.dev$/;
 function isAllowedOrigin(origin) {
   if (!origin) return true;
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  // Cloudflare Pages preview deployments (covers both
-  // <hash>.pages.dev and <hash>.<project>.pages.dev forms).
-  if (/^https:\/\/[a-z0-9.-]+\.pages\.dev$/.test(origin)) return true;
+  if (PREVIEW_ORIGIN_RE.test(origin)) return true;
   return false;
 }
 
@@ -118,7 +124,9 @@ export async function onRequest(context) {
         ok: true,
         cached: true,
         ...cached,
-        trace: `cache hit · ${cached.candidates?.length || 0} candidates · ${GEN_MODEL}`,
+        // Trace stays generic — model name + cost internals were
+        // exposed previously, useful for fingerprinting.
+        trace: `cache hit · ${cached.candidates?.length || 0} candidates`,
       }, 200, reqOrigin);
     }
 
@@ -240,9 +248,10 @@ export async function onRequest(context) {
             }
           }
 
-          // Cache the final result
+          // Cache the final result. Trace omits model name + cost
+          // estimate (those leak infrastructure details).
           const totalMs = Date.now() - t0;
-          const traceLine = `embed ${embedMs}ms · retrieved ${candidates.length} of ${pool.length} · ${GEN_MODEL} · ${totalMs}ms total · ~$${ESTIMATED_COST_PER_CALL_USD.toFixed(4)}`;
+          const traceLine = `retrieved ${candidates.length} of ${pool.length} candidates · ${totalMs}ms`;
           await writeCache(env, cacheKey, {
             ok: true,
             answer: fullText,
@@ -591,7 +600,15 @@ function currentDay() {
   return `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
 }
 function normalizeQuery(q) {
-  return q.toLowerCase().replace(/\s+/g, ' ').trim();
+  // Hash-based cache key derived from the FULL trimmed query (length-
+  // capped). The previous version lowercased + collapsed whitespace
+  // before hashing, which meant "Cheap MODEL" and "cheap model" served
+  // the same cached answer — an attacker could pre-poison popular
+  // query variants. We still want minor whitespace normalization to
+  // dedupe "  cheap  model " and "cheap model", so we trim + collapse
+  // internal whitespace but PRESERVE case so that distinct phrasings
+  // get distinct cache entries.
+  return String(q || '').trim().replace(/\s+/g, ' ').slice(0, MAX_INPUT_CHARS);
 }
 function truncate(s, n) {
   if (!s) return '';

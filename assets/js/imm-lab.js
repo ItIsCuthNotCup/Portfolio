@@ -21,6 +21,14 @@ if (typeof window !== 'undefined' && !window.IMM_API_URL) {
 
 (function () {
   'use strict';
+  // Defense in depth: escape any JSON-fetched string before interpolating
+  // into innerHTML. Catalog data is author-controlled today; this prevents
+  // stored XSS if a future PR or compromised pipeline ships malicious data.
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
 
   const fmt = new Intl.NumberFormat('en-US');
   const fmtUSD = (v) => '$' + Math.round(v).toLocaleString();
@@ -356,7 +364,7 @@ if (typeof window !== 'undefined' && !window.IMM_API_URL) {
       else { status = 'saturated'; statusText = 'Saturated'; }
 
       tile.innerHTML =
-        '<div class="imm-sat-name">' + ch.label + '</div>' +
+        '<div class="imm-sat-name">' + escapeHtml(ch.label) + '</div>' +
         '<div class="imm-sat-meta">' +
         '<span>Current: ' + fmtUSDk(xCurrent) + '/wk</span>' +
         '<span class="imm-sat-status ' + status + '">' + statusText + '</span>' +
@@ -433,9 +441,9 @@ if (typeof window !== 'undefined' && !window.IMM_API_URL) {
       const tile = document.createElement('div');
       tile.className = 'imm-whatif-tile';
       tile.innerHTML =
-        '<div class="imm-whatif-name">' + ch.label +
+        '<div class="imm-whatif-name">' + escapeHtml(ch.label) +
         '<span class="sub">current ' + fmtUSDk(cur) + '/wk</span></div>' +
-        '<input class="imm-whatif-slider" type="range" min="0" max="' + (cur * 3) + '" step="500" value="' + cur + '" data-ch="' + ch.id + '">' +
+        '<input class="imm-whatif-slider" type="range" min="0" max="' + (cur * 3) + '" step="500" value="' + cur + '" data-ch="' + escapeHtml(ch.id) + '">' +
         '<div class="imm-whatif-value">' +
         '<span class="proposed" data-ch-val="' + ch.id + '">' + fmtUSDk(cur) + '</span>' +
         '<span class="imm-whatif-delta" data-ch-delta="' + ch.id + '">±$0</span>' +

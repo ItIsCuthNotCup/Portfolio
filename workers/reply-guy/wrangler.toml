@@ -1,0 +1,31 @@
+name = "reply-guy"
+main = "src/index.js"
+compatibility_date = "2025-05-08"
+
+# ── KV namespace (create with `npx wrangler kv:namespace create "REPLY_GUY_KV"`) ──
+[[kv_namespaces]]
+binding = "REPLY_GUY_KV"
+id = "73ebec709b66496d866b5351eed9fb9b"
+preview_id = "73ebec709b66496d866b5351eed9fb9b"
+
+# ── Cron: every 30 minutes. Replies and tweets gated randomly (never same tick). ──
+[triggers]
+crons = ["*/30 * * * *"]
+
+# ── Secrets (set with `npx wrangler secret put <NAME>`) ──
+# X_CONSUMER_KEY           — from X Developer Portal (Consumer Key)
+# X_CONSUMER_KEY_SECRET    — from X Developer Portal (Consumer Secret)
+# X_ACCESS_TOKEN           — OAuth 1.0a Access Token (generate with Read+Write)
+# X_ACCESS_TOKEN_SECRET    — OAuth 1.0a Access Token Secret
+# X_BEARER_TOKEN           — App-only Bearer Token
+# OPENROUTER_API_KEY       — https://openrouter.ai/keys
+# REPLY_GUY_AUTH_TOKEN     — REQUIRED. Long random secret (>= 32 chars).
+#                            All HTTP endpoints reject requests without
+#                            `Authorization: Bearer <this>`. Generate with:
+#                              openssl rand -hex 32
+#                            The cron `scheduled` handler doesn't use it
+#                            (Cloudflare invokes it internally).
+
+[observability]
+enabled = true
+head_sampling_rate = 1

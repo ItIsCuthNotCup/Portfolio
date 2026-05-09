@@ -1,5 +1,13 @@
 (function () {
   'use strict';
+  // Defense in depth: escape any JSON-fetched string before interpolating
+  // into innerHTML. Catalog data is author-controlled today; this prevents
+  // stored XSS if a future PR or compromised pipeline ships malicious data.
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
 
   /* ═══════════════════════════════════════════════════════════
      SEGMENTATION LAB — page logic
@@ -172,7 +180,7 @@
       const inertiaDisp = row.inertia == null ? '—' : integer(row.inertia);
       return `
         <tr${isWinner ? ' class="winner"' : ''}>
-          <td class="name">${row.label}</td>
+          <td class="name">${escapeHtml(row.label)}</td>
           <td>${row.best_k}</td>
           ${td('silhouette',        fmt(row.silhouette, 4))}
           ${td('calinski_harabasz', fmt(row.calinski_harabasz, 1))}

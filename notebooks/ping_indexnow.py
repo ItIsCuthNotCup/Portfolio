@@ -17,6 +17,7 @@ with each Cloudflare Pages deploy.
 from __future__ import annotations
 
 import json
+import os
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -24,7 +25,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HOST = "www.jakecuth.com"
-KEY  = "fa21add8723315e733624411374972b1"
+# IndexNow keys are public by design (the protocol requires the key to
+# be served from the site at /<key>.txt to prove ownership). Reading
+# from env lets CI rotate the key without code changes; falls back to
+# the committed key so local dev still works without setup. The matching
+# <key>.txt file at the repo root must exist for IndexNow to accept
+# submissions.
+KEY = os.environ.get("INDEXNOW_KEY", "fa21add8723315e733624411374972b1")
 ENDPOINT = "https://api.indexnow.org/indexnow"
 
 

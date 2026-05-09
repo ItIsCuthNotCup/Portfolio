@@ -128,7 +128,25 @@ gcloud run deploy imm-lab-api \
   --min-instances=0 \
   --max-instances=1 \
   --concurrency=20 \
-  --set-env-vars="IMM_GCS_BUCKET=cuth-imm-lab-artifacts,IMM_RATE_LIMIT_PER_MIN=10,IMM_CORS_ORIGINS=https://jakecuth.com,https://jakecuth.pages.dev"
+  --set-env-vars="IMM_GCS_BUCKET=cuth-imm-lab-artifacts,IMM_RATE_LIMIT_PER_MIN=10,IMM_CORS_ORIGINS=https://jakecuth.com,https://www.jakecuth.com" \
+  --set-secrets="IMM_MODEL_HMAC_SECRET=imm-model-hmac-secret:latest"
+
+# IMM_MODEL_HMAC_SECRET (REQUIRED for production):
+#   Generate once and store in Secret Manager:
+#     openssl rand -hex 32 | gcloud secrets create imm-model-hmac-secret --data-file=-
+#   When uploading the model artifact to GCS, also upload its HMAC:
+#     python -c "import hmac, hashlib, sys; \
+#       data=open('imm_model.pkl','rb').read(); \
+#       key=open(sys.argv[1],'rb').read().strip(); \
+#       print(hmac.new(key, data, hashlib.sha256).hexdigest())" \
+#       <(gcloud secrets versions access latest --secret=imm-model-hmac-secret) \
+#       > imm_model.pkl.hmac
+#     gcloud storage cp imm_model.pkl.hmac gs://cuth-imm-lab-artifacts/imm/
+#   The API refuses to load the model if the HMAC doesn't match.
+#   If IMM_MODEL_HMAC_SECRET is unset, the API loads the model
+#   UNVERIFIED (back-compat) and logs a loud warning.
+# IMM_CORS_ORIGINS removed pages.dev wildcard — anyone could create
+#   a free pages.dev site to forge CORS-valid requests.
 
 # Grab the URL
 gcloud run services describe imm-lab-api --region=us-central1 --format="value(status.url)"

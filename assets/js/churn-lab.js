@@ -1,5 +1,13 @@
 (function () {
   'use strict';
+  // Defense in depth: escape any JSON-fetched string before interpolating
+  // into innerHTML. Catalog data is author-controlled today; this prevents
+  // stored XSS if a future PR or compromised pipeline ships malicious data.
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
 
   /* ═══════════════════════════════════════════════════════════
      CHURN LAB — page logic
@@ -105,7 +113,7 @@
         const cls = bestIdx[c] === i ? 'is-best' : '';
         return `<td class="${cls}">${fmt(row[c], 3)}</td>`;
       }).join('');
-      return `<tr><td class="name">${row.label}</td>${cells}</tr>`;
+      return `<tr><td class="name">${escapeHtml(row.label)}</td>${cells}</tr>`;
     }).join('');
   }
 

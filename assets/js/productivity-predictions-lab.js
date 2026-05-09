@@ -10,6 +10,24 @@
   const PREDICTIONS_URL = '/assets/data/productivity-predictions/predictions.json?v=1';
   const BLS_URL = '/assets/data/productivity-predictions/bls-productivity.json?v=1';
 
+  /* ── Safety helpers ──────────────────────────────────────────
+     Even though predictions JSON is author-controlled, defense in
+     depth: escape every interpolated field, and reject any href
+     that isn't http(s). Mirrors the helpers in agi-forecast-lab. */
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function safeHttpUrl(s) {
+    const raw = String(s || '').trim();
+    if (!raw) return '';
+    try {
+      const u = new URL(raw, 'https://jakecuth.com');
+      if (u.protocol === 'http:' || u.protocol === 'https:') return u.href;
+    } catch (_) { /* fall through */ }
+    return '';
+  }
+
   /* Category → CSS class (for color) */
   const CAT_CLASS = {
     'general-it-paradox': 'pp-cat-general',
@@ -348,11 +366,12 @@
     const tt = document.getElementById('pp-tooltip');
     const wrap = document.getElementById('pp-horizon-wrap');
     const rect = wrap.getBoundingClientRect();
-    let html = `<div class="tt-name">${r.predictor}</div>`;
-    html += `<div class="tt-meta">${r.institution} &middot; ${r.year_said}`;
-    if (r.year_targeted) html += ` &rarr; ${r.year_targeted}`;
+    let html = `<div class="tt-name">${escapeHtml(r.predictor)}</div>`;
+    html += `<div class="tt-meta">${escapeHtml(r.institution)} &middot; ${escapeHtml(r.year_said)}`;
+    if (r.year_targeted) html += ` &rarr; ${escapeHtml(r.year_targeted)}`;
     html += `</div>`;
-    html += `<div class="tt-quote">"${r.quote.substring(0, 120)}${r.quote.length > 120 ? '...' : ''}"</div>`;
+    const quoteShort = String(r.quote || '').substring(0, 120);
+    html += `<div class="tt-quote">"${escapeHtml(quoteShort)}${(r.quote || '').length > 120 ? '...' : ''}"</div>`;
     tt.innerHTML = html;
     tt.hidden = false;
     const ttRect = tt.getBoundingClientRect();
@@ -373,20 +392,24 @@
     const backdrop = document.getElementById('pp-side-backdrop');
     const content = document.getElementById('pp-side-content');
 
-    let html = `<div class="sp-name">${r.predictor}</div>`;
-    html += `<div class="sp-role">${r.institution} &middot; ${r.predictor_type}</div>`;
-    html += `<div class="sp-quote">"${r.quote}"</div>`;
+    let html = `<div class="sp-name">${escapeHtml(r.predictor)}</div>`;
+    html += `<div class="sp-role">${escapeHtml(r.institution)} &middot; ${escapeHtml(r.predictor_type)}</div>`;
+    html += `<div class="sp-quote">"${escapeHtml(r.quote)}"</div>`;
     html += `<div class="sp-meta">`;
-    html += `<span class="label">Context</span>${r.context}`;
-    html += `<span class="label">Year said</span>${r.year_said}`;
-    if (r.year_targeted) html += `<span class="label">Year targeted</span>${r.year_targeted}`;
-    html += `<span class="label">Metric</span>${r.metric_predicted}`;
-    if (r.magnitude_predicted) html += `<span class="label">Magnitude</span>${r.magnitude_predicted} bps`;
-    html += `<span class="label">Stance</span>${r.stance}`;
-    html += `<span class="label">Outcome</span>${r.outcome}`;
-    if (r.outcome_note) html += `<span class="label">Note</span>${r.outcome_note}`;
-    if (r.source_url) html += `<span class="label">Source</span><a href="${r.source_url}" target="_blank" rel="noopener">${r.source_url.substring(0, 60)}${r.source_url.length > 60 ? '...' : ''} &#8599;</a>`;
-    html += `<span class="label">Confidence</span>${r.verification_confidence}`;
+    html += `<span class="label">Context</span>${escapeHtml(r.context)}`;
+    html += `<span class="label">Year said</span>${escapeHtml(r.year_said)}`;
+    if (r.year_targeted) html += `<span class="label">Year targeted</span>${escapeHtml(r.year_targeted)}`;
+    html += `<span class="label">Metric</span>${escapeHtml(r.metric_predicted)}`;
+    if (r.magnitude_predicted) html += `<span class="label">Magnitude</span>${escapeHtml(r.magnitude_predicted)} bps`;
+    html += `<span class="label">Stance</span>${escapeHtml(r.stance)}`;
+    html += `<span class="label">Outcome</span>${escapeHtml(r.outcome)}`;
+    if (r.outcome_note) html += `<span class="label">Note</span>${escapeHtml(r.outcome_note)}`;
+    const safeSrc = safeHttpUrl(r.source_url);
+    if (safeSrc) {
+      const display = safeSrc.length > 60 ? safeSrc.substring(0, 60) + '...' : safeSrc;
+      html += `<span class="label">Source</span><a href="${escapeHtml(safeSrc)}" target="_blank" rel="noopener noreferrer">${escapeHtml(display)} &#8599;</a>`;
+    }
+    html += `<span class="label">Confidence</span>${escapeHtml(r.verification_confidence)}`;
     html += `</div>`;
 
     content.innerHTML = html;
@@ -546,7 +569,7 @@
         const tt = document.getElementById('pp-tooltip');
         const wrap = document.getElementById('pp-rbl-wrap');
         const rect = wrap.getBoundingClientRect();
-        tt.innerHTML = `<div class="tt-name">${r.predictor}</div><div class="tt-meta">${r.institution} &middot; +${delay} years late</div>`;
+        tt.innerHTML = `<div class="tt-name">${escapeHtml(r.predictor)}</div><div class="tt-meta">${escapeHtml(r.institution)} &middot; +${escapeHtml(delay)} years late</div>`;
         tt.hidden = false;
         tt.style.left = (rect.left + cx + 12) + 'px';
         tt.style.top = (rect.top + cy - 20) + 'px';
@@ -578,15 +601,16 @@
     rows.forEach(r => {
       const tr = document.createElement('tr');
       tr.style.cursor = 'pointer';
+      const confSafe = String(r.verification_confidence || '').replace(/[^a-z0-9_-]/gi, '');
       tr.innerHTML = `
-        <td class="pp-td-predictor">${r.predictor}</td>
-        <td class="pp-td-institution">${r.institution}</td>
-        <td>${r.year_said}</td>
-        <td>${r.year_targeted || '—'}</td>
-        <td class="pp-td-magnitude">${r.magnitude_predicted ? r.magnitude_predicted + ' bps' : '—'}</td>
-        <td>${r.metric_predicted}</td>
-        <td class="pp-td-outcome">${r.outcome.replace(/-/g, ' ')}</td>
-        <td class="pp-td-confidence-${r.verification_confidence}">${r.verification_confidence}</td>
+        <td class="pp-td-predictor">${escapeHtml(r.predictor)}</td>
+        <td class="pp-td-institution">${escapeHtml(r.institution)}</td>
+        <td>${escapeHtml(r.year_said)}</td>
+        <td>${escapeHtml(r.year_targeted || '—')}</td>
+        <td class="pp-td-magnitude">${r.magnitude_predicted ? escapeHtml(r.magnitude_predicted) + ' bps' : '—'}</td>
+        <td>${escapeHtml(r.metric_predicted)}</td>
+        <td class="pp-td-outcome">${escapeHtml(String(r.outcome || '').replace(/-/g, ' '))}</td>
+        <td class="pp-td-confidence-${confSafe}">${escapeHtml(r.verification_confidence)}</td>
       `;
       tr.addEventListener('click', () => {
         const expand = document.getElementById('pp-expand-' + r.id);
@@ -596,9 +620,13 @@
           const expandTr = document.createElement('tr');
           expandTr.id = 'pp-expand-' + r.id;
           expandTr.className = 'pp-archive-row-expand is-open';
+          const safeSrc = safeHttpUrl(r.source_url);
+          const sourceLink = safeSrc
+            ? ` &middot; <a href="${escapeHtml(safeSrc)}" target="_blank" rel="noopener noreferrer">Source &#8599;</a>`
+            : '';
           expandTr.innerHTML = `<td colspan="8">
-            <div class="pp-expand-quote">"${r.quote}"</div>
-            <div class="pp-expand-meta">${r.context}${r.source_url ? ' &middot; <a href="' + r.source_url + '" target="_blank" rel="noopener">Source &#8599;</a>' : ''}</div>
+            <div class="pp-expand-quote">"${escapeHtml(r.quote)}"</div>
+            <div class="pp-expand-meta">${escapeHtml(r.context)}${sourceLink}</div>
           </td>`;
           tr.parentNode.insertBefore(expandTr, tr.nextSibling);
         }

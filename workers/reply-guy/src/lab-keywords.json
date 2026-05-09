@@ -1,0 +1,128 @@
+{
+  "churn-lab": {
+    "url": "https://jakecuth.com/work/churn-lab/",
+    "title": "The customers about to leave.",
+    "biz": "A churn model, built and run in public.",
+    "search": ["customer churn prediction", "\"churn model\" ML", "predict churn"],
+    "match": ["churn", "customer", "retention", "cancel", "attrition"]
+  },
+  "segmentation-lab": {
+    "url": "https://jakecuth.com/work/segmentation-lab/",
+    "title": "Which customers earn their keep.",
+    "biz": "A segmentation model that sorts every customer by value.",
+    "search": ["customer segmentation", "RFM analysis", "K-means clustering marketing"],
+    "match": ["segment", "cluster", "customer", "RFM", "lifetime value"]
+  },
+  "reco-lab": {
+    "url": "https://jakecuth.com/work/reco-lab/",
+    "title": "Guessing what they'll watch next.",
+    "biz": "A recommendation engine, the kind Netflix and Spotify live on.",
+    "search": ["recommendation engine", "collaborative filtering", "\"recommender system\""],
+    "match": ["recommend", "netflix", "spotify", "personalize", "suggestion", "algorithm"]
+  },
+  "ab-test-lab": {
+    "url": "https://jakecuth.com/work/ab-test-lab/",
+    "title": "When A/B tests lie.",
+    "biz": "A live A/B test simulator showing when winners are noise.",
+    "search": ["\"A/B test\" bayesian", "\"A/B testing\" statistics", "peeking problem A/B"],
+    "match": ["A/B", "split test", "experiment", "bayesian", "statistical", "p-value"]
+  },
+  "funnel-sim-lab": {
+    "url": "https://jakecuth.com/work/funnel-sim-lab/",
+    "title": "The leak in the funnel.",
+    "biz": "An agent-based funnel simulation finding where conversion breaks.",
+    "search": ["marketing funnel simulation", "conversion rate optimization", "\"agent-based\" marketing"],
+    "match": ["funnel", "conversion", "CRO", "marketing", "acquisition", "retention"]
+  },
+  "sketch-lab": {
+    "url": "https://jakecuth.com/work/sketch-lab/",
+    "title": "Drawing, classified live.",
+    "biz": "An AI model running entirely in the browser, on every stroke.",
+    "search": ["ONNX browser inference", "in-browser machine learning", "\"Quick Draw\" classifier"],
+    "match": ["ONNX", "browser", "edge", "inference", "classifier", "drawing"]
+  },
+  "model-picker-lab": {
+    "url": "https://jakecuth.com/work/model-picker-lab/",
+    "title": "Model picker, recursive.",
+    "biz": "Ask plain-language, get a model comparison from 300+ LLMs.",
+    "search": ["which LLM model use", "compare AI models", "best LLM for coding"],
+    "match": ["LLM", "model", "compare", "cheapest", "fastest", "GPT", "Claude"]
+  },
+  "jobs-lab": {
+    "url": "https://jakecuth.com/work/jobs-lab/",
+    "title": "AI and robotics are opposite stories.",
+    "biz": "888 occupations, three exposure estimates for AI and robotics.",
+    "search": ["AI jobs exposure", "automation occupational risk", "which jobs safe AI"],
+    "match": ["job", "automation", "occupation", "replace", "worker", "labor"]
+  },
+  "time-use-lab": {
+    "url": "https://jakecuth.com/work/time-use-lab/",
+    "title": "The average day, drawn round.",
+    "biz": "How the average American spends 1,440 minutes, rendered as a clock.",
+    "search": ["American Time Use Survey", "how Americans spend time", "ATUS data"],
+    "match": ["time use", "average day", "ATUS", "schedule", "routine"]
+  },
+  "watchdog-lab": {
+    "url": "https://jakecuth.com/work/watchdog-lab/",
+    "title": "Algorithm Watchdog.",
+    "biz": "Daily-refreshed read on YouTube's Trending tab patterns.",
+    "search": ["YouTube algorithm trending", "creator economy analytics", "YouTube posting strategy"],
+    "match": ["youtube", "algorithm", "creator", "trending", "video"]
+  },
+  "agi-forecast-lab": {
+    "url": "https://jakecuth.com/work/agi-forecast-lab/",
+    "title": "The future is always twenty years out.",
+    "biz": "250 AGI forecasts from 140 figures, plotted from 1950 to now.",
+    "search": ["AGI prediction timeline", "when will AGI arrive", "\"artificial general intelligence\" forecast"],
+    "match": ["AGI", "artificial general intelligence", "singularity", "timeline", "prediction"]
+  },
+  "logistic-regression-lab": {
+    "url": "https://jakecuth.com/work/logistic-regression-lab/",
+    "title": "The probability boundary.",
+    "biz": "A logistic regression trained live in the browser by gradient descent.",
+    "search": ["logistic regression gradient descent", "sigmoid decision boundary", "probability classifier"],
+    "match": ["logistic", "regression", "classifier", "probability", "gradient"]
+  },
+  "model-atlas-lab": {
+    "url": "https://jakecuth.com/work/model-atlas-lab/",
+    "title": "Pick the right model. With reasons.",
+    "biz": "Answer five questions, get routed to the right discriminative model.",
+    "search": ["which machine learning model use", "ML model selection guide", "\"decision tree\" classifier regression"],
+    "match": ["model selection", "which model", "classifier", "regression", "algorithm"]
+  },
+  "imm-lab": {
+    "url": "https://jakecuth.com/work/imm-lab/",
+    "title": "Eight channels, one budget, and an honest answer.",
+    "biz": "A Bayesian Marketing Mix Model with full posterior credible intervals.",
+    "search": ["marketing mix modeling", "\"Bayesian\" MMM", "influencer ROI measurement"],
+    "match": ["MMM", "marketing mix", "attribution", "ROI", "media spend"]
+  },
+  "productivity-lab": {
+    "url": "https://jakecuth.com/work/productivity-lab/",
+    "title": "The curve broke twice. No one fully agrees why.",
+    "biz": "U.S. labor productivity 1947-present through seven public datasets.",
+    "search": ["US labor productivity slowdown", "productivity paradox", "Solow computer age"],
+    "match": ["productivity", "Solow", "GDP", "output", "growth", "labor"]
+  },
+  "llm-learning-lab": {
+    "url": "https://jakecuth.com/work/llm-learning-lab/",
+    "title": "A trillion words. A handful of equations.",
+    "biz": "Eight charts on what actually happens inside an LLM when it learns.",
+    "search": ["LLM training explained", "scaling laws Chinchilla", "transformer architecture tutorial"],
+    "match": ["transformer", "scaling law", "training", "token", "attention", "emergence"]
+  },
+  "escape-velocity-lab": {
+    "url": "https://jakecuth.com/work/escape-velocity-lab/",
+    "title": "The inputs are bending up. Is intelligence following?",
+    "biz": "Seven charts from public data. Are we approaching escape velocity?",
+    "search": ["AI escape velocity singularity", "AI compute scaling exponential", "Epoch AI benchmarks"],
+    "match": ["escape velocity", "compute", "scaling", "exponential", "METR", "benchmark"]
+  },
+  "semiconductor-lab": {
+    "url": "https://jakecuth.com/work/semiconductor-lab/",
+    "title": "Every AI chip passes through seven layers and a handful of hands.",
+    "biz": "Thirty facilities, seven supply-chain layers, one map.",
+    "search": ["AI chip supply chain", "semiconductor supply chain chokepoints", "TSMC ASML fabrication"],
+    "match": ["semiconductor", "chip", "TSMC", "ASML", "supply chain", "fabrication"]
+  }
+}

@@ -5,6 +5,14 @@
 
 (function () {
   'use strict';
+  // Defense in depth: escape any JSON-fetched string before interpolating
+  // into innerHTML. Catalog data is author-controlled today; this prevents
+  // stored XSS if a future PR or compromised pipeline ships malicious data.
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
 
   function svgEl(tag, attrs) {
     const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -530,8 +538,8 @@
         const glyph = s === 'fits' ? '✓' : s === 'partial' ? '~' : s === 'global' ? '✓' : '×';
         html += '<div class="prod-matrix-cell ' + cls + '">' + glyph + '</div>';
       });
-      html += '<div>' + r.magnitude + '</div>';
-      html += '<div class="prod-matrix-verdict">' + r.verdict + '</div>';
+      html += '<div>' + escapeHtml(r.magnitude) + '</div>';
+      html += '<div class="prod-matrix-verdict">' + escapeHtml(r.verdict) + '</div>';
       html += '</div>';
     });
     wrap.innerHTML = html;
@@ -544,14 +552,14 @@
     const ai = data.ai_outlook;
     let html = '';
     html += '<div class="prod-ai-tile fact"><h4>The 2024–2025 facts</h4><ul>';
-    ai.facts.forEach(f => { html += '<li>' + f + '</li>'; });
+    ai.facts.forEach(f => { html += '<li>' + escapeHtml(f) + '</li>'; });
     html += '</ul></div>';
     html += '<div class="prod-ai-tile"><h4>Three reads on the same data</h4><ul>';
     ai.interpretations.forEach(it => {
       html += '<li>' +
-        '<div class="interp-side">' + it.side + '</div>' +
-        '<div class="interp-forecast">Trend forecast: ' + it.trend_forecast + '</div>' +
-        '<div class="interp-logic">' + it.logic + '</div>' +
+        '<div class="interp-side">' + escapeHtml(it.side) + '</div>' +
+        '<div class="interp-forecast">Trend forecast: ' + escapeHtml(it.trend_forecast) + '</div>' +
+        '<div class="interp-logic">' + escapeHtml(it.logic) + '</div>' +
       '</li>';
     });
     html += '</ul></div>';
@@ -564,9 +572,9 @@
     if (!wrap) return;
     wrap.innerHTML = data.receipts.map(r =>
       '<div class="prod-receipt">' +
-        '<div class="prod-receipt-label">' + r.label + '</div>' +
-        '<div class="prod-receipt-value">' + r.value + '</div>' +
-        '<div class="prod-receipt-sub">' + r.sub + '</div>' +
+        '<div class="prod-receipt-label">' + escapeHtml(r.label) + '</div>' +
+        '<div class="prod-receipt-value">' + escapeHtml(r.value) + '</div>' +
+        '<div class="prod-receipt-sub">' + escapeHtml(r.sub) + '</div>' +
       '</div>'
     ).join('');
   }

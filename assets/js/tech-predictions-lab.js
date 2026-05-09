@@ -22,6 +22,17 @@
     return String(s ?? '').replace(/[&<>"']/g, c =>
       ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
+  // Reject any href that isn't http(s) — defense against javascript: /
+  // data: URIs sneaking in via the predictions JSON.
+  function safeHttpUrl(s) {
+    const raw = String(s || '').trim();
+    if (!raw) return '';
+    try {
+      const u = new URL(raw, 'https://jakecuth.com');
+      if (u.protocol === 'http:' || u.protocol === 'https:') return u.href;
+    } catch (_) { /* fall through */ }
+    return '';
+  }
 
   let DATA = null;
   let activeCategory = 'all';
@@ -407,9 +418,10 @@
     document.getElementById('tp-sp-quote').textContent = r.quote;
     document.getElementById('tp-sp-outcome').innerHTML =
       '<strong>' + outcomeMark(r.outcome) + ' ' + humanOutcome(r.outcome) + '.</strong> ' + escapeHtml(r.outcome_note || '');
+    const safeSrc = safeHttpUrl(r.source_url);
     document.getElementById('tp-sp-source').innerHTML =
       escapeHtml(r.source_title || '—') +
-      (r.source_url ? ' · <a href="' + r.source_url + '" target="_blank" rel="noopener" style="border-bottom:1px solid">visit ↗</a>' : '');
+      (safeSrc ? ' · <a href="' + escapeHtml(safeSrc) + '" target="_blank" rel="noopener noreferrer" style="border-bottom:1px solid">visit ↗</a>' : '');
     document.getElementById('tp-sp-ver').innerHTML =
       escapeHtml(r.verified_level) + (r.verbatim ? ' · verbatim quote' : ' · paraphrased');
     panel.setAttribute('aria-hidden', 'false');
