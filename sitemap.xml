@@ -1,283 +1,289 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jakecuth.com/</loc>
+    <loc>https://www.jakecuth.com/</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/notes/</loc>
+    <loc>https://www.jakecuth.com/notes/</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/notes/og-images-with-pil/</loc>
+    <loc>https://www.jakecuth.com/notes/og-images-with-pil/</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/notes/segmentation-k2-honesty/</loc>
+    <loc>https://www.jakecuth.com/notes/segmentation-k2-honesty/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/notes/ab-test-fpr-26-percent/</loc>
+    <loc>https://www.jakecuth.com/notes/ab-test-fpr-26-percent/</loc>
     <lastmod>2026-05-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/ab-test-lab/</loc>
+    <loc>https://www.jakecuth.com/work/ab-test-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/agent-memory-lab/</loc>
+    <loc>https://www.jakecuth.com/work/agent-memory-lab/</loc>
     <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/agi-forecast-lab/</loc>
+    <loc>https://www.jakecuth.com/work/agi-forecast-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/attention-lab/</loc>
+    <loc>https://www.jakecuth.com/work/attention-lab/</loc>
     <lastmod>2026-05-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/churn-lab/</loc>
+    <loc>https://www.jakecuth.com/work/churn-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/claude-skills-lab/</loc>
+    <loc>https://www.jakecuth.com/work/claude-skills-lab/</loc>
     <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/dbscan-lab/</loc>
+    <loc>https://www.jakecuth.com/work/dbscan-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/decision-tree-lab/</loc>
+    <loc>https://www.jakecuth.com/work/decision-tree-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/deepseek-v4-lab/</loc>
+    <loc>https://www.jakecuth.com/work/deepseek-v4-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/escape-velocity-lab/</loc>
+    <loc>https://www.jakecuth.com/work/escape-velocity-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/funnel-sim-lab/</loc>
+    <loc>https://www.jakecuth.com/work/funnel-sim-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/gradient-boosting-lab/</loc>
+    <loc>https://www.jakecuth.com/work/gradient-boosting-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/imm-lab/</loc>
+    <loc>https://www.jakecuth.com/work/humanoid-robots-lab/</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jakecuth.com/work/imm-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/isolation-forest-lab/</loc>
+    <loc>https://www.jakecuth.com/work/isolation-forest-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/jobs-lab/</loc>
+    <loc>https://www.jakecuth.com/work/jobs-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/kmeans-lab/</loc>
+    <loc>https://www.jakecuth.com/work/kmeans-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/knn-lab/</loc>
+    <loc>https://www.jakecuth.com/work/knn-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/leworldmodel-lab/</loc>
+    <loc>https://www.jakecuth.com/work/leworldmodel-lab/</loc>
     <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/linear-regression-lab/</loc>
+    <loc>https://www.jakecuth.com/work/linear-regression-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/llm-learning-lab/</loc>
+    <loc>https://www.jakecuth.com/work/llm-learning-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/logistic-regression-lab/</loc>
+    <loc>https://www.jakecuth.com/work/logistic-regression-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/mlp-lab/</loc>
+    <loc>https://www.jakecuth.com/work/mlp-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/model-atlas-lab/</loc>
+    <loc>https://www.jakecuth.com/work/model-atlas-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/model-picker-lab/</loc>
+    <loc>https://www.jakecuth.com/work/model-picker-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/naive-bayes-lab/</loc>
+    <loc>https://www.jakecuth.com/work/naive-bayes-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/productivity-lab/</loc>
+    <loc>https://www.jakecuth.com/work/productivity-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/productivity-predictions-lab/</loc>
+    <loc>https://www.jakecuth.com/work/productivity-predictions-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/random-forest-lab/</loc>
+    <loc>https://www.jakecuth.com/work/random-forest-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/reco-lab/</loc>
+    <loc>https://www.jakecuth.com/work/reco-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/ridge-lasso-lab/</loc>
+    <loc>https://www.jakecuth.com/work/ridge-lasso-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/segmentation-lab/</loc>
+    <loc>https://www.jakecuth.com/work/segmentation-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/semiconductor-lab/</loc>
+    <loc>https://www.jakecuth.com/work/semiconductor-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/sketch-lab/</loc>
+    <loc>https://www.jakecuth.com/work/sketch-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/subquadratic-lab/</loc>
+    <loc>https://www.jakecuth.com/work/subquadratic-lab/</loc>
     <lastmod>2026-05-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/svm-lab/</loc>
+    <loc>https://www.jakecuth.com/work/svm-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/tech-predictions-lab/</loc>
+    <loc>https://www.jakecuth.com/work/tech-predictions-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/time-use-lab/</loc>
+    <loc>https://www.jakecuth.com/work/time-use-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/uap-files-lab/</loc>
+    <loc>https://www.jakecuth.com/work/uap-files-lab/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/watchdog-lab/</loc>
+    <loc>https://www.jakecuth.com/work/watchdog-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/tokenization-lab/</loc>
+    <loc>https://www.jakecuth.com/work/tokenization-lab/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/bandit-lab/</loc>
+    <loc>https://www.jakecuth.com/work/bandit-lab/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jakecuth.com/work/diffusion-lab/</loc>
+    <loc>https://www.jakecuth.com/work/diffusion-lab/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

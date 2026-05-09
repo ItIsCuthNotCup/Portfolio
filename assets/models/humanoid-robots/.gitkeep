@@ -1,0 +1,4 @@
+# Drop verified GLB files here, named by robot id (e.g. figure-03.glb).
+# When a file is present AND catalog entry sets asset.verifiedModel: true,
+# the lab loads it instead of the procedural proxy.
+# See /docs/humanoid-robot-asset-pipeline.md for the full workflow.

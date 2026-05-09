@@ -1,0 +1,1890 @@
+{
+  "_meta": {
+    "title": "Humanoid Robots: A Living Atlas",
+    "version": 1,
+    "last_updated": "2026-05-09",
+    "note": "Editorial / educational comparison. Specs are sourced from official company pages where available and labeled by confidence. Where a value is not publicly disclosed it is set to null with confidence 'unknown'. Visual proxies render as Three.js primitives unless an accurate GLB has been added and verifiedModel is set true.",
+    "confidence_legend": {
+      "official": "Direct from the company's own product / spec page or a primary release.",
+      "reported": "Stated by the company in a press appearance or interview, but not on an official spec page.",
+      "estimated": "A range or reasonable extrapolation from public material; not the company's own number.",
+      "unknown": "Not publicly confirmed. Avoid reading too much into the procedural model proxy."
+    }
+  },
+  "companies": [
+    {
+      "id": "figure",
+      "name": "Figure AI",
+      "homepage": "https://www.figure.ai/"
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "homepage": "https://www.tesla.com/AI"
+    },
+    {
+      "id": "boston",
+      "name": "Boston Dynamics",
+      "homepage": "https://bostondynamics.com/atlas"
+    },
+    {
+      "id": "agility",
+      "name": "Agility Robotics",
+      "homepage": "https://www.agilityrobotics.com/"
+    },
+    {
+      "id": "apptronik",
+      "name": "Apptronik",
+      "homepage": "https://apptronik.com/apollo"
+    },
+    {
+      "id": "1x",
+      "name": "1X Technologies",
+      "homepage": "https://www.1x.tech/neo"
+    },
+    {
+      "id": "unitree",
+      "name": "Unitree",
+      "homepage": "https://www.unitree.com/"
+    },
+    {
+      "id": "fourier",
+      "name": "Fourier Intelligence",
+      "homepage": "https://www.fourierintelligence.com/"
+    },
+    {
+      "id": "ubtech",
+      "name": "UBTECH",
+      "homepage": "https://www.ubtrobot.com/"
+    },
+    {
+      "id": "sanctuary",
+      "name": "Sanctuary AI",
+      "homepage": "https://www.sanctuary.ai/"
+    }
+  ],
+  "robots": [
+    {
+      "id": "figure-01",
+      "companyId": "figure",
+      "companyName": "Figure AI",
+      "modelName": "Figure",
+      "generationName": "01",
+      "displayName": "Figure 01",
+      "yearIntroduced": {
+        "value": "2023",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Prototype, retired from public roadmap",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Industrial / general-purpose research",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": "1.7 m (~5 ft 6 in)",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "60 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "20 kg",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": "5 hr operational target",
+        "confidence": "reported"
+      },
+      "speed": {
+        "value": "~1.2 m/s walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric, in-house actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Vision-language model partnership with OpenAI for end-to-end demos",
+        "confidence": "reported"
+      },
+      "summary": "Figure's first-generation humanoid. The platform that demonstrated dialogue-driven manipulation in their March 2024 OpenAI partnership demo, then was rapidly superseded by Figure 02.",
+      "differentiators": [
+        "End-to-end vision-language driven manipulation demo with OpenAI",
+        "Compact glossy-black faceplate visual identity",
+        "First Figure platform to ship press demos"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#d8d8d8",
+        "secondaryTone": "#0a0a0a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/figure-01.glb",
+        "posterPath": "/assets/posters/humanoid-robots/figure-01.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Figure AI homepage",
+          "url": "https://www.figure.ai/",
+          "type": "official"
+        },
+        {
+          "label": "Figure platform page",
+          "url": "https://www.figure.ai/figure",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "figure-02",
+      "companyId": "figure",
+      "companyName": "Figure AI",
+      "modelName": "Figure",
+      "generationName": "02",
+      "displayName": "Figure 02",
+      "yearIntroduced": {
+        "value": "2024",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Pilot deployments in industrial environments",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Industrial / commercial pilots",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": "1.7 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "70 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "25 kg",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": "5 hr (target)",
+        "confidence": "reported"
+      },
+      "speed": {
+        "value": "~1.2 m/s walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric in-house actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Helix vision-language-action model (Figure-developed, replacing the OpenAI partnership)",
+        "confidence": "reported"
+      },
+      "summary": "Figure 02 added third-generation hands, integrated cameras, and a 3x compute upgrade. Marks Figure's pivot from research-demo platform to pilot-deployment platform.",
+      "differentiators": [
+        "In-house Helix VLA replaces the OpenAI partnership",
+        "Larger battery and 3x compute over Figure 01",
+        "Third-generation hands with improved manipulation envelope"
+      ],
+      "previousGenerationId": "figure-01",
+      "changesFromPrevious": [
+        {
+          "category": "ai",
+          "text": "Switched from the OpenAI partnership to Figure's own Helix VLA model.",
+          "confidence": "reported"
+        },
+        {
+          "category": "manipulation",
+          "text": "Third-generation hands with improved dexterity and force range.",
+          "confidence": "reported"
+        },
+        {
+          "category": "form",
+          "text": "Battery, integrated cameras, and 3x onboard compute relative to Figure 01.",
+          "confidence": "reported"
+        },
+        {
+          "category": "deployment",
+          "text": "Shifted from research demo to industrial pilot positioning.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#d8d8d8",
+        "secondaryTone": "#0a0a0a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/figure-02.glb",
+        "posterPath": "/assets/posters/humanoid-robots/figure-02.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Figure AI homepage",
+          "url": "https://www.figure.ai/",
+          "type": "official"
+        },
+        {
+          "label": "Figure platform page",
+          "url": "https://www.figure.ai/figure",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "figure-03",
+      "companyId": "figure",
+      "companyName": "Figure AI",
+      "modelName": "Figure",
+      "generationName": "03",
+      "displayName": "Figure 03",
+      "yearIntroduced": {
+        "value": "2025-2026 (current focus)",
+        "confidence": "reported"
+      },
+      "status": {
+        "value": "Showcase and home-environment positioning",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "General-purpose, home-leaning",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "aiSystem": {
+        "value": "Helix VLA, evolved from Figure 02",
+        "confidence": "reported"
+      },
+      "summary": "Figure's current featured platform. The official Figure page positions Figure 03 as a general-purpose humanoid leaning into home environments, but most spec disclosure is still pending.",
+      "differentiators": [
+        "Home-environment framing in the official product page",
+        "Continues the smooth glossy-black face visual identity",
+        "Positioned as Figure's current commercial showcase"
+      ],
+      "previousGenerationId": "figure-02",
+      "changesFromPrevious": [
+        {
+          "category": "deployment",
+          "text": "Shifts emphasis from industrial pilots toward home environments.",
+          "confidence": "reported"
+        },
+        {
+          "category": "ai",
+          "text": "Continues Helix VLA, with form-factor refinements over Figure 02.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#dcdcdc",
+        "secondaryTone": "#0a0a0a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/figure-03.glb",
+        "posterPath": "/assets/posters/humanoid-robots/figure-03.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Figure AI homepage",
+          "url": "https://www.figure.ai/",
+          "type": "official"
+        },
+        {
+          "label": "Figure platform page",
+          "url": "https://www.figure.ai/figure",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "tesla-bot-prototype",
+      "companyId": "tesla",
+      "companyName": "Tesla",
+      "modelName": "Optimus",
+      "generationName": "Bumble C / prototype",
+      "displayName": "Tesla Bot prototype",
+      "yearIntroduced": {
+        "value": "2022 (AI Day demo)",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Engineering prototype, walking demo",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "General-purpose research",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "Slow walking demo",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Off-the-shelf actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Stated reuse of Tesla Autopilot vision stack",
+        "confidence": "reported"
+      },
+      "summary": "The first publicly walking Optimus prototype, shown at Tesla AI Day 2022. Built largely from off-the-shelf parts to demonstrate the program existed.",
+      "differentiators": [
+        "First public Optimus on stage",
+        "Off-the-shelf actuators, used as proof of life rather than a product",
+        "Public framing tied to Tesla's broader AI / Autopilot stack"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#cccccc",
+        "secondaryTone": "#1a1a1a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/tesla-bot-prototype.glb",
+        "posterPath": "/assets/posters/humanoid-robots/tesla-bot-prototype.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Tesla AI page",
+          "url": "https://www.tesla.com/AI",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "tesla-optimus-gen-1",
+      "companyId": "tesla",
+      "companyName": "Tesla",
+      "modelName": "Optimus",
+      "generationName": "Gen 1",
+      "displayName": "Optimus Gen 1",
+      "yearIntroduced": {
+        "value": "2023",
+        "confidence": "reported"
+      },
+      "status": {
+        "value": "Internal prototype with public videos",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Factory tasks (Tesla manufacturing)",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Tesla in-house actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Shared neural-network stack with Tesla Autopilot",
+        "confidence": "reported"
+      },
+      "summary": "First in-house Tesla-built Optimus generation. Replaced the off-the-shelf hardware of the prototype with Tesla-designed actuators and a custom hand.",
+      "differentiators": [
+        "First fully Tesla-designed Optimus body",
+        "Custom 11-DoF hand framing in public demos",
+        "Walked across stage at Tesla events"
+      ],
+      "previousGenerationId": "tesla-bot-prototype",
+      "changesFromPrevious": [
+        {
+          "category": "form",
+          "text": "Replaced off-the-shelf actuators with Tesla in-house designs.",
+          "confidence": "reported"
+        },
+        {
+          "category": "manipulation",
+          "text": "Introduced an 11-DoF custom hand featured in demos.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#e8e8e8",
+        "secondaryTone": "#1a1a1a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/tesla-optimus-gen-1.glb",
+        "posterPath": "/assets/posters/humanoid-robots/tesla-optimus-gen-1.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Tesla AI page",
+          "url": "https://www.tesla.com/AI",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "tesla-optimus-gen-2",
+      "companyId": "tesla",
+      "companyName": "Tesla",
+      "modelName": "Optimus",
+      "generationName": "Gen 2",
+      "displayName": "Optimus Gen 2",
+      "yearIntroduced": {
+        "value": "2023-12",
+        "confidence": "reported"
+      },
+      "status": {
+        "value": "Public demos and Tesla factory pilots",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Factory tasks, general-purpose framing",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": "~10 kg lighter than Gen 1 (per Tesla demo video)",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~30% faster walking than Gen 1 (per Tesla demo)",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": "11-DoF hands (per Tesla demo)",
+        "confidence": "reported"
+      },
+      "actuation": {
+        "value": "Tesla-designed actuators with weight reduction",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Shared Tesla neural-network stack",
+        "confidence": "reported"
+      },
+      "summary": "Tesla's December 2023 reveal of a noticeably lighter, faster, more refined Optimus. The first version that read as a product silhouette rather than an engineering prototype.",
+      "differentiators": [
+        "Reportedly ~10 kg lighter and ~30% faster walking than Gen 1",
+        "Refined silhouette closer to a finished product",
+        "Demonstrated finer manipulation tasks in Tesla videos"
+      ],
+      "previousGenerationId": "tesla-optimus-gen-1",
+      "changesFromPrevious": [
+        {
+          "category": "mobility",
+          "text": "Walking speed reportedly ~30% higher than Gen 1.",
+          "confidence": "reported"
+        },
+        {
+          "category": "form",
+          "text": "~10 kg lighter, more refined silhouette.",
+          "confidence": "reported"
+        },
+        {
+          "category": "manipulation",
+          "text": "Smoother demonstrated manipulation tasks in Tesla video reveals.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#f0f0f0",
+        "secondaryTone": "#1a1a1a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/tesla-optimus-gen-2.glb",
+        "posterPath": "/assets/posters/humanoid-robots/tesla-optimus-gen-2.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Tesla AI page",
+          "url": "https://www.tesla.com/AI",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "tesla-optimus-gen-3",
+      "companyId": "tesla",
+      "companyName": "Tesla",
+      "modelName": "Optimus",
+      "generationName": "Gen 3 / V3",
+      "displayName": "Optimus Gen 3 / V3",
+      "yearIntroduced": {
+        "value": "Expected 2026",
+        "confidence": "estimated"
+      },
+      "status": {
+        "value": "Announced direction, not fully verified",
+        "confidence": "estimated"
+      },
+      "targetEnvironment": {
+        "value": "General-purpose, with consumer framing",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "aiSystem": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "summary": "Tesla has publicly framed a third-generation Optimus as the production-targeted version. Specifications remain largely unverified in public material; treat as forward-looking.",
+      "differentiators": [
+        "Positioned as the first production-targeted Optimus",
+        "Public framing tied to Tesla AI day announcements",
+        "Specific specs largely unverified"
+      ],
+      "previousGenerationId": "tesla-optimus-gen-2",
+      "changesFromPrevious": [
+        {
+          "category": "deployment",
+          "text": "Framed as the first production-targeted Optimus rather than an internal prototype.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#f4f4f4",
+        "secondaryTone": "#1a1a1a",
+        "hasBlackFaceplate": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/tesla-optimus-gen-3.glb",
+        "posterPath": "/assets/posters/humanoid-robots/tesla-optimus-gen-3.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Tesla AI page",
+          "url": "https://www.tesla.com/AI",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "atlas-hydraulic",
+      "companyId": "boston",
+      "companyName": "Boston Dynamics",
+      "modelName": "Atlas",
+      "generationName": "Hydraulic",
+      "displayName": "Atlas (hydraulic)",
+      "yearIntroduced": {
+        "value": "2013-2024 (research lifetime)",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Research platform, retired April 2024",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Research, parkour and locomotion R&D",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.5 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "~89 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "11 kg (per Boston Dynamics historical specs)",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~2.5 m/s running",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": "28 DoF",
+        "confidence": "reported"
+      },
+      "actuation": {
+        "value": "Hydraulic",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Boston Dynamics in-house controllers",
+        "confidence": "official"
+      },
+      "summary": "The original parkour-running, gymnastics-doing Atlas. The hydraulic platform that made Boston Dynamics a household name and was retired in April 2024 in favor of an electric successor.",
+      "differentiators": [
+        "Hydraulic actuation, distinctive sound and athleticism",
+        "Showcased dynamic parkour and gymnastic motion",
+        "Retired April 2024 in favor of Electric Atlas"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "industrial-athletic",
+        "primaryTone": "#7a7a7a",
+        "secondaryTone": "#3a3a3a",
+        "bulkyShoulders": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/atlas-hydraulic.glb",
+        "posterPath": "/assets/posters/humanoid-robots/atlas-hydraulic.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Boston Dynamics Atlas page",
+          "url": "https://bostondynamics.com/atlas",
+          "type": "official"
+        },
+        {
+          "label": "Boston Dynamics Atlas product page",
+          "url": "https://bostondynamics.com/products/atlas/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "atlas-electric",
+      "companyId": "boston",
+      "companyName": "Boston Dynamics",
+      "modelName": "Atlas",
+      "generationName": "Electric",
+      "displayName": "Atlas (electric)",
+      "yearIntroduced": {
+        "value": "2024",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Commercial / industrial pilots (Hyundai)",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Industrial / commercial",
+        "confidence": "official"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Boston Dynamics + Hyundai pilot integration",
+        "confidence": "reported"
+      },
+      "summary": "The all-electric successor to the hydraulic Atlas. Marked Boston Dynamics's pivot from research showcase to commercial industrial humanoid, with Hyundai as the launch deployment partner.",
+      "differentiators": [
+        "All-electric replacement for the hydraulic platform",
+        "Commercial / industrial framing rather than research showcase",
+        "Hyundai pilot deployment partnership"
+      ],
+      "previousGenerationId": "atlas-hydraulic",
+      "changesFromPrevious": [
+        {
+          "category": "form",
+          "text": "Switched from hydraulic to all-electric actuation.",
+          "confidence": "official"
+        },
+        {
+          "category": "deployment",
+          "text": "Pivoted from research platform to commercial / industrial use.",
+          "confidence": "official"
+        },
+        {
+          "category": "mobility",
+          "text": "New range of motion exceeds typical human-joint limits in early demos.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "industrial-athletic",
+        "primaryTone": "#9a9a9a",
+        "secondaryTone": "#2a2a2a",
+        "bulkyShoulders": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/atlas-electric.glb",
+        "posterPath": "/assets/posters/humanoid-robots/atlas-electric.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Boston Dynamics Atlas page",
+          "url": "https://bostondynamics.com/atlas",
+          "type": "official"
+        },
+        {
+          "label": "Boston Dynamics Atlas product page",
+          "url": "https://bostondynamics.com/products/atlas/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "agility-digit-early",
+      "companyId": "agility",
+      "companyName": "Agility Robotics",
+      "modelName": "Digit",
+      "generationName": "Early",
+      "displayName": "Digit (early generation)",
+      "yearIntroduced": {
+        "value": "2019",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "R&D and early customer pilots",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Logistics / material handling",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.55 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "~45 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "~16 kg",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric, ostrich-inspired reverse-bent legs",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Agility Robotics in-house controllers",
+        "confidence": "reported"
+      },
+      "summary": "Agility's first commercially available Digit. Notable for its bird-like reverse-bent legs and lack of a head; a deliberately functional warehouse design.",
+      "differentiators": [
+        "Distinctive ostrich-style reverse-bent legs",
+        "Headless sensor-bar silhouette",
+        "Material-handling positioning from day one"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "warehouse-digit",
+        "primaryTone": "#1d8a8a",
+        "secondaryTone": "#f0f0f0",
+        "reverseKnees": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/agility-digit-early.glb",
+        "posterPath": "/assets/posters/humanoid-robots/agility-digit-early.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Agility Robotics homepage",
+          "url": "https://www.agilityrobotics.com/",
+          "type": "official"
+        },
+        {
+          "label": "Agility Robotics products",
+          "url": "https://www.agilityrobotics.com/products",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "agility-digit-current",
+      "companyId": "agility",
+      "companyName": "Agility Robotics",
+      "modelName": "Digit",
+      "generationName": "Current",
+      "displayName": "Digit (current)",
+      "yearIntroduced": {
+        "value": "2023-2024 (current commercial generation)",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Commercial deployments at logistics customers",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Warehouse logistics, tote and case handling",
+        "confidence": "official"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric, reverse-bent leg platform refined",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Agility Arc cloud platform for fleet operation",
+        "confidence": "reported"
+      },
+      "summary": "Current-generation Digit. Adds a perception head, refined hands, and Agility's Arc cloud platform for managing fleets of robots in real warehouses.",
+      "differentiators": [
+        "Adds a perception head with cameras",
+        "Arc cloud fleet management platform",
+        "Active commercial deployments at warehouse customers"
+      ],
+      "previousGenerationId": "agility-digit-early",
+      "changesFromPrevious": [
+        {
+          "category": "manipulation",
+          "text": "Refined hands and end effectors for tote / case handling.",
+          "confidence": "reported"
+        },
+        {
+          "category": "ai",
+          "text": "Arc cloud fleet platform brings central monitoring and OTA updates.",
+          "confidence": "reported"
+        },
+        {
+          "category": "deployment",
+          "text": "From R&D pilots to ongoing commercial warehouse deployments.",
+          "confidence": "official"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "warehouse-digit",
+        "primaryTone": "#1d8a8a",
+        "secondaryTone": "#f0f0f0",
+        "reverseKnees": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/agility-digit-current.glb",
+        "posterPath": "/assets/posters/humanoid-robots/agility-digit-current.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Agility Robotics homepage",
+          "url": "https://www.agilityrobotics.com/",
+          "type": "official"
+        },
+        {
+          "label": "Agility Robotics products",
+          "url": "https://www.agilityrobotics.com/products",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "apptronik-apollo",
+      "companyId": "apptronik",
+      "companyName": "Apptronik",
+      "modelName": "Apollo",
+      "generationName": "v1",
+      "displayName": "Apollo",
+      "yearIntroduced": {
+        "value": "2023",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Pilot deployments (Mercedes-Benz, GXO)",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Industrial / commercial / general-purpose",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "1.73 m",
+        "confidence": "official"
+      },
+      "weight": {
+        "value": "73 kg",
+        "confidence": "official"
+      },
+      "payload": {
+        "value": "25 kg",
+        "confidence": "official"
+      },
+      "runtime": {
+        "value": "~4 hr swappable battery",
+        "confidence": "official"
+      },
+      "speed": {
+        "value": "~1.5 m/s walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Apptronik in-house electric actuators",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Apptronik perception + control stack",
+        "confidence": "reported"
+      },
+      "summary": "Apollo is Apptronik's modular general-purpose humanoid, framed for industrial and commercial work first. Builds on Apptronik's NASA Valkyrie lineage; designed around a hot-swappable battery.",
+      "differentiators": [
+        "Hot-swappable battery for continuous operation",
+        "Status-light chest module for human-robot interaction",
+        "Modular industrial design lineage from NASA Valkyrie"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "smooth-consumer",
+        "primaryTone": "#fafafa",
+        "secondaryTone": "#1a1a1a",
+        "hasBlackFaceplate": true,
+        "chestLight": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/apptronik-apollo.glb",
+        "posterPath": "/assets/posters/humanoid-robots/apptronik-apollo.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Apptronik Apollo page",
+          "url": "https://apptronik.com/apollo",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "1x-eve",
+      "companyId": "1x",
+      "companyName": "1X Technologies",
+      "modelName": "EVE",
+      "generationName": "v1",
+      "displayName": "EVE",
+      "yearIntroduced": {
+        "value": "2022",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Wheeled humanoid pilot deployments",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Security and light-duty work",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": "~1.86 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "~86 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Tendon-driven electric, wheeled base",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "1X autonomy stack",
+        "confidence": "reported"
+      },
+      "summary": "1X's first commercially deployed humanoid. Wheeled base instead of legs; soft tendon-driven upper body. A practical R&D platform that paved the way for NEO.",
+      "differentiators": [
+        "Wheeled base instead of bipedal walking",
+        "Tendon-driven upper body for safer human contact",
+        "First 1X platform in active deployments"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "soft-home",
+        "primaryTone": "#dccebd",
+        "secondaryTone": "#c0b09c",
+        "softSuit": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/1x-eve.glb",
+        "posterPath": "/assets/posters/humanoid-robots/1x-eve.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "1X NEO page",
+          "url": "https://www.1x.tech/neo",
+          "type": "official"
+        },
+        {
+          "label": "1X androids page",
+          "url": "https://www.1x.tech/androids/neo",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "1x-neo-gamma",
+      "companyId": "1x",
+      "companyName": "1X Technologies",
+      "modelName": "NEO",
+      "generationName": "Gamma / Home",
+      "displayName": "NEO Gamma",
+      "yearIntroduced": {
+        "value": "2024-2025",
+        "confidence": "reported"
+      },
+      "status": {
+        "value": "Early-access home program",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Home, with assisted-autonomy caveats",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": "~1.65 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "~30 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "~20 kg",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "Walking pace (slow, intentional for home)",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Tendon-driven, soft-bodied",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "1X autonomy with optional teleoperation",
+        "confidence": "reported"
+      },
+      "summary": "NEO is 1X's bipedal home humanoid. Soft, fabric-covered, deliberately quiet, designed to operate in domestic spaces. Early access ships with explicit teleoperation and autonomy caveats.",
+      "differentiators": [
+        "Bipedal soft-bodied home humanoid",
+        "Fabric / soft-suit exterior to soften human-contact concerns",
+        "Early-access program with explicit teleoperation disclosure"
+      ],
+      "previousGenerationId": "1x-eve",
+      "changesFromPrevious": [
+        {
+          "category": "form",
+          "text": "Bipedal walking instead of wheeled base.",
+          "confidence": "reported"
+        },
+        {
+          "category": "safety",
+          "text": "Soft-suit exterior and lighter weight for home environments.",
+          "confidence": "reported"
+        },
+        {
+          "category": "deployment",
+          "text": "Targets home users via early-access rather than commercial security pilots.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "soft-home",
+        "primaryTone": "#d4c5b2",
+        "secondaryTone": "#c0b09c",
+        "softSuit": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/1x-neo-gamma.glb",
+        "posterPath": "/assets/posters/humanoid-robots/1x-neo-gamma.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "1X NEO page",
+          "url": "https://www.1x.tech/neo",
+          "type": "official"
+        },
+        {
+          "label": "1X androids page",
+          "url": "https://www.1x.tech/androids/neo",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "unitree-h1",
+      "companyId": "unitree",
+      "companyName": "Unitree",
+      "modelName": "H1",
+      "generationName": "v1",
+      "displayName": "Unitree H1",
+      "yearIntroduced": {
+        "value": "2023",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Commercial research / developer platform",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Research, demos, athletic mobility",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.80 m",
+        "confidence": "official"
+      },
+      "weight": {
+        "value": "~47 kg",
+        "confidence": "official"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~3.3 m/s sprint (per Unitree spec)",
+        "confidence": "official"
+      },
+      "degreesOfFreedom": {
+        "value": "Up to 27 DoF (per Unitree spec)",
+        "confidence": "official"
+      },
+      "actuation": {
+        "value": "Electric, in-house high-torque actuators",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Open SDK for developers",
+        "confidence": "official"
+      },
+      "summary": "H1 was Unitree's first general-purpose humanoid. Notable for combining respectable specs with research-developer pricing far below Western competitors.",
+      "differentiators": [
+        "Affordable research-grade humanoid pricing",
+        "Strong sprint speed for a research platform",
+        "Open SDK for developers"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "research-platform",
+        "primaryTone": "#4a4a4a",
+        "secondaryTone": "#c0c0c0"
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/unitree-h1.glb",
+        "posterPath": "/assets/posters/humanoid-robots/unitree-h1.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Unitree H1 page",
+          "url": "https://www.unitree.com/h1/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "unitree-h1-2",
+      "companyId": "unitree",
+      "companyName": "Unitree",
+      "modelName": "H1",
+      "generationName": "v2",
+      "displayName": "Unitree H1-2",
+      "yearIntroduced": {
+        "value": "2024",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Updated research / developer platform",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Research, athletic mobility, R&D",
+        "confidence": "official"
+      },
+      "height": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "actuation": {
+        "value": "Electric, refined actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Open SDK",
+        "confidence": "reported"
+      },
+      "summary": "H1-2 is the second iteration of Unitree's H1 platform with refined hardware. Most published spec deltas vs the original H1 are still pending in publicly cited material.",
+      "differentiators": [
+        "Iterated hardware refinements over H1",
+        "Same affordability and SDK posture",
+        "Continues athletic-research positioning"
+      ],
+      "previousGenerationId": "unitree-h1",
+      "changesFromPrevious": [
+        {
+          "category": "form",
+          "text": "Hardware refinements over H1; specific deltas largely undisclosed in cited material.",
+          "confidence": "reported"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "research-platform",
+        "primaryTone": "#4a4a4a",
+        "secondaryTone": "#c0c0c0"
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/unitree-h1-2.glb",
+        "posterPath": "/assets/posters/humanoid-robots/unitree-h1-2.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Unitree H1 page",
+          "url": "https://www.unitree.com/h1/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "unitree-g1",
+      "companyId": "unitree",
+      "companyName": "Unitree",
+      "modelName": "G1",
+      "generationName": "v1",
+      "displayName": "Unitree G1",
+      "yearIntroduced": {
+        "value": "2024-05",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Commercial developer / research humanoid",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Research, education, demos",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.32 m",
+        "confidence": "official"
+      },
+      "weight": {
+        "value": "~35 kg",
+        "confidence": "official"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~2 m/s walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": "Up to 43 DoF (extended config)",
+        "confidence": "official"
+      },
+      "actuation": {
+        "value": "Electric, in-house actuators",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Open SDK with developer support",
+        "confidence": "official"
+      },
+      "summary": "G1 is Unitree's smaller, more affordable general-purpose humanoid. Compact athletic design at a price point that opened humanoid hardware to many more research labs.",
+      "differentiators": [
+        "Smaller, more affordable humanoid platform",
+        "Up to 43 DoF in extended configuration",
+        "Made humanoid R&D accessible at significantly lower cost"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "research-platform",
+        "primaryTone": "#3a3a3a",
+        "secondaryTone": "#c0c0c0"
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/unitree-g1.glb",
+        "posterPath": "/assets/posters/humanoid-robots/unitree-g1.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Unitree G1 page",
+          "url": "https://www.unitree-robot.com/mobile/g1",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "fourier-gr1",
+      "companyId": "fourier",
+      "companyName": "Fourier Intelligence",
+      "modelName": "GR-1",
+      "generationName": "v1",
+      "displayName": "Fourier GR-1",
+      "yearIntroduced": {
+        "value": "2023",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Research / rehab / industrial trials",
+        "confidence": "reported"
+      },
+      "targetEnvironment": {
+        "value": "Research, rehabilitation, industrial trials",
+        "confidence": "reported"
+      },
+      "height": {
+        "value": "~1.65 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": "~55 kg",
+        "confidence": "reported"
+      },
+      "payload": {
+        "value": "~50 kg",
+        "confidence": "reported"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~5 km/h walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": "~40 DoF",
+        "confidence": "reported"
+      },
+      "actuation": {
+        "value": "Electric in-house actuators",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Fourier in-house controllers",
+        "confidence": "reported"
+      },
+      "summary": "Fourier's first general-purpose humanoid, leveraging the company's rehabilitation-robotics lineage. Strong reported payload for its weight class; details confirmed mostly in press material.",
+      "differentiators": [
+        "Strong reported payload-to-weight ratio",
+        "Rehabilitation-robotics design lineage",
+        "Research and industrial trial positioning"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "research-platform",
+        "primaryTone": "#fafafa",
+        "secondaryTone": "#d8d8d8"
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/fourier-gr1.glb",
+        "posterPath": "/assets/posters/humanoid-robots/fourier-gr1.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Fourier GR-2 documentation portal (cross-references GR-1)",
+          "url": "https://support.fftai.com/en/docs/GR-X-Humanoid-Robot/GR2/GR-2_Introduction/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "fourier-gr2",
+      "companyId": "fourier",
+      "companyName": "Fourier Intelligence",
+      "modelName": "GR-2",
+      "generationName": "v1",
+      "displayName": "Fourier GR-2",
+      "yearIntroduced": {
+        "value": "2024-2025",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Research / industrial / medical trials",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Research, manufacturing, medical R&D",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.75 m",
+        "confidence": "official"
+      },
+      "weight": {
+        "value": "~63 kg",
+        "confidence": "official"
+      },
+      "payload": {
+        "value": "~3 kg per arm continuous (per docs)",
+        "confidence": "official"
+      },
+      "runtime": {
+        "value": "~2 hr operational (per docs)",
+        "confidence": "official"
+      },
+      "speed": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "degreesOfFreedom": {
+        "value": "53 DoF (per docs)",
+        "confidence": "official"
+      },
+      "actuation": {
+        "value": "Electric, refined GR-X series actuation",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "Fourier in-house controllers, open APIs for integration",
+        "confidence": "official"
+      },
+      "summary": "GR-2 is Fourier's documented second-generation humanoid. The official GR-2 documentation portal exposes spec details that put the platform credibly in the research / industrial-trial bracket.",
+      "differentiators": [
+        "Public documentation portal with spec disclosure",
+        "53 DoF for fine manipulation tasks",
+        "Integration APIs for research labs and manufacturing pilots"
+      ],
+      "previousGenerationId": "fourier-gr1",
+      "changesFromPrevious": [
+        {
+          "category": "manipulation",
+          "text": "Higher overall DoF count and refined hands relative to GR-1.",
+          "confidence": "official"
+        },
+        {
+          "category": "ai",
+          "text": "Public APIs and documentation expose more integration surface.",
+          "confidence": "official"
+        }
+      ],
+      "visualProfile": {
+        "bodyStyle": "research-platform",
+        "primaryTone": "#fafafa",
+        "secondaryTone": "#cfcfcf"
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/fourier-gr2.glb",
+        "posterPath": "/assets/posters/humanoid-robots/fourier-gr2.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Fourier GR-2 documentation",
+          "url": "https://support.fftai.com/en/docs/GR-X-Humanoid-Robot/GR2/GR-2_Introduction/",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "ubtech-walker-x",
+      "companyId": "ubtech",
+      "companyName": "UBTECH",
+      "modelName": "Walker",
+      "generationName": "X",
+      "displayName": "Walker X",
+      "yearIntroduced": {
+        "value": "2021",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Service-robot showcase platform",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Service / smart-home / showcases",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.30 m",
+        "confidence": "reported"
+      },
+      "weight": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "payload": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~3 km/h walking",
+        "confidence": "reported"
+      },
+      "degreesOfFreedom": {
+        "value": "41 active DoF (per UBTECH page)",
+        "confidence": "official"
+      },
+      "actuation": {
+        "value": "Electric, UBTECH service-robot platform",
+        "confidence": "official"
+      },
+      "aiSystem": {
+        "value": "UBTECH service-robot stack with face/voice interaction",
+        "confidence": "official"
+      },
+      "summary": "UBTECH's smart-home / service-robot humanoid. Distinctive screen face and service-bot proportions, used for retail showcases and home demonstrations rather than industrial labor.",
+      "differentiators": [
+        "Screen-face for human-robot interaction",
+        "Strongly service-oriented platform",
+        "41 active DoF in a small frame"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "service-robot",
+        "primaryTone": "#fafafa",
+        "secondaryTone": "#1a4a8a",
+        "screenFace": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/ubtech-walker-x.glb",
+        "posterPath": "/assets/posters/humanoid-robots/ubtech-walker-x.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "UBTECH Walker X page",
+          "url": "https://www.ubtrobot.com/en/humanoid/products/WalkerX",
+          "type": "official"
+        }
+      ]
+    },
+    {
+      "id": "sanctuary-phoenix",
+      "companyId": "sanctuary",
+      "companyName": "Sanctuary AI",
+      "modelName": "Phoenix",
+      "generationName": "v1 (6th-gen technology)",
+      "displayName": "Sanctuary Phoenix",
+      "yearIntroduced": {
+        "value": "2023-05-11",
+        "confidence": "official"
+      },
+      "status": {
+        "value": "Pilot deployments, work-task focus",
+        "confidence": "official"
+      },
+      "targetEnvironment": {
+        "value": "Work tasks across retail, logistics, manufacturing",
+        "confidence": "official"
+      },
+      "height": {
+        "value": "~1.7 m",
+        "confidence": "official"
+      },
+      "weight": {
+        "value": "~70 kg",
+        "confidence": "official"
+      },
+      "payload": {
+        "value": "~25 kg",
+        "confidence": "official"
+      },
+      "runtime": {
+        "value": null,
+        "confidence": "unknown"
+      },
+      "speed": {
+        "value": "~4.8 km/h",
+        "confidence": "official"
+      },
+      "degreesOfFreedom": {
+        "value": "Hands feature 20+ DoF each, per Sanctuary",
+        "confidence": "official"
+      },
+      "actuation": {
+        "value": "Hydraulic + electric hybrid (Sanctuary 6th-gen platform)",
+        "confidence": "reported"
+      },
+      "aiSystem": {
+        "value": "Carbon AI control system",
+        "confidence": "official"
+      },
+      "summary": "Sanctuary's first publicly unveiled general-purpose humanoid, framed as the body for the company's Carbon AI software. Emphasizes dexterous human-equivalent hands and work-task generality.",
+      "differentiators": [
+        "Marketed dexterous hands with 20+ DoF each",
+        "Carbon AI software stack as the headline differentiator",
+        "Described as 6th-generation Sanctuary technology"
+      ],
+      "previousGenerationId": null,
+      "changesFromPrevious": [],
+      "visualProfile": {
+        "bodyStyle": "industrial-athletic",
+        "primaryTone": "#c8c8c8",
+        "secondaryTone": "#909090",
+        "bulkyShoulders": true,
+        "largeHands": true
+      },
+      "asset": {
+        "glbPath": "/assets/models/humanoid-robots/sanctuary-phoenix.glb",
+        "posterPath": "/assets/posters/humanoid-robots/sanctuary-phoenix.webp",
+        "verifiedModel": false
+      },
+      "sources": [
+        {
+          "label": "Sanctuary AI Phoenix announcement",
+          "url": "https://www.sanctuary.ai/blog/sanctuary-ai-unveils-phoenix-a-humanoid-general-purpose-robot-designed-for-work",
+          "type": "official"
+        }
+      ]
+    }
+  ],
+  "featuredPerCompany": {
+    "figure": "figure-03",
+    "tesla": "tesla-optimus-gen-2",
+    "boston": "atlas-electric",
+    "agility": "agility-digit-current",
+    "apptronik": "apptronik-apollo",
+    "1x": "1x-neo-gamma",
+    "unitree": "unitree-g1",
+    "fourier": "fourier-gr2",
+    "ubtech": "ubtech-walker-x",
+    "sanctuary": "sanctuary-phoenix"
+  }
+}
