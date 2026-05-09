@@ -1,13 +1,19 @@
 {
   "_meta": {
-    "title": "Frontier Training Compute, 1950\u20132026",
+    "title": "Frontier Training Compute, 1950–2026",
     "sources": [
       "https://epoch.ai/data/notable-ai-models",
       "https://epoch.ai/blog/compute-trends",
-      "https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+      "https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year",
+      "https://epoch.ai/gradient-updates/why-gpt5-used-less-training-compute-than-gpt45-but-gpt6-probably-wont",
+      "https://epochai.substack.com/p/notes-on-gpt-5-training-compute",
+      "https://epoch.ai/trends",
+      "https://epoch.ai/data-insights/grok-4-training-resources"
     ],
-    "updated": "2026-04-30",
-    "note": "FLOP values are approximate training compute. Era tags follow Epoch AI classification."
+    "updated": "2026-05-09",
+    "note": "FLOP values are approximate training compute. `flop_status` field indicates source: 'epoch' = Epoch-published estimate or anchor with public disclosure; 'rumored' = unconfirmed industry chatter, plotted at the rumored value with an open marker; 'unknown' = no public estimate, plotted near the trendline only as a date marker (open marker, x at fractional year, y at the local trend value). Era tags follow Epoch AI classification.",
+    "doubling_months_current": 5.2,
+    "doubling_source": "https://epoch.ai/trends (Feb 2026 dashboard)"
   },
   "eras": [
     {
@@ -38,189 +44,259 @@
       "year": 1957,
       "flop": 10000000.0,
       "era": "pre-dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "ALVINN",
       "year": 1989,
       "flop": 1000000000.0,
       "era": "pre-dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "LeNet-5",
       "year": 1998,
       "flop": 10000000000.0,
       "era": "pre-dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "AlexNet",
       "year": 2012,
       "flop": 4700000000000000.0,
       "era": "dl",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "VGG-19",
       "year": 2014,
       "flop": 1.6e+17,
       "era": "dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "ResNet-152",
       "year": 2015,
       "flop": 1.1e+18,
       "era": "dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "Transformer",
       "year": 2017,
       "flop": 3.3e+18,
       "era": "dl",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "BERT-Large",
       "year": 2018,
       "flop": 6.4e+18,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-2",
       "year": 2019,
       "flop": 1.5e+19,
       "era": "scaling",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-3",
       "year": 2020,
       "flop": 3.1e+23,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "AlphaFold2",
       "year": 2021,
       "flop": 1e+24,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "PaLM",
       "year": 2022,
       "flop": 2.5e+24,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-4",
       "year": 2023,
       "flop": 2e+25,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
+    },
+    {
+      "name": "Gemini 1.0 Ultra",
+      "year": 2023,
+      "date": "2023-12-06",
+      "flop": 5e+25,
+      "era": "scaling",
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "Claude 3.5 Sonnet",
       "year": 2024,
-      "flop": 1e+25,
+      "date": "2024-06-20",
+      "flop": 3.6e+25,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch",
+      "note": "Amodei stated ~2x GPT-4 training compute in interviews."
     },
     {
       "name": "Grok 2",
       "year": 2024,
       "flop": 2e+25,
       "era": "scaling",
-      "label": false
+      "label": false,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-4o",
       "year": 2024,
       "flop": 2e+25,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "Llama 3.1 405B",
       "year": 2024,
       "flop": 3.8e+25,
       "era": "scaling",
-      "label": true
-    },
-    {
-      "name": "Gemini 1.0 Ultra",
-      "year": 2024,
-      "flop": 5e+25,
-      "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "Gemini 2.0 Flash",
       "year": 2025,
-      "flop": 8e+25,
+      "flop": 3e+25,
       "era": "scaling",
-      "label": false
+      "label": false,
+      "flop_status": "epoch",
+      "note": "Flash is the small tier; not frontier scale."
     },
     {
       "name": "Claude 3.7 Sonnet",
       "year": 2025,
-      "flop": 1.2e+26,
+      "date": "2025-02-24",
+      "flop": 5e+25,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch",
+      "note": "Anthropic did not announce a major pretraining scale-up vs 3.5 Sonnet."
     },
     {
       "name": "Grok 3",
       "year": 2025,
       "flop": 2.5e+26,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-4.5",
       "year": 2025,
       "flop": 3e+26,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "Grok 4",
       "year": 2025,
       "flop": 5e+26,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "Claude 4 Opus",
       "year": 2025,
       "flop": 8e+26,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch"
     },
     {
       "name": "GPT-5",
-      "year": 2026,
-      "flop": 2e+27,
+      "year": 2025,
+      "date": "2025-08-07",
+      "flop": 5e+25,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "epoch",
+      "note": "Epoch median 5e25, ceiling <1e26. Trained with less compute than GPT-4.5; most scaling went into post-training RL."
+    },
+    {
+      "name": "Gemini 3 Pro",
+      "year": 2025,
+      "date": "2025-11-18",
+      "flop": null,
+      "era": "scaling",
+      "label": true,
+      "flop_status": "unknown",
+      "tooltip_note": "Google DeepMind, no public compute estimate."
+    },
+    {
+      "name": "Claude 4.6 Opus",
+      "year": 2026,
+      "date": "2026-02-17",
+      "flop": null,
+      "era": "scaling",
+      "label": true,
+      "flop_status": "unknown",
+      "tooltip_note": "Anthropic, no public compute disclosure."
+    },
+    {
+      "name": "Claude Mythos Preview",
+      "year": 2026,
+      "date": "2026-04-07",
+      "flop": 1e+27,
+      "era": "scaling",
+      "label": true,
+      "flop_status": "rumored",
+      "marker": "diamond",
+      "tooltip_note": "Anthropic Glasswing, rumored 10T-param MoE, no confirmed compute estimate."
     },
     {
       "name": "Claude 4.7 Opus",
       "year": 2026,
+      "date": "2026-04-16",
       "flop": 3.5e+27,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "estimated",
+      "tooltip_note": "Estimated; Anthropic does not disclose training compute."
     },
     {
-      "name": "GPT-5.5",
+      "name": "GPT-5.5 (Spud)",
       "year": 2026,
-      "flop": 5e+27,
+      "date": "2026-04-23",
+      "flop": 7.5e+26,
       "era": "scaling",
-      "label": true
+      "label": true,
+      "flop_status": "rumored",
+      "tooltip_note": "First fully retrained base since GPT-4.5. Plausibly 5e26-1e27, no public estimate."
     }
   ],
   "moores_law": {
@@ -230,7 +306,7 @@
     "doubling_months": 24
   },
   "counterpoint": {
-    "text": "Frontier-only growth slowed to ~4.2\u00d7/year after 2018 per Epoch's own finding.",
-    "source": "Lohn (2023)"
+    "text": "Epoch's current trend, frontier language models since 2020, is roughly 5x per year, a 5.2-month doubling. More compute does not automatically mean smarter AI; it is an ingredient, not the finished product. And GPT-5 in August 2025 broke from the trend, training with less compute than GPT-4.5 while shifting most of the new spend into post-training RL.",
+    "source": "Epoch AI trends dashboard, Feb 2026"
   }
 }

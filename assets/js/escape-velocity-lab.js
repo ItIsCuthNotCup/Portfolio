@@ -142,15 +142,41 @@
     let currentEra = 'all';
     const curveOn = { moore: true, exp: true, super: false, fit: false };
 
-    // Best-fit (least-squares) on log10(flop) vs year, for the recent-era data only.
-    // The user's question is "is recent growth tracking exponential or super-exponential?"
-    // so we fit on 2018+ frontier models — those that drive the current scaling debate.
+    // Convert a model's date (yyyy-mm-dd) to a fractional year for chart x.
+    // Falls back to the integer `year` field when no date is provided.
+    function fractionalYear(m) {
+      if (m.date) {
+        const d = new Date(m.date + 'T00:00:00Z');
+        if (!isNaN(d.getTime())) {
+          const y = d.getUTCFullYear();
+          const start = Date.UTC(y, 0, 1);
+          const end = Date.UTC(y + 1, 0, 1);
+          return y + (d.getTime() - start) / (end - start);
+        }
+      }
+      return m.year;
+    }
+
+    // A point is "confirmed" for trendline purposes if it has a real
+    // FLOP value AND its source is Epoch-published (not rumored / unknown).
+    // Open-marker points (rumored / unknown) are EXCLUDED from the fit
+    // so the trendline isn't reverse-engineered from speculation about the
+    // very models we're trying to assess.
+    function isConfirmedFlop(m) {
+      if (m.flop == null || m.flop <= 0) return false;
+      const status = m.flop_status || 'epoch';
+      return status === 'epoch' || status === 'estimated';
+    }
+
+    // Best-fit (least-squares) on log10(flop) vs fractional-year, for the
+    // recent-era data only. Restricted to confirmed FLOP estimates.
     function bestFit(modelsForFit) {
-      if (modelsForFit.length < 2) return null;
+      const filtered = modelsForFit.filter(isConfirmedFlop);
+      if (filtered.length < 2) return null;
       let sx = 0, sy = 0, sxx = 0, sxy = 0;
-      const n = modelsForFit.length;
-      modelsForFit.forEach(m => {
-        const x = m.year, y = Math.log10(m.flop);
+      const n = filtered.length;
+      filtered.forEach(m => {
+        const x = fractionalYear(m), y = Math.log10(m.flop);
         sx += x; sy += y; sxx += x * x; sxy += x * y;
       });
       const slope = (n * sxy - sx * sy) / (n * sxx - sx * sx);
@@ -166,12 +192,16 @@
       const visible = startYear === null ? allModels : allModels.filter(m => m.year >= startYear);
       if (visible.length === 0) return;
 
-      const years = visible.map(d => d.year);
-      const flops = visible.map(d => d.flop);
+      // X uses fractional year so a Nov-2025 release sits to the right of
+      // a Feb-2025 one even though both have year=2025.
+      const xs = visible.map(fractionalYear);
+      // Y-domain calculation only considers points with known FLOP. The
+      // null-FLOP points get placed via the trendline later.
+      const knownFlops = visible.filter(m => m.flop != null && m.flop > 0).map(d => d.flop);
       const xPad = currentRange === 'all' ? 2 : 0.5;
-      const xDomain = [Math.min(...years) - xPad, Math.max(...years) + xPad];
-      const minPow = Math.floor(Math.log10(Math.min(...flops)));
-      const maxPow = Math.ceil(Math.log10(Math.max(...flops)));
+      const xDomain = [Math.min(...xs) - xPad, Math.max(...xs) + xPad];
+      const minPow = knownFlops.length ? Math.floor(Math.log10(Math.min(...knownFlops))) : 0;
+      const maxPow = knownFlops.length ? Math.ceil(Math.log10(Math.max(...knownFlops))) : 28;
       const yDomain = [Math.pow(10, minPow - 0.2), Math.pow(10, maxPow + 0.4)];
       const xScale = makeScale(xDomain, [M.l, W - M.r]);
       const yScale = makeScale(yDomain, [H - M.b, M.t], 'log');
@@ -203,18 +233,31 @@
       });
 
       // ── Inline legend (top-left, inside plot area) ───────────
-      // Three era colors are encoded on the dots — readers shouldn't have to
-      // scroll back to the filter pills to decode them.
+      // Era colors + a separate "estimated / no public compute disclosure"
+      // glyph for open-marker points (rumored or unknown FLOP). Readers
+      // shouldn't have to scroll back to the filter pills to decode them.
       const legendItems = [
-        { color: eraDotColors['pre-dl'], label: 'Pre-DL' },
-        { color: eraDotColors['dl'], label: 'DL Era' },
-        { color: eraDotColors['scaling'], label: 'Scaling Era' },
+        { color: eraDotColors['pre-dl'], label: 'Pre-DL', kind: 'filled' },
+        { color: eraDotColors['dl'], label: 'DL Era', kind: 'filled' },
+        { color: eraDotColors['scaling'], label: 'Scaling Era', kind: 'filled' },
+        { color: eraDotColors['scaling'], label: 'Estimated — no public compute disclosure', kind: 'open' },
       ];
       const legG = svgEl('g', { id: 'ev-compute-legend' });
       let legX = M.l + 10;
       const legY = M.t + 14;
       legendItems.forEach(item => {
-        legG.appendChild(svgEl('circle', { cx: legX + 4, cy: legY, r: 4, fill: item.color, stroke: 'var(--paper)', 'stroke-width': 1 }));
+        if (item.kind === 'open') {
+          // Hollow ring matches the on-chart open marker
+          legG.appendChild(svgEl('circle', {
+            cx: legX + 4, cy: legY, r: 4,
+            fill: 'var(--paper)', stroke: item.color, 'stroke-width': 1.6
+          }));
+        } else {
+          legG.appendChild(svgEl('circle', {
+            cx: legX + 4, cy: legY, r: 4,
+            fill: item.color, stroke: 'var(--paper)', 'stroke-width': 1
+          }));
+        }
         const t = svgEl('text', {
           x: legX + 12, y: legY + 4, fill: 'var(--ink-soft)',
           'font-size': 10, 'font-family': 'DM Mono, monospace'
@@ -337,23 +380,23 @@
             logScaled += dt / dTi;
           }
           return ay * Math.pow(2, logScaled);
-        }, CHART.orange, '2,3', 'Super-exp. (doubling shrinks 6mo→3mo)',
+        }, CHART.orange, '2,3', 'Speculative super-exp.',
         { labelBelow: false, labelAt: 0.6 });
       }
       // Best-fit through 2018+ frontier — the "what is the data ACTUALLY
       // doing right now?" line. Drawn through the data's own range so the
       // reader can see whether the data tracks ordinary exp or beats it.
-      if (curveOn.fit) {
-        const recentFrontier = allModels.filter(m => m.year >= 2018 && m.flop >= 1e22);
-        const fit = bestFit(recentFrontier);
-        if (fit) {
-          const fitStart = Math.max(xDomain[0], 2018);
-          plotCurve(
-            yr => Math.pow(10, fit.slope * yr + fit.intercept),
-            CHART.gold, '6,3', 'Best-fit (' + fit.doublingMonths.toFixed(1) + '-mo doubling)',
-            { startYear: fitStart, labelBelow: true, labelAt: 0.45 }
-          );
-        }
+      // Computed from CONFIRMED FLOP only (open-marker points are excluded
+      // — see bestFit's isConfirmedFlop filter).
+      const recentFrontierAll = allModels.filter(m => m.year >= 2018 && (m.flop || 0) >= 1e22);
+      const recentFit = bestFit(recentFrontierAll);
+      if (curveOn.fit && recentFit) {
+        const fitStart = Math.max(xDomain[0], 2018);
+        plotCurve(
+          yr => Math.pow(10, recentFit.slope * yr + recentFit.intercept),
+          CHART.gold, '6,3', 'Best-fit (' + recentFit.doublingMonths.toFixed(1) + '-mo doubling, confirmed FLOP only)',
+          { startYear: fitStart, labelBelow: true, labelAt: 0.45 }
+        );
       }
 
       // ── Model dots ───────────────────────────────────────────
@@ -363,38 +406,97 @@
       //  - any zoomed view: every visible model gets a label
       const ICONIC = new Set([
         'Perceptron', 'AlexNet', 'BERT-Large', 'AlphaFold2',
-        'GPT-3', 'GPT-4', 'GPT-5', 'GPT-5.5', 'Claude 4.7 Opus'
+        'GPT-3', 'GPT-4', 'GPT-4.5', 'GPT-5', 'Claude 4.7 Opus',
+        'Claude Mythos Preview'
       ]);
       const labelEvery = currentRange !== 'all';
       const placed = [];
       const labelH = 14;
 
-      // Sort by flop ascending so earlier (lower) labels get placed first;
-      // helps the higher-flop models steer clear of them.
-      const drawn = visible.slice().sort((a, b) => a.flop - b.flop);
+      // For null-FLOP points (open markers), we need a y-position. We
+      // place them at the local trendline so they read as "if compute had
+      // tracked the trend, this is where it would land — but it might
+      // not." If no fit is available (rare), default to mid-plot.
+      function trendFlopAt(yrFrac) {
+        if (recentFit) return Math.pow(10, recentFit.slope * yrFrac + recentFit.intercept);
+        return Math.sqrt(yDomain[0] * yDomain[1]);
+      }
 
-      // Width estimate for collision math — a rough char-width heuristic
-      // since we can't measure the SVG text before painting.
+      // Sort by displayed flop ascending so earlier (lower) labels get
+      // placed first; helps higher-flop models steer clear of them.
+      function displayFlop(m) {
+        if (m.flop != null && m.flop > 0) return m.flop;
+        return trendFlopAt(fractionalYear(m));
+      }
+      const drawn = visible.slice().sort((a, b) => displayFlop(a) - displayFlop(b));
+
       function estimateWidth(s) { return Math.min(140, s.length * 6.4); }
 
       drawn.forEach(m => {
-        const cx = xScale(m.year), cy = yScale(m.flop);
+        const xr = fractionalYear(m);
+        const yr = displayFlop(m);
+        const cx = xScale(xr), cy = yScale(yr);
         const isEraActive = currentEra === 'all' || m.era === currentEra;
-        const fill = eraDotColors[m.era] || '#999';
+        const eraColor = eraDotColors[m.era] || '#999';
         const willLabel = isEraActive && (labelEvery ? true : (m.label && ICONIC.has(m.name)));
         const dotR = willLabel ? 5 : 3.5;
-        const circle = svgEl('circle', {
-          cx, cy, r: dotR, fill,
-          stroke: 'var(--paper)', 'stroke-width': 1.4,
-          'data-model': m.name,
-          opacity: isEraActive ? 0.95 : 0.18
+        const status = m.flop_status || 'epoch';
+        const isOpen = status === 'rumored' || status === 'unknown';
+        const isDiamond = m.marker === 'diamond';
+
+        // Open markers (rumored / unknown FLOP) render as hollow shapes
+        // in paper color with a thicker era-color stroke. Diamonds are
+        // used for the rare "this might not even be a normal frontier
+        // training run" case (e.g., Mythos Preview).
+        let dot;
+        if (isDiamond) {
+          // Diamond: a square rotated 45° around (cx, cy). Slightly larger
+          // than a circle of equal r so it reads at the same visual weight.
+          const d = dotR * 1.25;
+          const points = `${cx},${cy - d} ${cx + d},${cy} ${cx},${cy + d} ${cx - d},${cy}`;
+          dot = svgEl('polygon', {
+            points,
+            fill: isOpen ? 'var(--paper)' : eraColor,
+            stroke: eraColor,
+            'stroke-width': isOpen ? 2 : 1.4,
+            'data-model': m.name,
+            opacity: isEraActive ? 0.95 : 0.18,
+          });
+        } else {
+          dot = svgEl('circle', {
+            cx, cy, r: dotR,
+            fill: isOpen ? 'var(--paper)' : eraColor,
+            stroke: eraColor,
+            'stroke-width': isOpen ? 2 : 1.4,
+            'data-model': m.name,
+            opacity: isEraActive ? 0.95 : 0.18,
+          });
+        }
+        dot.style.cursor = 'pointer';
+        dot.addEventListener('mouseenter', e => {
+          const dateStr = m.date || String(m.year);
+          let flopStr;
+          if (m.flop == null) {
+            flopStr = 'no public estimate';
+          } else if (status === 'rumored') {
+            flopStr = '~' + formatNumber(m.flop) + ' FLOP (rumored)';
+          } else if (status === 'estimated') {
+            flopStr = '~' + formatNumber(m.flop) + ' FLOP (estimated)';
+          } else {
+            flopStr = formatNumber(m.flop) + ' FLOP';
+          }
+          const noteHtml = m.tooltip_note
+            ? `<div class="tt-meta" style="margin-top:4px;opacity:0.85">${m.tooltip_note}</div>`
+            : '';
+          showTip(
+            `<div class="tt-name">${m.name}</div>` +
+            `<div class="tt-meta">${dateStr} &middot; ${flopStr}</div>` +
+            noteHtml,
+            e.offsetX, e.offsetY,
+          );
         });
-        circle.style.cursor = 'pointer';
-        circle.addEventListener('mouseenter', e => {
-          showTip(`<div class="tt-name">${m.name}</div><div class="tt-meta">${m.year} &middot; ${formatNumber(m.flop)} FLOP</div>`, e.offsetX, e.offsetY);
-        });
-        circle.addEventListener('mouseleave', () => hideTooltip(tip));
-        svg.appendChild(circle);
+        dot.addEventListener('mouseleave', () => hideTooltip(tip));
+        svg.appendChild(dot);
 
         if (willLabel) {
           // 16 candidate offsets — 4 directions × 4 distances.
