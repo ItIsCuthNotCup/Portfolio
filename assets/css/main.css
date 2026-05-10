@@ -1832,6 +1832,63 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   mix-blend-mode: lighten;
 }
 
+/* ── Pixel Icons ───────────────────────────────────────────── */
+.pixel-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: -0.12em;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+  flex-shrink: 0;
+}
+.pixel-icon-lg {
+  width: 18px;
+  height: 18px;
+  vertical-align: -0.18em;
+}
+
+/* Nav links with icons */
+.masthead-nav a,
+.masthead-nav .nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Section label icons */
+.section-label .pixel-icon {
+  opacity: 0.6;
+}
+
+/* Research chip icons */
+.research-chip .pixel-icon {
+  opacity: 0.7;
+}
+.research-chip.is-active .pixel-icon {
+  opacity: 1;
+}
+
+/* Contact CTA icons */
+.contact-ctas a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hero CTA icons */
+.hero-ctas .btn-primary,
+.hero-ctas .btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Notes page nav */
+.notes-main .section-label .pixel-icon {
+  opacity: 0.6;
+}
+
 @media (hover: none) {
   [data-theme="graphite"] .cursor-grid { display: none; }
   [data-theme="midnight"] .cursor-grid { display: none; }
