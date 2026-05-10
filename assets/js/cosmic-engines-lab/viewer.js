@@ -7,9 +7,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { BUILDERS } from './procedural.js';
-import { prefersReducedMotion } from './scroll.js';
-import { makeComposer } from './postfx.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { BUILDERS } from './procedural.js?v=3';
+import { prefersReducedMotion } from './scroll.js?v=2';
+import { makeComposer } from './postfx.js?v=2';
+
+// Shared Draco decoder for compressed Meshy GLBs
+const DRACO_PATH = 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/';
+let _dracoLoader = null;
+function getDracoLoader() {
+  if (!_dracoLoader) {
+    _dracoLoader = new DRACOLoader();
+    _dracoLoader.setDecoderPath(DRACO_PATH);
+  }
+  return _dracoLoader;
+}
 
 const MODEL_BASE = '/assets/models/cosmic-engines/';
 
@@ -107,6 +119,7 @@ export function initViewer({ canvas, container, onReady }) {
       if (id !== currentId) return; // raced
       if (res && res.ok) {
         const loader = new GLTFLoader();
+        loader.setDRACOLoader(getDracoLoader());
         loader.load(
           url,
           (gltf) => {

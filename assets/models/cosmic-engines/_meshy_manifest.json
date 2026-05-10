@@ -1,0 +1,66 @@
+[
+  {
+    "id": "quasar",
+    "status": "ok",
+    "preview_task": "019e1270-2528-7309-9973-9ba152c85d6e",
+    "refine_task": "019e1272-cb4f-712c-8a03-c9d90518ae87",
+    "path": "assets/models/cosmic-engines/quasar.glb",
+    "size": 10833700
+  },
+  {
+    "id": "blackhole",
+    "status": "ok",
+    "preview_task": "019e1274-d351-7333-af79-88282f380dbb",
+    "refine_task": "019e127b-405f-75da-b4d4-fb0d643dde0e",
+    "path": "assets/models/cosmic-engines/blackhole.glb",
+    "size": 15023464
+  },
+  {
+    "id": "pulsar",
+    "status": "ok",
+    "preview_task": "019e127d-081a-7b4c-bcd4-2eb943052d35",
+    "refine_task": "019e127f-8f0f-73d7-bc7f-ed6247467ebc",
+    "path": "assets/models/cosmic-engines/pulsar.glb",
+    "size": 11584628
+  },
+  {
+    "id": "magnetar",
+    "status": "ok",
+    "preview_task": "019e1280-f5ff-764e-b9d5-d05b81c07a39",
+    "refine_task": "019e1282-fc75-745d-9a69-bca9e6cea688",
+    "path": "assets/models/cosmic-engines/magnetar.glb",
+    "size": 15975456
+  },
+  {
+    "id": "grb",
+    "status": "ok",
+    "preview_task": "019e1284-42da-7492-a9ac-fa6229ccfc0d",
+    "refine_task": "019e1287-2b91-7817-9f8d-6ce8bbf3c860",
+    "path": "assets/models/cosmic-engines/grb.glb",
+    "size": 7834120
+  },
+  {
+    "id": "supernova",
+    "status": "ok",
+    "preview_task": "019e1289-12e4-7e9d-be4b-6f3aae85ff5e",
+    "refine_task": "019e128d-5d5c-7033-82a1-ba82297401af",
+    "path": "assets/models/cosmic-engines/supernova.glb",
+    "size": 13958984
+  },
+  {
+    "id": "merger",
+    "status": "ok",
+    "preview_task": "019e128f-043f-7073-9ce3-b62b2bad61a0",
+    "refine_task": "019e1290-8990-7aea-8f23-05697dea8850",
+    "path": "assets/models/cosmic-engines/merger.glb",
+    "size": 9646904
+  },
+  {
+    "id": "lens",
+    "status": "ok",
+    "preview_task": "019e1291-d031-77aa-9cef-7c850d8ebf26",
+    "refine_task": "019e1295-18aa-727a-9f06-bda153e42d18",
+    "path": "assets/models/cosmic-engines/lens.glb",
+    "size": 10373960
+  }
+]

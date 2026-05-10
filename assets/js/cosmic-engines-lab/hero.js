@@ -5,9 +5,9 @@
 // ────────────────────────────────────────────────────────────────────
 
 import * as THREE from 'three';
-import { buildQuasar } from './procedural.js';
-import { makeScrollProgress, smoothstep, lerp, prefersReducedMotion } from './scroll.js';
-import { makeComposer } from './postfx.js';
+import { buildQuasar } from './procedural.js?v=3';
+import { makeScrollProgress, smoothstep, lerp, prefersReducedMotion } from './scroll.js?v=2';
+import { makeComposer } from './postfx.js?v=2';
 
 export function initHero({ canvas, container, labelEls = {} }) {
   const reduced = prefersReducedMotion();

@@ -4,4 +4,4 @@
 // path. The actual entry point is loaded via a `<script type="module">`
 // in /work/cosmic-engines-lab/index.html. This shim re-exports it for any
 // caller that imports from this path directly.
-export * from './cosmic-engines-lab/main.js';
+export * from './cosmic-engines-lab/main.js?v=3';

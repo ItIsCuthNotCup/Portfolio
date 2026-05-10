@@ -3,9 +3,11 @@
 // chapter card content, and the comparison matrix from data.js.
 // ────────────────────────────────────────────────────────────────────
 
-import { COSMIC_OBJECTS, COMPARISON_ROWS } from './data.js';
-import { initHero } from './hero.js';
-import { initViewer } from './viewer.js';
+// Versioned imports — bump the ?v= when the corresponding module
+// changes so browsers re-fetch instead of serving the cached copy.
+import { COSMIC_OBJECTS, COMPARISON_ROWS } from './data.js?v=2';
+import { initHero } from './hero.js?v=3';
+import { initViewer } from './viewer.js?v=3';
 
 // Quick lookup
 const BY_ID = Object.fromEntries(COSMIC_OBJECTS.map((o) => [o.id, o]));
