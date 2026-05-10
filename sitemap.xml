@@ -67,6 +67,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.jakecuth.com/work/cosmic-engines-lab/</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.jakecuth.com/work/dbscan-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
@@ -100,12 +106,6 @@
     <loc>https://www.jakecuth.com/work/gradient-boosting-lab/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.jakecuth.com/work/humanoid-robots-lab/</loc>
-    <lastmod>2026-05-09</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>

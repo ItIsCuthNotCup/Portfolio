@@ -4,7 +4,7 @@
 
 The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 43 in-browser labs plus 1 external case study (44 tile entries total) organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
 
-## Working models (M01–M13)
+## Working models (M01–M12)
 
 Live ML demos. Move sliders, watch the economics change. Each one is a portfolio piece showing one applied-ML chop end to end.
 
@@ -20,9 +20,8 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M10 · Bandit Lab](https://jakecuth.com/work/bandit-lab/): A live multi-armed bandit simulator. Four strategies on identical hidden reward distributions. Real-time regret curves prove why the slot machine that paid most recently is rarely the one that pays most overall.
 - [M11 · Diffusion Lab](https://jakecuth.com/work/diffusion-lab/): A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion and DALL-E.
 - [M12 · Viral Nation Case Study](https://vn-case.vercel.app/): External case study deliverable built for Viral Nation interviews. Hosted on Vercel; the tile on jakecuth.com opens this site in a new tab.
-- [M13 · Humanoid Robots Atlas](https://jakecuth.com/work/humanoid-robots-lab/): An interactive 3D Lab comparing ten humanoid platforms (Figure, Tesla Optimus, Boston Dynamics Atlas, Agility Digit, Apptronik Apollo, 1X NEO, Unitree, Fourier GR, UBTECH Walker, Sanctuary Phoenix) across twenty-one generations. Three.js viewer with rotate / lineup / matrix views and source-backed specs labeled by confidence (official, reported, estimated, unknown). 3D bodies are visual proxies unless marked verifiedModel.
 
-## Data stories (S01–S13)
+## Data stories (S01–S14)
 
 Editorial pieces. Real data, one thesis each. The longer reads, with charts that argue.
 
@@ -39,6 +38,7 @@ Editorial pieces. Real data, one thesis each. The longer reads, with charts that
 - [S11 · The Skills Surge](https://jakecuth.com/work/claude-skills-lab/): Six months after Anthropic's Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Four hand-coded charts: power-law star distribution, surge timeline, architecture quadrant, and the verbs every skill author opens with.
 - [S12 · Inside Agent Memory](https://jakecuth.com/work/agent-memory-lab/): The 2026 map of agent memory, benchmarked across twelve approaches. MEMORY.md / CLAUDE.md beats vector RAG for solo coders (Letta filesystem 74.0% LoCoMo vs Mem0 graph 68.5%); Mastra Observational tops LongMemEval at 94.87% with GPT-5-mini; Mem0 raised $24M Oct 2025; Pinecone $50/mo minimum drove migration to pgvector. Four hand-coded charts plus a when-to-use-what decision matrix.
 - [S13 · The PURSUE Files](https://jakecuth.com/work/uap-files-lab/): Inside the May 8, 2026 Department of War UAP release at war.gov/UFO. Tranche 1 inventory of 17 newly declassified pages plus 162 multimedia files (Apollo 17, Gemini 7 bogey audio, FBI infrared western US, INDOPACOM football object); resolution rates across 79 years and 14,500+ U.S. government cases (zero confirmed extraterrestrial); 60-times rise in reports since destigmatization; Gallup 1996 to 2021 belief gap. Four hand-coded charts.
+- [S14 · Cosmic Engines](https://jakecuth.com/work/cosmic-engines-lab/): An interactive 3D field guide to the eight extreme objects that light the universe — quasar, black hole, pulsar, magnetar, gamma-ray burst, supernova, neutron-star merger, gravitational lens. Scroll-driven Three.js hero quasar (central shadow, accretion disk, polar jets), procedural Engine Room viewer with eight switchable scenes, side-by-side comparison matrix, NASA / ESA / LIGO / EHT sources. Optional Meshy GLB asset slot per object; pure procedural by default.
 
 ## Paper anatomies (P01–P04)
 

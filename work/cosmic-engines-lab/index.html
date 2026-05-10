@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmic Engines · Quasars, black holes, pulsars, and the violent machinery that lights the universe — Jake Cuth.</title>
+  <meta name="description" content="An interactive 3D Lab on quasars, black holes, pulsars, magnetars, gamma-ray bursts, supernovae, neutron-star mergers, and gravitational lenses.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://www.jakecuth.com/work/cosmic-engines-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cosmic Engines · Quasars, black holes, pulsars, and the violent machinery that lights the universe">
+  <meta property="og:description" content="An interactive 3D visualization of the universe's eight extreme objects. Scroll-driven hero quasar, procedural Three.js scenes, source-backed copy from NASA and ESA.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/cosmic-engines-lab.png?v=1">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/cosmic-engines-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/work/cosmic-engines-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-09T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-09T00:00:00Z">
+  <meta name="twitter:title" content="Cosmic Engines · Quasars, black holes, pulsars, and the violent machinery that lights the universe">
+  <meta name="twitter:description" content="An interactive 3D visualization of the universe's eight extreme objects. Scroll-driven hero quasar, procedural Three.js scenes, source-backed copy.">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#05060c">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=42">
+  <link rel="stylesheet" href="/assets/css/cosmic-engines-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Cosmic Engines", "item": "https://www.jakecuth.com/work/cosmic-engines-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Cosmic Engines: Quasars, black holes, pulsars, and the violent machinery that lights the universe",
+    "description": "An interactive 3D visualization lab covering the eight extreme objects that power the visible universe.",
+    "image": "https://www.jakecuth.com/assets/og/cosmic-engines-lab.png?v=1",
+    "datePublished": "2026-05-09",
+    "dateModified": "2026-05-09",
+    "url": "https://www.jakecuth.com/work/cosmic-engines-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/cosmic-engines-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Cosmic Engines · Interactive 3D visualization of the universe's extreme objects",
+    "description": "Eight cosmic objects rendered as scroll-linked Three.js scenes: quasar, black hole, pulsar, magnetar, gamma-ray burst, supernova, neutron-star merger, gravitational lens.",
+    "image": "https://www.jakecuth.com/assets/og/cosmic-engines-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/cosmic-engines-lab/",
+    "datePublished": "2026-05-09",
+    "dateModified": "2026-05-09",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any (browser-based, WebGL)",
+    "browserRequirements": "Requires JavaScript and WebGL",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body class="cosmic-page">
+
+<div id="progress" class="progress"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--c-amber)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">44</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">14</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="cosmic-main">
+
+  <!-- ── HERO ────────────────────────────────────────────── -->
+  <section class="cosmic-hero" id="cosmic-hero" aria-label="Cosmic engines hero scene">
+    <div class="cosmic-hero-canvas-wrap">
+      <canvas id="cosmic-hero-canvas" role="img" aria-label="A procedural 3D quasar with central black hole shadow, glowing accretion disk, and polar relativistic jets."></canvas>
+      <div class="cosmic-hero-labels">
+        <div class="cosmic-hero-label" data-cosmic-label="shadow">Black-hole shadow</div>
+        <div class="cosmic-hero-label" data-cosmic-label="disk">Accretion disk</div>
+        <div class="cosmic-hero-label" data-cosmic-label="jet">Relativistic jet</div>
+        <div class="cosmic-hero-label" data-cosmic-label="host">Host galaxy glow</div>
+        <div class="cosmic-hero-label" data-cosmic-label="spectrum">Radiation across the spectrum</div>
+      </div>
+      <div class="cosmic-hero-title">
+        <span class="cosmic-hero-eyebrow">FIG. S14 &middot; Field guide</span>
+        <h1>Cosmic <em>Engines.</em></h1>
+        <p>The universe is not quiet. It runs on engines: gravity wells, plasma jets, collapsing stars, and magnetic fields violent enough to reshape space around them.</p>
+      </div>
+      <div class="cosmic-hero-hint">Scroll to enter the disk</div>
+      <div class="cosmic-webgl-fallback" role="status">
+        <div>The hero scene needs WebGL.</div>
+        <div>The chapter cards and comparison matrix below remain readable without it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BREADCRUMB + CONCEPT ──────────────────────────────── -->
+  <nav class="breadcrumb mono" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#research">Research</a></li>
+      <li><span aria-current="page">Cosmic Engines</span></li>
+    </ol>
+  </nav>
+
+  <div class="cosmic-concept">
+    <p>The universe is not quiet. It runs on <em>engines</em>: black holes, collapsing stars, magnetic fields, plasma jets, and gravity wells deep enough to bend light. This lab is a guided tour of eight of them.</p>
+    <div class="cosmic-dateline">
+      <div><div class="label">Filed</div><div class="value" id="cosmic-dateline-time">May 2026</div></div>
+      <div><div class="label">Engine</div><div class="value">Three.js r170 &middot; vanilla JS &middot; no build</div></div>
+      <div><div class="label">Sources</div><div class="value">NASA &middot; ESA &middot; LIGO &middot; EHT</div></div>
+    </div>
+    <div class="cosmic-inline-nav">
+      <a href="#engine-room">Engine Room</a><span>&middot;</span>
+      <a href="#chapters">Chapters</a><span>&middot;</span>
+      <a href="#comparison">Comparison</a><span>&middot;</span>
+      <a href="#methodology">Sources</a>
+    </div>
+  </div>
+
+  <!-- ── ENGINE ROOM (object browser) ─────────────────────── -->
+  <section class="cosmic-section" id="engine-room" aria-labelledby="engine-room-title">
+    <span class="cosmic-eyebrow">§ I &middot; Engine room</span>
+    <h2 class="cosmic-section-title" id="engine-room-title">Pick a <em>cosmic engine.</em> Inspect it from every angle.</h2>
+    <p class="cosmic-section-lede">Eight procedural Three.js scenes, each a stylized stand-in for one extreme object. Click a card. Drag the canvas to orbit. The engine animates while idle.</p>
+
+    <div class="cosmic-browser-grid">
+      <div id="cosmic-browser" aria-label="3D viewer canvas">
+        <span class="cosmic-browser-corner tl">Drag · scroll · stylized</span>
+        <span class="cosmic-browser-corner br" id="cosmic-browser-source-tag">Procedural · stylized</span>
+        <canvas id="cosmic-browser-canvas"></canvas>
+      </div>
+
+      <div class="cosmic-browser-detail">
+        <div class="cosmic-browser-head">
+          <h3 id="cosmic-browser-title">Quasar</h3>
+          <p id="cosmic-browser-tagline">An active supermassive black hole so bright it can drown out its host galaxy.</p>
+        </div>
+        <div class="cosmic-browser-seeing-wrap">
+          <span class="label">What you are seeing</span>
+          <p id="cosmic-browser-seeing">A central dark sphere. A flattened glowing disk of in-falling gas. Two narrow polar jets.</p>
+        </div>
+        <div class="cosmic-facts" id="cosmic-browser-facts" aria-label="Key facts"></div>
+        <div class="cosmic-sources" id="cosmic-browser-sources" aria-label="Sources"></div>
+      </div>
+    </div>
+
+    <div class="cosmic-cards" id="cosmic-browser-cards" role="tablist" aria-label="Cosmic objects"></div>
+  </section>
+
+  <!-- ── CHAPTERS ──────────────────────────────────────────── -->
+  <section class="cosmic-section" id="chapters" aria-labelledby="chapters-title">
+    <span class="cosmic-eyebrow">§ II &middot; Field notes</span>
+    <h2 class="cosmic-section-title" id="chapters-title">Eight short <em>chapters.</em> One engine each.</h2>
+    <p class="cosmic-section-lede">Why the object exists, what its engine is, and what an astronomer actually sees when they point an instrument at it.</p>
+
+    <div class="cosmic-chapters" id="cosmic-chapters"></div>
+  </section>
+
+  <!-- ── COMPARISON MATRIX ─────────────────────────────────── -->
+  <section class="cosmic-section" id="comparison" aria-labelledby="comparison-title">
+    <span class="cosmic-eyebrow">§ III &middot; Comparison</span>
+    <h2 class="cosmic-section-title" id="comparison-title">Engines, side by side.</h2>
+    <p class="cosmic-section-lede">The same eight objects, charted by what powers them, what they emit, and what the visual signature looks like.</p>
+
+    <div class="cosmic-matrix-wrap">
+      <table class="cosmic-matrix">
+        <thead>
+          <tr>
+            <th scope="col">Object</th>
+            <th scope="col">Engine</th>
+            <th scope="col">Energy source</th>
+            <th scope="col">What we observe</th>
+            <th scope="col">Typical scale</th>
+            <th scope="col">Visual signature</th>
+          </tr>
+        </thead>
+        <tbody id="cosmic-matrix-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── SOURCES / METHODOLOGY ─────────────────────────────── -->
+  <section class="cosmic-section" id="methodology" aria-labelledby="methodology-title">
+    <span class="cosmic-eyebrow">§ IV &middot; Sources &amp; methodology</span>
+    <h2 class="cosmic-section-title" id="methodology-title">How this was made.</h2>
+
+    <div class="cosmic-method">
+      <div>
+        <h3>Visualization</h3>
+        <p>Every 3D scene is generated procedurally with Three.js (r170, ESM, no build step) using primitives, particle systems, additive blending, and a small custom gradient shader for the hero background. There are no large textures or pre-baked GLB assets shipped on this page.</p>
+        <p>Every visual is stylized. Real cosmic objects span sixty orders of magnitude in scale. None of these models is to scale, and the colors are chosen for legibility, not photometric accuracy. Where we approximate something physical (Keplerian disk rotation, lighthouse pulsar geometry, expanding supernova shells), the simplification is intentional and noted.</p>
+        <p>If a decorative GLB asset exists at <code>/assets/models/cosmic-engines/&lt;id&gt;.glb</code>, the viewer will load it as a substitute for the procedural scene. None ship by default. See the asset pipeline doc below.</p>
+      </div>
+      <div>
+        <h3>Source list</h3>
+        <ul>
+          <li><a href="https://science.nasa.gov/mission/webb/science-overview/science-explainers/what-are-active-galactic-nuclei/" target="_blank" rel="noopener noreferrer">NASA &middot; What are active galactic nuclei? ↗</a></li>
+          <li><a href="https://science.nasa.gov/mission/hubble/science/science-behind-the-discoveries/hubble-quasars/" target="_blank" rel="noopener noreferrer">NASA Hubble &middot; Quasars ↗</a></li>
+          <li><a href="https://science.nasa.gov/universe/black-holes/" target="_blank" rel="noopener noreferrer">NASA &middot; Black Holes ↗</a></li>
+          <li><a href="https://science.nasa.gov/universe/black-holes/anatomy/" target="_blank" rel="noopener noreferrer">NASA &middot; Anatomy of a black hole ↗</a></li>
+          <li><a href="https://science.nasa.gov/mission/webb/science-overview/science-explainers/how-do-we-know-there-are-black-holes/" target="_blank" rel="noopener noreferrer">NASA &middot; How do we know there are black holes? ↗</a></li>
+          <li><a href="https://www.ligo.org/detections.php" target="_blank" rel="noopener noreferrer">LIGO &middot; Detections ↗</a></li>
+          <li><a href="https://eventhorizontelescope.org/" target="_blank" rel="noopener noreferrer">Event Horizon Telescope ↗</a></li>
+          <li><a href="https://science.nasa.gov/universe/" target="_blank" rel="noopener noreferrer">NASA &middot; Universe topics ↗</a></li>
+        </ul>
+        <p>Numbers cited only when source-backed. Where a fact is widely reported but lacks a single canonical source (e.g., total magnetar count), the confidence label is "reported" rather than "official."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RELATED LABS ──────────────────────────────────────── -->
+  <aside class="cosmic-section" aria-label="Related labs" style="padding-top:0;">
+    <span class="cosmic-eyebrow">Related labs</span>
+    <h2 class="cosmic-section-title">Other big <em>fields,</em> charted.</h2>
+    <div class="cosmic-method">
+      <div>
+        <h3><a href="/work/uap-files-lab/" style="color:inherit; text-decoration:none;">S13 · The PURSUE Files ↗</a></h3>
+        <p>Inside the May 2026 Department of War UAP release. Tranche 1 inventory, 79 years of cases, four hand-coded charts.</p>
+      </div>
+      <div>
+        <h3><a href="/work/escape-velocity-lab/" style="color:inherit; text-decoration:none;">S07 · Escape Velocity ↗</a></h3>
+        <p>Six measurable curves arguing whether AI is approaching escape velocity or riding an S-curve.</p>
+      </div>
+    </div>
+  </aside>
+
+  <nav class="cosmic-lab-nav mono" aria-label="Story navigation">
+    <a href="/work/uap-files-lab/">&larr; Prev: The PURSUE Files (S13)</a>
+    <span>Data story 14 of 14</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js?v=16"></script>
+<script type="module" src="/assets/js/cosmic-engines-lab/main.js?v=1"></script>
+</body>
+</html>
