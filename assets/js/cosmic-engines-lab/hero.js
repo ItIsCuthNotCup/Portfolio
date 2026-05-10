@@ -7,6 +7,7 @@
 import * as THREE from 'three';
 import { buildQuasar } from './procedural.js';
 import { makeScrollProgress, smoothstep, lerp, prefersReducedMotion } from './scroll.js';
+import { makeComposer } from './postfx.js';
 
 export function initHero({ canvas, container, labelEls = {} }) {
   const reduced = prefersReducedMotion();
@@ -22,7 +23,7 @@ export function initHero({ canvas, container, labelEls = {} }) {
   renderer.setClearColor(0x05060c, 1.0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.15;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x05060c, 0.03);
@@ -58,6 +59,18 @@ export function initHero({ canvas, container, labelEls = {} }) {
   const quasar = buildQuasar();
   scene.add(quasar);
 
+  // Post-processing pipeline (cinematic bloom). Wrapped in try so
+  // older browsers / blocked CDNs fall back to plain renderer.render.
+  let composer = null;
+  try {
+    composer = makeComposer({
+      renderer, scene, camera,
+      strength: 1.05, radius: 0.6, threshold: 0.16,
+    });
+  } catch (e) {
+    console.warn('cosmic-engines hero: bloom unavailable, plain render fallback', e);
+  }
+
   // Resize handling
   function onResize() {
     const w = container.clientWidth;
@@ -65,6 +78,7 @@ export function initHero({ canvas, container, labelEls = {} }) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    if (composer) composer.setSize(w, h);
   }
   onResize();
   window.addEventListener('resize', onResize);
@@ -191,7 +205,8 @@ export function initHero({ canvas, container, labelEls = {} }) {
       hint.style.opacity = String(1 - smoothstep(0.0, 0.1, p));
     }
 
-    renderer.render(scene, camera);
+    if (composer) composer.render();
+    else renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);

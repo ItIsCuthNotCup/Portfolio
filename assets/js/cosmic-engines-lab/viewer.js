@@ -9,6 +9,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { BUILDERS } from './procedural.js';
 import { prefersReducedMotion } from './scroll.js';
+import { makeComposer } from './postfx.js';
 
 const MODEL_BASE = '/assets/models/cosmic-engines/';
 
@@ -25,7 +26,7 @@ export function initViewer({ canvas, container, onReady }) {
   renderer.setClearColor(0x05060c, 1.0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.15;
 
   const scene = new THREE.Scene();
 
@@ -140,6 +141,17 @@ export function initViewer({ canvas, container, onReady }) {
     });
   }
 
+  // Post-processing pipeline (cinematic bloom)
+  let composer = null;
+  try {
+    composer = makeComposer({
+      renderer, scene, camera,
+      strength: 1.0, radius: 0.55, threshold: 0.18,
+    });
+  } catch (e) {
+    console.warn('cosmic-engines viewer: bloom unavailable, plain render fallback', e);
+  }
+
   function onResize() {
     const w = container.clientWidth;
     const h = container.clientHeight;
@@ -147,6 +159,7 @@ export function initViewer({ canvas, container, onReady }) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    if (composer) composer.setSize(w, h);
   }
   onResize();
   window.addEventListener('resize', onResize);
@@ -164,7 +177,8 @@ export function initViewer({ canvas, container, onReady }) {
     if (currentObject && currentObject.userData && currentObject.userData.tick && !reduced) {
       currentObject.userData.tick(dt, elapsed);
     }
-    renderer.render(scene, camera);
+    if (composer) composer.render();
+    else renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
