@@ -143,19 +143,25 @@ main { position: relative; }
 }
 
 /* ── Masthead ───────────────────────────────────────────────── */
+/* 3-column grid so the name stays exactly center regardless of
+   whether the dateline is hidden by media queries. The previous
+   flex layout put the name at "center of remaining space," which
+   slid left as soon as the dateline hid. Grid pins it to the
+   middle column. */
 .masthead {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   padding: 14px 28px;
-  display: flex; align-items: center; gap: 24;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 24px;
   background: color-mix(in oklab, var(--paper) 82%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
   transition: padding 220ms ease, background 220ms ease;
 }
-/* Condensed state — toggled by main.js once scrollY > 80px. Padding
-   tightens, background firms up, name shrinks slightly. Subtle by
-   design — premium editorial sites condense, they don't collapse. */
+/* Condensed state — toggled by main.js once scrollY > 80px. */
 .masthead.scrolled {
   padding: 8px 28px;
   background: color-mix(in oklab, var(--paper) 92%, transparent);
@@ -163,15 +169,20 @@ main { position: relative; }
 .masthead.scrolled .masthead-name { font-size: 18px; }
 .masthead-dateline {
   font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  justify-self: start;
+  white-space: nowrap;
 }
 .masthead-name {
-  flex: 1; text-align: center;
+  text-align: center;
   font-size: 22px; letter-spacing: 0.02em;
   transition: font-size 220ms ease;
+  justify-self: center;
+  white-space: nowrap;
 }
 .masthead-nav {
   font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  display: flex; gap: 22px; align-items: center;
+  display: flex; gap: 18px; align-items: center;
+  justify-self: end;
 }
 .masthead-nav a { transition: opacity 200ms; }
 .masthead-nav a:hover { opacity: 0.7; }
@@ -1906,11 +1917,23 @@ hr.rule.is-drawn, hr.hair.is-drawn {
   opacity: 0.6;
 }
 
-/* Hide masthead icons on narrow screens — they read as decoration,
-   not function, and the text labels are the actual nav. */
-@media (max-width: 880px) {
+/* Narrow-viewport masthead: drop icons + secondary items so the
+   primary nav (Projects · Research · Get in touch) still fits.
+   Notes and Education remain reachable through the homepage. */
+@media (max-width: 1080px) {
   .masthead-nav .pixel-icon { display: none; }
   .masthead-nav a, .masthead-nav .nav-dropdown-toggle { gap: 0; }
+  .masthead-nav { gap: 16px; }
+}
+@media (max-width: 820px) {
+  .masthead-nav a[href="#education"],
+  .masthead-nav a[href="/notes/"] { display: none; }
+  .masthead { padding: 12px 18px; column-gap: 16px; }
+  .masthead-nav { gap: 14px; }
+}
+@media (max-width: 520px) {
+  .masthead-nav a[href="#projects"] { display: none; }
+  .masthead { padding: 10px 14px; column-gap: 12px; }
 }
 
 @media (hover: none) {
