@@ -1835,25 +1835,32 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 /* ── Pixel Icons ───────────────────────────────────────────── */
 .pixel-icon {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   vertical-align: -0.12em;
   fill: currentColor;
   shape-rendering: crispEdges;
   flex-shrink: 0;
 }
 .pixel-icon-lg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   vertical-align: -0.18em;
 }
 
-/* Nav links with icons */
+/* Nav links with icons — smaller icon + tighter gap so the full
+   nav fits with all five items visible on a 1280-wide viewport */
+.masthead-nav { gap: 18px; }
 .masthead-nav a,
 .masthead-nav .nav-dropdown-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+}
+.masthead-nav .pixel-icon {
+  width: 11px;
+  height: 11px;
+  opacity: 0.75;
 }
 
 /* Section label icons */
@@ -1867,6 +1874,16 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 }
 .research-chip.is-active .pixel-icon {
   opacity: 1;
+}
+
+/* Toolbar — let the search shrink so the readout stays inside the
+   viewport edge instead of clipping past it */
+.research-toolbar .research-search {
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+.research-toolbar .research-readout {
+  flex: 0 0 auto;
 }
 
 /* Contact CTA icons */
@@ -1887,6 +1904,13 @@ hr.rule.is-drawn, hr.hair.is-drawn {
 /* Notes page nav */
 .notes-main .section-label .pixel-icon {
   opacity: 0.6;
+}
+
+/* Hide masthead icons on narrow screens — they read as decoration,
+   not function, and the text labels are the actual nav. */
+@media (max-width: 880px) {
+  .masthead-nav .pixel-icon { display: none; }
+  .masthead-nav a, .masthead-nav .nav-dropdown-toggle { gap: 0; }
 }
 
 @media (hover: none) {
