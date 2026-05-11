@@ -132,7 +132,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
-  padding: 5px 0 5px 20px;
+  padding: 5px 0 5px 22px;
   font-family: 'Newsreader', serif;
   font-style: italic;
   font-weight: 300;
@@ -148,28 +148,12 @@
   color: var(--ink-dim);
   font-style: italic;
 }
-.research-search::before {
-  content: '';
+.research-search .research-search-icon {
   position: absolute;
-  left: 2px;
+  left: 0;
   top: 50%;
-  width: 10px;
-  height: 10px;
-  margin-top: -7px;
-  border: 1.5px solid var(--ink-dim);
-  border-radius: 50%;
-  pointer-events: none;
-}
-.research-search::after {
-  content: '';
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  margin-top: 1px;
-  width: 5px;
-  height: 1.5px;
-  background: var(--ink-dim);
-  transform: rotate(45deg);
+  transform: translateY(-65%);
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -192,16 +176,17 @@
    ═══════════════════════════════════════════════════════════ */
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 6px;
-  /* Padding ensures hover-scaled tiles don't get clipped at edges */
-  padding: 24px 0;
+  /* Compressed Apr 2026 — was minmax(180px, 1fr). Smaller cards
+     reduce wall-of-text density; full description still on hover. */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 5px;
+  padding: 18px 0;
   /* Allow the grid container to overflow its scaled children */
   overflow: visible;
 }
 
 @media (max-width: 720px) {
-  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 4px; }
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 4px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -213,8 +198,9 @@
   --fill: var(--cat-m-fill);
 
   position: relative;
-  aspect-ratio: 5 / 3;
-  padding: 13px 14px 12px;
+  /* squarer + tighter padding so tiles take less vertical room */
+  aspect-ratio: 4 / 3;
+  padding: 9px 11px 9px;
   background: var(--tint);
   color: var(--ink);
   text-decoration: none;
@@ -297,7 +283,7 @@
 /* Tile content elements */
 .tile-fig {
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 9.5px;
+  font-size: 9px;
   letter-spacing: 0.18em;
   color: var(--accent);
   text-transform: uppercase;
@@ -315,8 +301,8 @@
 .tile-name {
   font-family: 'Newsreader', serif;
   font-weight: 400;
-  font-size: 15px;
-  line-height: 1.18;
+  font-size: 13px;
+  line-height: 1.15;
   letter-spacing: -0.01em;
   margin: 6px 0 0;
 
