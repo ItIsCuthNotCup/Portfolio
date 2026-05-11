@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neurotransmitter Atlas · A 3D neuron, synapse, and brain map · Jake Cuth.</title>
+  <meta name="description" content="A hyperrealistic 3D explainer of neurons, synapses, and six major neurotransmitter systems in the brain.">
+
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/neurotransmitter-atlas-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Neurotransmitter Atlas · A 3D neuron, synapse, and brain map">
+  <meta property="og:description" content="A hyperrealistic 3D explainer of neurons, synapses, and six major neurotransmitter systems in the brain.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/neurotransmitter-atlas-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/work/neurotransmitter-atlas-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-10T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-10T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Neurotransmitter Atlas · A 3D neuron, synapse, and brain map">
+  <meta name="twitter:description" content="A hyperrealistic 3D explainer of neurons, synapses, and six major neurotransmitter systems in the brain.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/neurotransmitter-atlas-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#f7f0df">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../assets/css/main.css?v=48">
+  <link rel="stylesheet" href="../../assets/css/neurotransmitter-atlas-lab.css?v=20">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Neurotransmitter Atlas", "item": "https://www.jakecuth.com/work/neurotransmitter-atlas-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Neurotransmitter Atlas: A 3D neuron, synapse, and brain map",
+    "description": "A hyperrealistic 3D explainer of neurons, synapses, and six major neurotransmitter systems in the brain.",
+    "image": "https://www.jakecuth.com/assets/og/neurotransmitter-atlas-lab.png?v=1",
+    "datePublished": "2026-05-10",
+    "dateModified": "2026-05-10",
+    "url": "https://www.jakecuth.com/work/neurotransmitter-atlas-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/neurotransmitter-atlas-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Neurotransmitter Atlas · Interactive 3D neuroscience explainer",
+    "description": "A browser-based 3D neuron, synapse close-up, and brain-region atlas for six major neurotransmitter systems.",
+    "image": "https://www.jakecuth.com/assets/og/neurotransmitter-atlas-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/neurotransmitter-atlas-lab/",
+    "datePublished": "2026-05-10",
+    "dateModified": "2026-05-10",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any (browser-based, WebGL)",
+    "browserRequirements": "Requires JavaScript and WebGL",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body class="ntx-page">
+
+<div id="progress" class="progress"></div>
+<div class="ntx-file-warning mono" role="status">
+  This local file view cannot run the Three.js modules. Open the served page at
+  <a href="http://127.0.0.1:4173/work/neurotransmitter-atlas-lab/">127.0.0.1:4173/work/neurotransmitter-atlas-lab</a>.
+</div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--ntx-red)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">45</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">15</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="ntx-main">
+  <section class="ntx-hero" id="atlas" aria-label="Neurotransmitter Atlas interactive">
+    <div class="ntx-panel ntx-title-panel">
+      <div class="mono section-label">
+        <span class="idx">S15</span>
+        <span>Interactive neuroscience atlas</span>
+      </div>
+      <h1>Neurotransmitter <em>Atlas.</em></h1>
+      <p class="lab-biz-line">
+        A neuron is not a wire. It is a switching station where electricity becomes chemistry, then becomes behavior.
+      </p>
+      <p class="ntx-kicker">
+        This lab renders an anatomical neuron specimen, a synapse close-up, and a rotatable NIH-derived brain mesh in Three.js. It covers six major neurotransmitter systems, with short explanations tied to source-backed anatomy instead of medical folklore.
+      </p>
+      <nav class="ntx-reader-flow" aria-label="Suggested reading path">
+        <button type="button" data-flow="specimen"><span>01</span><strong>Specimen</strong><em>Start with the whole neuron.</em></button>
+        <button type="button" data-flow="model"><span>02</span><strong>Rules</strong><em>Learn the mental model first.</em></button>
+        <button type="button" data-flow="structures"><span>03</span><strong>Parts</strong><em>Name the jobs before the sequence.</em></button>
+        <button type="button" data-flow="signal"><span>04</span><strong>Signal</strong><em>Follow voltage into chemistry.</em></button>
+        <button type="button" data-flow="brain"><span>05</span><strong>Brain map</strong><em>Compare circuits by transmitter.</em></button>
+      </nav>
+      <div class="mono ntx-dateline">
+        <div><div class="label">Filed</div><div class="value" id="ntx-dateline-time">May 2026</div></div>
+        <div><div class="label">Engine</div><div class="value">Three.js r170 &middot; vanilla JS &middot; no build</div></div>
+        <div><div class="label">Scope</div><div class="value">6 transmitters &middot; 12 regions &middot; rotatable 3D plate</div></div>
+      </div>
+    </div>
+
+    <div class="ntx-canvas-shell" id="ntx-canvas-shell">
+      <canvas id="ntx-canvas" role="img" aria-label="Interactive 3D neuron, synapse, and brain-region atlas."></canvas>
+      <div class="ntx-hotspots" id="ntx-hotspots" aria-hidden="false"></div>
+      <div class="ntx-canvas-badge">Specimen plate &middot; rotatable 3D</div>
+      <div class="ntx-canvas-source">NIH 3D mesh &middot; browser 3D</div>
+
+      <div class="ntx-mode-card" aria-label="View mode">
+        <div class="ntx-mode-card-label"><span>View mode</span><strong id="ntx-mode-label">Full neuron</strong></div>
+        <div class="ntx-mode-buttons">
+          <button class="ntx-mode-button is-active" type="button" data-mode="full" aria-pressed="true" title="Full neuron">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 12h16M12 4v16"/><circle cx="12" cy="12" r="7"/></svg>
+            <span>Full</span>
+          </button>
+          <button class="ntx-mode-button" type="button" data-mode="isolate" aria-pressed="false" title="Isolate cell body">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 5h14v14H5z"/><path d="M8 12h8M12 8v8"/></svg>
+            <span>Cell</span>
+          </button>
+          <button class="ntx-mode-button" type="button" data-mode="synapse" aria-pressed="false" title="Synapse close-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 8c4 0 4 8 8 8s4-8 8-8"/><path d="M8 12h8"/></svg>
+            <span>Synapse</span>
+          </button>
+          <button class="ntx-mode-button" type="button" data-mode="brain" aria-pressed="false" title="Brain map">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M9 18c-3 0-5-2-5-5 0-2 1-4 3-5 0-3 2-5 5-5s5 2 5 5c2 1 3 3 3 5 0 3-2 5-5 5H9z"/><path d="M12 4v15"/></svg>
+            <span>Brain</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ntx-tools">
+        <button class="ntx-tool-button" type="button" id="ntx-release-button">Release pulse</button>
+        <button class="ntx-tool-button" type="button" id="ntx-reset-button">Reset view</button>
+      </div>
+
+      <div class="ntx-webgl-fallback" id="ntx-webgl-fallback" role="status">
+        <h2 class="serif">The 3D atlas needs WebGL.</h2>
+        <p>The transmitter notes, source table, and methodology below remain readable.</p>
+      </div>
+    </div>
+
+    <aside class="ntx-panel ntx-detail-panel" aria-label="Neurotransmitter details">
+      <div>
+        <div class="ntx-panel-title">
+          <span>Transmitter system</span>
+          <i class="ntx-active-swatch" id="ntx-active-swatch" aria-hidden="true"></i>
+        </div>
+        <div class="ntx-transmitter-list" id="ntx-transmitter-list"></div>
+      </div>
+
+      <div>
+        <article class="ntx-detail-card">
+          <span class="ntx-mini-label">Selected molecule</span>
+          <h2 id="ntx-detail-title">Glutamate</h2>
+          <div class="ntx-detail-type" id="ntx-detail-type">Amino acid transmitter</div>
+          <p id="ntx-detail-action">Primary excitatory signal</p>
+          <p id="ntx-detail-effect"></p>
+          <div class="ntx-regions" id="ntx-detail-regions"></div>
+        </article>
+
+        <article class="ntx-detail-card">
+          <span class="ntx-mini-label">Synapse readout</span>
+          <h3>What changes at the receiving cell</h3>
+          <p id="ntx-detail-mechanism"></p>
+          <p id="ntx-detail-limits"></p>
+          <div class="ntx-source-links" id="ntx-detail-sources"></div>
+        </article>
+
+        <article class="ntx-detail-card ntx-study-card">
+          <span class="ntx-mini-label">Study card</span>
+          <h3>How to read it</h3>
+          <dl class="ntx-study-list">
+            <div>
+              <dt>Frame</dt>
+              <dd id="ntx-detail-frame"></dd>
+            </div>
+            <div>
+              <dt>Trap</dt>
+              <dd id="ntx-detail-trap"></dd>
+            </div>
+            <div>
+              <dt>Check</dt>
+              <dd id="ntx-detail-check"></dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="ntx-detail-card ntx-hotspot-readout">
+          <span class="ntx-mini-label" id="ntx-hotspot-source">Atlas UI</span>
+          <h3 id="ntx-hotspot-title">Interactive hotspot</h3>
+          <p id="ntx-hotspot-summary">Click a label or a 3D anchor on the specimen to pin an anatomical note here.</p>
+        </article>
+      </div>
+    </aside>
+  </section>
+
+  <aside class="ntx-inspector" id="ntx-inspector" aria-labelledby="ntx-inspector-title" aria-hidden="true" hidden>
+    <div class="ntx-inspector-card" role="dialog" aria-modal="false">
+      <button class="ntx-inspector-close" type="button" id="ntx-inspector-close" aria-label="Close specimen note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="ntx-inspector-copy">
+        <span class="ntx-mini-label" id="ntx-inspector-source">Atlas UI</span>
+        <h2 id="ntx-inspector-title">Specimen note</h2>
+        <p id="ntx-inspector-summary">Select a labeled structure to open the matching chapter note.</p>
+      </div>
+      <div class="ntx-inspector-actions">
+        <button class="ntx-inspector-action" type="button" id="ntx-inspector-primary">Open chapter note</button>
+        <button class="ntx-inspector-action is-secondary" type="button" id="ntx-inspector-secondary">Show in 3D</button>
+      </div>
+    </div>
+  </aside>
+
+  <nav class="breadcrumb mono" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#research">Research</a></li>
+      <li><span aria-current="page">Neurotransmitter Atlas</span></li>
+    </ol>
+  </nav>
+
+  <div class="ntx-concept">
+    <p>The synapse is the gap where the signal changes form. The molecule is not the meaning. Meaning comes from receptor, region, timing, and the circuit already in motion.</p>
+    <div class="ntx-inline-nav">
+      <a href="#core-model">Mental model</a><span>&middot;</span>
+      <a href="#structures">Structures</a><span>&middot;</span>
+      <a href="#sequence">Signal path</a><span>&middot;</span>
+      <a href="#systems">Systems</a><span>&middot;</span>
+      <a href="#receptors">Receptors</a><span>&middot;</span>
+      <a href="#matrix">Matrix</a><span>&middot;</span>
+      <a href="#review">Review</a><span>&middot;</span>
+      <a href="#methodology">Sources</a>
+    </div>
+  </div>
+
+  <section class="ntx-section ntx-chapter-section" id="chapter-map" aria-labelledby="ntx-chapter-title">
+    <div class="mono section-label">
+      <span class="idx">Chapter map</span>
+      <span>What this plate should teach</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-chapter-title">Read the neuron as a <em>system.</em></h2>
+    <p class="ntx-section-lede">A good neuron chapter should connect structure, timing, chemistry, and circuit context. Use the specimen first, then the stepper, then the tables. By the end, the labels should feel like a mechanism rather than vocabulary.</p>
+    <ol class="ntx-objectives" id="ntx-objectives"></ol>
+  </section>
+
+  <section class="ntx-section ntx-core-section" id="core-model" aria-labelledby="ntx-core-title">
+    <div class="mono section-label">
+      <span class="idx">§ I</span>
+      <span>The mental model before the labels</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-core-title">Four rules make the plate <em>readable.</em></h2>
+    <p class="ntx-section-lede">Before memorizing molecules, learn the logic. Inputs are summed, voltage becomes chemistry, receptors define the local effect, and brain regions make sense only as circuits.</p>
+    <div class="ntx-rule-grid" id="ntx-core-rules"></div>
+  </section>
+
+  <section class="ntx-section" id="structures" aria-labelledby="ntx-structures-title">
+    <div class="mono section-label">
+      <span class="idx">§ II</span>
+      <span>The neuron as a switching station</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-structures-title">Every part has a <em>job.</em></h2>
+    <p class="ntx-section-lede">The specimen is simplified, but the roles are real: dendrites receive, the soma integrates, the axon carries the spike, terminals release chemicals, and receptors decide what the next cell does with the message.</p>
+    <div class="ntx-structure-grid" id="ntx-structure-grid"></div>
+  </section>
+
+  <section class="ntx-section ntx-sequence-section" id="sequence" aria-labelledby="ntx-sequence-title">
+    <div class="mono section-label">
+      <span class="idx">§ III</span>
+      <span>How a message crosses the synapse</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-sequence-title">The signal changes <em>form.</em></h2>
+    <p class="ntx-section-lede">The same event has two languages. Voltage carries the message inside the sending neuron. Molecules carry it across the gap. Receptors translate it again on the receiving side.</p>
+    <div class="ntx-sequence-layout">
+      <div class="ntx-step-buttons" id="ntx-step-buttons" aria-label="Signal sequence controls"></div>
+      <article class="ntx-step-readout">
+        <span class="ntx-mini-label" id="ntx-step-source">NINDS neuron basics</span>
+        <h3 id="ntx-step-title">Dendrites collect local voltage changes</h3>
+        <p id="ntx-step-body">Most incoming synapses land on dendrites. A single input is usually not the whole decision. The soma integrates many excitatory and inhibitory nudges before the axon initial segment fires.</p>
+        <div class="ntx-step-visual">
+          <strong>What to look for</strong>
+          <span id="ntx-step-visual">Watch the soma and dendrite field. The important idea is summation, not one magic trigger.</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="ntx-section" id="systems" aria-labelledby="ntx-systems-title">
+    <div class="mono section-label">
+      <span class="idx">§ IV &middot; S15.1</span>
+      <span>Six transmitter systems</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-systems-title">Not one chemical per <em>feeling.</em></h2>
+    <p class="ntx-section-lede">A transmitter is closer to a control signal than a mood label. Glutamate and GABA handle fast excitation and inhibition. Dopamine, serotonin, acetylcholine, and norepinephrine often modulate how strongly circuits respond.</p>
+    <div class="ntx-use-note">
+      <strong>Using the interactive plate:</strong>
+      select a transmitter, switch to Brain mode, then click a region label. The right rail explains the molecule, while the bottom note anchors the region in a specific circuit. The map is intentionally representative, not exhaustive.
+    </div>
+    <div class="ntx-how-grid">
+      <article class="ntx-how-card">
+        <span class="ntx-card-kicker">Fig. A</span>
+        <h3>Fast channels</h3>
+        <p>Ionotropic receptors open a channel directly. AMPA receptors are the classic fast glutamate example in this lab.</p>
+      </article>
+      <article class="ntx-how-card">
+        <span class="ntx-card-kicker">Fig. B</span>
+        <h3>Slow modulation</h3>
+        <p>Metabotropic receptors change cell state through signaling cascades. The effect can be slower and broader.</p>
+      </article>
+      <article class="ntx-how-card">
+        <span class="ntx-card-kicker">Fig. C</span>
+        <h3>Cleanup matters</h3>
+        <p>Transporters, enzymes, and diffusion end the message. The off-switch is part of the computation.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="ntx-section" id="receptors" aria-labelledby="ntx-receptors-title">
+    <div class="mono section-label">
+      <span class="idx">§ V</span>
+      <span>Receptors set the timescale</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-receptors-title">Fast channel or slow <em>state change?</em></h2>
+    <p class="ntx-section-lede">A transmitter is only half the story. The receptor determines whether the receiving cell changes voltage immediately, changes its internal chemistry, or clears the signal and resets.</p>
+    <div class="ntx-matrix-wrap">
+      <table class="ntx-matrix ntx-receptor-table">
+        <thead>
+          <tr>
+            <th scope="col">Process</th>
+            <th scope="col">Tempo</th>
+            <th scope="col">Mechanism</th>
+            <th scope="col">Example</th>
+            <th scope="col">Takeaway</th>
+          </tr>
+        </thead>
+        <tbody id="ntx-receptor-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ntx-section" id="matrix" aria-labelledby="ntx-matrix-title">
+    <div class="mono section-label">
+      <span class="idx">§ VI &middot; S15.2</span>
+      <span>Reference matrix</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-matrix-title">Same synapse. Different <em>meaning.</em></h2>
+    <p class="ntx-section-lede">The table mirrors the interactive panel so the page stays useful even without WebGL.</p>
+    <div class="ntx-matrix-wrap">
+      <table class="ntx-matrix">
+        <thead>
+          <tr>
+            <th scope="col">Transmitter</th>
+            <th scope="col">Class</th>
+            <th scope="col">Primary action</th>
+            <th scope="col">Representative regions</th>
+            <th scope="col">Synapse note</th>
+          </tr>
+        </thead>
+        <tbody id="ntx-matrix-body"></tbody>
+      </table>
+    </div>
+    <div class="ntx-note-band">
+      This is not a full list of neurotransmitters. NCBI and neuroscience references describe well over 100 known neurotransmitter and neuromodulator candidates. This v1 atlas chooses six familiar systems so the mechanism can stay legible.
+    </div>
+  </section>
+
+  <section class="ntx-section" id="review" aria-labelledby="ntx-review-title">
+    <div class="mono section-label">
+      <span class="idx">§ VII</span>
+      <span>Vocabulary, traps, and self-checks</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-review-title">What a student should <em>keep.</em></h2>
+    <p class="ntx-section-lede">The chapter is useful only if it prevents the usual bad shortcuts: one molecule per feeling, one brain point per behavior, and excitation as a moral category.</p>
+    <div class="ntx-review-layout">
+      <div>
+        <h3 class="ntx-subhead">Glossary</h3>
+        <dl class="ntx-glossary-list" id="ntx-glossary-list"></dl>
+      </div>
+      <div>
+        <h3 class="ntx-subhead">Misconceptions to retire</h3>
+        <div class="ntx-misconceptions" id="ntx-misconceptions"></div>
+      </div>
+      <div>
+        <h3 class="ntx-subhead">Check yourself</h3>
+        <div class="ntx-checks" id="ntx-checks"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ntx-section" id="methodology" aria-labelledby="ntx-method-title">
+    <div class="mono section-label">
+      <span class="idx">§ VIII</span>
+      <span>Sources and production notes</span>
+    </div>
+    <h2 class="ntx-section-title" id="ntx-method-title">How the atlas was <em>built.</em></h2>
+    <div class="ntx-method">
+      <div>
+        <h3>Visualization</h3>
+        <p>The neuron and synapse are browser-built Three.js geometry with organic membranes, tapered dendrites, myelin wraps, vesicles, receptors, and transmitter particles. The brain mode loads an optimized NIH 3D GLB mesh so the map is a rotatable object, not a flat image. No Meshy key is shipped to the browser. If a future GLB asset is generated, the API key belongs in <code>MESHY_API_KEY</code> and the final file should be committed under <code>/assets/models/neurotransmitter-atlas/</code>.</p>
+      </div>
+      <div>
+        <h3>Image model role</h3>
+        <p>Generated imagery is not used as the brain object. The labels, region notes, transmitter explanations, and interaction logic stay browser-native and source-backed so the atlas can be inspected, tested, and corrected.</p>
+      </div>
+      <div>
+        <h3>Source list</h3>
+        <ul id="ntx-method-sources"></ul>
+      </div>
+    </div>
+  </section>
+
+  <aside class="ntx-related" aria-label="Related labs">
+    <div class="mono section-label">
+      <span class="idx">Related labs</span>
+      <span>Other systems, made explorable</span>
+    </div>
+    <div class="ntx-related-grid">
+      <article class="ntx-related-card">
+        <span class="ntx-card-kicker">S13</span>
+        <h3><a href="/work/cosmic-engines-lab/">Cosmic Engines &rarr;</a></h3>
+        <p>A 3D field guide for quasars, black holes, pulsars, and the violent machinery that lights the universe.</p>
+      </article>
+      <article class="ntx-related-card">
+        <span class="ntx-card-kicker">P03</span>
+        <h3><a href="/work/attention-lab/">Attention Is All You Need &rarr;</a></h3>
+        <p>A paper anatomy with interactive views of attention heads, token mixing, and sequence complexity.</p>
+      </article>
+      <article class="ntx-related-card">
+        <span class="ntx-card-kicker">M11</span>
+        <h3><a href="/work/diffusion-lab/">Diffusion Lab &rarr;</a></h3>
+        <p>A browser-native explanation of forward noise, reverse denoising, and how generative image models recover structure.</p>
+      </article>
+    </div>
+  </aside>
+
+  <nav class="ntx-lab-nav lab-nav mono" aria-label="Story navigation">
+    <a href="/work/cosmic-engines-lab/">&larr; Prev: Cosmic Engines (S13)</a>
+    <span class="lab-nav-meta">Data story 15 of 15</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="../../assets/js/main.js?v=16"></script>
+<script>
+  (function () {
+    function loadAtlasModule() {
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.src = '../../assets/js/neurotransmitter-atlas-lab.js?v=20';
+      document.body.appendChild(script);
+    }
+
+    if (window.location.protocol !== 'file:') {
+      loadAtlasModule();
+      return;
+    }
+
+    var localAtlasUrl = 'http://127.0.0.1:4173/work/neurotransmitter-atlas-lab/' + window.location.hash;
+    fetch(localAtlasUrl, { mode: 'no-cors', cache: 'no-store' })
+      .then(function () { window.location.replace(localAtlasUrl); })
+      .catch(function () { document.documentElement.classList.add('ntx-file-mode'); });
+  })();
+</script>
+</body>
+</html>
