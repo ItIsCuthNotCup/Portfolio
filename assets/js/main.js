@@ -428,6 +428,8 @@
   function initScene() {
     var host = document.getElementById('scene-canvas');
     if (!host || typeof THREE === 'undefined') return;
+    // ASCII humanoid (hero-ascii.js) owns this slot when present.
+    if (host.dataset && host.dataset.ascii) return;
 
     var w = function () { return host.clientWidth; };
     var h = function () { return host.clientHeight; };
