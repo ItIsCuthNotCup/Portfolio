@@ -96,17 +96,14 @@
   }
 
   // S-curve tone mapping for density → character index.
-  // Compresses mid-grays toward dark, lifts the highlight tail.
-  // Result: more "punch" in the rendered silhouette.
+  // Steeper sigmoid → harder edges, more contrast.
   function sCurve(v) {
     if (v <= 0) return 0;
     if (v >= 1) return 1;
-    // Filmic-ish: toe + linear + shoulder
-    const a = 2.2;     // contrast
-    const b = 0.45;    // midpoint
+    const a = 3.6;   // contrast (higher = steeper)
+    const b = 0.40;  // midpoint (lower = more cells push to dense end)
     const x = clamp(v, 0, 1);
     const out = 1 / (1 + Math.exp(-a * (x - b) * 6));
-    // Normalize so f(0)=0, f(1)=1
     const f0 = 1 / (1 + Math.exp(a * b * 6));
     const f1 = 1 / (1 + Math.exp(-a * (1 - b) * 6));
     return (out - f0) / (f1 - f0);
@@ -308,12 +305,15 @@
     const lThigh    = 0.275;
     const lCalf     = 0.260;
 
-    function armPositions(shoulder, swing, bend) {
-      const sx = Math.sin(swing) * lUpperArm;
+    // When idle, arms hang slightly outward from the torso so they
+    // visually separate (instead of fusing into the body column).
+    function armPositions(shoulder, swing, bend, sideSign) {
+      const idleOutward = walking ? 0 : 0.022 * sideSign;
+      const sx = Math.sin(swing) * lUpperArm + idleOutward;
       const sy = Math.cos(swing) * lUpperArm;
       const elbow = [shoulder[0] + sx, shoulder[1] + sy];
       const faAng = swing - bend * 0.46;
-      const fx = Math.sin(faAng) * lForearm;
+      const fx = Math.sin(faAng) * lForearm + idleOutward * 0.6;
       const fy = Math.cos(faAng) * lForearm;
       const hand = [elbow[0] + fx, elbow[1] + fy];
       return { elbow, hand };
@@ -356,8 +356,8 @@
       };
     }
 
-    const armL = armPositions(shoulderL, armSwingL, elbowBendL);
-    const armR = armPositions(shoulderR, armSwingR, elbowBendR);
+    const armL = armPositions(shoulderL, armSwingL, elbowBendL, -1);
+    const armR = armPositions(shoulderR, armSwingR, elbowBendR, +1);
     const legLp = legPositions(hipL, L);
     const legRp = legPositions(hipR, R);
 
@@ -427,8 +427,10 @@
   }
 
   function rasterizeBody(d, cols, rows, pose, scale, anchor, depth) {
-    const figH = rows * scale * 0.92;
-    const figW = figH * 0.44;
+    // Wider, slightly shorter figure → reads as a person, not a column.
+    // figH * 0.55 gives shoulder width ≈ 30% of total height (real human).
+    const figH = rows * scale * 0.84;
+    const figW = figH * 0.55;
     const cx0 = anchor.cx;
     const cy0 = anchor.cyBottom;
 
@@ -436,9 +438,7 @@
     const fy = (p) => cy0 - figH + p[1] * figH;
     const partScale = figW;
 
-    // 3/4 hinting: leading-side limbs (right side, for walker turning
-    // slightly to viewer) scaled ~6% larger. Depth-modulated so the
-    // effect ramps in as the figure approaches.
+    // 3/4 hinting: leading-side limbs scale slightly larger.
     const leadBoost = 1 + 0.06 * depth;
     const trailBoost = 1 - 0.04 * depth;
 
@@ -447,35 +447,35 @@
       const top = [fx(pose.hairTop), fy(pose.hairTop)];
       const bot = [fx(pose.head), fy(pose.head) - pose.widths.head * figW * 0.2];
       rasterizeContour(d, cols, rows, top, bot, HAIR_CONTOUR,
-        pose.widths.head * partScale * 1.55, 0.95);
+        pose.widths.head * partScale * 2.05, 0.95);
     }
 
-    // Head
+    // Head — bigger absolute multiplier so it reads as a head, not a dot
     {
       const top = [fx(pose.head), fy(pose.head)];
       const bot = [fx(pose.chin), fy(pose.chin)];
       rasterizeContour(d, cols, rows, top, bot, HEAD_CONTOUR,
-        pose.widths.head * partScale * 1.45, 1.0);
+        pose.widths.head * partScale * 1.95, 1.0);
     }
 
-    // Neck
+    // Neck — thicker
     rasterizeContour(d, cols, rows,
       [fx(pose.chin), fy(pose.chin)],
       [fx(pose.neck), fy(pose.neck)],
-      NECK_CONTOUR, partScale * 0.18, 0.85);
+      NECK_CONTOUR, partScale * 0.22, 0.85);
 
-    // Torso
+    // Torso — thicker so the V-taper reads
     {
       const top = [fx(pose.shoulderC), fy(pose.shoulderC)];
       const bot = [fx(pose.hipC), fy(pose.hipC) + 0.3];
       rasterizeContour(d, cols, rows, top, bot, TORSO_CONTOUR,
-        partScale * 0.36, 1.0);
+        partScale * 0.46, 1.0);
     }
 
-    // Arms — left (trailing in 3/4), right (leading)
+    // Arms — thicker so they separate from the torso
     const armList = [
-      { sh: pose.shoulderL, arm: pose.armL, w: 0.18 * trailBoost },
-      { sh: pose.shoulderR, arm: pose.armR, w: 0.18 * leadBoost },
+      { sh: pose.shoulderL, arm: pose.armL, w: 0.23 * trailBoost },
+      { sh: pose.shoulderR, arm: pose.armR, w: 0.23 * leadBoost },
     ];
     for (const a of armList) {
       rasterizeContour(d, cols, rows,
@@ -486,15 +486,16 @@
         [fx(a.arm.elbow), fy(a.arm.elbow)],
         [fx(a.arm.hand), fy(a.arm.hand)],
         FOREARM_CONTOUR, partScale * (a.w * 0.89), 0.95);
+      // Hand (slightly bigger ellipse)
       rasterizeEllipse(d, cols, rows,
         fx(a.arm.hand), fy(a.arm.hand),
-        partScale * 0.04, partScale * 0.08, 0.9);
+        partScale * 0.055, partScale * 0.095, 0.95);
     }
 
-    // Legs
+    // Legs — thicker
     const legList = [
-      { hp: pose.hipL, lg: pose.legL, w: 0.18 * trailBoost },
-      { hp: pose.hipR, lg: pose.legR, w: 0.18 * leadBoost },
+      { hp: pose.hipL, lg: pose.legL, w: 0.25 * trailBoost },
+      { hp: pose.hipR, lg: pose.legR, w: 0.25 * leadBoost },
     ];
     for (const l of legList) {
       rasterizeContour(d, cols, rows,
@@ -505,10 +506,12 @@
         [fx(l.lg.knee), fy(l.lg.knee)],
         [fx(l.lg.ankle), fy(l.lg.ankle)],
         CALF_CONTOUR, partScale * (l.w * 0.83), 1.0);
-      rasterizeContour(d, cols, rows,
-        [fx(l.lg.heel), fy(l.lg.heel)],
-        [fx(l.lg.toe), fy(l.lg.toe)],
-        FOOT_CONTOUR, partScale * 0.08, 0.9);
+      // Feet: solid horizontal ellipse instead of contour. Reads as
+      // a planted shoe rather than a smear.
+      rasterizeEllipse(d, cols, rows,
+        fx(l.lg.ankle) + partScale * 0.025,
+        fy(l.lg.ankle) + 0.6,
+        partScale * 0.075, partScale * 0.030, 1.0);
     }
   }
 
@@ -756,8 +759,17 @@
       // Anchor: figure walks from far→close
       const horizonY = subRows * 0.28;
       const groundY  = subRows * 0.97;
+      // Anchor: figure walks from far→close in DEPTH (vertical), but
+      // stays centered horizontally in the slot at all depths.
       const cyBottom = lerp(horizonY + subRows * 0.44, groundY, depth);
-      const cxAnchor = lerp(subCols * 0.56, subCols * 0.50, depth);
+      const cxAnchor = subCols * 0.50;
+      // Cell-space equivalents (used by ground line, foot ripples,
+      // melt cull, etc). Computed once here so all downstream code
+      // shares the same numbers.
+      const cellHorizon  = Math.floor(rows * 0.28);
+      const cellGround   = Math.floor(rows * 0.97);
+      const cyBottomCell = lerp(cellHorizon + rows * 0.44, cellGround, depth);
+      const cxAnchorCell = cxAnchor / SS;
 
       const pose = buildPose(walking ? phase : 0, walking, idleT);
 
@@ -789,18 +801,69 @@
       downsample(subDensity, subCols, subRows, cellDensity, cols, rows, SS);
 
       // ── Edge brighten (rim-light feel)
-      applyEdgeBrighten(cellDensity, cols, rows, 0.10, 0.18);
+      applyEdgeBrighten(cellDensity, cols, rows, 0.10, 0.30);
+
+      // ── Interior fill: any interior cell (one with all neighbors
+      // above the threshold) is bumped to a minimum density so the
+      // body reads as solid, not Swiss-cheesed.
+      {
+        const FILL_MIN = 0.55;
+        const FILL_THRESHOLD = 0.10;
+        for (let y = 1; y < rows - 1; y++) {
+          const rs = y * cols;
+          for (let x = 1; x < cols - 1; x++) {
+            const i = rs + x;
+            const v = cellDensity[i];
+            if (v < FILL_THRESHOLD) continue;
+            // 8-neighbor: if all neighbors are also above threshold,
+            // this cell is interior.
+            const n =
+              cellDensity[i - 1] +
+              cellDensity[i + 1] +
+              cellDensity[i - cols] +
+              cellDensity[i + cols] +
+              cellDensity[i - cols - 1] +
+              cellDensity[i - cols + 1] +
+              cellDensity[i + cols - 1] +
+              cellDensity[i + cols + 1];
+            const minN = Math.min(
+              cellDensity[i - 1], cellDensity[i + 1],
+              cellDensity[i - cols], cellDensity[i + cols]
+            );
+            if (minN > FILL_THRESHOLD && cellDensity[i] < FILL_MIN) {
+              cellDensity[i] = FILL_MIN;
+            }
+            // Reference n to silence unused warnings (used in dev sweeps)
+            void n;
+          }
+        }
+      }
+
+      // ── Ground line: faint dotted horizontal line at the figure's
+      // foot level. Provides visual grounding so the figure isn't
+      // floating in space.
+      if (depth > 0.5) {
+        const groundRow = Math.min(rows - 1, Math.floor(cyBottomCell));
+        const figHCellLocal = rows * scale * 0.84;
+        const figWCellLocal = figHCellLocal * 0.55;
+        const span = figWCellLocal * 1.4;
+        for (let dx = -span; dx <= span; dx++) {
+          const x = Math.round(cxAnchorCell + dx);
+          if (x < 0 || x >= cols) continue;
+          // Only draw on every other cell for a dotted look
+          if ((x & 1) === 0) continue;
+          const fall = 1 - Math.abs(dx) / span;
+          const v = fall * fall * 0.18 * smoothstep(0.5, 1.0, depth);
+          const i = groundRow * cols + x;
+          if (v > cellDensity[i]) cellDensity[i] = v;
+        }
+      }
 
       // ── Detect foot-plant events (transition from swing → stance)
       //     and emit a ground ripple.
       if (walking && depth > 0.4) {
-        const figHCell = rows * scale * 0.92;
-        const cyBottomCell = lerp(
-          Math.floor(rows * 0.28) + rows * 0.44,
-          Math.floor(rows * 0.97),
-          depth
-        );
-        const figWCell = figHCell * 0.44;
+        const figHCell = rows * scale * 0.84;
+        const figWCell = figHCell * 0.55;
         const stanceL = pose.legL.isStance;
         const stanceR = pose.legR.isStance;
         if (stanceL && !lastFootStateL) {
@@ -839,10 +902,7 @@
       }
 
       // ── Melt cull with organic drip tendrils
-      const cellHorizon  = Math.floor(rows * 0.28);
-      const cellGround   = Math.floor(rows * 0.97);
-      const cyBottomCell = lerp(cellHorizon + rows * 0.44, cellGround, depth);
-      const figHCell     = rows * scale * 0.92;
+      const figHCell     = rows * scale * 0.84;
       const figTopRow    = Math.max(0, Math.floor(cyBottomCell - figHCell));
       const figRows      = Math.max(1, Math.floor(cyBottomCell + 1) - figTopRow);
       const meltRow      = figTopRow + Math.floor(melt * figRows * 1.05);
@@ -916,7 +976,7 @@
         const py = y * CELL_H;
         for (let x = 0; x < cols; x++) {
           const v = cellDensity[rowStart + x];
-          if (v <= 0.035) continue;
+          if (v <= 0.022) continue;
           const mapped = sCurve(v);
           const idx = Math.min(D_N - 1, Math.floor(mapped * (D_N - 0.001)));
           ctx.fillText(D[idx], x * CELL_W, py);
