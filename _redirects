@@ -1,0 +1,3 @@
+# Redirect non-www to www (canonical consolidation)
+http://jakecuth.com/* https://www.jakecuth.com/:splat 301!
+https://jakecuth.com/* https://www.jakecuth.com/:splat 301!
