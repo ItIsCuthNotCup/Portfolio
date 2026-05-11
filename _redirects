@@ -1,3 +1,7 @@
 # Redirect non-www to www (canonical consolidation)
 http://jakecuth.com/* https://www.jakecuth.com/:splat 301!
 https://jakecuth.com/* https://www.jakecuth.com/:splat 301!
+
+# Removed labs — force redirect, override stale edge cache
+/work/uap-files-lab/* /#research 301
+/work/humanoid-robots-lab/* /#research 301
