@@ -1,25 +1,28 @@
 /* ═══════════════════════════════════════════════════════════════
    hero-ascii.js — scroll-driven ASCII instrument
 
-   Eight scroll-driven phases share one canvas on the right rail. The
+   Seven scroll-driven phases share one canvas on the right rail. The
    sequence reads: ambient texture → dissolves → three rotating data
    objects, each held long, with brief beats of silence between.
 
-     scroll (vh)   phase
-     ───────────   ─────────────────────────────────────────────────
-     0.00 → 0.40   CONTOUR · sparse 2-octave value-noise field
-     0.40 → 0.85   MELT    · per-cell hashed delay + quadratic fall
-     0.85 → 1.00   gap
-     1.00 → 2.00   DONUT   · classic donut.c torus, two-axis spin
-     2.00 → 2.15   gap
-     2.15 → 3.15   TENSOR  · wireframe cube, two-axis rotation
-     3.15 → 3.30   gap
-     3.30 → 4.30   LORENZ  · attractor trajectory, age-shaded trail
-     > 4.30        gone — canvas cleared once and held
+     phase            window
+     ─────────────    ─────────────────────────────────────
+     CONTOUR          0.00vh → 0.40vh   ambient noise
+     MELT             0.40vh → 0.85vh   hashed drip
+     gap              0.85vh → 1.00vh
+     DONUT            1.00vh → ...      shaded torus
+     gap              0.10vh
+     TENSOR (cube)    after gap → ...   wireframe cube
+     gap              0.10vh
+     LORENZ           after gap → end of document
 
-   Each rotating-object phase fades in over the first 12% of its
-   window and out over the last 14%, so the canvas is never empty
-   for more than the 0.15vh gap between objects.
+   The three object phase windows are derived from the document
+   height at run time: each gets an equal share of (pageScrollVh -
+   1.0vh intro). Lorenz extends to the very end of the page and
+   holds full alpha (no fade-out) so the last object is still visible
+   when the user reaches the footer. recomputePhases() recalculates
+   on load, resize, and when scrollHeight changes (filter toggle,
+   image load, marquee resize, etc.).
 
    Why these three objects:
      · DONUT  — surface (luminance-shaded torus)
@@ -71,14 +74,47 @@
   const SPARSE_CUT = 0.28;
 
   // ── Phase boundaries (scroll viewport-heights) ────────────────
-  const P_CONTOUR_END = 0.40;
-  const P_MELT_END    = 0.85;
-  const P_GAP1_END    = 1.00;
-  const P_DONUT_END   = 2.00;
-  const P_GAP2_END    = 2.15;
-  const P_CUBE_END    = 3.15;
-  const P_GAP3_END    = 3.30;
-  const P_LORENZ_END  = 4.30;
+  // Computed dynamically from page length so the three rotating
+  // objects fill the page proportionally and Lorenz ends at the
+  // bottom of the document. recomputePhases() updates these on
+  // load, on resize, and when document height changes.
+  let P_CONTOUR_END = 0.40;
+  let P_MELT_END    = 0.85;
+  let P_GAP1_END    = 1.00;
+  let P_DONUT_END   = 2.00;
+  let P_GAP2_END    = 2.15;
+  let P_CUBE_END    = 3.15;
+  let P_GAP3_END    = 3.30;
+  let P_LORENZ_END  = 4.30;
+
+  // Intro (contour + melt + gap1) is fixed; the three object phases
+  // share the remaining page real estate with a small gap between each.
+  const INTRO_END = 1.00;
+  const OBJECT_GAP = 0.10;
+  const MIN_PER_OBJECT = 1.00;
+  let lastDocHeight = 0;
+
+  function recomputePhases() {
+    const doc = document.documentElement;
+    const vh = Math.max(1, window.innerHeight);
+    // Max scroll position in viewport-heights.
+    const maxScrollVh = Math.max(0, (doc.scrollHeight - vh) / vh);
+    // After the intro, what's left of the page is split 3 ways.
+    const remaining = Math.max(MIN_PER_OBJECT * 3, maxScrollVh - INTRO_END);
+    const perObject = Math.max(
+      MIN_PER_OBJECT,
+      (remaining - 2 * OBJECT_GAP) / 3
+    );
+    P_CONTOUR_END = 0.40;
+    P_MELT_END    = 0.85;
+    P_GAP1_END    = INTRO_END;
+    P_DONUT_END   = P_GAP1_END + perObject;
+    P_GAP2_END    = P_DONUT_END + OBJECT_GAP;
+    P_CUBE_END    = P_GAP2_END + perObject;
+    P_GAP3_END    = P_CUBE_END + OBJECT_GAP;
+    P_LORENZ_END  = P_GAP3_END + perObject;
+    lastDocHeight = doc.scrollHeight;
+  }
 
   const TARGET_FPS = 30;
   const FRAME_MIN  = 1000 / TARGET_FPS;
@@ -108,11 +144,15 @@
   function rgba(rgb, a) {
     return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a.toFixed(3) + ')';
   }
-  // Standard 12% fade-in, 14% fade-out envelope for object phases.
-  function envelope(sp) {
-    if (sp < 0.12)      return sp / 0.12;
-    if (sp > 1 - 0.14)  return (1 - sp) / 0.14;
-    return 1;
+  // Fade-in/out envelope expressed in absolute vh so the transition
+  // length is consistent regardless of how long the object phase is.
+  // fadeIn / fadeOut = 0 disables that side (used for Lorenz, which
+  // holds full alpha through to the bottom of the page).
+  function fadeAlpha(intoPhase, phaseLen, fadeIn, fadeOut) {
+    const fromEnd = phaseLen - intoPhase;
+    const fIn  = fadeIn  > 0 && intoPhase < fadeIn  ? intoPhase / fadeIn  : 1;
+    const fOut = fadeOut > 0 && fromEnd   < fadeOut ? Math.max(0, fromEnd / fadeOut) : 1;
+    return clamp(Math.min(fIn, fOut), 0, 1);
   }
 
   // Deterministic per-cell hash → [0, 1).
@@ -192,16 +232,27 @@
     ctx.textBaseline = 'top';
   }
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  recomputePhases();
+  window.addEventListener('resize', function () {
+    resize();
+    recomputePhases();
+  }, { passive: true });
 
   // ── Scroll progress, normalized to viewport heights ──────────
   let scrollP = 0;
   function onScroll() {
     const vh = window.innerHeight || 1;
     scrollP = window.scrollY / vh;
+    // Cheap detection: if the document grew/shrunk (filter toggled,
+    // images loaded, marquee duplicated, etc.), re-derive phases.
+    if (document.documentElement.scrollHeight !== lastDocHeight) {
+      recomputePhases();
+    }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+  // One more pass after window load so images/fonts have settled.
+  window.addEventListener('load', recomputePhases);
 
   // ── Phase A: CONTOUR ─────────────────────────────────────────
   function drawContour(t, rgb, alpha) {
@@ -511,22 +562,16 @@
   const reduced = prefersReducedMotion();
   const t0 = performance.now();
   let last = 0;
-  let goneCleared = false;
+
+  // 0.15vh fade-in and fade-out feels like a deliberate dissolve at
+  // any page length. Lorenz uses fadeOut = 0 so it stays bright all
+  // the way to the bottom of the document.
+  const FADE_VH = 0.15;
 
   function drawFrame(now) {
     const t = (now - t0) / 1000;
     const p = scrollP;
     const rgb = hexToRGB(resolveInk());
-
-    // GONE — clear once when we cross the boundary, then idle.
-    if (p >= P_LORENZ_END) {
-      if (!goneCleared) {
-        ctx.clearRect(0, 0, cssW, cssH);
-        goneCleared = true;
-      }
-      return;
-    }
-    goneCleared = false;
     ctx.clearRect(0, 0, cssW, cssH);
 
     if (p < P_CONTOUR_END) {
@@ -540,22 +585,27 @@
       // empty beat
 
     } else if (p < P_DONUT_END) {
-      const sp = (p - P_GAP1_END) / (P_DONUT_END - P_GAP1_END);
-      drawDonut(rgb, clamp(envelope(sp), 0, 1));
+      const into = p - P_GAP1_END;
+      const len  = P_DONUT_END - P_GAP1_END;
+      drawDonut(rgb, fadeAlpha(into, len, FADE_VH, FADE_VH));
 
     } else if (p < P_GAP2_END) {
       // empty beat
 
     } else if (p < P_CUBE_END) {
-      const sp = (p - P_GAP2_END) / (P_CUBE_END - P_GAP2_END);
-      drawCube(rgb, clamp(envelope(sp), 0, 1));
+      const into = p - P_GAP2_END;
+      const len  = P_CUBE_END - P_GAP2_END;
+      drawCube(rgb, fadeAlpha(into, len, FADE_VH, FADE_VH));
 
     } else if (p < P_GAP3_END) {
       // empty beat
 
-    } else if (p < P_LORENZ_END) {
-      const sp = (p - P_GAP3_END) / (P_LORENZ_END - P_GAP3_END);
-      drawLorenz(rgb, clamp(envelope(sp), 0, 1));
+    } else {
+      // Lorenz holds to the end of the page (and beyond, if the user
+      // rubber-band overscrolls). Fade-in only; no fade-out.
+      const into = p - P_GAP3_END;
+      const len  = Math.max(0.5, P_LORENZ_END - P_GAP3_END);
+      drawLorenz(rgb, fadeAlpha(into, len, FADE_VH, 0));
     }
   }
 
