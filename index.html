@@ -36,6 +36,19 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="assets/css/main.css?v=48">
   <link rel="stylesheet" href="assets/css/research-filter.css?v=6">
+  <style>
+    /* Hero ASCII canvas — anchored bottom-right, sized as an instrument
+       readout rather than a wall of glyphs. Scoped to the homepage to
+       avoid touching main.css (which would cache-bust 45 lab pages). */
+    .scene-stage {
+      top: auto;
+      bottom: 6vh;
+      right: 4vw;
+      transform: none;
+      height: min(440px, 56vh);
+      width: min(380px, 28vw);
+    }
+  </style>
 
   <!-- SEO: canonical, twitter card, JSON-LD -->
   <link rel="canonical" href="https://www.jakecuth.com">
@@ -790,7 +803,7 @@
 
 <!-- JS (after DOM) -->
 <script src="assets/js/main.js?v=17"></script>
-<script src="assets/js/hero-ascii.js?v=9"></script>
+<script src="assets/js/hero-ascii.js?v=10"></script>
 <script src="assets/js/research-filter.js?v=4"></script>
 </body>
 </html>

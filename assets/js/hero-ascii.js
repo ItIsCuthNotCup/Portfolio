@@ -1,37 +1,34 @@
 /* ═══════════════════════════════════════════════════════════════
    hero-ascii.js — scroll-driven ASCII instrument
 
-   Four scroll-driven phases share one canvas on the right rail.
+   Eight scroll-driven phases share one canvas on the right rail. The
+   sequence reads: ambient texture → dissolves → three rotating data
+   objects, each held long, with brief beats of silence between.
 
-     phase A · CONTOUR (scroll 0.0vh → 0.5vh)
-         Sparse 2-octave value-noise topography. Only cells above
-         a density threshold render, so the field reads as quiet
-         contours, not a wall of code.
+     scroll (vh)   phase
+     ───────────   ─────────────────────────────────────────────────
+     0.00 → 0.40   CONTOUR · sparse 2-octave value-noise field
+     0.40 → 0.85   MELT    · per-cell hashed delay + quadratic fall
+     0.85 → 1.00   gap
+     1.00 → 2.00   DONUT   · classic donut.c torus, two-axis spin
+     2.00 → 2.15   gap
+     2.15 → 3.15   TENSOR  · wireframe cube, two-axis rotation
+     3.15 → 3.30   gap
+     3.30 → 4.30   LORENZ  · attractor trajectory, age-shaded trail
+     > 4.30        gone — canvas cleared once and held
 
-     phase B · MELT    (scroll 0.5vh → 1.1vh)
-         Each cell has a hashed delay; as melt progress advances,
-         cells accelerate downward, fade, and exit the bottom.
-         By the end the canvas is empty.
+   Each rotating-object phase fades in over the first 12% of its
+   window and out over the last 14%, so the canvas is never empty
+   for more than the 0.15vh gap between objects.
 
-     phase C · EMPTY   (scroll 1.1vh → 1.4vh)
-         Quiet beat. Nothing renders.
-
-     phase D · DONUT   (scroll 1.4vh → 2.4vh)
-         Classic donut.c torus, ASCII-shaded by Lambert reflection,
-         rotating on two axes. Fades in over the first 15% of the
-         phase and out over the last 25%.
-
-     phase E · GONE    (scroll > 2.4vh)
-         Canvas cleared. No work per frame except clearRect.
-
-   The .scene-stage host is position:fixed so it persists across
-   scroll. We listen to window.scroll, normalize by innerHeight,
-   and dispatch to one of the four draw paths each frame.
+   Why these three objects:
+     · DONUT  — surface (luminance-shaded torus)
+     · TENSOR — structure (rotating wireframe cube; reads as matrix)
+     · LORENZ — flow (chaotic point trail from dx/dt = σ(y-x), …)
 
    Accessibility
-     - aria-hidden + pointer-events:none on canvas.
-     - prefers-reduced-motion: renders one static contour frame and
-       stops; no scroll-driven phases.
+     · aria-hidden + pointer-events:none on canvas.
+     · prefers-reduced-motion: a single contour frame, then idle.
    ═══════════════════════════════════════════════════════════════ */
 
 (function () {
@@ -43,6 +40,8 @@
   const D = " .'`-\"_,:~;+!|ijl/trcnIPwY1LV\\{CcxzksKv3Ju2Fa]o7T5G9?6$XZAB8USH%&QM@DO0NW#";
   // 12-step luminance ramp for the donut (donut.c original).
   const DR = ".,-~:;=!*#$@";
+  // 7-step trail ramp for the Lorenz attractor.
+  const LR = ".,:+*#@";
 
   const CELL_W = 7;
   const CELL_H = 11;
@@ -67,15 +66,19 @@
   const ISO_WIDTH = 0.018;
   const ISO_BOOST = 0.22;
 
-  // Threshold below which cells are skipped (gives the sparse,
-  // editorial contour look instead of a dense wall).
-  const SPARSE_CUT = 0.42;
+  // Cells under this density are skipped. 0.28 keeps the topographic
+  // contour structure intact without filling the field with debris.
+  const SPARSE_CUT = 0.28;
 
   // ── Phase boundaries (scroll viewport-heights) ────────────────
-  const P_CONTOUR_END = 0.5;
-  const P_MELT_END    = 1.1;
-  const P_EMPTY_END   = 1.4;
-  const P_DONUT_END   = 2.4;
+  const P_CONTOUR_END = 0.40;
+  const P_MELT_END    = 0.85;
+  const P_GAP1_END    = 1.00;
+  const P_DONUT_END   = 2.00;
+  const P_GAP2_END    = 2.15;
+  const P_CUBE_END    = 3.15;
+  const P_GAP3_END    = 3.30;
+  const P_LORENZ_END  = 4.30;
 
   const TARGET_FPS = 30;
   const FRAME_MIN  = 1000 / TARGET_FPS;
@@ -105,6 +108,12 @@
   function rgba(rgb, a) {
     return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a.toFixed(3) + ')';
   }
+  // Standard 12% fade-in, 14% fade-out envelope for object phases.
+  function envelope(sp) {
+    if (sp < 0.12)      return sp / 0.12;
+    if (sp > 1 - 0.14)  return (1 - sp) / 0.14;
+    return 1;
+  }
 
   // Deterministic per-cell hash → [0, 1).
   function hash2(ix, iy) {
@@ -116,7 +125,7 @@
     return n - Math.floor(n);
   }
 
-  // 3D value noise w/ smoothstep interpolation.
+  // 3D value noise with smoothstep interpolation.
   function valueNoise3(x, y, z) {
     const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
     const fx = x - ix, fy = y - iy, fz = z - iz;
@@ -165,6 +174,7 @@
 
   let cols = 0, rows = 0;
   let cssW = 0, cssH = 0;
+  let aspectAdj = CELL_W / CELL_H;
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -193,7 +203,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // ── Phase A: contour ─────────────────────────────────────────
+  // ── Phase A: CONTOUR ─────────────────────────────────────────
   function drawContour(t, rgb, alpha) {
     const dx = t * DRIFT_X;
     const dy = t * DRIFT_Y;
@@ -222,8 +232,7 @@
     }
   }
 
-  // ── Phase B: melt ────────────────────────────────────────────
-  // Each cell drops independently. Hash-seeded delay + quadratic fall.
+  // ── Phase B: MELT ────────────────────────────────────────────
   function drawMelt(t, m, rgb) {
     const dx = t * DRIFT_X;
     const dy = t * DRIFT_Y;
@@ -234,7 +243,6 @@
       const py = r * CELL_H;
       for (let c = 0; c < cols; c++) {
         const h = hash2(c, r);
-        // Earlier cells (low h) start dropping first.
         const lm = clamp((m - h * 0.55) / 0.45, 0, 1);
         if (lm >= 1) continue;
         const alpha = (1 - lm) * (1 - lm);
@@ -257,8 +265,8 @@
     }
   }
 
-  // ── Phase D: donut ───────────────────────────────────────────
-  // Classic donut.c. zBuffer per cell, Lambert luminance into a 12-glyph ramp.
+  // ── Phase D: DONUT ───────────────────────────────────────────
+  // Classic donut.c. Lambert luminance into a 12-glyph ramp.
   let donutA = 0, donutB = 0;
   let zbuf = null, dout = null, zbufSize = 0;
   function ensureDonutBuffers() {
@@ -279,9 +287,6 @@
     const cosA = Math.cos(donutA), sinA = Math.sin(donutA);
     const cosB = Math.cos(donutB), sinB = Math.sin(donutB);
 
-    // Sizing — pick the smaller dim (accounting for cell aspect) and
-    // size the torus so R1+R2 = 3 maps to ~⅔ of available cells.
-    const aspectAdj = CELL_W / CELL_H;                  // ≈ 0.636
     const minDim = Math.min(cols * aspectAdj, rows);
     const R1 = 1, R2 = 2;
     const K2 = 5;
@@ -298,9 +303,8 @@
         const z = K2 + cosA * cX * sinP + cY * sinA;
         const ooz = 1 / z;
 
-        // Project. Compensate for cell aspect on the y axis.
-        const xp = (cols  >> 1) + ((K1 * ooz * x / aspectAdj) | 0);
-        const yp = (rows  >> 1) - ((K1 * ooz * y) | 0);
+        const xp = (cols >> 1) + ((K1 * ooz * x / aspectAdj) | 0);
+        const yp = (rows >> 1) - ((K1 * ooz * y) | 0);
         if (xp < 0 || xp >= cols || yp < 0 || yp >= rows) continue;
 
         const L = (cosP * cosT * sinB
@@ -331,32 +335,228 @@
     }
   }
 
+  // ── Phase F: TENSOR CUBE (wireframe) ─────────────────────────
+  // 8 vertices, 12 edges, two-axis rotation. Edges stroked with '#',
+  // vertices overpainted with '@'.
+  const CUBE_V = [
+    [-1,-1,-1],[ 1,-1,-1],[ 1, 1,-1],[-1, 1,-1],
+    [-1,-1, 1],[ 1,-1, 1],[ 1, 1, 1],[-1, 1, 1],
+  ];
+  const CUBE_E = [
+    [0,1],[1,2],[2,3],[3,0],
+    [4,5],[5,6],[6,7],[7,4],
+    [0,4],[1,5],[2,6],[3,7],
+  ];
+  let cubeA = 0, cubeB = 0;
+  let cubeCellMark = null;
+  function ensureCubeMark() {
+    const n = cols * rows;
+    if (!cubeCellMark || cubeCellMark.length !== n) {
+      cubeCellMark = new Uint8Array(n);
+    }
+  }
+  function drawCube(rgb, alpha) {
+    ensureCubeMark();
+    cubeCellMark.fill(0);
+
+    cubeA += 0.022;
+    cubeB += 0.031;
+    const cosA = Math.cos(cubeA), sinA = Math.sin(cubeA);
+    const cosB = Math.cos(cubeB), sinB = Math.sin(cubeB);
+
+    const minDim = Math.min(cols * aspectAdj, rows);
+    const K2 = 5;
+    const K1 = minDim * 0.45 * K2 / 3; // half-extent of cube ≈ √3
+
+    // Project 8 vertices.
+    const P = new Array(8);
+    for (let i = 0; i < 8; i++) {
+      const x = CUBE_V[i][0], y0 = CUBE_V[i][1], z = CUBE_V[i][2];
+      // Rotate Y (B) then X (A).
+      const x1 =  x * cosB + z * sinB;
+      const z1 = -x * sinB + z * cosB;
+      const y1 =  y0 * cosA - z1 * sinA;
+      const z2 =  y0 * sinA + z1 * cosA;
+
+      const projZ = K2 + z2;
+      const ooz = 1 / projZ;
+      const px = (cols >> 1) + (K1 * x1 / aspectAdj) * ooz;
+      const py = (rows >> 1) - (K1 * y1) * ooz;
+      P[i] = [px, py, z2];
+    }
+
+    ctx.fillStyle = rgba(rgb, alpha);
+
+    // Stroke each edge with '#' along a line.
+    for (let e = 0; e < CUBE_E.length; e++) {
+      const a = P[CUBE_E[e][0]], b = P[CUBE_E[e][1]];
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const steps = Math.max(Math.abs(dx), Math.abs(dy)) | 0;
+      if (steps === 0) continue;
+      for (let s = 0; s <= steps; s++) {
+        const tt = s / steps;
+        const ix = (a[0] + dx * tt) | 0;
+        const iy = (a[1] + dy * tt) | 0;
+        if (ix < 0 || ix >= cols || iy < 0 || iy >= rows) continue;
+        const key = ix + cols * iy;
+        if (cubeCellMark[key]) continue;
+        cubeCellMark[key] = 1;
+        ctx.fillText('#', ix * CELL_W, iy * CELL_H);
+      }
+    }
+
+    // Vertices overpaint as '@' for emphasis.
+    for (let i = 0; i < 8; i++) {
+      const ix = P[i][0] | 0, iy = P[i][1] | 0;
+      if (ix < 0 || ix >= cols || iy < 0 || iy >= rows) continue;
+      ctx.fillText('@', ix * CELL_W, iy * CELL_H);
+    }
+  }
+
+  // ── Phase H: LORENZ ATTRACTOR ────────────────────────────────
+  // dx/dt = σ(y-x), dy/dt = x(ρ-z)-y, dz/dt = xy-βz
+  // Ring buffer of the last N points; trail shaded by age.
+  const LORENZ_N = 700;
+  const lorenzTraj = new Float32Array(LORENZ_N * 3);
+  let lorenzHead = 0, lorenzFilled = 0;
+  let lx = 0.1, ly = 0, lz = 0;
+  let lorenzWarmed = false;
+
+  function stepLorenz(dt) {
+    const SG = 10, RO = 28, BE = 8 / 3;
+    const dx = SG * (ly - lx);
+    const dy = lx * (RO - lz) - ly;
+    const dz = lx * ly - BE * lz;
+    lx += dx * dt;
+    ly += dy * dt;
+    lz += dz * dt;
+    lorenzTraj[lorenzHead * 3]     = lx;
+    lorenzTraj[lorenzHead * 3 + 1] = ly;
+    lorenzTraj[lorenzHead * 3 + 2] = lz;
+    lorenzHead = (lorenzHead + 1) % LORENZ_N;
+    if (lorenzFilled < LORENZ_N) lorenzFilled++;
+  }
+  function warmLorenz() {
+    if (lorenzWarmed) return;
+    // Burn-in onto the attractor so the trail doesn't show the
+    // transient spiral from initial condition (0.1, 0, 0).
+    for (let i = 0; i < 800; i++) {
+      const SG = 10, RO = 28, BE = 8 / 3;
+      const dx = SG * (ly - lx);
+      const dy = lx * (RO - lz) - ly;
+      const dz = lx * ly - BE * lz;
+      lx += dx * 0.008;
+      ly += dy * 0.008;
+      lz += dz * 0.008;
+    }
+    lorenzWarmed = true;
+  }
+  function drawLorenz(rgb, alpha) {
+    warmLorenz();
+    // Advance simulation. While trail is filling, step harder so the
+    // user sees a full butterfly the moment Lorenz fades in.
+    const ITERS = lorenzFilled < LORENZ_N ? 18 : 6;
+    for (let i = 0; i < ITERS; i++) stepLorenz(0.008);
+
+    // Slow spin around Y so the butterfly precesses.
+    const A = (performance.now() - t0) * 0.00025;
+    const cosA = Math.cos(A), sinA = Math.sin(A);
+
+    // The attractor lives roughly within x ∈ [-22, 22], y ∈ [-30, 30],
+    // z ∈ [0, 55]. Center on (0, 0, 25) before projecting.
+    const K2 = 75;
+    const minDim = Math.min(cols * aspectAdj, rows);
+    const K1 = minDim * 2.2;
+
+    // Bucket points by trail-age for batched fillStyle.
+    const bx = [[], [], [], []];
+    const by = [[], [], [], []];
+    const bg = [[], [], [], []];
+
+    for (let i = 0; i < lorenzFilled; i++) {
+      const idx = (lorenzHead - 1 - i + LORENZ_N) % LORENZ_N;
+      const age = i / lorenzFilled; // 0 newest, ~1 oldest
+
+      const x = lorenzTraj[idx * 3];
+      const y = lorenzTraj[idx * 3 + 1];
+      const z = lorenzTraj[idx * 3 + 2] - 25;
+
+      const nx =  x * cosA + z * sinA;
+      const nz = -x * sinA + z * cosA;
+
+      const projZ = K2 + nz;
+      const ooz = 1 / projZ;
+      const px = (cols >> 1) + ((K1 * nx / aspectAdj) * ooz) | 0;
+      const py = (rows >> 1) - ((K1 * y) * ooz) | 0;
+      if (px < 0 || px >= cols || py < 0 || py >= rows) continue;
+
+      const bucket = age < 0.20 ? 0 : age < 0.45 ? 1 : age < 0.75 ? 2 : 3;
+      const glyphIdx = 6 - bucket * 2; // 6, 4, 2, 0 → '@', '*', ':', '.'
+      bx[bucket].push(px);
+      by[bucket].push(py);
+      bg[bucket].push(glyphIdx);
+    }
+
+    const alphaScale = [1.00, 0.72, 0.46, 0.22];
+    for (let b = 0; b < 4; b++) {
+      if (bx[b].length === 0) continue;
+      ctx.fillStyle = rgba(rgb, alpha * alphaScale[b]);
+      for (let i = 0; i < bx[b].length; i++) {
+        ctx.fillText(LR.charAt(bg[b][i]), bx[b][i] * CELL_W, by[b][i] * CELL_H);
+      }
+    }
+  }
+
   // ── Loop ─────────────────────────────────────────────────────
   const reduced = prefersReducedMotion();
   const t0 = performance.now();
   let last = 0;
+  let goneCleared = false;
 
   function drawFrame(now) {
     const t = (now - t0) / 1000;
-    ctx.clearRect(0, 0, cssW, cssH);
-    const rgb = hexToRGB(resolveInk());
     const p = scrollP;
+    const rgb = hexToRGB(resolveInk());
+
+    // GONE — clear once when we cross the boundary, then idle.
+    if (p >= P_LORENZ_END) {
+      if (!goneCleared) {
+        ctx.clearRect(0, 0, cssW, cssH);
+        goneCleared = true;
+      }
+      return;
+    }
+    goneCleared = false;
+    ctx.clearRect(0, 0, cssW, cssH);
 
     if (p < P_CONTOUR_END) {
       drawContour(t, rgb, 1);
+
     } else if (p < P_MELT_END) {
       const m = (p - P_CONTOUR_END) / (P_MELT_END - P_CONTOUR_END);
       drawMelt(t, m, rgb);
-    } else if (p < P_EMPTY_END) {
-      // empty pause — already cleared
+
+    } else if (p < P_GAP1_END) {
+      // empty beat
+
     } else if (p < P_DONUT_END) {
-      const sp = (p - P_EMPTY_END) / (P_DONUT_END - P_EMPTY_END);
-      let alpha = 1;
-      if (sp < 0.15)       alpha = sp / 0.15;
-      else if (sp > 0.75)  alpha = (1 - sp) / 0.25;
-      drawDonut(rgb, clamp(alpha, 0, 1));
+      const sp = (p - P_GAP1_END) / (P_DONUT_END - P_GAP1_END);
+      drawDonut(rgb, clamp(envelope(sp), 0, 1));
+
+    } else if (p < P_GAP2_END) {
+      // empty beat
+
+    } else if (p < P_CUBE_END) {
+      const sp = (p - P_GAP2_END) / (P_CUBE_END - P_GAP2_END);
+      drawCube(rgb, clamp(envelope(sp), 0, 1));
+
+    } else if (p < P_GAP3_END) {
+      // empty beat
+
+    } else if (p < P_LORENZ_END) {
+      const sp = (p - P_GAP3_END) / (P_LORENZ_END - P_GAP3_END);
+      drawLorenz(rgb, clamp(envelope(sp), 0, 1));
     }
-    // p ≥ P_DONUT_END: gone. Canvas was already cleared.
   }
 
   function loop(now) {
