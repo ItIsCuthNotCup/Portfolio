@@ -1,22 +1,43 @@
 /* ═══════════════════════════════════════════════════════════════
-   hero-ascii.js — cinematic ASCII humanoid v3
+   hero-ascii.js — cinematic ASCII humanoid v4
 
    A single <canvas> inside #scene-canvas. Anatomical silhouette,
-   IK-clean walking gait, perspective walk-in from horizon to
-   foreground, top-down evaporation melt driven by hero scroll.
+   IK-clean walking gait with foot-plant locking, perspective walk-in
+   from horizon to foreground, idle breathing + weight shift while
+   standing, top-down evaporation melt with organic drip tendrils
+   driven by hero scroll.
 
    PIPELINE PER FRAME
-     1. Compute pose (joint positions) from walk phase + depth.
-     2. Rasterize body as anatomical contours into sub-cell grid (SS=3).
-     3. Apply directional key + fill + rim lighting.
-     4. Edge-darkening post-pass for readable silhouette.
-     5. Downsample sub-cell → ASCII cell density.
-     6. Melt cull with per-cell organic timing variance.
-     7. Map cells to characters from a 72-step pure-ASCII ramp.
-     8. Composite: atmosphere → edge outline → body → glow line → falling chars → puddle.
+     1. Compute pose (joints) from walk phase + depth + idle phase.
+        Foot ground-Y is locked per leg during stance; knee position
+        is solved by 2-bone IK so the leg can't stretch or slide.
+     2. Rasterize body parts as anatomical contours into the sub-cell
+        density grid (SS=3, 9 samples per ASCII cell).
+        Includes hair mass, body, contact shadow, and atmosphere.
+     3. Post-passes on the sub-cell grid:
+          (a) downsample to cell grid
+          (b) S-curve tone-map for punchy density→character contrast
+          (c) silhouette edge brighten — adds rim-light feel
+          (d) edge darkening — keeps interior cells readable
+     4. Melt cull with organic per-cell timing variance and drip
+        tendrils that reach below the main melt line.
+     5. Map cells to characters from a 72-step pure-ASCII ramp.
+     6. Particles overlay: foot-plant ripples + walk-in dust trail
+        + falling shed characters.
+     7. Canvas-level opacity fade-in on first paint + fade-out as
+        melt completes.
 
-   Honors prefers-reduced-motion. Pauses when off-screen and fully
-   melted. DPR-clamped. No external libs.
+   Performance:
+     - Adaptive quality. First ~16 frames are measured; if avg frame
+       cost exceeds the budget, SS drops to 2 and CELL_W/H scale up.
+     - Pauses entirely when hero is fully out of viewport and melt is
+       complete.
+     - DPR clamped to 2.
+
+   Accessibility:
+     - aria-hidden + pointer-events:none on host and canvas.
+     - Respects prefers-reduced-motion: static figure, no entry, no
+       walk, no melt, no particles.
    ═══════════════════════════════════════════════════════════════ */
 
 (function () {
@@ -25,37 +46,32 @@
   const HOST_ID = 'scene-canvas';
   const HERO_ID = 'hero';
 
-  // ── 72-step density ramp (pure ASCII, light → dense).
-  //    No Unicode fill chars — every character has internal texture
-  //    so the figure reads as ASCII art, not a silhouette blob.
+  // 72-step pure-ASCII density ramp. Every glyph has internal
+  // texture so the figure reads as ASCII art, not a silhouette blob.
   const D = " .'`-\"_,:~;+!|ijl/trcnIPwY1LV\\{CcxzksKv3Ju2Fa]o7T5G9?6$XZAB8USH%&QM@DO0NW#";
   const D_N = D.length;
 
-  // ── Cell metrics. 6×9 px → ~77×62 cells in a 460×560 box.
-  //    Slightly larger cells than v2's 5×7 for bolder, more
-  //    readable ASCII at the cost of a few rows of resolution.
-  const CELL_W = 6;
-  const CELL_H = 9;
-  const FONT_PX = 10;
-  const FONT_FAMILY = "ui-monospace, 'DM Mono', 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace";
+  // Cell metrics. Adaptive: may grow if first frames are slow.
+  let CELL_W = 6;
+  let CELL_H = 9;
+  let FONT_PX = 10;
+  const FONT_FAMILY =
+    "ui-monospace, 'DM Mono', 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace";
 
-  // ── Sub-cell oversampling. SS=3 gives 9 sub-samples per cell
-  //    for much smoother contours than v2's SS=2 (4 sub-samples).
-  const SS = 3;
+  // Sub-cell oversampling. SS=3 → 9 samples per ASCII cell.
+  let SS = 3;
 
-  // ── Walk cycle period (seconds)
   const WALK_PERIOD = 1.1;
+  const ENTRY_DURATION = 3.6;
+  const FADE_IN_MS = 500;
 
-  // ── Entry walk duration
-  const ENTRY_DURATION = 4.2;
-
+  // ── Helpers
   function resolveInk() {
     const v = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
     return v || '#111111';
   }
   function prefersReducedMotion() {
-    return window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -63,44 +79,68 @@
     const t = clamp((x - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
   }
-  function easeOutExpo(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function smootherstep(a, b, x) {
+    const t = clamp((x - a) / (b - a), 0, 1);
+    return t * t * t * (t * (t * 6 - 15) + 10);
+  }
   function easeOutBack(t) {
-    const c1 = 1.70158;
+    const c1 = 1.5;
     const c3 = c1 + 1;
     return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
   }
 
-  // ── Seeded random for per-cell organic variance (deterministic per-position)
+  // Deterministic per-position noise (seeded sin hash)
   function cellNoise(x, y, seed) {
     const n = Math.sin(x * 12.9898 + y * 78.233 + seed * 437.58) * 43758.5453;
     return n - Math.floor(n);
   }
 
+  // S-curve tone mapping for density → character index.
+  // Compresses mid-grays toward dark, lifts the highlight tail.
+  // Result: more "punch" in the rendered silhouette.
+  function sCurve(v) {
+    if (v <= 0) return 0;
+    if (v >= 1) return 1;
+    // Filmic-ish: toe + linear + shoulder
+    const a = 2.2;     // contrast
+    const b = 0.45;    // midpoint
+    const x = clamp(v, 0, 1);
+    const out = 1 / (1 + Math.exp(-a * (x - b) * 6));
+    // Normalize so f(0)=0, f(1)=1
+    const f0 = 1 / (1 + Math.exp(a * b * 6));
+    const f1 = 1 / (1 + Math.exp(-a * (1 - b) * 6));
+    return (out - f0) / (f1 - f0);
+  }
+
   // ───────────────────────────────────────────────────────────────
-  // ANATOMICAL CONTOUR DEFINITIONS
-  //
-  // Each list: cross-sections (yOffset 0..1, halfWidth as fraction).
-  // The rasterizer fills the volume between centerline and outline.
+  // ANATOMICAL CONTOURS (cross-sections: [yT 0..1, halfW relative])
   // ───────────────────────────────────────────────────────────────
 
   const HEAD_CONTOUR = [
-    [0.00, 0.40], [0.08, 0.48], [0.18, 0.54], [0.30, 0.57],
-    [0.44, 0.58], [0.56, 0.56], [0.68, 0.52], [0.80, 0.44],
+    [0.00, 0.42], [0.06, 0.50], [0.16, 0.55], [0.28, 0.58],
+    [0.42, 0.59], [0.55, 0.58], [0.68, 0.54], [0.80, 0.46],
     [0.90, 0.34], [1.00, 0.10],
   ];
 
-  const NECK_CONTOUR = [
-    [0.00, 0.22], [0.50, 0.25], [1.00, 0.30],
+  // Hair mass — sits on top of crown, slightly asymmetric (swept right)
+  const HAIR_CONTOUR = [
+    [0.00, 0.20], [0.18, 0.48], [0.35, 0.62], [0.55, 0.66],
+    [0.72, 0.62], [0.86, 0.52], [1.00, 0.38],
   ];
 
+  const NECK_CONTOUR = [
+    [0.00, 0.22], [0.50, 0.25], [1.00, 0.32],
+  ];
+
+  // Torso — broad shoulders → V-taper to waist → flare to hip
   const TORSO_CONTOUR = [
-    [0.00, 0.64], [0.04, 0.72], [0.10, 0.70], [0.20, 0.64],
-    [0.30, 0.56], [0.40, 0.48], [0.50, 0.43], [0.60, 0.40],
-    [0.70, 0.44], [0.80, 0.53], [0.90, 0.58], [1.00, 0.53],
+    [0.00, 0.64], [0.04, 0.74], [0.10, 0.72], [0.20, 0.66],
+    [0.30, 0.58], [0.40, 0.49], [0.50, 0.43], [0.60, 0.41],
+    [0.70, 0.45], [0.80, 0.54], [0.90, 0.59], [1.00, 0.54],
   ];
 
   const BICEP_CONTOUR = [
-    [0.00, 0.40], [0.18, 0.43], [0.40, 0.40], [0.62, 0.36],
+    [0.00, 0.40], [0.18, 0.45], [0.40, 0.42], [0.62, 0.37],
     [0.82, 0.32], [1.00, 0.28],
   ];
 
@@ -109,50 +149,90 @@
     [0.78, 0.22], [1.00, 0.18],
   ];
 
-  const HAND_CONTOUR = [
-    [0.00, 0.26], [0.30, 0.34], [0.55, 0.32], [0.80, 0.26], [1.00, 0.20],
-  ];
-
   const THIGH_CONTOUR = [
-    [0.00, 0.48], [0.18, 0.50], [0.42, 0.46], [0.65, 0.40],
+    [0.00, 0.50], [0.18, 0.52], [0.42, 0.48], [0.65, 0.40],
     [0.84, 0.34], [1.00, 0.30],
   ];
 
   const CALF_CONTOUR = [
-    [0.00, 0.30], [0.20, 0.38], [0.42, 0.36], [0.65, 0.30],
+    [0.00, 0.30], [0.20, 0.40], [0.42, 0.36], [0.65, 0.30],
     [0.85, 0.23], [1.00, 0.16],
   ];
 
   const FOOT_CONTOUR = [
-    [0.00, 0.20], [0.20, 0.20], [0.55, 0.18], [0.80, 0.14], [1.00, 0.08],
+    [0.00, 0.22], [0.20, 0.22], [0.55, 0.20], [0.80, 0.14], [1.00, 0.08],
   ];
 
   // ───────────────────────────────────────────────────────────────
-  // POSE — Forward-kinematic walking figure
+  // 2-BONE IK — given hip and foot positions, place the knee.
+  //
+  //   l1 = thigh length, l2 = calf length, forward = which side
+  //   of the hip→foot line the knee bends to (+1 / -1).
   // ───────────────────────────────────────────────────────────────
-  function buildPose(phase, walking) {
+  function ik2(hipX, hipY, footX, footY, l1, l2, forward) {
+    const dx = footX - hipX;
+    const dy = footY - hipY;
+    let d = Math.sqrt(dx * dx + dy * dy);
+    // Clamp foot to within reach (prevents stretching)
+    const reach = l1 + l2 - 0.002;
+    if (d > reach) {
+      const k = reach / d;
+      const fx = hipX + dx * k;
+      const fy = hipY + dy * k;
+      d = reach;
+      // Recompute foot inside reach
+      const ux = (fx - hipX) / d;
+      const uy = (fy - hipY) / d;
+      return {
+        kneeX: hipX + ux * l1,
+        kneeY: hipY + uy * l1,
+        footX: fx,
+        footY: fy,
+      };
+    }
+    // Cosine law: distance from hip to knee-projection on hip-foot line
+    const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d);
+    const hSq = Math.max(0, l1 * l1 - a * a);
+    const h = Math.sqrt(hSq);
+    const ux = dx / d, uy = dy / d;
+    // Perp axis (rotate +90°). `forward` selects which side knee bulges.
+    const px = -uy * forward, py = ux * forward;
+    return {
+      kneeX: hipX + ux * a + px * h,
+      kneeY: hipY + uy * a + py * h,
+      footX, footY,
+    };
+  }
+
+  // ───────────────────────────────────────────────────────────────
+  // POSE — walking gait + idle stand with breath + weight shift
+  //
+  //   phase    walk phase 0..1 (only relevant when walking)
+  //   walking  if true, produces stepping gait; if false, idle stand
+  //   idleT    seconds elapsed in idle stand mode (for breath cycle)
+  // ───────────────────────────────────────────────────────────────
+  function buildPose(phase, walking, idleT) {
     const TAU = Math.PI * 2;
 
+    // Per-leg step kinematics. Returns hipAngle and lift (foot Y).
     function stepKinematics(p) {
-      let hipAng, kneeBend, lift;
+      let hipAng, lift;
       if (p < 0.58) {
-        // STANCE: leg sweeps forward → back
+        // STANCE: leg sweeps forward → back (no lift)
         const t = p / 0.58;
-        hipAng = lerp(-0.37, 0.36, t);
-        kneeBend = 0.04 + Math.sin(t * Math.PI) * 0.06;
+        hipAng = lerp(-0.34, 0.34, t);
         lift = 0;
       } else {
-        // SWING: knee bends, leg swings forward
+        // SWING: leg lifts and swings forward
         const t = (p - 0.58) / 0.42;
-        hipAng = lerp(0.36, -0.37, t);
-        kneeBend = 0.68 * Math.sin(t * Math.PI) + 0.1;
-        lift = 0.08 * Math.sin(t * Math.PI);
+        hipAng = lerp(0.34, -0.34, t);
+        lift = 0.075 * Math.sin(t * Math.PI);
       }
       return {
         hipAng: hipAng * (walking ? 1 : 0),
-        kneeBend: kneeBend * (walking ? 1 : 0),
         lift: lift * (walking ? 1 : 0),
-        ankleAng: walking ? Math.sin((p - 0.5) * TAU) * 0.20 : 0,
+        isStance: p < 0.58,
+        stancePhase: p < 0.58 ? p / 0.58 : 0,
       };
     }
 
@@ -161,46 +241,72 @@
     const L = stepKinematics(legL_p);
     const R = stepKinematics(legR_p);
 
-    const hipSway = Math.sin(phase * TAU + Math.PI * 0.2) * 0.014 * (walking ? 1 : 0);
-    const bob = (1 - Math.abs(Math.sin(phase * TAU))) * 0.020 * (walking ? 1 : 0);
-    const lean = walking ? 0.024 : 0;
-    const shoulderRot = Math.sin(phase * TAU) * 0.028 * (walking ? 1 : 0);
+    // Walking dynamics
+    const hipSway   = walking ? Math.sin(phase * TAU + Math.PI * 0.2) * 0.014 : 0;
+    const bob       = walking ? (1 - Math.abs(Math.sin(phase * TAU))) * 0.020 : 0;
+    const lean      = walking ? 0.024 : 0;
+    const shoulderRot = walking ? Math.sin(phase * TAU) * 0.028 : 0;
 
-    // Figure-space vertical anchors (0=crown, 1=soles)
-    const yCrown  = 0.020 + bob;
-    const yChin   = yCrown + 0.110;
+    // Idle dynamics: gentle breath (chest rise/fall ~4s) + weight
+    // shift between feet (~7s). These overlay on the static pose
+    // when the figure has finished walking in.
+    const idleBreath = walking ? 0 : Math.sin(idleT * TAU / 4.0) * 0.008;
+    const idleSway   = walking ? 0 : Math.sin(idleT * TAU / 7.0) * 0.012;
+    const idleBob    = walking ? 0 : Math.sin(idleT * TAU / 4.0 + Math.PI) * 0.006;
+
+    // Vertical anchors in figure-space (0=crown, 1=soles).
+    // Classical 7.5-head proportions: head height ~13.5% of total.
+    const yCrown    = 0.005 + bob + idleBob;
+    const yChin     = yCrown + 0.135;        // head ~7.4H proportion
     const yShoulder = yChin + 0.045;
-    const yWaist  = yShoulder + 0.20;
-    const yHip    = yShoulder + 0.30;
+    const yChest    = yShoulder + 0.10;
+    const yWaist    = yShoulder + 0.20 - idleBreath;
+    const yHip      = yShoulder + 0.30;
+    // Hip to soles = ~0.52, slightly less than total leg length so
+    // the IK never has to stretch the leg to reach the ground.
 
-    const wHead    = 0.112;
-    const wShoulder = 0.230;
-    const wHip     = 0.178;
+    const wHead     = 0.115;
+    const wShoulder = 0.235;
+    const wHip      = 0.180;
 
-    const cx = hipSway;
+    const cx = hipSway + idleSway;
 
-    const head     = [cx, yCrown + 0.045];
-    const chin     = [cx, yChin];
-    const neck     = [cx, yShoulder - 0.012];
+    const head      = [cx, yCrown + 0.045];
+    const hairTop   = [cx + 0.012, yCrown - 0.020];  // slight asymmetry
+    const chin      = [cx, yChin];
+    const neck      = [cx, yShoulder - 0.012];
     const shoulderC = [cx + lean * 0.5, yShoulder];
-    const waist    = [cx + lean, yWaist];
-    const hipC     = [cx + lean * 1.2, yHip];
+    const chest     = [cx + lean * 0.6, yChest - idleBreath];  // chest rises on inhale
+    const waist     = [cx + lean, yWaist];
+    const hipC      = [cx + lean * 1.2, yHip];
 
-    const shoulderL = [cx - wShoulder * 0.5 + shoulderRot * 0.04 - lean * 0.3, yShoulder + Math.abs(shoulderRot) * 0.012];
-    const shoulderR = [cx + wShoulder * 0.5 + shoulderRot * 0.04 - lean * 0.3, yShoulder + Math.abs(shoulderRot) * 0.012];
+    const shoulderL = [
+      cx - wShoulder * 0.5 + shoulderRot * 0.04 - lean * 0.3,
+      yShoulder + Math.abs(shoulderRot) * 0.012,
+    ];
+    const shoulderR = [
+      cx + wShoulder * 0.5 + shoulderRot * 0.04 - lean * 0.3,
+      yShoulder + Math.abs(shoulderRot) * 0.012,
+    ];
 
     const hipL = [cx - wHip * 0.5 + lean * 1.2, yHip];
     const hipR = [cx + wHip * 0.5 + lean * 1.2, yHip];
 
+    // Arm swing (opposite legs). When idle, base elbow bend is small
+    // (~5°) so arms hang naturally. When walking, base bend rises so
+    // the forearm carries forward through the swing.
     const armSwingL = -L.hipAng * 0.85;
     const armSwingR = -R.hipAng * 0.85;
-    const elbowBendL = 0.52 + Math.abs(armSwingL) * 0.48;
-    const elbowBendR = 0.52 + Math.abs(armSwingR) * 0.48;
+    const baseBend  = walking ? 0.40 : 0.08;
+    const elbowBendL = baseBend + Math.abs(armSwingL) * 0.50;
+    const elbowBendR = baseBend + Math.abs(armSwingR) * 0.50;
 
-    const lUpperArm = 0.158;
+    // Limb lengths. Total leg = 0.535 with hip→sole distance = 0.52
+    // gives the IK a small slack window so knees can bend on stance.
+    const lUpperArm = 0.165;
     const lForearm  = 0.158;
-    const lThigh    = 0.228;
-    const lCalf     = 0.208;
+    const lThigh    = 0.275;
+    const lCalf     = 0.260;
 
     function armPositions(shoulder, swing, bend) {
       const sx = Math.sin(swing) * lUpperArm;
@@ -213,19 +319,41 @@
       return { elbow, hand };
     }
 
+    // Foot positioning + IK leg.
+    //
+    // For our front-ish view, feet plant at a fixed ground-Y per leg.
+    // During stance, foot Y stays locked (no slide). During swing,
+    // foot lifts proportional to step.lift. The horizontal x is the
+    // hip x (slight outward splay).
+    const groundY = 1.0;  // figure-space soles
     function legPositions(hip, k) {
-      const ang = k.hipAng;
-      const tx = Math.sin(ang) * lThigh;
-      const ty = Math.cos(ang) * lThigh;
-      const knee = [hip[0] + tx, hip[1] + ty];
-      const calfAng = ang - k.kneeBend;
-      const cx2 = Math.sin(calfAng) * lCalf;
-      const cy2 = Math.cos(calfAng) * lCalf;
-      const ankle = [knee[0] + cx2, knee[1] + cy2 - k.lift];
-      const footAng = calfAng + Math.PI / 2 - k.ankleAng;
-      const heel = [ankle[0] - Math.cos(footAng) * 0.020, ankle[1] - Math.sin(footAng) * 0.020];
-      const toe  = [ankle[0] + Math.cos(footAng) * 0.054, ankle[1] + Math.sin(footAng) * 0.054];
-      return { knee, ankle, heel, toe };
+      // Foot x: keep aligned with hip x (slight outward for both)
+      const footOutward = hip[0] < cx ? -0.020 : 0.020;
+      const footX = hip[0] + footOutward;
+      const footY = groundY - k.lift;
+      // 2-bone IK from hip → foot
+      // forward sign: knees bulge slightly outward (away from body center)
+      const forwardSign = hip[0] < cx ? -1 : 1;
+      const ik = ik2(hip[0], hip[1], footX, footY, lThigh, lCalf, forwardSign);
+      // Foot orientation: heel slightly back, toe forward + ankle dorsiflexion
+      // During swing, toe lifts (heel-strike preparation)
+      const footAng = walking
+        ? Math.PI / 2 - Math.sin((k.stancePhase + 0.5) * TAU) * 0.12
+        : Math.PI / 2;
+      const heel = [
+        ik.footX - Math.cos(footAng) * 0.020,
+        ik.footY - Math.sin(footAng) * 0.020,
+      ];
+      const toe = [
+        ik.footX + Math.cos(footAng) * 0.054,
+        ik.footY + Math.sin(footAng) * 0.054,
+      ];
+      return {
+        knee: [ik.kneeX, ik.kneeY],
+        ankle: [ik.footX, ik.footY],
+        heel, toe,
+        isStance: k.isStance,
+      };
     }
 
     const armL = armPositions(shoulderL, armSwingL, elbowBendL);
@@ -234,7 +362,7 @@
     const legRp = legPositions(hipR, R);
 
     return {
-      head, chin, neck, shoulderC, waist, hipC,
+      head, hairTop, chin, neck, shoulderC, chest, waist, hipC,
       shoulderL, shoulderR, hipL, hipR,
       armL, armR,
       legL: legLp, legR: legRp,
@@ -243,14 +371,13 @@
   }
 
   // ───────────────────────────────────────────────────────────────
-  // RASTERIZATION — contour body parts into sub-cell density grid
+  // RASTERIZATION
   // ───────────────────────────────────────────────────────────────
 
   function rasterizeContour(d, cols, rows, p1, p2, contour, scaleW, weight) {
     const ax = p2[0] - p1[0];
     const ay = p2[1] - p1[1];
     const len = Math.sqrt(ax * ax + ay * ay) || 0.0001;
-    const ux = ax / len, uy = ay / len;
 
     const STEPS = Math.max(6, Math.ceil(len * 2.0));
     let cIdx = 0;
@@ -275,7 +402,6 @@
           const dd = Math.sqrt(dx * dx + dy * dy);
           if (dd > r) continue;
           const fall = 1 - dd / r;
-          // Smooth step for softer falloff
           const v = fall * fall * weight;
           if (v > d[y * cols + x]) d[y * cols + x] = v;
         }
@@ -300,7 +426,7 @@
     }
   }
 
-  function rasterizeBody(d, cols, rows, pose, scale, anchor) {
+  function rasterizeBody(d, cols, rows, pose, scale, anchor, depth) {
     const figH = rows * scale * 0.92;
     const figW = figH * 0.44;
     const cx0 = anchor.cx;
@@ -309,6 +435,20 @@
     const fx = (p) => cx0 + p[0] * figW;
     const fy = (p) => cy0 - figH + p[1] * figH;
     const partScale = figW;
+
+    // 3/4 hinting: leading-side limbs (right side, for walker turning
+    // slightly to viewer) scaled ~6% larger. Depth-modulated so the
+    // effect ramps in as the figure approaches.
+    const leadBoost = 1 + 0.06 * depth;
+    const trailBoost = 1 - 0.04 * depth;
+
+    // Hair (drawn first, behind head)
+    {
+      const top = [fx(pose.hairTop), fy(pose.hairTop)];
+      const bot = [fx(pose.head), fy(pose.head) - pose.widths.head * figW * 0.2];
+      rasterizeContour(d, cols, rows, top, bot, HAIR_CONTOUR,
+        pose.widths.head * partScale * 1.55, 0.95);
+    }
 
     // Head
     {
@@ -329,79 +469,85 @@
       const top = [fx(pose.shoulderC), fy(pose.shoulderC)];
       const bot = [fx(pose.hipC), fy(pose.hipC) + 0.3];
       rasterizeContour(d, cols, rows, top, bot, TORSO_CONTOUR,
-        partScale * 0.35, 1.0);
+        partScale * 0.36, 1.0);
     }
 
-    // Arms
-    const armParts = [
-      [pose.shoulderL, pose.armL, BICEP_CONTOUR, FOREARM_CONTOUR],
-      [pose.shoulderR, pose.armR, BICEP_CONTOUR, FOREARM_CONTOUR],
+    // Arms — left (trailing in 3/4), right (leading)
+    const armList = [
+      { sh: pose.shoulderL, arm: pose.armL, w: 0.18 * trailBoost },
+      { sh: pose.shoulderR, arm: pose.armR, w: 0.18 * leadBoost },
     ];
-    for (const [sh, arm, bic, fore] of armParts) {
+    for (const a of armList) {
       rasterizeContour(d, cols, rows,
-        [fx(sh), fy(sh)],
-        [fx(arm.elbow), fy(arm.elbow)],
-        bic, partScale * 0.18, 1.0);
+        [fx(a.sh), fy(a.sh)],
+        [fx(a.arm.elbow), fy(a.arm.elbow)],
+        BICEP_CONTOUR, partScale * a.w, 1.0);
       rasterizeContour(d, cols, rows,
-        [fx(arm.elbow), fy(arm.elbow)],
-        [fx(arm.hand), fy(arm.hand)],
-        fore, partScale * 0.16, 0.95);
+        [fx(a.arm.elbow), fy(a.arm.elbow)],
+        [fx(a.arm.hand), fy(a.arm.hand)],
+        FOREARM_CONTOUR, partScale * (a.w * 0.89), 0.95);
       rasterizeEllipse(d, cols, rows,
-        fx(arm.hand), fy(arm.hand),
+        fx(a.arm.hand), fy(a.arm.hand),
         partScale * 0.04, partScale * 0.08, 0.9);
     }
 
     // Legs
-    const legParts = [
-      [pose.hipL, pose.legL],
-      [pose.hipR, pose.legR],
+    const legList = [
+      { hp: pose.hipL, lg: pose.legL, w: 0.18 * trailBoost },
+      { hp: pose.hipR, lg: pose.legR, w: 0.18 * leadBoost },
     ];
-    for (const [hp, lg] of legParts) {
+    for (const l of legList) {
       rasterizeContour(d, cols, rows,
-        [fx(hp), fy(hp)],
-        [fx(lg.knee), fy(lg.knee)],
-        THIGH_CONTOUR, partScale * 0.18, 1.0);
+        [fx(l.hp), fy(l.hp)],
+        [fx(l.lg.knee), fy(l.lg.knee)],
+        THIGH_CONTOUR, partScale * l.w, 1.0);
       rasterizeContour(d, cols, rows,
-        [fx(lg.knee), fy(lg.knee)],
-        [fx(lg.ankle), fy(lg.ankle)],
-        CALF_CONTOUR, partScale * 0.15, 1.0);
+        [fx(l.lg.knee), fy(l.lg.knee)],
+        [fx(l.lg.ankle), fy(l.lg.ankle)],
+        CALF_CONTOUR, partScale * (l.w * 0.83), 1.0);
       rasterizeContour(d, cols, rows,
-        [fx(lg.heel), fy(lg.heel)],
-        [fx(lg.toe), fy(lg.toe)],
+        [fx(l.lg.heel), fy(l.lg.heel)],
+        [fx(l.lg.toe), fy(l.lg.toe)],
         FOOT_CONTOUR, partScale * 0.08, 0.9);
     }
   }
 
   // ───────────────────────────────────────────────────────────────
-  // Edge-darkening: trace the 1-pixel outline of the figure and
-  // boost edge cells so the silhouette reads against background.
+  // Edge-brighten: silhouette outline cells get a small density bump
+  // so the figure reads against background. Works by detecting cells
+  // with a low-density neighbor (i.e. edge pixels).
   // ───────────────────────────────────────────────────────────────
-  function applyEdgeDarkening(cellD, cols, rows, threshold) {
+  function applyEdgeBrighten(cellD, cols, rows, threshold, boost) {
     const out = new Float32Array(cellD.length);
-    for (let y = 1; y < rows - 1; y++) {
+    for (let y = 0; y < rows; y++) {
       const rowStart = y * cols;
-      for (let x = 1; x < cols - 1; x++) {
+      for (let x = 0; x < cols; x++) {
         const i = rowStart + x;
         const v = cellD[i];
-        // Has at least one empty neighbor → edge cell
-        const hasGap =
-          cellD[i - 1] < threshold || cellD[i + 1] < threshold ||
-          cellD[i - cols] < threshold || cellD[i + cols] < threshold;
-        out[i] = hasGap && v > threshold ? Math.min(1, v * 1.35 + 0.08) : v;
+        if (v < threshold) { out[i] = v; continue; }
+        // 4-neighbor gap test
+        const left  = x > 0        ? cellD[i - 1]    : 0;
+        const right = x < cols - 1 ? cellD[i + 1]    : 0;
+        const up    = y > 0        ? cellD[i - cols] : 0;
+        const down  = y < rows - 1 ? cellD[i + cols] : 0;
+        const minN = Math.min(left, right, up, down);
+        if (minN < threshold * 0.5) {
+          out[i] = Math.min(1, v + boost);
+        } else {
+          out[i] = v;
+        }
       }
     }
-    // Copy back
     for (let i = 0; i < cellD.length; i++) cellD[i] = out[i];
   }
 
   // ───────────────────────────────────────────────────────────────
-  // Atmosphere — layered horizon particle field with parallax depth
+  // Atmosphere — layered horizon particle field (parallax dust)
   // ───────────────────────────────────────────────────────────────
   function rasterizeAtmosphere(d, cols, rows, depth, elapsed) {
     const horizonY = Math.floor(rows * 0.22);
     const intensity = lerp(0.20, 0.03, depth);
     if (intensity < 0.02) return;
-    // Two layers: far (slow) and near (fast)
     for (let layer = 0; layer < 2; layer++) {
       const speed = layer === 0 ? 0.12 : 0.28;
       const spread = layer === 0 ? 3 : 5;
@@ -417,7 +563,7 @@
     }
   }
 
-  // Contact shadow — soft ellipse tracking the figure
+  // Contact shadow
   function rasterizeShadow(d, cols, rows, anchor, depth, figW) {
     const yShadow = anchor.cyBottom + 0.5;
     const span = figW * 0.82 * (0.3 + depth * 0.7);
@@ -441,25 +587,24 @@
   // ───────────────────────────────────────────────────────────────
   // Downsample sub-cell → ASCII cell (average of SS×SS block)
   // ───────────────────────────────────────────────────────────────
-  function downsample(subD, subCols, subRows, outD, outCols, outRows) {
-    const inv = 1 / (SS * SS);
+  function downsample(subD, subCols, subRows, outD, outCols, outRows, ss) {
+    const inv = 1 / (ss * ss);
     for (let y = 0; y < outRows; y++) {
-      const ys = y * SS;
+      const ys = y * ss;
       for (let x = 0; x < outCols; x++) {
-        const xs = x * SS;
-        let sum = 0, count = 0;
-        for (let oy = 0; oy < SS; oy++) {
+        const xs = x * ss;
+        let sum = 0;
+        for (let oy = 0; oy < ss; oy++) {
           const sy = ys + oy;
           if (sy >= subRows) continue;
           const rowStart = sy * subCols;
-          for (let ox = 0; ox < SS; ox++) {
+          for (let ox = 0; ox < ss; ox++) {
             const sx = xs + ox;
             if (sx >= subCols) continue;
             sum += subD[rowStart + sx];
-            count++;
           }
         }
-        outD[y * outCols + x] = count ? sum * inv : 0;
+        outD[y * outCols + x] = sum * inv;
       }
     }
   }
@@ -484,6 +629,8 @@
     canvas.style.height = '100%';
     canvas.style.display = 'block';
     canvas.style.pointerEvents = 'none';
+    canvas.style.opacity = '0';     // fade in on first paint
+    canvas.style.transition = 'opacity 320ms ease-out';
     canvas.setAttribute('aria-hidden', 'true');
     host.appendChild(canvas);
 
@@ -495,8 +642,7 @@
     let subCols = 0, subRows = 0;
     let subDensity = null;
     let cellDensity = null;
-    // Per-cell shed metadata: [shedTime, originalDensity]
-    let shedData = null;
+    let shedData = null;  // [time, density] per cell
 
     function resize() {
       const rect = host.getBoundingClientRect();
@@ -512,7 +658,6 @@
       subRows = rows * SS;
       subDensity = new Float32Array(subCols * subRows);
       cellDensity = new Float32Array(cols * rows);
-      // shedData: [shedAtElapsed, originalDensity] per cell
       shedData = new Float32Array(cols * rows * 2);
       ctx.font = `${FONT_PX}px ${FONT_FAMILY}`;
       ctx.textBaseline = 'top';
@@ -522,15 +667,12 @@
     ro.observe(host);
     resize();
 
-    // ── Scroll progress → melt target
+    // Scroll progress → melt target
     let meltTarget = 0;
     let meltCurrent = 0;
     function readScroll() {
       const rect = hero.getBoundingClientRect();
       const scrolled = -rect.top;
-      // Melt completes by the time the user has scrolled 32% of the
-      // hero height past the top — so by the first section divider
-      // the figure is already gone.
       const span = Math.max(1, rect.height * 0.32);
       meltTarget = clamp(scrolled / span, 0, 1);
     }
@@ -557,7 +699,34 @@
     let raf = 0;
     let last = performance.now();
     let running = true;
-    let frameCount = 0;
+
+    // Adaptive-quality state. Measure frame cost in the first window
+    // and downgrade SS if too slow.
+    let perfWindow = [];
+    let perfChecked = false;
+    function maybeDowngrade() {
+      if (perfChecked) return;
+      if (perfWindow.length < 16) return;
+      perfChecked = true;
+      const avg = perfWindow.reduce((a, b) => a + b, 0) / perfWindow.length;
+      if (avg > 17) {
+        // Slow device: drop SS, larger cells
+        SS = 2;
+        CELL_W = 7;
+        CELL_H = 11;
+        FONT_PX = 11;
+        resize();
+      }
+    }
+
+    // ── Particle systems (foot-plant ripples + walk-in dust trail)
+    const ripples = [];          // {t0, x, y, life}
+    const dust    = [];          // {t0, x, y, vx, vy, life}
+    let lastFootStateL = false;  // was left foot in stance last frame?
+    let lastFootStateR = false;
+
+    // Idle phase starts ticking once entry walk completes
+    let idleStartedAt = null;
 
     function frame(now) {
       if (!running) return;
@@ -565,37 +734,37 @@
       if (!visible && meltCurrent > 0.98) { last = now; return; }
 
       const dt = Math.min(0.05, (now - last) / 1000);
+      const frameStart = now;
       last = now;
-      frameCount++;
 
-      // Melt follows target with spring-like lerp
       meltCurrent += (meltTarget - meltCurrent) * Math.min(1, dt * 7.5);
       const melt = meltCurrent;
 
       const elapsed = (now - startedAt) / 1000;
-
-      // ── Cinematic walk-in: exponential ease for fast arrival +
-      //     subtle overshoot settle at the end.
       const enterRaw = reduced ? 1 : Math.min(1, elapsed / ENTRY_DURATION);
-      const entryT = reduced ? 1 : easeOutBack(Math.min(elapsed / ENTRY_DURATION, 1));
-      const depth = entryT; // 0 = horizon, 1 = foreground
+      const entryT = reduced ? 1 : easeOutBack(enterRaw);
+      const depth = clamp(entryT, 0, 1);
       const scale = lerp(0.12, 1.0, depth);
-      const walking = !reduced && entryT > 0.15;
+      const walking = !reduced && enterRaw < 1;
+
+      // Track idle time
+      if (!walking && idleStartedAt === null) idleStartedAt = elapsed;
+      const idleT = idleStartedAt === null ? 0 : (elapsed - idleStartedAt);
 
       if (walking) phase = (phase + dt / WALK_PERIOD) % 1;
 
-      // Anchor: figure walks from deep horizon → ground line
+      // Anchor: figure walks from far→close
       const horizonY = subRows * 0.28;
       const groundY  = subRows * 0.97;
       const cyBottom = lerp(horizonY + subRows * 0.44, groundY, depth);
-      const cxAnchor  = lerp(subCols * 0.56, subCols * 0.50, depth);
+      const cxAnchor = lerp(subCols * 0.56, subCols * 0.50, depth);
 
-      const pose = buildPose(walking ? phase : 0, walking);
+      const pose = buildPose(walking ? phase : 0, walking, idleT);
 
       // ── Reset sub-density grid
       for (let i = 0; i < subDensity.length; i++) subDensity[i] = 0;
 
-      // ── Atmosphere (parallax particles)
+      // ── Atmosphere
       rasterizeAtmosphere(subDensity, subCols, subRows, depth, elapsed);
 
       // ── Shadow
@@ -608,21 +777,68 @@
 
       // ── Body
       rasterizeBody(subDensity, subCols, subRows, pose, scale,
-        { cx: cxAnchor, cyBottom });
+        { cx: cxAnchor, cyBottom }, depth);
 
-      // ── Distance fade (dimmer at horizon, full at foreground)
+      // ── Distance fade
       if (depth < 1) {
         const fade = lerp(0.48, 1.0, depth);
         for (let i = 0; i < subDensity.length; i++) subDensity[i] *= fade;
       }
 
       // ── Downsample
-      downsample(subDensity, subCols, subRows, cellDensity, cols, rows);
+      downsample(subDensity, subCols, subRows, cellDensity, cols, rows, SS);
 
-      // ── Edge darkening (readable silhouette)
-      applyEdgeDarkening(cellDensity, cols, rows, 0.04);
+      // ── Edge brighten (rim-light feel)
+      applyEdgeBrighten(cellDensity, cols, rows, 0.10, 0.18);
 
-      // ── Melt cull with per-cell organic timing
+      // ── Detect foot-plant events (transition from swing → stance)
+      //     and emit a ground ripple.
+      if (walking && depth > 0.4) {
+        const figHCell = rows * scale * 0.92;
+        const cyBottomCell = lerp(
+          Math.floor(rows * 0.28) + rows * 0.44,
+          Math.floor(rows * 0.97),
+          depth
+        );
+        const figWCell = figHCell * 0.44;
+        const stanceL = pose.legL.isStance;
+        const stanceR = pose.legR.isStance;
+        if (stanceL && !lastFootStateL) {
+          ripples.push({
+            t0: elapsed,
+            x: (cxAnchor / SS) + (pose.hipL[0] - 0) * figWCell,
+            y: cyBottomCell + 0.5,
+            life: 0.5,
+          });
+        }
+        if (stanceR && !lastFootStateR) {
+          ripples.push({
+            t0: elapsed,
+            x: (cxAnchor / SS) + (pose.hipR[0] - 0) * figWCell,
+            y: cyBottomCell + 0.5,
+            life: 0.5,
+          });
+        }
+        lastFootStateL = stanceL;
+        lastFootStateR = stanceR;
+
+        // Walk-in dust trail: emit a few particles per second behind
+        // each foot during the entry walk.
+        if (cellNoise(elapsed * 1000 | 0, 0, 7) < dt * 8) {
+          const useL = cellNoise(elapsed * 100 | 0, 1, 13) < 0.5;
+          const hip = useL ? pose.hipL : pose.hipR;
+          dust.push({
+            t0: elapsed,
+            x: (cxAnchor / SS) + hip[0] * figWCell + (cellNoise(elapsed, 0, 3) - 0.5) * 1.4,
+            y: cyBottomCell + 0.4,
+            vx: (cellNoise(elapsed, 1, 11) - 0.5) * 0.6,
+            vy: -0.4 - cellNoise(elapsed, 2, 19) * 0.5,
+            life: 1.2,
+          });
+        }
+      }
+
+      // ── Melt cull with organic drip tendrils
       const cellHorizon  = Math.floor(rows * 0.28);
       const cellGround   = Math.floor(rows * 0.97);
       const cyBottomCell = lerp(cellHorizon + rows * 0.44, cellGround, depth);
@@ -634,15 +850,17 @@
       for (let y = 0; y < rows; y++) {
         const perRowJitter = cellNoise(y, 0, 42) * 2.0;
         const myMeltLine = meltRow + perRowJitter;
-        const isShed = y < myMeltLine;
         const rowStart = y * cols;
         for (let x = 0; x < cols; x++) {
           const i = rowStart + x;
-          // Organic per-cell timing offset: cells don't all shed at once
-          const cellOffset = cellNoise(x, y, 17) * 2.5;
-          const myMelt = myMeltLine + cellOffset;
+          // Drip tendril: each column has a downward "finger" reaching
+          // ahead of the main melt line. Tendril depth varies per
+          // column via noise.
+          const tendril = cellNoise(x, 0, 88) * 4.5 * smoothstep(0, 0.4, melt);
+          const cellOffset = cellNoise(x, y, 17) * 2.0;
+          const effectiveMeltLine = myMeltLine + cellOffset - tendril;
 
-          if (y < myMelt) {
+          if (y < effectiveMeltLine) {
             const dIdx = i * 2;
             if (shedData[dIdx] === 0 && cellDensity[i] > 0.05) {
               shedData[dIdx] = elapsed + cellNoise(x, y, 89) * 0.08;
@@ -656,7 +874,7 @@
         }
       }
 
-      // ── Glow band at melt front (cells get brighter just before they go)
+      // ── Glow band at melt front
       if (melt > 0.02 && melt < 0.95) {
         const glowY = Math.floor(meltRow);
         for (let dy = -1; dy <= 2; dy++) {
@@ -673,31 +891,81 @@
 
       // ── DRAW ──────────────────────────────────────────────────
       ctx.clearRect(0, 0, cssW, cssH);
-      // Canvas-level opacity fade as melt finishes — kills any
-      // lingering falling characters by the time the user reaches
-      // the next section. Map melt 0.75..1.0 → alpha 1.0..0.0.
-      const canvasAlpha = clamp(1 - (melt - 0.75) / 0.25, 0, 1);
+
+      // Fade in on first paint (CSS transition handles smoothing)
+      const fadeIn = clamp(elapsed * 1000 / FADE_IN_MS, 0, 1);
+      const fadeOut = clamp(1 - (melt - 0.75) / 0.25, 0, 1);
+      const canvasAlpha = Math.min(fadeIn, fadeOut);
       canvas.style.opacity = String(canvasAlpha);
-      if (canvasAlpha <= 0.005) return; // skip the rest, nothing to draw
+      if (canvasAlpha <= 0.005) {
+        // Adaptive perf check still runs even if we skip draw
+        if (!perfChecked) {
+          perfWindow.push(performance.now() - frameStart);
+          maybeDowngrade();
+        }
+        return;
+      }
+
       const ink = resolveInk();
       ctx.globalAlpha = 1;
+      ctx.fillStyle = ink;
 
-      // Body cells — map density → character
+      // ── Body cells with S-curve tone-map
       for (let y = 0; y < rows; y++) {
         const rowStart = y * cols;
         const py = y * CELL_H;
         for (let x = 0; x < cols; x++) {
           const v = cellDensity[rowStart + x];
           if (v <= 0.035) continue;
-          // Non-linear mapping: compress mid-range for more contrast
-          const mapped = Math.pow(Math.min(1, v), 0.75);
+          const mapped = sCurve(v);
           const idx = Math.min(D_N - 1, Math.floor(mapped * (D_N - 0.001)));
-          ctx.fillStyle = ink;
           ctx.fillText(D[idx], x * CELL_W, py);
         }
       }
 
-      // ── Falling shed characters (remember their original density)
+      // ── Foot-plant ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        const age = elapsed - r.t0;
+        if (age > r.life) { ripples.splice(i, 1); continue; }
+        const t = age / r.life;
+        const radius = t * 4.5;
+        const alpha = (1 - t) * 0.5;
+        ctx.globalAlpha = alpha;
+        // Draw a thin horizontal ripple ring
+        for (let dx = -radius; dx <= radius; dx += 0.7) {
+          const ang = Math.acos(clamp(dx / Math.max(0.01, radius), -1, 1));
+          const dy = Math.sin(ang) * radius * 0.25;
+          const xs = Math.round(r.x + dx);
+          const ys = Math.round(r.y + dy);
+          if (xs >= 0 && xs < cols && ys >= 0 && ys < rows) {
+            ctx.fillText('.', xs * CELL_W, ys * CELL_H);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // ── Walk-in dust trail
+      for (let i = dust.length - 1; i >= 0; i--) {
+        const p = dust[i];
+        const age = elapsed - p.t0;
+        if (age > p.life) { dust.splice(i, 1); continue; }
+        // Update position (Euler integration)
+        const x = p.x + p.vx * age;
+        const y = p.y + p.vy * age + 0.6 * age * age; // gravity
+        const t = age / p.life;
+        const alpha = (1 - t) * 0.45;
+        const xs = Math.round(x);
+        const ys = Math.round(y);
+        if (xs < 0 || xs >= cols || ys < 0 || ys >= rows) continue;
+        const ramp = ".'`,:;";
+        const ch = ramp[Math.floor((1 - t) * ramp.length * 0.999)];
+        ctx.globalAlpha = alpha;
+        ctx.fillText(ch, xs * CELL_W, ys * CELL_H);
+      }
+      ctx.globalAlpha = 1;
+
+      // ── Falling shed characters
       for (let y = 0; y < rows; y++) {
         const rowStart = y * cols;
         for (let x = 0; x < cols; x++) {
@@ -712,22 +980,21 @@
           const fall = age * age * fallSpeed;
           const drift = Math.sin((y * 0.37 + x * 0.53 + age * 2.1 + cellNoise(x, y, 101) * 6)) * 7;
           const alpha = Math.max(0, 1 - age / 2.2);
-          // Character index from original density (not just dense end)
-          const mapped = Math.pow(Math.min(1, origDensity), 0.75);
+          const mapped = sCurve(Math.min(1, origDensity));
           const baseIdx = Math.min(D_N - 1, Math.floor(mapped * (D_N - 0.001)));
-          // Darken as it falls
           const idx = Math.max(0, baseIdx - Math.floor(age * 6));
           ctx.globalAlpha = 0.55 * alpha;
-          ctx.fillStyle = ink;
           ctx.fillText(D[idx], x * CELL_W + drift, y * CELL_H + fall);
         }
       }
 
-      // No puddle — the figure should leave no residue once melted.
-      // Below, a canvas-level opacity fade ensures even the falling
-      // characters are gone before the user reaches the next section.
-
       ctx.globalAlpha = 1;
+
+      // Adaptive perf metric
+      if (!perfChecked) {
+        perfWindow.push(performance.now() - frameStart);
+        maybeDowngrade();
+      }
     }
     raf = requestAnimationFrame(frame);
 
