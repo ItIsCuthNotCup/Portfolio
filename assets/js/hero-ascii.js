@@ -62,7 +62,17 @@
   let SS = 3;
 
   const WALK_PERIOD = 1.1;
-  const ENTRY_DURATION = 3.6;
+  // Cycle: figure walks from horizon → past camera → loops.
+  // CYCLE_DURATION = total seconds per loop.
+  // FAR_PORTION    = fraction of cycle spent before figure reaches
+  //                  full size (the "approach" phase).
+  // PAST_PORTION   = fraction after full size during which figure
+  //                  walks past camera (clipping below the slot).
+  const CYCLE_DURATION = 8.5;
+  const FAR_PORTION = 0.55;   // 0..0.55  approach
+  const PAST_PORTION = 0.30;  // 0.55..0.85 walk past
+  // 0.85..1.0 is offscreen / re-emerge transition
+
   const FADE_IN_MS = 500;
 
   // ── Helpers
@@ -262,9 +272,10 @@
     // Hip to soles = ~0.52, slightly less than total leg length so
     // the IK never has to stretch the leg to reach the ground.
 
+    // Wider shoulder/hip line so arms hang clearly outside the trunk
     const wHead     = 0.115;
-    const wShoulder = 0.235;
-    const wHip      = 0.180;
+    const wShoulder = 0.290;
+    const wHip      = 0.220;
 
     const cx = hipSway + idleSway;
 
@@ -464,18 +475,22 @@
       [fx(pose.neck), fy(pose.neck)],
       NECK_CONTOUR, partScale * 0.22, 0.85);
 
-    // Torso — thicker so the V-taper reads
+    // Torso — narrow trunk so arms can clearly hang outside.
+    // Was 0.46 (engulfed the arms). 0.20 keeps the trunk to about
+    // shoulder-joint width, leaving the arms visibly outside.
     {
       const top = [fx(pose.shoulderC), fy(pose.shoulderC)];
       const bot = [fx(pose.hipC), fy(pose.hipC) + 0.3];
       rasterizeContour(d, cols, rows, top, bot, TORSO_CONTOUR,
-        partScale * 0.46, 1.0);
+        partScale * 0.20, 1.0);
     }
 
-    // Arms — thicker so they separate from the torso
+    // Arms — slightly thinner now so they read as limbs, not blobs.
+    // Combined with wider shoulders + idleOutward + thinner torso,
+    // arms now visibly hang OUTSIDE the trunk.
     const armList = [
-      { sh: pose.shoulderL, arm: pose.armL, w: 0.23 * trailBoost },
-      { sh: pose.shoulderR, arm: pose.armR, w: 0.23 * leadBoost },
+      { sh: pose.shoulderL, arm: pose.armL, w: 0.16 * trailBoost },
+      { sh: pose.shoulderR, arm: pose.armR, w: 0.16 * leadBoost },
     ];
     for (const a of armList) {
       rasterizeContour(d, cols, rows,
@@ -744,31 +759,82 @@
       const melt = meltCurrent;
 
       const elapsed = (now - startedAt) / 1000;
-      const enterRaw = reduced ? 1 : Math.min(1, elapsed / ENTRY_DURATION);
-      const entryT = reduced ? 1 : easeOutBack(enterRaw);
-      const depth = clamp(entryT, 0, 1);
-      const scale = lerp(0.12, 1.0, depth);
-      const walking = !reduced && enterRaw < 1;
 
-      // Track idle time
-      if (!walking && idleStartedAt === null) idleStartedAt = elapsed;
-      const idleT = idleStartedAt === null ? 0 : (elapsed - idleStartedAt);
+      // ── Continuous cycle: figure walks from horizon → past camera
+      //    → re-emerges at horizon. Loops indefinitely (until scroll
+      //    melt takes over).
+      //
+      //    cycleT 0..1 maps to:
+      //      0.00..FAR_PORTION       : approach from horizon to ground
+      //      FAR_PORTION..(FAR+PAST) : continue walking forward, scale
+      //                                grows past 1.0, figure exits
+      //                                below the slot
+      //      (FAR+PAST)..1           : offscreen, re-emerging at horizon
+      //
+      //    "depth" (0..1) is the rendering depth used for scale +
+      //    cyBottom. Depth grows from 0 to ~1 by FAR_PORTION, then
+      //    keeps growing past 1 during PAST phase.
+      const cycleT = reduced ? 0.5 : (elapsed / CYCLE_DURATION) % 1;
+      let depth, walking;
+      if (cycleT < FAR_PORTION) {
+        // Approach: depth 0 → 1
+        depth = cycleT / FAR_PORTION;
+        walking = !reduced;
+      } else if (cycleT < FAR_PORTION + PAST_PORTION) {
+        // Walk past camera: depth 1 → 1.45
+        const t = (cycleT - FAR_PORTION) / PAST_PORTION;
+        depth = 1.0 + t * 0.45;
+        walking = !reduced;
+      } else {
+        // Offscreen + re-emerge at horizon: render nothing this frame
+        depth = -1;  // sentinel
+        walking = false;
+      }
 
+      // Apply easing to the approach so the figure decelerates as it
+      // gets close (parallax illusion).
+      let visibleDepth = depth;
+      if (depth >= 0 && depth <= 1) {
+        visibleDepth = smootherstep(0, 1, depth);
+      }
+      // Scale: grows from far → close, then keeps growing past camera
+      const scale = depth < 0
+        ? 0
+        : lerp(0.14, 1.0, Math.min(1, visibleDepth)) +
+          Math.max(0, depth - 1) * 0.65;
+
+      // Walk phase (legs cycle continuously)
       if (walking) phase = (phase + dt / WALK_PERIOD) % 1;
 
-      // Anchor: figure walks from far→close
-      const horizonY = subRows * 0.28;
-      const groundY  = subRows * 0.97;
-      // Anchor: figure walks from far→close in DEPTH (vertical), but
-      // stays centered horizontally in the slot at all depths.
-      const cyBottom = lerp(horizonY + subRows * 0.44, groundY, depth);
+      // Idle is no longer used (no idle stand state in continuous loop)
+      const idleT = 0;
+
+      // Anchor: figure stands on virtual ground line. As depth grows
+      // past 1.0, cyBottom moves below the slot, so the figure exits
+      // through the bottom of the frame.
+      const horizonY = subRows * 0.30;
+      const groundY  = subRows * 0.96;
+      let cyBottom;
+      if (depth < 0) {
+        cyBottom = -9999;  // offscreen
+      } else if (depth <= 1) {
+        cyBottom = lerp(horizonY + subRows * 0.44, groundY, visibleDepth);
+      } else {
+        // Past camera: cyBottom continues moving down past slot bottom
+        cyBottom = groundY + (depth - 1) * subRows * 0.85;
+      }
       const cxAnchor = subCols * 0.50;
-      // Cell-space equivalents (used by ground line, foot ripples,
-      // melt cull, etc). Computed once here so all downstream code
-      // shares the same numbers.
-      const cellHorizon  = Math.floor(rows * 0.28);
-      const cellGround   = Math.floor(rows * 0.97);
-      const cyBottomCell = lerp(cellHorizon + rows * 0.44, cellGround, depth);
+      // Cell-space anchor for downstream effects (ripples, melt, ground line)
+      const cellHorizon  = Math.floor(rows * 0.30);
+      const cellGround   = Math.floor(rows * 0.96);
+      let cyBottomCell;
+      if (depth < 0) {
+        cyBottomCell = -9999;
+      } else if (depth <= 1) {
+        cyBottomCell = lerp(cellHorizon + rows * 0.44, cellGround, visibleDepth);
+      } else {
+        cyBottomCell = cellGround + (depth - 1) * rows * 0.85;
+      }
       const cxAnchorCell = cxAnchor / SS;
 
       const pose = buildPose(walking ? phase : 0, walking, idleT);
@@ -776,25 +842,28 @@
       // ── Reset sub-density grid
       for (let i = 0; i < subDensity.length; i++) subDensity[i] = 0;
 
-      // ── Atmosphere
-      rasterizeAtmosphere(subDensity, subCols, subRows, depth, elapsed);
+      // ── Atmosphere (always — even when figure offscreen, the
+      //    horizon shimmer plays as a continuity cue)
+      rasterizeAtmosphere(subDensity, subCols, subRows,
+        depth < 0 ? 0 : Math.min(1, depth), elapsed);
 
-      // ── Shadow
-      const figH = subRows * scale * 0.92;
-      const figW = figH * 0.44;
-      if (depth > 0.12) {
-        rasterizeShadow(subDensity, subCols, subRows,
-          { cx: cxAnchor, cyBottom }, depth, figW);
-      }
-
-      // ── Body
-      rasterizeBody(subDensity, subCols, subRows, pose, scale,
-        { cx: cxAnchor, cyBottom }, depth);
-
-      // ── Distance fade
-      if (depth < 1) {
-        const fade = lerp(0.48, 1.0, depth);
-        for (let i = 0; i < subDensity.length; i++) subDensity[i] *= fade;
+      if (depth >= 0) {
+        // Match figure aspect ratio used in rasterizeBody.
+        const figH = subRows * scale * 0.84;
+        const figW = figH * 0.55;
+        // ── Shadow
+        if (depth > 0.12 && depth < 1.15) {
+          rasterizeShadow(subDensity, subCols, subRows,
+            { cx: cxAnchor, cyBottom }, Math.min(1, depth), figW);
+        }
+        // ── Body
+        rasterizeBody(subDensity, subCols, subRows, pose, scale,
+          { cx: cxAnchor, cyBottom }, Math.min(1, depth));
+        // ── Distance fade (dim distant figure)
+        if (depth < 1) {
+          const fade = lerp(0.48, 1.0, depth);
+          for (let i = 0; i < subDensity.length; i++) subDensity[i] *= fade;
+        }
       }
 
       // ── Downsample
@@ -842,7 +911,7 @@
       // ── Ground line: faint dotted horizontal line at the figure's
       // foot level. Provides visual grounding so the figure isn't
       // floating in space.
-      if (depth > 0.5) {
+      if (depth > 0.5 && depth < 1.05) {
         const groundRow = Math.min(rows - 1, Math.floor(cyBottomCell));
         const figHCellLocal = rows * scale * 0.84;
         const figWCellLocal = figHCellLocal * 0.55;
@@ -861,7 +930,7 @@
 
       // ── Detect foot-plant events (transition from swing → stance)
       //     and emit a ground ripple.
-      if (walking && depth > 0.4) {
+      if (walking && depth > 0.4 && depth < 1.05) {
         const figHCell = rows * scale * 0.84;
         const figWCell = figHCell * 0.55;
         const stanceL = pose.legL.isStance;
