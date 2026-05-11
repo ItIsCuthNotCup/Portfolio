@@ -1,85 +1,122 @@
 /* ═══════════════════════════════════════════════════════════════
-   hero-ascii.js — contour field v5
+   hero-ascii.js — scroll-driven ASCII instrument
 
-   A quiet, abstract ASCII topography. Multi-octave value noise
-   drifts slowly across the canvas; cells are tone-mapped through
-   the same 72-glyph density ramp the rest of the site uses, with
-   subtle contour highlights at fixed isolines so the field reads
-   as a topographic map rather than blur.
+   Four scroll-driven phases share one canvas on the right rail.
 
-   Replaces v4 (cinematic walking humanoid). The figure read as
-   noise at low cell-resolution; this reads as data.
+     phase A · CONTOUR (scroll 0.0vh → 0.5vh)
+         Sparse 2-octave value-noise topography. Only cells above
+         a density threshold render, so the field reads as quiet
+         contours, not a wall of code.
 
-   PIPELINE PER FRAME
-     1. Each cell samples a 2-octave 3D value-noise field at
-        (col*FREQ_X + drift, row*FREQ_Y + drift, t*MORPH).
-     2. Field is contrast-stretched into [0, 1].
-     3. Density v → ASCII glyph from D ramp.
-     4. Narrow contour highlights at ISO_BANDS isolines so
-        topographic structure reads at a glance.
+     phase B · MELT    (scroll 0.5vh → 1.1vh)
+         Each cell has a hashed delay; as melt progress advances,
+         cells accelerate downward, fade, and exit the bottom.
+         By the end the canvas is empty.
 
-   No IK, no physics, no particles. One canvas, one pass per frame.
+     phase C · EMPTY   (scroll 1.1vh → 1.4vh)
+         Quiet beat. Nothing renders.
+
+     phase D · DONUT   (scroll 1.4vh → 2.4vh)
+         Classic donut.c torus, ASCII-shaded by Lambert reflection,
+         rotating on two axes. Fades in over the first 15% of the
+         phase and out over the last 25%.
+
+     phase E · GONE    (scroll > 2.4vh)
+         Canvas cleared. No work per frame except clearRect.
+
+   The .scene-stage host is position:fixed so it persists across
+   scroll. We listen to window.scroll, normalize by innerHeight,
+   and dispatch to one of the four draw paths each frame.
 
    Accessibility
      - aria-hidden + pointer-events:none on canvas.
-     - Respects prefers-reduced-motion: renders one static frame.
+     - prefers-reduced-motion: renders one static contour frame and
+       stops; no scroll-driven phases.
    ═══════════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
   const HOST_ID = 'scene-canvas';
-  const HERO_ID = 'hero';
 
-  // 72-step pure-ASCII density ramp (same as v4).
+  // 72-step density ramp for the contour field.
   const D = " .'`-\"_,:~;+!|ijl/trcnIPwY1LV\\{CcxzksKv3Ju2Fa]o7T5G9?6$XZAB8USH%&QM@DO0NW#";
-  const D_LAST = D.length - 1;
+  // 12-step luminance ramp for the donut (donut.c original).
+  const DR = ".,-~:;=!*#$@";
 
-  // Cell metrics — fixed; no adaptive fallback needed at this cost.
   const CELL_W = 7;
   const CELL_H = 11;
   const FONT_PX = 11;
   const FONT_FAMILY =
     "ui-monospace, 'DM Mono', 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace";
 
-  // Field parameters.
-  const FREQ_X = 0.020;   // noise units per cell, x
-  const FREQ_Y = 0.024;   // noise units per cell, y
-  const DRIFT_X = 0.055;  // noise units / sec along x
-  const DRIFT_Y = 0.028;  // noise units / sec along y
-  const MORPH   = 0.040;  // structural morph rate (3rd dim)
+  // ── Contour field parameters ──────────────────────────────────
+  const FREQ_X  = 0.022;
+  const FREQ_Y  = 0.026;
+  const DRIFT_X = 0.055;
+  const DRIFT_Y = 0.028;
+  const MORPH   = 0.040;
   const OCTAVES = 2;
-  const TARGET_FPS = 30;
-  const FRAME_MIN = 1000 / TARGET_FPS;
 
-  // Field contrast stretch — empirical p5–p95 of the noise field is
-  // ≈[0.21, 0.55]; map that to [0, 1] so the full glyph ramp is used.
+  // Contrast stretch — empirical p5–p95 of the field.
   const STRETCH_LO = 0.24;
   const STRETCH_HI = 0.56;
   const STRETCH_R  = STRETCH_HI - STRETCH_LO;
 
-  // Contour highlights.
   const ISO_BANDS = 5;
   const ISO_WIDTH = 0.018;
   const ISO_BOOST = 0.22;
 
-  // ── Helpers
+  // Threshold below which cells are skipped (gives the sparse,
+  // editorial contour look instead of a dense wall).
+  const SPARSE_CUT = 0.42;
+
+  // ── Phase boundaries (scroll viewport-heights) ────────────────
+  const P_CONTOUR_END = 0.5;
+  const P_MELT_END    = 1.1;
+  const P_EMPTY_END   = 1.4;
+  const P_DONUT_END   = 2.4;
+
+  const TARGET_FPS = 30;
+  const FRAME_MIN  = 1000 / TARGET_FPS;
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function prefersReducedMotion() {
+    return window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
   function resolveInk() {
-    const v = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+    const v = getComputedStyle(document.documentElement)
+      .getPropertyValue('--ink').trim();
     return v || '#111111';
   }
-  function prefersReducedMotion() {
-    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function hexToRGB(hex) {
+    if (!hex || hex.charAt(0) !== '#') return [17, 17, 17];
+    const h = hex.length === 4
+      ? '#' + hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]
+      : hex;
+    return [
+      parseInt(h.slice(1, 3), 16),
+      parseInt(h.slice(3, 5), 16),
+      parseInt(h.slice(5, 7), 16),
+    ];
   }
-  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function rgba(rgb, a) {
+    return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a.toFixed(3) + ')';
+  }
 
-  // Deterministic hash → [0, 1)
+  // Deterministic per-cell hash → [0, 1).
+  function hash2(ix, iy) {
+    const n = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453;
+    return n - Math.floor(n);
+  }
   function hash3(ix, iy, iz) {
     const n = Math.sin(ix * 127.1 + iy * 311.7 + iz * 74.7) * 43758.5453;
     return n - Math.floor(n);
   }
 
-  // 3D value noise with smoothstep interpolation.
+  // 3D value noise w/ smoothstep interpolation.
   function valueNoise3(x, y, z) {
     const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
     const fx = x - ix, fy = y - iy, fz = z - iz;
@@ -104,8 +141,6 @@
     const y1  = x01  * (1 - uy) + x11  * uy;
     return y0 * (1 - uz) + y1 * uz;
   }
-
-  // 2-octave fBm-style sample.
   function field(x, y, z) {
     let v = 0, amp = 1, total = 0;
     let fx = x, fy = y, fz = z;
@@ -118,10 +153,9 @@
     return v / total;
   }
 
-  // ── Mount
+  // ── Mount ─────────────────────────────────────────────────────
   const host = document.getElementById(HOST_ID);
   if (!host) return;
-  const hero = document.getElementById(HERO_ID);
 
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'display:block;width:100%;height:100%;pointer-events:none;';
@@ -131,7 +165,6 @@
 
   let cols = 0, rows = 0;
   let cssW = 0, cssH = 0;
-  const reduced = prefersReducedMotion();
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -151,56 +184,183 @@
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
-  // Pause when hero is offscreen.
-  let visible = true;
-  if (hero && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver(function (entries) {
-      visible = entries[0].isIntersecting;
-    }, { threshold: 0 });
-    io.observe(hero);
+  // ── Scroll progress, normalized to viewport heights ──────────
+  let scrollP = 0;
+  function onScroll() {
+    const vh = window.innerHeight || 1;
+    scrollP = window.scrollY / vh;
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-  // ── Render
-  const t0 = performance.now();
-  let last = 0;
-
-  function drawFrame(now) {
-    const t = (now - t0) / 1000;
-    ctx.clearRect(0, 0, cssW, cssH);
-    ctx.fillStyle = resolveInk();
-
+  // ── Phase A: contour ─────────────────────────────────────────
+  function drawContour(t, rgb, alpha) {
     const dx = t * DRIFT_X;
     const dy = t * DRIFT_Y;
     const dz = t * MORPH;
-
+    ctx.fillStyle = rgba(rgb, alpha);
     for (let r = 0; r < rows; r++) {
       const sy = r * FREQ_Y + dy;
       const py = r * CELL_H;
       for (let c = 0; c < cols; c++) {
         const sx = c * FREQ_X + dx;
         let v = field(sx, sy, dz);
-
-        // Contrast stretch into [0, 1].
         v = (v - STRETCH_LO) / STRETCH_R;
         v = clamp(v, 0, 1);
 
-        // Contour isoline boost.
         const phase = v * ISO_BANDS;
         const distInV = Math.abs(phase - Math.round(phase)) / ISO_BANDS;
         if (distInV < ISO_WIDTH) {
           v += ISO_BOOST * (1 - distInV / ISO_WIDTH);
           if (v > 1) v = 1;
         }
-
-        const idx = Math.min(D_LAST, Math.floor(v * D.length));
+        if (v < SPARSE_CUT) continue;
+        const idx = Math.min(D.length - 1, Math.floor(v * D.length));
         const ch = D.charAt(idx);
         if (ch !== ' ') ctx.fillText(ch, c * CELL_W, py);
       }
     }
   }
 
+  // ── Phase B: melt ────────────────────────────────────────────
+  // Each cell drops independently. Hash-seeded delay + quadratic fall.
+  function drawMelt(t, m, rgb) {
+    const dx = t * DRIFT_X;
+    const dy = t * DRIFT_Y;
+    const dz = t * MORPH;
+    const fallScale = cssH + 80;
+    for (let r = 0; r < rows; r++) {
+      const sy = r * FREQ_Y + dy;
+      const py = r * CELL_H;
+      for (let c = 0; c < cols; c++) {
+        const h = hash2(c, r);
+        // Earlier cells (low h) start dropping first.
+        const lm = clamp((m - h * 0.55) / 0.45, 0, 1);
+        if (lm >= 1) continue;
+        const alpha = (1 - lm) * (1 - lm);
+        if (alpha < 0.01) continue;
+
+        const sx = c * FREQ_X + dx;
+        let v = field(sx, sy, dz);
+        v = (v - STRETCH_LO) / STRETCH_R;
+        v = clamp(v, 0, 1);
+        if (v < SPARSE_CUT) continue;
+
+        const idx = Math.min(D.length - 1, Math.floor(v * D.length));
+        const ch = D.charAt(idx);
+        if (ch === ' ') continue;
+
+        const drop = lm * lm * fallScale;
+        ctx.fillStyle = rgba(rgb, alpha);
+        ctx.fillText(ch, c * CELL_W, py + drop);
+      }
+    }
+  }
+
+  // ── Phase D: donut ───────────────────────────────────────────
+  // Classic donut.c. zBuffer per cell, Lambert luminance into a 12-glyph ramp.
+  let donutA = 0, donutB = 0;
+  let zbuf = null, dout = null, zbufSize = 0;
+  function ensureDonutBuffers() {
+    const n = cols * rows;
+    if (zbufSize !== n) {
+      zbuf = new Float32Array(n);
+      dout = new Int8Array(n);
+      zbufSize = n;
+    }
+  }
+  function drawDonut(rgb, alpha) {
+    ensureDonutBuffers();
+    zbuf.fill(0);
+    dout.fill(-1);
+
+    donutA += 0.035;
+    donutB += 0.020;
+    const cosA = Math.cos(donutA), sinA = Math.sin(donutA);
+    const cosB = Math.cos(donutB), sinB = Math.sin(donutB);
+
+    // Sizing — pick the smaller dim (accounting for cell aspect) and
+    // size the torus so R1+R2 = 3 maps to ~⅔ of available cells.
+    const aspectAdj = CELL_W / CELL_H;                  // ≈ 0.636
+    const minDim = Math.min(cols * aspectAdj, rows);
+    const R1 = 1, R2 = 2;
+    const K2 = 5;
+    const K1 = (minDim * K2 * 0.30) / (R1 + R2);
+
+    for (let theta = 0; theta < Math.PI * 2; theta += 0.07) {
+      const cosT = Math.cos(theta), sinT = Math.sin(theta);
+      for (let phi = 0; phi < Math.PI * 2; phi += 0.02) {
+        const cosP = Math.cos(phi), sinP = Math.sin(phi);
+        const cX = R2 + R1 * cosT;
+        const cY = R1 * sinT;
+        const x = cX * (cosB * cosP + sinA * sinB * sinP) - cY * cosA * sinB;
+        const y = cX * (sinB * cosP - sinA * cosB * sinP) + cY * cosA * cosB;
+        const z = K2 + cosA * cX * sinP + cY * sinA;
+        const ooz = 1 / z;
+
+        // Project. Compensate for cell aspect on the y axis.
+        const xp = (cols  >> 1) + ((K1 * ooz * x / aspectAdj) | 0);
+        const yp = (rows  >> 1) - ((K1 * ooz * y) | 0);
+        if (xp < 0 || xp >= cols || yp < 0 || yp >= rows) continue;
+
+        const L = (cosP * cosT * sinB
+                   - cosA * cosT * sinP
+                   - sinA * sinT
+                   + cosB * (cosA * sinT - cosT * sinA * sinP));
+        if (L <= 0) continue;
+
+        const idx = xp + cols * yp;
+        if (ooz > zbuf[idx]) {
+          zbuf[idx] = ooz;
+          const li = (L * 8) | 0;
+          dout[idx] = li > 11 ? 11 : li < 0 ? 0 : li;
+        }
+      }
+    }
+
+    ctx.fillStyle = rgba(rgb, alpha);
+    for (let y = 0; y < rows; y++) {
+      const py = y * CELL_H;
+      const rowStart = cols * y;
+      for (let x = 0; x < cols; x++) {
+        const i = rowStart + x;
+        const li = dout[i];
+        if (li < 0) continue;
+        ctx.fillText(DR.charAt(li), x * CELL_W, py);
+      }
+    }
+  }
+
+  // ── Loop ─────────────────────────────────────────────────────
+  const reduced = prefersReducedMotion();
+  const t0 = performance.now();
+  let last = 0;
+
+  function drawFrame(now) {
+    const t = (now - t0) / 1000;
+    ctx.clearRect(0, 0, cssW, cssH);
+    const rgb = hexToRGB(resolveInk());
+    const p = scrollP;
+
+    if (p < P_CONTOUR_END) {
+      drawContour(t, rgb, 1);
+    } else if (p < P_MELT_END) {
+      const m = (p - P_CONTOUR_END) / (P_MELT_END - P_CONTOUR_END);
+      drawMelt(t, m, rgb);
+    } else if (p < P_EMPTY_END) {
+      // empty pause — already cleared
+    } else if (p < P_DONUT_END) {
+      const sp = (p - P_EMPTY_END) / (P_DONUT_END - P_EMPTY_END);
+      let alpha = 1;
+      if (sp < 0.15)       alpha = sp / 0.15;
+      else if (sp > 0.75)  alpha = (1 - sp) / 0.25;
+      drawDonut(rgb, clamp(alpha, 0, 1));
+    }
+    // p ≥ P_DONUT_END: gone. Canvas was already cleared.
+  }
+
   function loop(now) {
-    if (visible && (now - last) >= FRAME_MIN) {
+    if ((now - last) >= FRAME_MIN) {
       last = now;
       drawFrame(now);
     }
