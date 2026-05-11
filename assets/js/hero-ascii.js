@@ -528,7 +528,10 @@
     function readScroll() {
       const rect = hero.getBoundingClientRect();
       const scrolled = -rect.top;
-      const span = Math.max(1, rect.height * 0.52);
+      // Melt completes by the time the user has scrolled 32% of the
+      // hero height past the top — so by the first section divider
+      // the figure is already gone.
+      const span = Math.max(1, rect.height * 0.32);
       meltTarget = clamp(scrolled / span, 0, 1);
     }
     let scrollScheduled = false;
@@ -670,6 +673,12 @@
 
       // ── DRAW ──────────────────────────────────────────────────
       ctx.clearRect(0, 0, cssW, cssH);
+      // Canvas-level opacity fade as melt finishes — kills any
+      // lingering falling characters by the time the user reaches
+      // the next section. Map melt 0.75..1.0 → alpha 1.0..0.0.
+      const canvasAlpha = clamp(1 - (melt - 0.75) / 0.25, 0, 1);
+      canvas.style.opacity = String(canvasAlpha);
+      if (canvasAlpha <= 0.005) return; // skip the rest, nothing to draw
       const ink = resolveInk();
       ctx.globalAlpha = 1;
 
@@ -714,23 +723,9 @@
         }
       }
 
-      // ── Melt puddle (accumulated at bottom)
-      if (melt > 0.35) {
-        const pAlpha = Math.min(1, (melt - 0.35) / 0.65) * 0.40;
-        ctx.globalAlpha = pAlpha;
-        const puddleY = rows - 2;
-        const puddleW = Math.floor(cols * 0.30 + cols * melt * 0.12);
-        const startX = Math.max(0, Math.floor((cxAnchor / SS) - puddleW / 2));
-        for (let x = 0; x < puddleW; x++) {
-          const xx = startX + x;
-          if (xx < 0 || xx >= cols) continue;
-          const noise = Math.sin(x * 0.47 + elapsed * 0.83) * 0.15 +
-                        Math.sin(x * 1.13 + elapsed * 1.47) * 0.12 + 0.32;
-          const idx = Math.max(0, Math.min(D_N - 1, Math.floor(noise * 12)));
-          ctx.fillStyle = ink;
-          ctx.fillText(D[idx], xx * CELL_W, puddleY * CELL_H);
-        }
-      }
+      // No puddle — the figure should leave no residue once melted.
+      // Below, a canvas-level opacity fade ensures even the falling
+      // characters are gone before the user reaches the next section.
 
       ctx.globalAlpha = 1;
     }
