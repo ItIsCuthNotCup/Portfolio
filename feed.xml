@@ -2,21 +2,21 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Jake Cuth. — Notes</title>
   <subtitle>Field notes from a senior data analyst.</subtitle>
-  <link href="https://jakecuth.com/feed.xml" rel="self" type="application/atom+xml"/>
-  <link href="https://jakecuth.com/notes/" rel="alternate" type="text/html"/>
-  <id>https://jakecuth.com/feed.xml</id>
+  <link href="https://www.jakecuth.com/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://www.jakecuth.com/notes/" rel="alternate" type="text/html"/>
+  <id>https://www.jakecuth.com/feed.xml</id>
   <updated>2026-05-05T00:00:00Z</updated>
   <author>
     <name>Jacob Cuthbertson</name>
-    <uri>https://jakecuth.com/</uri>
+    <uri>https://www.jakecuth.com/</uri>
   </author>
   <rights>© Jacob Cuthbertson</rights>
-  <generator uri="https://jakecuth.com/" version="1">jakecuth.com</generator>
+  <generator uri="https://www.jakecuth.com/" version="1">jakecuth.com</generator>
 
   <entry>
     <title>33 OG images in 80 lines of Python</title>
-    <link href="https://jakecuth.com/notes/og-images-with-pil/" rel="alternate" type="text/html"/>
-    <id>https://jakecuth.com/notes/og-images-with-pil/</id>
+    <link href="https://www.jakecuth.com/notes/og-images-with-pil/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/og-images-with-pil/</id>
     <published>2026-05-05T12:00:00Z</published>
     <updated>2026-05-05T12:00:00Z</updated>
     <summary>Per-page OpenGraph cards without Figma. A one-shot Python script over your existing og:title tags.</summary>
@@ -27,8 +27,8 @@
 
   <entry>
     <title>The k=2 problem in cluster selection</title>
-    <link href="https://jakecuth.com/notes/segmentation-k2-honesty/" rel="alternate" type="text/html"/>
-    <id>https://jakecuth.com/notes/segmentation-k2-honesty/</id>
+    <link href="https://www.jakecuth.com/notes/segmentation-k2-honesty/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/segmentation-k2-honesty/</id>
     <published>2026-05-04T12:00:00Z</published>
     <updated>2026-05-04T12:00:00Z</updated>
     <summary>Silhouette at k=2 is almost always highest and almost always meaningless. Why the segmentation lab grays it out instead of pretending it's a real choice.</summary>
@@ -39,8 +39,8 @@
 
   <entry>
     <title>Why my A/B simulator says false positives are 26%, not 5%</title>
-    <link href="https://jakecuth.com/notes/ab-test-fpr-26-percent/" rel="alternate" type="text/html"/>
-    <id>https://jakecuth.com/notes/ab-test-fpr-26-percent/</id>
+    <link href="https://www.jakecuth.com/notes/ab-test-fpr-26-percent/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/ab-test-fpr-26-percent/</id>
     <published>2026-05-03T12:00:00Z</published>
     <updated>2026-05-03T12:00:00Z</updated>
     <summary>Peeking every 50 users turns a 5% nominal false-positive rate into 26% empirical. The Monte Carlo lives on the A/B Test Simulator lab page.</summary>

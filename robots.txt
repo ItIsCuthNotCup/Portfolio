@@ -52,4 +52,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-Sitemap: https://jakecuth.com/sitemap.xml
+Sitemap: https://www.jakecuth.com/sitemap.xml

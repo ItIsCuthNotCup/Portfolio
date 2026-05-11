@@ -780,19 +780,19 @@ main { position: relative; }
 
 /* ── Projects Section ───────────────────────────────────────── */
 .projects-section {
-  padding: 80px 48px 100px;
+  padding: 56px 48px 80px;
   border-top: 1px solid var(--ink);
 }
 .projects-intro { max-width: 900px; }
 .projects-intro p {
-  margin-top: 24px; max-width: 560px;
-  color: var(--ink-soft); font-size: 17px;
+  margin-top: 18px; max-width: 560px;
+  color: var(--ink-soft); font-size: 16px;
 }
 
 /* Featured project (video) */
 .project-featured {
-  border-top: 1px solid var(--ink); padding: 56px 0;
-  display: grid; gap: 56px; align-items: center;
+  border-top: 1px solid var(--ink); padding: 40px 0;
+  display: grid; gap: 48px; align-items: center;
 }
 .project-featured.layout-a { grid-template-columns: 1fr 1.3fr; }
 .project-featured.layout-b { grid-template-columns: 1.3fr 1fr; }

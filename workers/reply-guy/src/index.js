@@ -27,6 +27,8 @@ import LABS from './lab-keywords.json' with { type: 'json' };
 
 // ── Config ───────────────────────────────────────────────────
 const TWITTER_BASE       = 'https://api.twitter.com/2';
+const TWITTER_UPLOAD     = 'https://upload.twitter.com/1.1';
+const THUMBS_BASE        = 'https://jakecuth.com/assets/twitter-thumbs';
 const OPENROUTER         = 'https://openrouter.ai/api/v1';
 const GEN_MODEL          = 'x-ai/grok-4.1-fast';
 const MAX_REPLIES_PER_RUN = 3;
@@ -388,7 +390,15 @@ async function runTweet(env, dryRun) {
 
   if (dryRun) return result;
 
-  const posted = await postTweet(env, tweetText);
+  // Fetch and upload lab thumbnail so the tweet has a clean image card
+  let mediaId = null;
+  try {
+    mediaId = await uploadLabThumbnail(env, labName);
+  } catch (err) {
+    console.error('Thumbnail upload failed (non-fatal), tweeting without image', err?.message || 'unknown');
+  }
+
+  const posted = await postTweet(env, tweetText, mediaId);
   if (posted) {
     await recordTweetLab(env, labName);
   } else {
@@ -414,8 +424,12 @@ function pickRandomLab() {
 function buildSearchQuery(lab) {
   const terms = lab.search
     .map(t => {
-      if (t.startsWith('"') && t.endsWith('"')) return t;
-      return t.includes(' ') ? `"${t}"` : t;
+      // Strip any existing wrapping quotes so we never produce ""nested""
+      let clean = t.trim();
+      if (clean.startsWith('"') && clean.endsWith('"')) clean = clean.slice(1, -1);
+      // Escape any remaining double quotes inside the term (safety)
+      clean = clean.replace(/"/g, '');
+      return clean.includes(' ') ? `"${clean}"` : clean;
     })
     .join(' OR ');
   return `(${terms}) -is:retweet -is:reply -has:links lang:en`;
@@ -466,9 +480,9 @@ async function searchTwitter(env, query, dryRun) {
       return null;
     }
     if (!resp.ok) {
-      // Log status only — don't echo the response body, which can contain
-      // tweet text, author IDs, and other sensitive data into CF logs.
-      console.error('Twitter search failed', resp.status);
+      let bodySnippet = '';
+      try { bodySnippet = (await resp.text()).slice(0, 200); } catch {}
+      console.error('Twitter search failed', resp.status, bodySnippet);
       return null;
     }
 
@@ -722,6 +736,127 @@ function containsUnsafeContent(text) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Media upload (Twitter v1.1 — OAuth 1.0a)
+// Fetches the lab thumbnail from the site and uploads it so the
+// tweet gets a clean image card even before anyone clicks the link.
+// ─────────────────────────────────────────────────────────────
+async function uploadLabThumbnail(env, labName) {
+  const thumbUrl = `${THUMBS_BASE}/${labName}.png`;
+  const imgResp = await fetchWithTimeout(thumbUrl, {}, FETCH_TIMEOUT_TWITTER_MS);
+  if (!imgResp.ok) {
+    throw new Error(`Thumbnail fetch failed: ${imgResp.status}`);
+  }
+  const imageBytes = new Uint8Array(await imgResp.arrayBuffer());
+  if (imageBytes.length === 0) {
+    throw new Error('Thumbnail empty');
+  }
+  return uploadMediaToTwitter(env, imageBytes, 'image/png');
+}
+
+async function uploadMediaToTwitter(env, imageBytes, mimeType) {
+  const totalBytes = imageBytes.length;
+
+  // INIT
+  const initParams = {
+    command: 'INIT',
+    total_bytes: String(totalBytes),
+    media_type: mimeType,
+  };
+  const initResp = await twitterUploadRequest(env, initParams);
+  if (!initResp.ok) {
+    console.error('Media INIT failed', initResp.status);
+    throw new Error('Media INIT failed');
+  }
+  const initData = await initResp.json();
+  const mediaId = initData?.media_id_string;
+  if (!mediaId) {
+    throw new Error('No media_id from INIT');
+  }
+
+  // APPEND
+  const appendParams = {
+    command: 'APPEND',
+    media_id: mediaId,
+    segment_index: '0',
+  };
+  const appendResp = await twitterUploadRequest(env, appendParams, imageBytes);
+  if (!appendResp.ok) {
+    console.error('Media APPEND failed', appendResp.status);
+    throw new Error('Media APPEND failed');
+  }
+
+  // FINALIZE
+  const finalizeParams = {
+    command: 'FINALIZE',
+    media_id: mediaId,
+  };
+  const finalizeResp = await twitterUploadRequest(env, finalizeParams);
+  if (!finalizeResp.ok) {
+    console.error('Media FINALIZE failed', finalizeResp.status);
+    throw new Error('Media FINALIZE failed');
+  }
+
+  return mediaId;
+}
+
+async function twitterUploadRequest(env, params, bodyBytes = null) {
+  const url = `${TWITTER_UPLOAD}/media/upload.json`;
+  const method = bodyBytes ? 'POST' : 'POST';
+  const oauthParams = {
+    oauth_consumer_key: env.X_CONSUMER_KEY,
+    oauth_nonce: oauthNonce(),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp: oauthTimestamp(),
+    oauth_token: env.X_ACCESS_TOKEN,
+    oauth_version: '1.0',
+  };
+  const authHeader = await oauthHeader(
+    method, url, oauthParams,
+    env.X_CONSUMER_KEY_SECRET, env.X_ACCESS_TOKEN_SECRET,
+  );
+
+  const headers = {
+    Authorization: authHeader,
+    'User-Agent': USER_AGENT,
+  };
+
+  let body;
+  if (bodyBytes) {
+    // multipart/form-data for binary upload
+    const boundary = `----FormBoundary${oauthNonce().slice(0, 16)}`;
+    headers['Content-Type'] = `multipart/form-data; boundary=${boundary}`;
+
+    const encoder = new TextEncoder();
+    const pre = encoder.encode(
+      `--${boundary}\r\n` +
+      'Content-Disposition: form-data; name="command"\r\n\r\n' +
+      `${params.command}\r\n` +
+      `--${boundary}\r\n` +
+      'Content-Disposition: form-data; name="media_id"\r\n\r\n' +
+      `${params.media_id}\r\n` +
+      `--${boundary}\r\n` +
+      'Content-Disposition: form-data; name="segment_index"\r\n\r\n' +
+      `${params.segment_index}\r\n` +
+      `--${boundary}\r\n` +
+      'Content-Disposition: form-data; name="media"; filename="thumb.png"\r\n' +
+      'Content-Type: image/png\r\n\r\n'
+    );
+    const post = encoder.encode(`\r\n--${boundary}--\r\n`);
+
+    const combined = new Uint8Array(pre.length + bodyBytes.length + post.length);
+    combined.set(pre, 0);
+    combined.set(bodyBytes, pre.length);
+    combined.set(post, pre.length + bodyBytes.length);
+    body = combined;
+  } else {
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    body = new URLSearchParams(params).toString();
+  }
+
+  return fetchWithTimeout(url, { method, headers, body }, FETCH_TIMEOUT_TWITTER_MS);
+}
+
+// ─────────────────────────────────────────────────────────────
 // Post reply to Twitter (OAuth 1.0a user context)
 // ─────────────────────────────────────────────────────────────
 async function postReply(env, tweetId, text) {
@@ -731,8 +866,12 @@ async function postReply(env, tweetId, text) {
   });
 }
 
-async function postTweet(env, text) {
-  return postToTwitterAPI(env, { text });
+async function postTweet(env, text, mediaId) {
+  const payload = { text };
+  if (mediaId) {
+    payload.media = { media_ids: [mediaId] };
+  }
+  return postToTwitterAPI(env, payload);
 }
 
 async function postToTwitterAPI(env, payload) {
@@ -777,8 +916,10 @@ async function postToTwitterAPI(env, payload) {
       return false;
     }
     if (!resp.ok) {
-      // Log STATUS only. Body can echo our outgoing tweet text + IDs.
-      console.error('Twitter post failed', resp.status);
+      // Log status and body for diagnostics — delete after debugging.
+      let bodySnippet = '';
+      try { bodySnippet = (await resp.text()).slice(0, 200); } catch {}
+      console.error('Twitter post failed', resp.status, bodySnippet);
       return false;
     }
     return true;
