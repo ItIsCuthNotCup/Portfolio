@@ -107,10 +107,18 @@
 .bl-patterns-list li {
   display: grid;
   grid-template-columns: 28px 1fr;
-  gap: 10px;
+  column-gap: 10px;
+  row-gap: 2px;
   font-size: 13px;
   line-height: 1.5;
   color: var(--ink-soft);
+}
+/* Force title + description into the 1fr column. Without explicit
+   placement, the third child (description span) auto-flows into the
+   narrow 28px column and every word wraps to its own line. */
+.bl-patterns-list li > strong,
+.bl-patterns-list li > span:not(.bl-pattern-idx) {
+  grid-column: 2;
 }
 .bl-patterns-list li strong {
   display: block;
@@ -119,6 +127,8 @@
   margin-bottom: 4px;
 }
 .bl-pattern-idx {
+  grid-column: 1;
+  grid-row: 1;
   font-size: 10px;
   letter-spacing: 0.12em;
   color: var(--accent);
