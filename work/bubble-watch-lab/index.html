@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Watch · A data-driven diagnosis of the AI market — Jake Cuth.</title>
+  <meta name="description" content="Six charts on whether the U.S. market is in an AI bubble. CAPE, concentration, hyperscaler capex versus frontier-lab revenue, margin debt, capability scaling.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/bubble-watch-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bubble Watch · A data-driven diagnosis of the AI market">
+  <meta property="og:description" content="Six charts on whether the U.S. market is in an AI bubble. CAPE, concentration, hyperscaler capex versus frontier-lab revenue, margin debt, capability scaling.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/bubble-watch-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/work/bubble-watch-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-12T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-12T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bubble Watch · A data-driven diagnosis of the AI market">
+  <meta name="twitter:description" content="Six charts on whether the U.S. market is in an AI bubble. CAPE, concentration, hyperscaler capex versus frontier-lab revenue, margin debt, capability scaling.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/bubble-watch-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/bubble-watch-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Bubble Watch", "item": "https://www.jakecuth.com/work/bubble-watch-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Bubble Watch: A data-driven diagnosis of the AI market",
+    "description": "Six charts on whether the U.S. market is in an AI bubble. CAPE, concentration, hyperscaler capex versus frontier-lab revenue, margin debt, capability scaling.",
+    "image": "https://www.jakecuth.com/assets/og/bubble-watch-lab.png?v=1",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "url": "https://www.jakecuth.com/work/bubble-watch-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/bubble-watch-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Bubble Watch · Interactive AI bubble diagnosis",
+    "description": "Six interactive charts on whether U.S. equities, and the AI complex inside them, are in a bubble in May 2026.",
+    "image": "https://www.jakecuth.com/assets/og/bubble-watch-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/bubble-watch-lab/",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S17</span> &middot; MMXXVI &middot; BUBBLE WATCH</span></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">47</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">17</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="bw-main">
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Bubble Watch</span></li>
+  </ol>
+</nav>
+
+<!-- HERO -->
+<section class="bw-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S17</span>
+    <span>A data-driven diagnosis of the AI market</span>
+  </h2>
+  <h1 class="serif big-display bw-title">
+    Priced for everything<br>
+    <span class="serif-italic" style="color:var(--accent)">to go right.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Seven public datasets. One question. By the metrics Wall Street actually tracks, the U.S. market is the second-most expensive on record, eclipsed only by December 1999. The leaders make money this time. The followers tell stories. The page argues both at once.
+  </p>
+  <p class="bw-kicker">
+    Scroll through six interactive charts drawn from Robert Shiller, FactSet, FINRA, MSCI, Stanford HAI, METR, and the four hyperscalers' filings. Each chart asks one question. Together they answer a bigger one: is this a bubble, and if so, where? The verdict sits at the bottom.
+  </p>
+  <div class="mono bw-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time">May 12, 2026</div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static JSON</div></div>
+    <div><div class="label">Coverage</div><div class="value">6 charts &middot; 11 datasets &middot; 1881 to 2026</div></div>
+    <div><div class="label">Verdict</div><div class="value">Mixed, leaning bubble in narrow segments</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="bw-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The question two camps fight over</span>
+  </h2>
+  <div class="bw-prose">
+    <p class="bw-lede">
+      The bull and the bear are looking at the same chart pack. They disagree about which lines matter.
+    </p>
+    <p>
+      The bull points at NVIDIA's 215.9 billion dollars in fiscal-2026 revenue, Microsoft's 281.7 billion, Alphabet's 402.8 billion, and Amazon's 716.9 billion. The leaders are profitable. Cloud backlogs sit at 460 billion at Google and 627 billion at Microsoft. METR's capability benchmark keeps doubling every four to seven months. None of this looks like 1999, when the largest internet names had weak revenue quality and negative earnings.
+    </p>
+    <p>
+      The bear points at the Shiller CAPE at 42, the Buffett indicator at an all-time high of 232 percent of GDP, the top ten stocks at 36 to 40 percent of the S&amp;P 500, and margin debt at a record 3.83 percent of GDP. The bear points at Anthropic going from 61.5 billion to 380 billion in private valuation in under a year. The bear points at hyperscaler 2026 capex of roughly 725 billion against combined OpenAI and Anthropic ARR of 54 billion, and asks who pays.
+    </p>
+    <p>
+      The honest reading is that both can be right at the same time. The cleanest framing comes from Bain's chairman of global technology, David Crawford, in the September 23, 2025 report: by 2030, hyperscalers need roughly 2 trillion dollars in new annual revenue to profitably fund the data centers they are committing to today. That number is not a bubble. It is the gap that has to close.
+    </p>
+    <div class="bw-callout mono">
+      The asymmetric risk in 2026 is not that the bubble is fake. It is that the bubble is real, and is priced as if <strong>everything goes right.</strong>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · S17.1 — THE CAPE CHART -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.1</span>
+    <span>The CAPE chart</span>
+  </h2>
+  <p class="bw-note">
+    Robert Shiller's cyclically-adjusted price-to-earnings ratio. The S&amp;P 500 price divided by the ten-year average of inflation-adjusted earnings. The long-run median is roughly 16. Above 30 has been rare. Above 40 has happened twice in 145 years.
+  </p>
+
+  <div class="bw-controls mono" aria-label="CAPE controls">
+    <span class="bw-filter-label">Era markers</span>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-marker="1929" data-active="true">1929 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-marker="1999" data-active="true">1999 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-marker="2007" data-active="true">2007 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-marker="2021" data-active="true">2021 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-marker="2026" data-active="true">2026</button>
+    <span class="bw-filter-divider"></span>
+    <span class="bw-filter-label">Reference lines</span>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-cape-ref="median" data-active="true">Long-run median (16)</button>
+    <button type="button" class="bw-pill bw-pill-toggle" data-cape-ref="2x" data-active="false">Two times median (32)</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-cape-wrap">
+    <svg id="bw-cape" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Shiller cyclically-adjusted price-to-earnings ratio, 1881 to 2026"></svg>
+    <div id="bw-tooltip-cape" class="bw-tooltip mono" hidden></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      The current reading is roughly 42, second only to the December 1999 peak of 44.2. The 1929 peak hit 32.6 before the crash. The CAPE is not a timing tool. It has stayed elevated for years at a stretch. But every prior reading above 30 has eventually mean-reverted, and the only mechanism for that mean-reversion is either falling prices or rising earnings. Today's CAPE says future long-horizon returns are more fragile than recent returns. It does not say when.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">42</span>
+    <span>Shiller CAPE in May 2026, vs a long-run median of 16 and a 1999 record of 44.2.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · S17.2 — CONCENTRATION -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.2</span>
+    <span>The concentration</span>
+  </h2>
+  <p class="bw-note">
+    Share of the S&amp;P 500's total market capitalization held by its largest stocks. The chart shows the top ten as one series, then breaks today's Magnificent Seven out individually. Cap-weighted index investors own this composition whether they know it or not.
+  </p>
+
+  <div class="bw-controls mono" aria-label="Concentration controls">
+    <span class="bw-filter-label">View</span>
+    <button type="button" class="bw-pill active" data-conc="history">Top 10 history</button>
+    <button type="button" class="bw-pill" data-conc="mag7">Magnificent Seven, 2026</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-conc-wrap">
+    <svg id="bw-conc" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Top ten stocks as a share of S&amp;P 500 market cap, 1980 to 2026"></svg>
+    <div id="bw-tooltip-conc" class="bw-tooltip mono" hidden></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      The top ten stocks are roughly 38 to 40 percent of the S&amp;P 500 by mid-2026, the highest concentration in at least fifty years. In 2000, the top ten were about 23 to 27 percent. The Magnificent Seven alone, NVIDIA, Apple, Microsoft, Alphabet, Amazon, Meta, and Tesla, are 33 to 35 percent of the index. NVIDIA by itself is roughly 7 percent. Critically, this concentration is not yet matched by earnings concentration. The Mag 7 generate roughly 24 percent of S&amp;P 500 forward revenue and 13 percent of forward earnings. The valuation has moved faster than the earnings have.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">~38%</span>
+    <span>Top ten share of S&amp;P 500, 2026. The highest reading in at least fifty years.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · S17.3 — THE CAPEX GAP -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.3</span>
+    <span>The capex gap</span>
+  </h2>
+  <p class="bw-note">
+    Hyperscaler capital spending against the revenue actually being earned by the frontier AI labs they are building for. Capex is what Microsoft, Alphabet, Meta, Amazon, and Oracle disclose in filings. Revenue is what OpenAI and Anthropic confirm as run-rate. This is the central bubble question.
+  </p>
+
+  <div class="bw-controls mono" aria-label="Capex gap controls">
+    <span class="bw-filter-label">Compare against</span>
+    <button type="button" class="bw-pill active" data-gap="frontier">Frontier-lab ARR</button>
+    <button type="button" class="bw-pill" data-gap="vendor">All AI vendor revenue</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-gap-wrap">
+    <svg id="bw-gap" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Hyperscaler capex against AI revenue, 2024 to 2026"></svg>
+    <div id="bw-tooltip-gap" class="bw-tooltip mono" hidden></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      Big 5 hyperscaler capex is going from 256 billion in 2024 to 410 billion in 2025 to roughly 725 to 805 billion in 2026, a near-tripling in two years. Capex intensity is the highest on record at Oracle (~86 percent of revenue), Meta (~54), Microsoft (~47), and Alphabet (~46). On the other side, OpenAI is at about 24 billion ARR and Anthropic crossed 30 billion in April 2026. Even granting a generous 514 billion in total global AI vendor revenue, 2026 hyperscaler capex still exceeds it by roughly 200 billion. Sequoia's David Cahn calls 2026 the moment of truth for capacity validation versus writedowns.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">~13x</span>
+    <span>Ratio of 2026 hyperscaler capex (~$725B) to combined OpenAI + Anthropic ARR (~$54B).</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V · S17.4 — MARGIN DEBT -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.4</span>
+    <span>The margin debt</span>
+  </h2>
+  <p class="bw-note">
+    FINRA-reported margin debt in customer securities accounts, expressed as a percentage of U.S. GDP. The level is the single most alarming reading in the entire data set. The composition is what keeps it from being a clean replay.
+  </p>
+
+  <div class="bw-controls mono" aria-label="Margin debt controls">
+    <span class="bw-filter-label">Era markers</span>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-marg-marker="2000" data-active="true">2000 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-marg-marker="2007" data-active="true">2007 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-marg-marker="2021" data-active="true">2021 peak</button>
+    <button type="button" class="bw-pill bw-pill-toggle active" data-marg-marker="2026" data-active="true">2026</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-margin-wrap">
+    <svg id="bw-margin" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="FINRA margin debt as a percent of GDP, 1997 to 2026"></svg>
+    <div id="bw-tooltip-margin" class="bw-tooltip mono" hidden></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      Margin debt as a percent of GDP hit roughly 3.83 percent in early 2026, edging close to the 3.97 percent 2021 peak and well above the 2.6 percent reading at the 2000 top. The January 2026 dollar level reached 1.28 trillion, the highest on record. By March it was 1.22 trillion. Retail trading volume hit 5.4 trillion dollars in 2025, the most since the FINRA data began. Same-day-expiry SPX options reached 57 percent of total SPX volume in Q3 2025. The plumbing is hot. Survey sentiment is curiously not. That gap is unusual and worth watching.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">3.83%</span>
+    <span>Margin debt as a percent of GDP, March 2026. Above the 2000 peak (2.6%) and near the 2021 record (3.97%).</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI · S17.5 — CAPABILITY CURVE -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.5</span>
+    <span>The capability curve</span>
+  </h2>
+  <p class="bw-note">
+    METR measures how long a task a frontier model can complete autonomously. The y-axis is time, log scale. The trend has doubled every four to seven months since 2019. This is what the bull case keeps pointing at, and it has not yet flattened.
+  </p>
+
+  <div class="bw-controls mono" aria-label="Capability controls">
+    <span class="bw-filter-label">Doubling</span>
+    <button type="button" class="bw-pill active" data-cap="long">7-month long-run</button>
+    <button type="button" class="bw-pill" data-cap="fast">4-month recent</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-cap-wrap">
+    <svg id="bw-cap" viewBox="0 0 1100 460" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="METR time-horizon doubling curve, 2019 to 2026"></svg>
+    <div id="bw-tooltip-cap" class="bw-tooltip mono" hidden></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      In 2019 the frontier could handle a few seconds of autonomous task work before failing. In May 2026, Claude Mythos shows a 50 percent time horizon of at least sixteen hours and an 80 percent horizon of three hours and six minutes. METR notes that measurements above sixteen hours are at the edge of its task-suite validity. So the line should be read with caution. But it has not bent down. This is the single strongest argument against a clean dot-com analogy. In 1999, the underlying technology was already on the diffusion curve. In 2026, the curve is still climbing.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">16h+</span>
+    <span>Claude Mythos 50% task time horizon in May 2026, up from one hour for Claude 3.7 Sonnet in early 2025.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII · S17.6 — THE LINEUP -->
+<section class="bw-section bw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S17.6</span>
+    <span>The bubble lineup</span>
+  </h2>
+  <p class="bw-note">
+    Five historical peaks compared on the indicators that actually distinguish a bubble from an expensive market. Each row is one signal. Each column is one peak. The color is how extreme the reading is relative to history. 2026 is the rightmost column.
+  </p>
+
+  <div class="bw-controls mono" aria-label="Lineup controls">
+    <span class="bw-filter-label">Sort indicators by</span>
+    <button type="button" class="bw-pill active" data-line="historical">Historical order</button>
+    <button type="button" class="bw-pill" data-line="extreme">Most extreme today</button>
+  </div>
+
+  <div class="bw-chart-wrap" id="bw-line-wrap">
+    <div id="bw-lineup" class="bw-lineup" role="img" aria-label="Indicator comparison across 1929, 2000, 2007, 2021, and 2026 market peaks"></div>
+  </div>
+
+  <div class="bw-readout">
+    <p class="mono bw-readout-label">What this means</p>
+    <p>
+      The pattern is consistent across every dimension. By valuation, the 2026 market is closer to 2000 than any other peak. By profitability, it is closer to 2021. By leverage, it has surpassed every prior peak. By sentiment, it is curiously restrained. That mix is not a clean diagnosis. It is exactly what a localized bubble inside a richly valued market looks like.
+    </p>
+  </div>
+
+  <div class="bw-chart-callout mono">
+    <span class="bw-callout-stat">5 / 8</span>
+    <span>Indicators where 2026 sets a new historical record (Buffett, top-10 concentration, margin debt $, profit margin, capex intensity).</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VIII — VERDICT + RECEIPTS -->
+<section class="bw-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VIII</span>
+    <span>Verdict and receipts</span>
+  </h2>
+
+  <div class="bw-verdict">
+    <div class="bw-verdict-card">
+      <div class="mono bw-verdict-label">Verdict</div>
+      <h3 class="serif">Mixed, leaning bubble in narrow segments.</h3>
+      <p>
+        Broad U.S. equities are richly valued. The AI complex contains both fundamentally justified leaders and clearly bubble-like pockets. Private frontier-model financing is the most euphoric corner. The likely failure mode is multiple compression at the periphery, not a 1929-style system cascade.
+      </p>
+    </div>
+    <div class="bw-verdict-card">
+      <div class="mono bw-verdict-label">Probability calls</div>
+      <ul class="bw-prob-list">
+        <li><span class="bw-prob-pct">35%</span> Broad U.S. market already in a full-system bubble</li>
+        <li><span class="bw-prob-pct">65%</span> Localized bubble in second-tier AI software and private frontier-model rounds</li>
+        <li><span class="bw-prob-pct">45%</span> 12 to 24 month AI-led valuation reset of 25%+ without a recession</li>
+        <li><span class="bw-prob-pct">40%</span> Leaders grow into current valuations through earnings over 2 to 4 years</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bw-receipts" id="bw-receipts">
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Shiller CAPE, May 2026</div>
+      <div class="bw-receipt-value">~42<span class="small">vs 1999 record 44.2</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Buffett indicator, Q1 2026</div>
+      <div class="bw-receipt-value">232%<span class="small">all-time high</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Top 10 S&amp;P 500 share</div>
+      <div class="bw-receipt-value">~38%<span class="small">50-year high</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Magnificent Seven share</div>
+      <div class="bw-receipt-value">~34%<span class="small">of S&amp;P 500</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Big 5 hyperscaler capex 2026</div>
+      <div class="bw-receipt-value">$725B+<span class="small">vs $256B in 2024</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">OpenAI + Anthropic ARR</div>
+      <div class="bw-receipt-value">~$54B<span class="small">~13x capex gap</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">FINRA margin debt, Mar 2026</div>
+      <div class="bw-receipt-value">$1.22T<span class="small">3.83% of GDP</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">SPX 0DTE options share</div>
+      <div class="bw-receipt-value">~57%<span class="small">of SPX volume</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Anthropic valuation move</div>
+      <div class="bw-receipt-value">6.2x<span class="small">$61.5B to $380B in 11 months</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">Hyperscaler debt issuance 2025</div>
+      <div class="bw-receipt-value">$121B<span class="small">vs $28B 5-yr avg</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">S&amp;P 500 forward earnings yield</div>
+      <div class="bw-receipt-value">3.4%<span class="small">vs 10Y at 4.2%</span></div>
+    </div>
+    <div class="bw-receipt">
+      <div class="bw-receipt-label">METR Claude Mythos horizon</div>
+      <div class="bw-receipt-value">16h+<span class="small">50% task time</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IX — METHODOLOGY + LAB-NAV -->
+<section class="bw-section bw-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IX</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is hand-drawn in SVG by a small vanilla JavaScript module. No frameworks, no build step, no analytics trackers beyond Cloudflare's privacy-respecting page-view counter. Data is baked into the page as static JSON. Hovering and pill filters redraw locally without a network round-trip.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data sources</div>
+      <p>
+        Shiller CAPE from multpl.com / Robert Shiller's data. Buffett indicator from Advisor Perspectives. Top-10 concentration from Slickcharts and MSCI factsheets. Hyperscaler capex from company filings, Statista, CreditSights, and CNBC. AI lab ARR from OpenAI and Anthropic public disclosures, plus Sacra and Stanford HAI 2026 AI Index. Margin debt from FINRA. METR time-horizon from metr.org. All sources are linked in the body and the reading list. Snapshot vintage: May 12, 2026.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.multpl.com/shiller-pe" target="_blank" rel="noopener" style="border-bottom:1px solid">multpl &middot; Shiller CAPE history &nearr;</a><br>
+        <a href="https://www.currentmarketvaluation.com/models/buffett-indicator.php" target="_blank" rel="noopener" style="border-bottom:1px solid">Current Market Valuation &middot; Buffett indicator &nearr;</a><br>
+        <a href="https://hai.stanford.edu/ai-index" target="_blank" rel="noopener" style="border-bottom:1px solid">Stanford HAI &middot; 2026 AI Index &nearr;</a><br>
+        <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank" rel="noopener" style="border-bottom:1px solid">METR &middot; Time-horizon paper &nearr;</a><br>
+        <a href="https://www.finra.org/investors/learn-to-invest/advanced-investing/margin-statistics" target="_blank" rel="noopener" style="border-bottom:1px solid">FINRA &middot; Margin debt statistics &nearr;</a><br>
+        <a href="https://www.bain.com/insights/topics/technology-report/" target="_blank" rel="noopener" style="border-bottom:1px solid">Bain &middot; Global Technology Report 2025 &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        None of this is investment advice. Several anchor figures are mid-May 2026 estimates and will move. The Buffett indicator has a structural upward drift from globalization of revenue, so the level-comparison to 1929 is imperfect. METR explicitly notes that measurements above sixteen hours are at the edge of measurement validity. Private valuations cited for OpenAI and Anthropic are last-disclosed; private markets reprice between rounds. The 2 trillion dollar gap from Bain is a 2030 projection, not realized data. Past projections of compute demand have been wrong in both directions. The data is the strongest argument here, but the verdict is editorial.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lab nav -->
+  <nav class="lab-nav mono" aria-label="Story navigation">
+    <a href="/work/better-lab/">&larr; Prev: Better? (S16)</a>
+    <span>Data story 17 of 17</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/work/bubble-watch-lab" target="_blank" rel="noopener" class="btn-outline">View the source on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- RELATED LABS ASIDE -->
+<aside class="bw-related" aria-label="Related labs">
+  <div class="mono section-label">
+    <span class="idx">Related labs</span>
+    <span>Other long-arc data stories on this site</span>
+  </div>
+  <div class="bw-related-grid">
+    <article class="bw-related-card">
+      <span class="bw-card-kicker">S07</span>
+      <h3><a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a></h3>
+      <p>Seven charts on whether AI is approaching an intelligence explosion. Same instinct as this lab. Public data, charts that argue.</p>
+    </article>
+    <article class="bw-related-card">
+      <span class="bw-card-kicker">S08</span>
+      <h3><a href="/work/semiconductor-lab/">Semiconductor Cartography &rarr;</a></h3>
+      <p>The geography of the AI chip supply chain. The other side of the capex story: where the spend physically lands.</p>
+    </article>
+    <article class="bw-related-card">
+      <span class="bw-card-kicker">S16</span>
+      <h3><a href="/work/better-lab/">Better? &rarr;</a></h3>
+      <p>A 100-indicator ledger of human progress and regress. Same editorial method, different question.</p>
+    </article>
+  </div>
+</aside>
+
+</main>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight, Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=17"></script>
+<script src="/assets/js/bubble-watch-lab.js?v=1"></script>
+</body>
+</html>

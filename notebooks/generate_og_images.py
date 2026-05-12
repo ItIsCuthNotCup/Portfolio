@@ -35,14 +35,33 @@ INK_DIM = (170, 162, 145)     # secondary text
 AMBER = (245, 197, 66)        # close to oklch(0.88 0.18 100)
 RULE = (90, 84, 72)           # divider rule
 
-# ── Fonts (sandbox has Liberation Serif + DejaVu Sans Mono) ────────
+# ── Fonts (sandbox has Liberation Serif + DejaVu Sans Mono;
+#    macOS fallback uses Times + SFMono so the script works locally) ─
 SERIF_PATH = "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf"
 SERIF_ITAL = "/usr/share/fonts/truetype/liberation/LiberationSerif-Italic.ttf"
 MONO_PATH  = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 
+_FONT_FALLBACKS = {
+    SERIF_PATH: ["/System/Library/Fonts/Times.ttc",
+                 "/Library/Fonts/Times New Roman.ttf"],
+    SERIF_ITAL: ["/System/Library/Fonts/Times.ttc",
+                 "/Library/Fonts/Times New Roman Italic.ttf"],
+    MONO_PATH:  ["/System/Library/Fonts/SFNSMono.ttf",
+                 "/System/Library/Fonts/Menlo.ttc",
+                 "/System/Library/Fonts/Courier.ttc"],
+}
+
 
 def load(path: str, size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(path, size)
+    try:
+        return ImageFont.truetype(path, size)
+    except OSError:
+        for alt in _FONT_FALLBACKS.get(path, []):
+            try:
+                return ImageFont.truetype(alt, size)
+            except OSError:
+                continue
+        raise
 
 
 # ── Lab metadata extraction ────────────────────────────────────────

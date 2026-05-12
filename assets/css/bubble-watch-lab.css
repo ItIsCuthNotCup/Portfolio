@@ -1,0 +1,532 @@
+/* ═══════════════════════════════════════════════════════════
+   BUBBLE WATCH — S17
+   Six SVG charts on whether the US market is in an AI bubble.
+   Editorial data story. Vanilla JS. Static snapshot, May 2026.
+   ═══════════════════════════════════════════════════════════ */
+
+.bw-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Local palette — keeps to the site's ink/accent vocabulary
+   plus two muted chart colors for two-series comparisons. */
+.bw-main {
+  --bw-bull:    oklch(0.72 0.13 200);
+  --bw-bear:    var(--accent);
+  --bw-neutral: oklch(0.66 0.04 80);
+  --bw-grid:    color-mix(in oklab, var(--ink) 12%, transparent);
+  --bw-soft:    color-mix(in oklab, var(--paper) 80%, var(--ink) 4%);
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.bw-hero {
+  padding: 120px 48px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.bw-title { margin-top: 22px; }
+.bw-kicker {
+  margin-top: 24px;
+  max-width: 740px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.bw-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.bw-dateline .label { color: var(--ink-dim); }
+.bw-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ───────────────────────────────────────── */
+.bw-section {
+  padding: 72px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.bw-section .section-label { margin-bottom: 26px; }
+.bw-prose { max-width: 760px; }
+.bw-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.bw-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 24px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.bw-note {
+  max-width: 820px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+}
+.bw-callout {
+  margin-top: 32px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  max-width: 760px;
+}
+.bw-callout strong {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ── Controls ─────────────────────────────────────────────── */
+.bw-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.bw-filter-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 8px;
+}
+.bw-filter-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--ink-dim);
+  margin: 0 12px;
+  opacity: 0.5;
+}
+.bw-pill {
+  appearance: none;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 6px 12px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+}
+.bw-pill:hover { transform: translateY(-1px); }
+.bw-pill.active,
+.bw-pill[data-active="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Charts ──────────────────────────────────────────────── */
+.bw-chart-wrap {
+  position: relative;
+  margin-top: 8px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 14px;
+}
+.bw-chart-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bw-axis {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.bw-axis-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-dim);
+}
+.bw-grid {
+  stroke: var(--bw-grid);
+  stroke-width: 1;
+}
+.bw-series {
+  fill: none;
+  stroke-width: 2;
+}
+.bw-series-bull { stroke: var(--bw-bull); }
+.bw-series-bear { stroke: var(--bw-bear); }
+.bw-series-neutral { stroke: var(--bw-neutral); }
+.bw-series-fill-bull { fill: color-mix(in oklab, var(--bw-bull) 22%, transparent); }
+.bw-series-fill-bear { fill: color-mix(in oklab, var(--bw-bear) 22%, transparent); }
+
+.bw-marker {
+  fill: var(--paper);
+  stroke-width: 1.4;
+}
+.bw-marker-line {
+  stroke-dasharray: 4 4;
+  stroke-width: 1;
+}
+.bw-marker-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  fill: var(--ink);
+}
+.bw-ref-line {
+  stroke: var(--ink-dim);
+  stroke-width: 1.2;
+  stroke-dasharray: 6 4;
+  fill: none;
+}
+.bw-ref-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-dim);
+  font-style: italic;
+}
+
+/* Two-bar grouped layout used by the capex gap chart */
+.bw-bar-capex { fill: var(--bw-bear); }
+.bw-bar-rev   { fill: var(--bw-bull); }
+.bw-bar-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+}
+.bw-bar-sub {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-dim);
+}
+
+/* Magnificent Seven bar list used by the concentration alternate view */
+.bw-mag7-row { transition: opacity 150ms ease; }
+.bw-mag7-bar { fill: var(--bw-bear); }
+.bw-mag7-bar-share { fill: var(--bw-bull); }
+
+.bw-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 8px 10px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  box-shadow: 0 6px 24px -10px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  white-space: nowrap;
+}
+.bw-tooltip strong { color: var(--accent); font-weight: 500; }
+.bw-tooltip-dim { color: var(--ink-dim); }
+
+/* ── Readout / ticker / callout ──────────────────────────── */
+.bw-readout {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink-dim);
+  max-width: 880px;
+}
+.bw-readout-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.bw-readout p {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.bw-readout p strong { color: var(--accent); font-weight: 500; }
+
+.bw-chart-callout {
+  margin-top: 22px;
+  padding: 14px 18px;
+  display: inline-flex;
+  gap: 14px;
+  align-items: center;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  max-width: 760px;
+}
+.bw-callout-stat {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 26px;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+/* ── Lineup grid (S17.6) ────────────────────────────────── */
+.bw-lineup {
+  display: grid;
+  grid-template-columns: 220px repeat(5, minmax(0, 1fr));
+  border: 1px solid var(--ink);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 12px;
+  background: var(--paper);
+}
+.bw-line-head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ink);
+  background: var(--bw-soft);
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.bw-line-row-label {
+  padding: 12px 14px;
+  border-top: 1px solid var(--bw-grid);
+  border-right: 1px solid var(--bw-grid);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.bw-line-row-label .bw-line-row-sub {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bw-line-cell {
+  padding: 12px 14px;
+  border-top: 1px solid var(--bw-grid);
+  border-right: 1px solid var(--bw-grid);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+.bw-line-cell:last-child { border-right: none; }
+.bw-line-val {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.1;
+}
+.bw-line-sev {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.13;
+}
+.bw-line-sev[data-s="0"] { background: transparent; }
+.bw-line-sev[data-s="1"] { background: var(--bw-neutral); }
+.bw-line-sev[data-s="2"] { background: var(--bw-bear); }
+.bw-line-sev[data-s="3"] { background: var(--bw-bear); opacity: 0.26; }
+.bw-line-row-now { font-weight: 500; }
+.bw-line-cell-now { background: color-mix(in oklab, var(--bw-bear) 6%, var(--paper)); }
+
+/* ── Verdict + Receipts ──────────────────────────────────── */
+.bw-verdict {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 22px;
+  margin-bottom: 32px;
+}
+.bw-verdict-card {
+  padding: 22px 24px;
+  border: 1px solid var(--ink);
+  background: var(--bw-soft);
+}
+.bw-verdict-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--ink-dim);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.bw-verdict-card h3 {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 24px;
+  line-height: 1.25;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.bw-verdict-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.bw-prob-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.bw-prob-list li {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.bw-prob-pct {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 22px;
+  color: var(--accent);
+  text-align: right;
+}
+
+.bw-receipts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px;
+}
+.bw-receipt {
+  padding: 16px;
+  border: 1px solid var(--ink-dim);
+  background: var(--bw-soft);
+}
+.bw-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.bw-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.bw-receipt-value .small {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  margin-left: 4px;
+  text-transform: lowercase;
+}
+
+/* ── Colophon ────────────────────────────────────────────── */
+.bw-colophon-section { padding-bottom: 110px; }
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.method-grid p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.method-head {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink-dim);
+}
+.method-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+/* ── Related labs aside ──────────────────────────────────── */
+.bw-related {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px 110px;
+}
+.bw-related .section-label { margin-bottom: 24px; }
+.bw-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.bw-related-card {
+  padding: 18px;
+  border: 1px solid var(--ink-dim);
+  background: var(--bw-soft);
+}
+.bw-related-card .bw-card-kicker {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.bw-related-card h3 {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 19px;
+  margin: 8px 0 6px;
+}
+.bw-related-card h3 a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.bw-related-card h3 a:hover { color: var(--accent); }
+.bw-related-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .bw-hero, .bw-section, .bw-related { padding-left: 24px; padding-right: 24px; }
+  .bw-dateline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bw-verdict { grid-template-columns: 1fr; }
+  .bw-lineup {
+    grid-template-columns: 140px repeat(5, minmax(0, 1fr));
+    font-size: 11px;
+  }
+  .bw-line-val { font-size: 15px; }
+}
+@media (max-width: 620px) {
+  .bw-hero { padding-top: 90px; }
+  .bw-controls { padding: 10px 12px; gap: 4px; }
+  .bw-pill { padding: 5px 9px; font-size: 10px; }
+  .bw-receipt-value { font-size: 22px; }
+  .bw-lineup {
+    grid-template-columns: 120px repeat(5, minmax(0, 1fr));
+    font-size: 10px;
+  }
+  .bw-line-head, .bw-line-cell, .bw-line-row-label { padding: 8px 10px; }
+}

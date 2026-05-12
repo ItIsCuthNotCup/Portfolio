@@ -21,7 +21,7 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M11 · Diffusion Lab](https://jakecuth.com/work/diffusion-lab/): A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion and DALL-E.
 - [M12 · Viral Nation Case Study](https://vn-case.vercel.app/): External case study deliverable built for Viral Nation interviews. Hosted on Vercel; the tile on jakecuth.com opens this site in a new tab.
 
-## Data stories (S01–S16)
+## Data stories (S01–S17)
 
 Editorial pieces. Real data, one thesis each. The longer reads, with charts that argue.
 
@@ -41,6 +41,7 @@ Editorial pieces. Real data, one thesis each. The longer reads, with charts that
 - [S14 · Reservoir Teacup Map](https://jakecuth.com/work/reservoir-teacup-map-lab/): Twenty Western reservoirs drawn as USBR teacup small multiples. Current storage vs the 1991-2020 historical average for each cup. Lake Mead and Lake Powell elevation cliff with 2007 Interim Guidelines and 2019 DCP policy tiers, dead-pool floors at 895 ft (Mead) and 3,370 ft (Powell), and a basin-level snow-to-storage scatter. Static USBR RISE + USGS NWIS + CA DWR snapshot, vanilla JS, no build step.
 - [S15 · Neurotransmitter Atlas](https://jakecuth.com/work/neurotransmitter-atlas-lab/): A chapter-style 3D neuron, synapse close-up, and rotatable NIH 3D brain mesh for six major neurotransmitter systems. Three.js specimen with organic membranes, tapered dendrites, axon, myelin wraps, vesicles, receptors, transmitter particles, 12 representative brain-region highlights, a 6-step signal pathway, receptor timing table, glossary, misconceptions, and self-check prompts. Sources include NIH 3D, NCBI Bookshelf, BrainFacts, and PDB-101.
 - [S16 · Better?](https://jakecuth.com/work/better-lab/): A Dalio-style ledger of 100 indicators of human progress and regress, hand-curated from primary sources (WB, WHO, UN IGME, UCDP, V-Dem, NOAA, IRENA, UNHCR, IUCN, IMF, ITU, UNESCO, FAO). Year scrubber, theme and direction filters, COVID-dip overlay, four log-scale cost-curve hero charts, and a worsening small-multiples panel. Editorial verdict: yes in lived-material dimensions, no in several planetary and geopolitical dimensions.
+- [S17 · Bubble Watch](https://jakecuth.com/work/bubble-watch-lab/): Six interactive SVG charts on whether the U.S. market is in an AI bubble as of May 2026. Shiller CAPE (~42, second-highest reading in 145 years), top-10 S&P 500 concentration (~38%, fifty-year high), hyperscaler capex (~$725B in 2026) vs OpenAI + Anthropic ARR (~$54B), FINRA margin debt (3.83% of GDP), METR capability time-horizon doubling, and a 1929/2000/2007/2021/2026 indicator lineup. Sources include Robert Shiller, FactSet, FINRA, Stanford HAI, METR, and the hyperscaler filings. Editorial verdict: mixed, leaning bubble in narrow segments, not a broad-market 2000-style mania.
 
 ## Paper anatomies (P01–P04)
 
