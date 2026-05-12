@@ -6,7 +6,7 @@ what DeepSeek-V4 actually does. The headline result is that V4 uses ~10%
 of the KV cache and ~27% of the FLOPs of V3.2 at 1M-token context, and
 the lab walks through HOW.
 
-This lab is a portfolio piece for jakecuth.com, a senior data analyst's
+This lab is a portfolio piece for jakecuth.com, an AI engineer's
 editorial-style portfolio site. Match the existing site's structure and
 voice exactly. Inspect /work/agi-forecast-lab/ and /work/imm-lab/ for
 typography, tone, chart machinery, and section pacing.

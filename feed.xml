@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Jake Cuth. — Notes</title>
-  <subtitle>Field notes from a senior data analyst.</subtitle>
+  <subtitle>Field notes from an AI engineer.</subtitle>
   <link href="https://www.jakecuth.com/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://www.jakecuth.com/notes/" rel="alternate" type="text/html"/>
   <id>https://www.jakecuth.com/feed.xml</id>

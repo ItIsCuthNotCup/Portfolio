@@ -177,7 +177,7 @@ def render(meta: dict, out_path: Path) -> None:
     d.text((72, rule_y + 24), foot_left, font=foot_font, fill=INK_DIM)
 
     # Right-aligned amber bullet so the card always has a touch of color
-    bullet = "● ML ENGINEER · NYC"
+    bullet = "● AI ENGINEER · NYC"
     bw = measure(d, bullet, foot_font)
     d.text((W - 72 - bw, rule_y + 24), bullet, font=foot_font, fill=AMBER)
 

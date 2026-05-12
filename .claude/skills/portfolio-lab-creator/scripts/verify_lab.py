@@ -441,7 +441,12 @@ else:
         "twitter:card":           r'<meta[^>]+name="twitter:card"',
         "twitter:title":          r'<meta[^>]+name="twitter:title"',
         "twitter:description":    r'<meta[^>]+name="twitter:description"',
-        "twitter:image (www)":    r'<meta[^>]+name="twitter:image"[^>]+content="https://www\.jakecuth\.com/assets/og/' + re.escape(NEW_SLUG) + r'-lab\.png',
+        # twitter:image MUST be the topic thumbnail (not the branded
+        # OG card). Both legacy forms are allowed during transition:
+        # the new path is /assets/twitter-thumbs/<slug>-lab.png on
+        # the www host. The OG image (branded) is still allowed via
+        # the og:image meta tag, but Twitter scrapes its own meta.
+        "twitter:image (www, twitter-thumbs)":    r'<meta[^>]+name="twitter:image"[^>]+content="https://www\.jakecuth\.com/assets/twitter-thumbs/' + re.escape(NEW_SLUG) + r'-lab\.png',
         "twitter:site=@ItsCuthulhu":    r'<meta[^>]+name="twitter:site"[^>]+content="@ItsCuthulhu"',
         "twitter:creator=@ItsCuthulhu": r'<meta[^>]+name="twitter:creator"[^>]+content="@ItsCuthulhu"',
         "theme-color":            r'<meta[^>]+name="theme-color"',
@@ -482,7 +487,7 @@ else:
         else:
             fail(f"JSON-LD missing @type={required_type}")
 
-# 4. OG image file exists at expected path
+# 4a. OG image file exists at expected path
 og_image_path = REPO_ROOT / "assets" / "og" / f"{NEW_SLUG}-lab.png"
 if og_image_path.exists():
     size = og_image_path.stat().st_size
@@ -493,6 +498,52 @@ if og_image_path.exists():
 else:
     fail(f"OG image missing: {og_image_path.relative_to(REPO_ROOT)}")
     fail("  run: python3 notebooks/generate_og_images.py")
+
+# 4b. Twitter thumbnail file exists at expected path.
+# Twitter scrapes a different URL than OpenGraph. A lab whose
+# twitter:image points at /assets/twitter-thumbs/<slug>-lab.png
+# but with no file there will render as a generic icon on twitter,
+# linkedin, and imessage. This has shipped broken multiple times.
+tw_thumb_path = REPO_ROOT / "assets" / "twitter-thumbs" / f"{NEW_SLUG}-lab.png"
+if tw_thumb_path.exists():
+    size = tw_thumb_path.stat().st_size
+    if size > 1024:
+        ok(f"Twitter thumbnail present ({size // 1024} KB)")
+    else:
+        fail(f"Twitter thumbnail suspiciously small ({size} bytes)")
+else:
+    fail(f"Twitter thumbnail missing: {tw_thumb_path.relative_to(REPO_ROOT)}")
+    fail("  run: python3 notebooks/generate_tweet_thumbnails.py")
+    fail("       python3 notebooks/inject_twitter_cards.py")
+
+# 4c. Twitter thumbs dir is tracked in git. Has shipped untracked
+# repeatedly, which leaves the thumbnail URLs as 404s on cf-pages
+# while the local file system says everything is fine.
+try:
+    tracked = subprocess.check_output(
+        ["git", "ls-files", "assets/twitter-thumbs/"],
+        cwd=str(REPO_ROOT), stderr=subprocess.DEVNULL
+    ).decode().strip()
+    if tracked:
+        # Confirm THIS lab's thumb specifically is tracked or staged
+        if f"{NEW_SLUG}-lab.png" in tracked:
+            ok("twitter-thumbs/<slug> is tracked in git")
+        else:
+            # Maybe it is staged but not committed yet
+            staged = subprocess.check_output(
+                ["git", "diff", "--cached", "--name-only"],
+                cwd=str(REPO_ROOT), stderr=subprocess.DEVNULL
+            ).decode()
+            if f"assets/twitter-thumbs/{NEW_SLUG}-lab.png" in staged:
+                ok("twitter-thumbs/<slug> is staged for commit")
+            else:
+                fail(f"twitter-thumbs/{NEW_SLUG}-lab.png exists but is not tracked or staged")
+                fail("  run: git add assets/twitter-thumbs/")
+    else:
+        fail("assets/twitter-thumbs/ has no tracked files (dir untracked)")
+        fail("  run: git add assets/twitter-thumbs/")
+except (subprocess.CalledProcessError, FileNotFoundError):
+    warn("git not available; cannot verify twitter-thumbs tracking")
 
 # 5. Sitemap entry
 sitemap_path = REPO_ROOT / "sitemap.xml"

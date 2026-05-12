@@ -1,6 +1,6 @@
 # Jake Cuth.
 
-> Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, a senior data analyst. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
+> Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, an AI engineer. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
 
 The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 46 research tiles organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
 
@@ -73,7 +73,7 @@ The textbook, drawn live. Each primer is a single-canvas demo of one ML techniqu
 
 ## Notes
 
-- [Notes index](https://jakecuth.com/notes/) — Field notes from a senior data analyst, three a week.
+- [Notes index](https://jakecuth.com/notes/) — Field notes from an AI engineer, three a week.
 - [Atom feed](https://jakecuth.com/feed.xml) — Subscribe to notes.
 
 ## About

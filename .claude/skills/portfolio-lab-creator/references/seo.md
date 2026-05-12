@@ -1,0 +1,280 @@
+# SEO — required for every new lab
+
+A lab page that is not in the sitemap, has no canonical URL, no
+OG image, no JSON-LD, and is missing from llms.txt will:
+
+- not be indexed by Google or Bing
+- show a generic shared OG card on Twitter / LinkedIn / iMessage
+- not be cited by Perplexity, ChatGPT search, or Claude search
+- be invisible in any structured-data carousel
+
+This is not a polish step — without these, the lab effectively
+does not exist on the open web. Treat the items below as part of
+the build, not as "I'll fix SEO later."
+
+## The contract: every new lab needs all of this
+
+### 1. Page-level meta tags (in `<head>`)
+
+Required, in this order, every time:
+
+```html
+<title>{{name}} · {{tagline}} — Jake Cuth.</title>
+<meta name="description" content="{{description, 60-160 chars}}">
+
+<link rel="canonical" href="https://jakecuth.com/work/{{slug}}-lab/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{name}} · {{tagline}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:image" content="https://www.jakecuth.com/assets/og/{{slug}}-lab.png?v=1">
+<meta property="og:url" content="https://jakecuth.com/work/{{slug}}-lab/">
+<meta property="og:site_name" content="Jake Cuth.">
+<meta property="og:locale" content="en_US">
+
+<meta property="article:published_time" content="{{YYYY-MM-DD}}T00:00:00Z">
+<meta property="article:modified_time" content="{{YYYY-MM-DD}}T00:00:00Z">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{name}} · {{tagline}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image" content="https://www.jakecuth.com/assets/og/{{slug}}-lab.png?v=1">
+<meta name="twitter:site" content="@ItsCuthulhu">
+<meta name="twitter:creator" content="@ItsCuthulhu">
+
+<meta name="theme-color" content="#141311">
+```
+
+Notes:
+
+- `og:image` and `twitter:image` MUST be on `https://www.jakecuth.com`,
+  not the bare apex. Apex is correct as the canonical, but social
+  scrapers fail when fetching apex URLs in some configurations.
+  www-prefixed image URLs work everywhere.
+- `description` must be 60–160 characters.
+- `theme-color` is always graphite (`#141311`) to match the live theme.
+- Twitter handle is `@ItsCuthulhu` for both site and creator on
+  every page on the domain.
+
+### 2. JSON-LD blocks
+
+Every lab page needs exactly three:
+
+**BreadcrumbList** — Home → (Labs|Tests|Model Atlas) → This page.
+Pick the right second-level based on whether the lab is in the
+Labs dropdown, Tests dropdown, or is a model-atlas deepdive.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jakecuth.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Labs", "item": "https://jakecuth.com/#labs" },
+    { "@type": "ListItem", "position": 3, "name": "{{name}} — {{kicker}}", "item": "https://jakecuth.com/work/{{slug}}-lab/" }
+  ]
+}
+</script>
+```
+
+**Article** — describes the editorial content of the page.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{name}} — {{kicker}}",
+  "description": "{{description}}",
+  "image": "https://www.jakecuth.com/assets/og/{{slug}}-lab.png?v=1",
+  "datePublished": "{{YYYY-MM-DD}}",
+  "dateModified": "{{YYYY-MM-DD}}",
+  "url": "https://jakecuth.com/work/{{slug}}-lab/",
+  "inLanguage": "en",
+  "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+  "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jakecuth.com/work/{{slug}}-lab/" }
+}
+</script>
+```
+
+**WebApplication** — flags the page as an interactive tool, which
+is what every lab actually is.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "{{name}} — {{kicker}}",
+  "description": "{{description}}",
+  "image": "https://www.jakecuth.com/assets/og/{{slug}}-lab.png?v=1",
+  "url": "https://jakecuth.com/work/{{slug}}-lab/",
+  "datePublished": "{{YYYY-MM-DD}}",
+  "dateModified": "{{YYYY-MM-DD}}",
+  "applicationCategory": "DataScienceApplication",
+  "operatingSystem": "Any (browser-based)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://jakecuth.com/" },
+  "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+}
+</script>
+```
+
+### 3. Two social cards (OG card AND Twitter thumbnail)
+
+Two separate images, two separate paths. Both are required.
+
+**3a. OG card (LinkedIn, iMessage, Slack, Facebook).** 1200×630 PNG
+at `assets/og/{{slug}}-lab.png`. Branded, has the `JAKECUTH.COM`
+wordmark and the role bullet. Generated by
+`notebooks/generate_og_images.py`, wired by
+`notebooks/wire_og_images.py`.
+
+**3b. Twitter thumbnail (twitter:image meta tag).** 1200×675 PNG
+at `assets/twitter-thumbs/{{slug}}-lab.png`. **No wordmark**, just
+the topic title + FIG marker. Twitter scrapes its own meta tag
+and uses a different image than OpenGraph; this is by design.
+Generated by `notebooks/generate_tweet_thumbnails.py`, wired by
+`notebooks/inject_twitter_cards.py`.
+
+Run all four in this order:
+
+```bash
+python3 notebooks/generate_og_images.py
+python3 notebooks/wire_og_images.py
+python3 notebooks/generate_tweet_thumbnails.py
+python3 notebooks/inject_twitter_cards.py
+```
+
+**Critical: `git add assets/twitter-thumbs/` after running.** The
+directory has shipped untracked multiple times. Local fs sees the
+thumbnails; the deployed site returns 404; Twitter shows a generic
+icon. The QA gate now enforces both file existence and git tracking.
+
+### 4. sitemap.xml
+
+Add a `<url>` block to `sitemap.xml` for the new lab. Keep the
+file alphabetically sorted within each section. Most labs go in
+the `/work/` block.
+
+```xml
+<url>
+  <loc>https://jakecuth.com/work/{{slug}}-lab/</loc>
+  <lastmod>{{YYYY-MM-DD}}</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+```
+
+Priority guide:
+- `1.0` — homepage only
+- `0.9` — `/notes/` index, `/work/model-atlas-lab/` (atlas index)
+- `0.8` — every other lab in the Labs / Tests dropdowns
+- `0.7` — model-atlas deep-dives (linear-regression-lab, etc.)
+  and individual `/notes/<slug>/` entries
+
+### 5. llms.txt
+
+`llms.txt` at the repo root is a curated index of the site for
+LLM crawlers (Perplexity, ChatGPT search, Claude search). Every
+new lab MUST be added to it. Pick the right section:
+
+- "Marquee labs" — the main FIG. 01–N labs in the primary Labs
+  dropdown
+- "Tests" — pages in the Tests dropdown (escape-velocity,
+  semiconductor, tech-predictions, productivity-predictions,
+  deepseek-v4)
+- "Algorithm deep-dives" — labs reachable from
+  `/work/model-atlas-lab/`
+
+Format:
+
+```markdown
+- [{{name}}](https://jakecuth.com/work/{{slug}}-lab/): {{one-sentence description, ideally with a concrete number or claim}}
+```
+
+The description should be specific (`8 channels, 104 weeks, 200
+posterior draws`) not generic (`a Bayesian model`).
+
+### 6. Related-labs aside (Phase-3 internal linking)
+
+Every main lab has a "Related labs" 3-card aside at the bottom
+that points at three thematically-adjacent labs. Pick the cluster:
+
+- **Statistical inference**: A/B test, segmentation, churn, IMM
+- **Visual / interactive ML**: sketch, model-picker, MLP,
+  model-atlas
+- **AI/economy commentary**: jobs, time-use, watchdog, AGI horizon,
+  semiconductor, deepseek-v4, productivity, llm-learning
+- **Algorithm primers**: linear, logistic, ridge/lasso, decision
+  tree, random forest, gradient boosting, SVM, KNN, naive bayes,
+  k-means, DBSCAN, isolation forest
+
+Pick the cluster the new lab belongs to, then link to three
+other labs in that cluster.
+
+### 7. IndexNow ping (automated)
+
+Every push to `main` runs `notebooks/ping_indexnow.py` via the
+`Deploy to Cloudflare Pages` GitHub Action, which sends every
+sitemap URL to Bing/Yandex/ChatGPT-search. **Nothing to do
+per-lab beyond making sure the sitemap was updated in step 4.**
+
+If the sitemap entry is missing, IndexNow will not ping the new
+URL, and Bing's crawl will be days slower.
+
+The IndexNow key file lives at `/<key>.txt` in the repo root.
+Don't delete it, don't rename it. Both this skill's verify
+script and the GitHub Action assume it stays where it is.
+
+### 8. Cache-bust on changed assets
+
+If the new lab pulls in a new version of `main.css` or `main.js`
+(via cross-cutting nav updates), every page that links to those
+files needs its `?v=N` bumped. The cross-cutting script handles
+this; verify with `grep -c "v=N"` across `work/*/index.html`.
+
+Not strictly SEO, but stale CSS makes crawlers see the old layout
+and re-render risk increases.
+
+## Verification
+
+Before commit, every one of these MUST be true. Add to the QA
+gate; do not rely on memory.
+
+- [ ] All meta + JSON-LD blocks above present in the new lab
+- [ ] `assets/og/{{slug}}-lab.png` exists and is 1200×630
+- [ ] `sitemap.xml` has a `<url>` for the new lab
+- [ ] `llms.txt` has a bullet for the new lab
+- [ ] Related-labs aside renders on the new lab and links to 3
+      cluster-mates
+- [ ] No two pages share the same `<link rel="canonical">` URL
+- [ ] Description is 60–160 characters
+- [ ] `og:image` and `twitter:image` resolve from
+      `https://www.jakecuth.com/assets/og/...` (not apex)
+
+## Common SEO failures (seen in past pages)
+
+1. **Page indexed under both apex and www.** Fix by making the
+   canonical point at apex AND making sure both DNS records exist
+   (apex CNAME-flattened to pages.dev). Cloudflare DNS is the
+   single source of truth.
+2. **OG image is the shared default.** Fix by running
+   `notebooks/generate_og_images.py` after writing the page's
+   meta tags. Per-lab cards are populated automatically.
+3. **Description copied verbatim from another page.** Fix by
+   writing the description to be specific to this lab. Generic
+   descriptions get filtered by Google's helpful-content
+   classifier.
+4. **JSON-LD missing or malformed.** Fix by validating with
+   https://validator.schema.org/ before commit.
+5. **Lab not in sitemap.xml.** GSC won't surface it in coverage
+   reports for weeks. Always add to sitemap; don't rely on
+   organic discovery.
+6. **Lab not in llms.txt.** Perplexity / ChatGPT search / Claude
+   search will not cite it. Same effect as not being indexed,
+   only worse — AI traffic is increasingly the cited-source
+   pipeline.
