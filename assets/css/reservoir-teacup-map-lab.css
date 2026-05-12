@@ -1,0 +1,608 @@
+/* ═══════════════════════════════════════════════════════════
+   RESERVOIR TEACUP MAP — S14
+   The West's water savings account, drawn the USBR way.
+   Editorial data story. SVG small multiples. Static snapshot.
+   ═══════════════════════════════════════════════════════════ */
+
+.rtm-main {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Local tokens for the water palette. Stays inside the
+   site's ink/accent vocabulary but gives the teacups a
+   readable status hierarchy. */
+.rtm-main {
+  --rtm-water:        oklch(0.62 0.10 230);
+  --rtm-water-deep:   oklch(0.42 0.10 230);
+  --rtm-above:        oklch(0.72 0.13 200);
+  --rtm-near:         oklch(0.76 0.15 95);
+  --rtm-below:        oklch(0.66 0.16 60);
+  --rtm-critical:     var(--accent);
+  --rtm-cup-stroke:   var(--ink);
+  --rtm-cup-bg:       color-mix(in oklab, var(--paper) 70%, var(--ink) 6%);
+  --rtm-grid-line:    color-mix(in oklab, var(--ink) 14%, transparent);
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.rtm-hero {
+  padding: 120px 48px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.rtm-title { margin-top: 22px; }
+.rtm-kicker {
+  margin-top: 24px;
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.rtm-dateline {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rtm-dateline .label { color: var(--ink-dim); }
+.rtm-dateline .value {
+  color: var(--ink);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+/* ── Section wrapper ───────────────────────────────────────── */
+.rtm-section {
+  padding: 80px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.rtm-section .section-label { margin-bottom: 28px; }
+.rtm-prose { max-width: 760px; }
+.rtm-prose p {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.rtm-lede {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 24px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+}
+.rtm-note {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+.rtm-callout {
+  margin-top: 32px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  max-width: 720px;
+}
+.rtm-callout strong {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ── Controls ─────────────────────────────────────────────── */
+.rtm-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.rtm-filter-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 8px;
+}
+.rtm-filter-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--ink-dim);
+  margin: 0 12px;
+  opacity: 0.5;
+}
+.rtm-pill {
+  appearance: none;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 6px 12px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+}
+.rtm-pill:hover { transform: translateY(-1px); }
+.rtm-pill.active,
+.rtm-pill[data-active="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Legend ──────────────────────────────────────────────── */
+.rtm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 26px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.rtm-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.rtm-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--rtm-cup-stroke);
+  background: var(--rtm-water);
+}
+.rtm-swatch.is-above    { background: var(--rtm-above); }
+.rtm-swatch.is-near     { background: var(--rtm-near); }
+.rtm-swatch.is-below    { background: var(--rtm-below); }
+.rtm-swatch.is-critical { background: var(--rtm-critical); }
+.rtm-legend-line {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  border-top: 1.5px dashed var(--ink);
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+/* ── Teacup grid ─────────────────────────────────────────── */
+.rtm-teacup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.rtm-cup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px 12px;
+  border: 1px solid var(--ink);
+  background: var(--rtm-cup-bg);
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+.rtm-cup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -16px color-mix(in oklab, var(--ink) 80%, transparent);
+}
+.rtm-cup.is-active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.rtm-cup-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.rtm-cup-name {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.rtm-cup-basin {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.rtm-cup-svg {
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+
+.rtm-cup-foot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px;
+  margin-top: 8px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.rtm-cup-pct {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+}
+.rtm-cup-pct .small { font-size: 11px; color: var(--ink-dim); margin-left: 2px; }
+.rtm-cup-delta {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  align-self: end;
+  text-align: right;
+}
+.rtm-cup-delta.is-above    { color: var(--rtm-above); }
+.rtm-cup-delta.is-near     { color: var(--ink-soft); }
+.rtm-cup-delta.is-below    { color: var(--rtm-below); }
+.rtm-cup-delta.is-critical { color: var(--rtm-critical); }
+
+/* SVG fill colors */
+.rtm-cup-svg .rtm-fill.is-above    { fill: var(--rtm-above); }
+.rtm-cup-svg .rtm-fill.is-near     { fill: var(--rtm-near); }
+.rtm-cup-svg .rtm-fill.is-below    { fill: var(--rtm-below); }
+.rtm-cup-svg .rtm-fill.is-critical { fill: var(--rtm-critical); }
+.rtm-cup-svg .rtm-cup-outline {
+  fill: var(--rtm-cup-bg);
+  stroke: var(--rtm-cup-stroke);
+  stroke-width: 1.2;
+}
+.rtm-cup-svg .rtm-avg-line {
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-dasharray: 5 3;
+  fill: none;
+}
+.rtm-cup-svg .rtm-tick {
+  stroke: var(--ink-dim);
+  stroke-width: 1;
+  fill: none;
+}
+.rtm-cup-svg .rtm-tick-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 8px;
+  fill: var(--ink-dim);
+  letter-spacing: 0.08em;
+}
+
+/* ── Pinned readout ──────────────────────────────────────── */
+.rtm-pinned {
+  margin: 0 0 24px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--paper) 70%, var(--ink) 6%);
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+  gap: 16px;
+}
+.rtm-pinned-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.rtm-pinned-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.rtm-pinned-body strong { color: var(--accent); font-weight: 500; }
+.rtm-pinned dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+}
+.rtm-pinned dt {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.rtm-pinned dd {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+/* ── Readout, ticker, chart callout (shared with later charts) */
+.rtm-readout {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink-dim);
+  max-width: 880px;
+}
+.rtm-readout-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.rtm-readout p {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.rtm-readout p strong { color: var(--accent); font-weight: 500; }
+
+.rtm-ticker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  padding: 10px 16px;
+  border: 1px solid var(--ink-dim);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.rtm-ticker-tag {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.rtm-ticker-text strong { color: var(--ink); font-weight: 500; }
+
+.rtm-chart-callout {
+  margin-top: 22px;
+  padding: 14px 18px;
+  display: inline-flex;
+  gap: 14px;
+  align-items: center;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  max-width: 720px;
+}
+.rtm-callout-stat {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 26px;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+/* ── Charts (cliff, scatter) ─────────────────────────────── */
+.rtm-chart-wrap {
+  position: relative;
+  margin-top: 8px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 12px;
+}
+.rtm-chart-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.rtm-chart-wrap .rtm-axis {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.rtm-chart-wrap .rtm-axis-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-dim);
+}
+.rtm-chart-wrap .rtm-grid {
+  stroke: var(--rtm-grid-line);
+  stroke-width: 1;
+}
+.rtm-chart-wrap .rtm-series {
+  fill: none;
+  stroke-width: 2;
+}
+.rtm-chart-wrap .rtm-series-mead   { stroke: var(--rtm-critical); }
+.rtm-chart-wrap .rtm-series-powell { stroke: var(--rtm-water); }
+.rtm-chart-wrap .rtm-series-marker {
+  fill: var(--paper);
+  stroke-width: 1.5;
+}
+.rtm-chart-wrap .rtm-tier {
+  stroke-dasharray: 4 4;
+  stroke-width: 1;
+}
+.rtm-chart-wrap .rtm-tier-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-soft);
+}
+.rtm-chart-wrap .rtm-dead-line {
+  stroke: var(--ink);
+  stroke-dasharray: 1 3;
+  stroke-width: 1.4;
+}
+.rtm-chart-wrap .rtm-dead-fill {
+  fill: color-mix(in oklab, var(--accent) 18%, transparent);
+}
+
+.rtm-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 8px 10px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  box-shadow: 0 6px 24px -10px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  white-space: nowrap;
+}
+.rtm-tooltip strong { color: var(--accent); font-weight: 500; }
+
+/* Scatter dot styling, set per category */
+.rtm-scatter-dot { cursor: pointer; transition: r 120ms ease, opacity 120ms ease; }
+.rtm-scatter-dot.is-dim { opacity: 0.18; }
+.rtm-scatter-dot[data-basin="Colorado"]   { fill: var(--rtm-critical); }
+.rtm-scatter-dot[data-basin="California"] { fill: var(--rtm-above); }
+.rtm-scatter-dot[data-basin="Columbia"]   { fill: var(--rtm-water); }
+.rtm-scatter-dot[data-basin="Rio Grande"] { fill: var(--rtm-below); }
+.rtm-scatter-dot[data-basin="Snake"]      { fill: var(--rtm-near); }
+.rtm-scatter-line {
+  stroke: var(--ink-dim);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+  fill: none;
+}
+
+/* ── Receipts grid ───────────────────────────────────────── */
+.rtm-receipts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+.rtm-receipt {
+  padding: 16px;
+  border: 1px solid var(--ink-dim);
+  background: color-mix(in oklab, var(--paper) 80%, var(--ink) 4%);
+}
+.rtm-receipt-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.rtm-receipt-value {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.rtm-receipt-value .small {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  margin-left: 4px;
+  text-transform: lowercase;
+}
+
+/* ── Colophon section ────────────────────────────────────── */
+.rtm-colophon-section {
+  padding-bottom: 110px;
+}
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.method-grid p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.method-head {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink-dim);
+}
+.method-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+/* ── Related labs aside ──────────────────────────────────── */
+.rtm-related {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px 110px;
+}
+.rtm-related .section-label { margin-bottom: 24px; }
+.rtm-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.rtm-related-card {
+  padding: 18px;
+  border: 1px solid var(--ink-dim);
+  background: color-mix(in oklab, var(--paper) 88%, var(--ink) 3%);
+}
+.rtm-related-card .rtm-card-kicker {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.rtm-related-card h3 {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 19px;
+  margin: 8px 0 6px;
+}
+.rtm-related-card h3 a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-dim);
+}
+.rtm-related-card h3 a:hover { color: var(--accent); }
+.rtm-related-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .rtm-hero, .rtm-section, .rtm-related { padding-left: 24px; padding-right: 24px; }
+  .rtm-dateline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rtm-teacup-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .rtm-cup { padding: 12px; }
+  .rtm-cup-svg { height: 130px; }
+  .rtm-pinned { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .rtm-hero { padding-top: 90px; }
+  .rtm-teacup-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .rtm-cup-name { font-size: 14px; }
+  .rtm-cup-pct { font-size: 18px; }
+  .rtm-controls { padding: 10px 12px; }
+  .rtm-receipt-value { font-size: 22px; }
+}

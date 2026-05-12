@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservoir Teacup Map · The West's water savings account — Jake Cuth.</title>
+  <meta name="description" content="Daily-balance teacup diagrams for twenty major Western reservoirs. Current storage versus historical average, drawn as small multiples.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/reservoir-teacup-map-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Reservoir Teacup Map · The West's water savings account">
+  <meta property="og:description" content="Daily-balance teacup diagrams for twenty major Western reservoirs. Current storage versus historical average, drawn as small multiples.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/reservoir-teacup-map-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/work/reservoir-teacup-map-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-12T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-12T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reservoir Teacup Map · The West's water savings account">
+  <meta name="twitter:description" content="Daily-balance teacup diagrams for twenty major Western reservoirs. Current storage versus historical average, drawn as small multiples.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/reservoir-teacup-map-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/reservoir-teacup-map-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Reservoir Teacup Map", "item": "https://www.jakecuth.com/work/reservoir-teacup-map-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Reservoir Teacup Map: The West's water savings account",
+    "description": "Daily-balance teacup diagrams for twenty major Western reservoirs. Current storage versus historical average, drawn as small multiples.",
+    "image": "https://www.jakecuth.com/assets/og/reservoir-teacup-map-lab.png?v=1",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "url": "https://www.jakecuth.com/work/reservoir-teacup-map-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/reservoir-teacup-map-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Reservoir Teacup Map · Interactive Western water atlas",
+    "description": "A browser-based interactive atlas of twenty Western reservoirs. Teacup small multiples, an elevation cliff for Mead and Powell, and a snowpack-to-storage scatter.",
+    "image": "https://www.jakecuth.com/assets/og/reservoir-teacup-map-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/reservoir-teacup-map-lab/",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S14</span> &middot; MMXXVI &middot; RESERVOIR TEACUP MAP</span></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">46</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">13</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">16</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="rtm-main">
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Reservoir Teacup Map</span></li>
+  </ol>
+</nav>
+
+<!-- HERO -->
+<section class="rtm-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S14</span>
+    <span>The West's water savings account</span>
+  </h2>
+  <h1 class="serif big-display rtm-title">
+    Twenty teacups,<br>
+    <span class="serif-italic" style="color:var(--accent)">one balance sheet.</span>
+  </h1>
+  <p class="lab-biz-line">
+    Twenty Western reservoirs drawn as the U.S. Bureau of Reclamation has always drawn them. Each teacup carries one number that decides whether forty million people in Phoenix, Las Vegas, Los Angeles, and the Central Valley wake up to water the next morning.
+  </p>
+  <p class="rtm-kicker">
+    Scroll through three views built from public USBR and USGS data. The teacup grid is the savings statement. The elevation cliff is the warning siren on Lake Mead and Lake Powell. The snow-to-storage scatter is the leading indicator that warming is breaking.
+  </p>
+  <div class="mono rtm-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time">May 2026</div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static snapshot</div></div>
+    <div><div class="label">Coverage</div><div class="value">20 reservoirs &middot; 5 basins &middot; 17 states</div></div>
+    <div><div class="label">Source</div><div class="value">USBR RISE &middot; USGS NWIS &middot; CA DWR</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — PROBLEM -->
+<section class="rtm-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The bank statement the West avoids reading</span>
+  </h2>
+  <div class="rtm-prose">
+    <p class="rtm-lede">
+      The U.S. Bureau of Reclamation has drawn its reservoir reports the same way for fifty years. A teacup, filled to the current level, with a thin line showing the historical average.
+    </p>
+    <p>
+      It is the most honest financial chart in American government. Each cup is a balance. The line is the average from three decades of records. Below the line, the West is overdrawn. Far below it, the dam itself starts to ration.
+    </p>
+    <p>
+      In June 2022, Lake Mead fell to 1,040 feet. That was 145 feet above dead pool, the level where Hoover Dam can no longer release water through its lowest outlet. Las Vegas, Phoenix, Los Angeles, and a quarter of California's farmland all sit downstream. Wet winters in 2023 and 2024 bought a partial reprieve. The structural deficit, the gap between what the Colorado promises and what it delivers, is still there.
+    </p>
+    <p>
+      This page draws twenty of the West's biggest cups together. It is not a forecast. It is a balance sheet for water, refreshed once and frozen, the way a printed annual report freezes a moment in finance.
+    </p>
+    <div class="rtm-callout mono">
+      The Colorado, Rio Grande, Columbia, Snake, and Sacramento basins together carry <strong>~245 million acre-feet</strong> of authorized reservoir capacity. That water serves <strong>~60 million people</strong> across seventeen states.
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · S14.1 — TEACUP GRID -->
+<section class="rtm-section rtm-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S14.1</span>
+    <span>The teacup grid</span>
+  </h2>
+  <p class="rtm-note">
+    Each cup is one reservoir. Fill height shows current storage as a percentage of total authorized capacity. The dashed line marks the historical average for this time of year. Filter by basin or by status. Click any cup to pin its details below.
+  </p>
+
+  <div class="rtm-controls mono" aria-label="Teacup filters">
+    <span class="rtm-filter-label">Basin</span>
+    <button type="button" class="rtm-pill active" data-basin="all">All five</button>
+    <button type="button" class="rtm-pill" data-basin="Colorado">Colorado</button>
+    <button type="button" class="rtm-pill" data-basin="California">California</button>
+    <button type="button" class="rtm-pill" data-basin="Columbia">Columbia</button>
+    <button type="button" class="rtm-pill" data-basin="Rio Grande">Rio Grande</button>
+    <button type="button" class="rtm-pill" data-basin="Snake">Snake</button>
+    <span class="rtm-filter-divider"></span>
+    <span class="rtm-filter-label">Status</span>
+    <button type="button" class="rtm-pill active" data-status="all">All</button>
+    <button type="button" class="rtm-pill" data-status="above">Above average</button>
+    <button type="button" class="rtm-pill" data-status="below">Below average</button>
+    <button type="button" class="rtm-pill" data-status="critical">Critical</button>
+  </div>
+
+  <div class="rtm-legend mono" aria-label="Teacup legend">
+    <span class="rtm-legend-item"><i class="rtm-swatch is-above"></i>Above the line</span>
+    <span class="rtm-legend-item"><i class="rtm-swatch is-near"></i>Within 10% of average</span>
+    <span class="rtm-legend-item"><i class="rtm-swatch is-below"></i>10 to 30% below</span>
+    <span class="rtm-legend-item"><i class="rtm-swatch is-critical"></i>More than 30% below</span>
+    <span class="rtm-legend-item"><span class="rtm-legend-line"></span>Historical average for May</span>
+  </div>
+
+  <div class="rtm-teacup-grid" id="rtm-teacup-grid" role="list" aria-label="Twenty Western reservoirs as teacup diagrams"></div>
+
+  <div class="rtm-pinned" id="rtm-pinned" aria-live="polite">
+    <span class="mono rtm-pinned-label">Selected</span>
+    <span class="rtm-pinned-body">Click a teacup to pin its details. Each cup shows capacity, current storage, and the May historical average. Color indicates how the current balance compares to the line.</span>
+  </div>
+
+  <div class="rtm-readout">
+    <p class="mono rtm-readout-label">What this means</p>
+    <p>
+      Forty percent full is not always a crisis. Lake Mead at thirty-five percent is. The line in each cup says why. It is what the reservoir should have held on this day, averaged across three decades. The cups below the line are the ones running an overdraft. The deeper the deficit, the more the basin is relying on snowpack that has not yet arrived, or on groundwater that no longer fills back up between droughts.
+    </p>
+    <p>
+      The Colorado River basin remains the visible crisis. California recovered hard in 2023 and 2024 after twelve months of record snow. The Pacific Northwest sits close to average most years. The Rio Grande is the quiet emergency that nobody west of Albuquerque tracks daily.
+    </p>
+  </div>
+
+  <div class="rtm-ticker" id="rtm-ticker">
+    <span class="mono rtm-ticker-tag">Snapshot</span>
+    <span class="rtm-ticker-text">20 reservoirs &middot; 5 basins &middot; total active storage <strong id="rtm-total-cur">—</strong> acre-feet against capacity <strong id="rtm-total-cap">—</strong> acre-feet</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · S14.2 — ELEVATION CLIFF -->
+<section class="rtm-section rtm-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S14.2</span>
+    <span>The elevation cliff</span>
+  </h2>
+  <p class="rtm-note">
+    Mead and Powell only. The y-axis is feet above sea level, the units the dam operators actually plan in. The horizontal bands are the policy triggers, the levels where the Colorado River Compact, the 2007 Interim Guidelines, and the 2019 Drought Contingency Plan force cuts on the seven basin states. The dotted floor is dead pool, the elevation at which the dam can no longer release water through its outlet works.
+  </p>
+
+  <div class="rtm-controls mono" aria-label="Elevation chart controls">
+    <span class="rtm-filter-label">View</span>
+    <button type="button" class="rtm-pill active" data-cliff="both">Mead &amp; Powell</button>
+    <button type="button" class="rtm-pill" data-cliff="mead">Lake Mead only</button>
+    <button type="button" class="rtm-pill" data-cliff="powell">Lake Powell only</button>
+    <span class="rtm-filter-divider"></span>
+    <button type="button" class="rtm-pill rtm-pill-toggle active" data-toggle="tiers" data-active="true">Policy tiers</button>
+    <button type="button" class="rtm-pill rtm-pill-toggle active" data-toggle="dead" data-active="true">Dead pool</button>
+  </div>
+
+  <div class="rtm-chart-wrap" id="rtm-cliff-wrap">
+    <svg id="rtm-cliff" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Lake Mead and Lake Powell elevations 1990 to 2025 with policy tier markers"></svg>
+    <div id="rtm-tooltip-cliff" class="rtm-tooltip mono" hidden></div>
+  </div>
+
+  <div class="rtm-readout">
+    <p class="mono rtm-readout-label">What this means</p>
+    <p>
+      Mead and Powell are the two largest reservoirs in the United States. Together they hold more than fifty million acre-feet at full pool and serve roughly forty million people downstream. The cliff is the same shape on both. Both fell roughly a hundred and forty feet between 2000 and 2022. Both rebounded twenty to forty feet on the 2023 atmospheric river winter. Both are still well below the upper policy line that the seven basin states wrote in 2007 to define normal.
+    </p>
+    <p>
+      Read the floor. Dead pool on Mead is 895 feet. Dead pool on Powell is 3,370 feet. The buffer between today's elevation and the floor is what the operators have to negotiate with for the next decade.
+    </p>
+  </div>
+
+  <div class="rtm-chart-callout mono">
+    <span class="rtm-callout-stat">~140 ft</span>
+    <span>Lake Mead's drop from full pool (1,229 ft) to its 2022 low (1,040 ft), against a dead-pool floor of 895 ft.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · S14.3 — SNOW-TO-STORAGE SCATTER -->
+<section class="rtm-section rtm-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S14.3</span>
+    <span>Snow to storage, by basin</span>
+  </h2>
+  <p class="rtm-note">
+    The West does not get rain when it needs it. It gets snow, in winter, and the reservoirs catch the melt. April 1 snow water equivalent, the height of liquid water locked inside the snowpack, is the closest thing the system has to a leading indicator. Each dot is a basin-year pairing April 1 SWE against the same basin's storage at the end of the water year.
+  </p>
+
+  <div class="rtm-controls mono" aria-label="Scatter controls">
+    <span class="rtm-filter-label">Highlight</span>
+    <button type="button" class="rtm-pill active" data-scatter="all">All basins</button>
+    <button type="button" class="rtm-pill" data-scatter="Colorado">Colorado</button>
+    <button type="button" class="rtm-pill" data-scatter="California">California</button>
+    <button type="button" class="rtm-pill" data-scatter="Columbia">Columbia</button>
+    <button type="button" class="rtm-pill" data-scatter="Rio Grande">Rio Grande</button>
+  </div>
+
+  <div class="rtm-chart-wrap" id="rtm-scatter-wrap">
+    <svg id="rtm-scatter" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Basin scatter, April 1 snow water equivalent against end-of-water-year reservoir storage"></svg>
+    <div id="rtm-tooltip-scatter" class="rtm-tooltip mono" hidden></div>
+  </div>
+
+  <div class="rtm-readout">
+    <p class="mono rtm-readout-label">What this means</p>
+    <p>
+      Two trends sit on this chart. The line from the lower left to the upper right is the old relationship between snow and storage. More snow in April meant more water in October. The cloud of points has been sliding downward since 2000, especially in the Colorado basin. The same snowpack now produces less storage, because warmer ground absorbs more meltwater, more of the precipitation falls as rain in winter and runs off before it can be captured, and atmospheric evaporative demand has risen.
+    </p>
+    <p>
+      The slope is not gone. It is flatter. That is what aridification looks like on a chart: the relationship between input and output gets noisier and weaker, year by year.
+    </p>
+  </div>
+
+  <div class="rtm-chart-callout mono">
+    <span class="rtm-callout-stat">~9 inches</span>
+    <span>2024 April 1 snow water equivalent for the Upper Colorado, against a historical average near 14 inches.</span>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS -->
+<section class="rtm-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts</span>
+  </h2>
+  <div class="rtm-receipts" id="rtm-receipts">
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Reservoirs in the grid</div>
+      <div class="rtm-receipt-value">20</div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Major basins covered</div>
+      <div class="rtm-receipt-value">5</div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">States served</div>
+      <div class="rtm-receipt-value">17</div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">People dependent on Mead + Powell</div>
+      <div class="rtm-receipt-value">~40M</div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">USBR total reservoir capacity</div>
+      <div class="rtm-receipt-value">~245<span class="small">M acre-ft</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Mead full pool elevation</div>
+      <div class="rtm-receipt-value">1,229<span class="small">ft</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Mead dead pool elevation</div>
+      <div class="rtm-receipt-value">895<span class="small">ft</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Mead 2022 low</div>
+      <div class="rtm-receipt-value">1,040<span class="small">ft, July 2022</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Powell minimum power pool</div>
+      <div class="rtm-receipt-value">3,490<span class="small">ft</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Colorado allocation to agriculture</div>
+      <div class="rtm-receipt-value">~80<span class="small">%</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Annual inflow driven by snowpack</div>
+      <div class="rtm-receipt-value">50–80<span class="small">%</span></div>
+    </div>
+    <div class="rtm-receipt">
+      <div class="rtm-receipt-label">Snapshot vintage</div>
+      <div class="rtm-receipt-value">Apr–May<span class="small">2025</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY + LAB-NAV -->
+<section class="rtm-section rtm-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is hand-drawn in SVG by a small vanilla JavaScript module. No frameworks, no build step, no analytics trackers. The data is baked into the page as static JSON. The teacup shape is parametric, redrawn for each reservoir at load time.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data sources</div>
+      <p>
+        Reservoir levels and capacities come from the U.S. Bureau of Reclamation RISE platform, the USGS National Water Information System, and the California Department of Water Resources Data Exchange Center. Snowpack figures come from the NRCS SNOTEL network. Historical-average curves are computed against the 1991 to 2020 period where available. The snapshot reflects April and May 2025 conditions, not live data.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://data.usbr.gov/" target="_blank" rel="noopener" style="border-bottom:1px solid">USBR RISE &middot; Reclamation data platform &nearr;</a><br>
+        <a href="https://waterservices.usgs.gov/" target="_blank" rel="noopener" style="border-bottom:1px solid">USGS NWIS &middot; water services API &nearr;</a><br>
+        <a href="https://cdec.water.ca.gov/" target="_blank" rel="noopener" style="border-bottom:1px solid">California DWR &middot; Data Exchange Center &nearr;</a><br>
+        <a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/" target="_blank" rel="noopener" style="border-bottom:1px solid">NRCS SNOTEL &middot; snow water equivalent network &nearr;</a><br>
+        <a href="https://www.usbr.gov/lc/region/g4000/hourly/mead-elv.html" target="_blank" rel="noopener" style="border-bottom:1px solid">USBR &middot; Lake Mead elevation chart &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        The page is a snapshot, not a live feed. Daily refresh from USBR RISE and USGS is straightforward and is the intended next step. The historical-average curves shown on each teacup are a simplification of more detailed daily exceedance percentiles that Reclamation publishes. Groundwater and tributary contributions are not visualized; the Central Valley and Ogallala aquifer drawdown is a hidden counterweight that surface storage alone cannot tell you about.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lab nav -->
+  <nav class="lab-nav mono" aria-label="Story navigation">
+    <a href="/work/cosmic-engines-lab/">&larr; Prev: Cosmic Engines (S13)</a>
+    <span>Data story 14 of 16</span>
+    <a href="/work/neurotransmitter-atlas-lab/">Next: Neurotransmitter Atlas (S15) &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/work/reservoir-teacup-map-lab" target="_blank" rel="noopener" class="btn-outline">View the source on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- RELATED LABS ASIDE -->
+<aside class="rtm-related" aria-label="Related labs">
+  <div class="mono section-label">
+    <span class="idx">Related labs</span>
+    <span>Other slow-moving public-data stories</span>
+  </div>
+  <div class="rtm-related-grid">
+    <article class="rtm-related-card">
+      <span class="rtm-card-kicker">S03</span>
+      <h3><a href="/work/watchdog-lab/">Algorithm Watchdog &rarr;</a></h3>
+      <p>A daily-refreshed read on what YouTube's algorithm is rewarding right now. The other lab on this site that runs on a cron.</p>
+    </article>
+    <article class="rtm-related-card">
+      <span class="rtm-card-kicker">S08</span>
+      <h3><a href="/work/semiconductor-lab/">Semiconductor Cartography &rarr;</a></h3>
+      <p>Industrial cartography for the chip supply chain. Same instinct as this lab. Map the chokepoints first, argue about them second.</p>
+    </article>
+    <article class="rtm-related-card">
+      <span class="rtm-card-kicker">S01</span>
+      <h3><a href="/work/jobs-lab/">AI &amp; Jobs &rarr;</a></h3>
+      <p>BLS occupational data, made interactive. Public data, geographic, and built for someone who is paid to ask.</p>
+    </article>
+  </div>
+</aside>
+
+</main>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight &mdash; Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=17"></script>
+<script src="/assets/js/reservoir-teacup-map-lab.js?v=1"></script>
+</body>
+</html>
