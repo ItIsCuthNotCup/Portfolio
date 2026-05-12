@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Better? · Is the world getting better, 100 indicators · Jake Cuth.</title>
+  <meta name="description" content="One hundred indicators from primary sources, scrubbable by year, filterable by theme and direction. The Ray Dalio ledger of human progress and regress.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/better-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Better? · Is the world getting better, 100 indicators">
+  <meta property="og:description" content="One hundred indicators from primary sources, scrubbable by year, filterable by theme and direction. The Ray Dalio ledger of human progress and regress.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/better-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/work/better-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-12T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-12T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Better? · Is the world getting better, 100 indicators">
+  <meta name="twitter:description" content="One hundred indicators from primary sources, scrubbable by year, filterable by theme and direction. The Ray Dalio ledger of human progress and regress.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/better-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/better-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "Better? — Is the world getting better?", "item": "https://www.jakecuth.com/work/better-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Better? — Is the world getting better?",
+    "description": "One hundred indicators from primary sources, scrubbable by year, filterable by theme and direction. The Ray Dalio ledger of human progress and regress.",
+    "image": "https://www.jakecuth.com/assets/og/better-lab.png?v=1",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "url": "https://www.jakecuth.com/work/better-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/better-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Better? — 100-indicator progress ledger",
+    "description": "An interactive ledger of 100 indicators of human progress and regress, scrubbable by year, filterable by theme and direction, with primary-source citations.",
+    "image": "https://www.jakecuth.com/assets/og/better-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/better-lab/",
+    "datePublished": "2026-05-12",
+    "dateModified": "2026-05-12",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">46</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">16</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="bl-main">
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">Better?</span></li>
+  </ol>
+</nav>
+
+<!-- HERO -->
+<section class="bl-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S16</span>
+    <span>The progress ledger</span>
+  </h2>
+  <h1 class="serif big-display bl-title">
+    Is the world getting<br>
+    <span class="serif-italic" style="color:var(--accent)">better?</span>
+  </h1>
+  <p class="lab-biz-line">
+    Two stories are simultaneously true. Acute deprivation. Death, disease, illiteracy, extreme poverty. Is in dramatic, well-sourced retreat. Climate, conflict, forced displacement, and democratic backsliding are accumulating. <mark class="ink-mark">A serious answer holds both.</mark>
+  </p>
+  <p class="bl-kicker">
+    One hundred indicators from primary sources. World Bank, WHO, UN IGME, UCDP, V-Dem, NOAA, IRENA, UNHCR, IUCN, IMF, ITU, UNESCO, FAO. Each tagged Optimistic, Mixed, or Negative and grouped by theme. The framework is Dalio's. Level, trend, and distribution shown together, so no single headline carries the verdict alone.
+  </p>
+  <div class="mono bl-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time">May 2026</div></div>
+    <div><div class="label">Engine</div><div class="value">Pure JS &middot; inline SVG &middot; no build</div></div>
+    <div><div class="label">Scope</div><div class="value">100 indicators &middot; 5 themes &middot; 1820&ndash;2025</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — THE TWO STORIES + PATTERNS SIDEBAR -->
+<section class="bl-section bl-section-intro">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>Two stories, both true</span>
+  </h2>
+
+  <div class="bl-intro-grid">
+    <div class="bl-intro-prose">
+      <p class="bl-lede">
+        Before the pandemic, global life expectancy reached 73.1 years. Under-five mortality fell by sixty percent in a single generation. The cost of solar electricity dropped ninety percent in fourteen years. Smallpox was wiped from the planet. Guinea worm went from three and a half million cases to ten.
+      </p>
+      <p>
+        And. In 2024, atmospheric CO<sub>2</sub> crossed 425 parts per million for the first time. There were sixty-one active state-based conflicts, the most since UCDP records began in 1946. One hundred and twenty-three million people were forcibly displaced, roughly one in every sixty-seven humans alive. For the first time in over twenty years, autocracies outnumbered democracies.
+      </p>
+      <p>
+        The honest answer to <em>is the world getting better</em> is neither yes nor no. The question depends on which metrics you are willing to look at and which baselines you are willing to use. The ledger below is the move past either side of that argument. It shows the level, the trend, and where in the world the change is concentrated. It refuses to vote.
+      </p>
+    </div>
+
+    <aside class="bl-patterns" aria-label="Patterns observed across the ledger">
+      <div class="mono bl-patterns-head">Patterns</div>
+      <ol class="bl-patterns-list">
+        <li>
+          <span class="mono bl-pattern-idx">01</span>
+          <strong>Acute deprivation is in retreat.</strong>
+          <span>Death before age five, illiteracy, extreme poverty, disease eradication. These have all moved sharply in one direction.</span>
+        </li>
+        <li>
+          <span class="mono bl-pattern-idx">02</span>
+          <strong>Planetary stress is accumulating.</strong>
+          <span>Emissions, temperature, sea level, biodiversity. These have all moved sharply in the other direction.</span>
+        </li>
+        <li>
+          <span class="mono bl-pattern-idx">03</span>
+          <strong>The global mean hides distribution.</strong>
+          <span>Most aggregate gains rest on a few large countries. Sub-Saharan Africa and conflict states show different curves.</span>
+        </li>
+        <li>
+          <span class="mono bl-pattern-idx">04</span>
+          <strong>Progress and regress run simultaneously.</strong>
+          <span>The same decade produces record renewable additions and record fossil emissions, record income growth and record displacement.</span>
+        </li>
+        <li>
+          <span class="mono bl-pattern-idx">05</span>
+          <strong>The 21st century shifted the risk profile.</strong>
+          <span>From acute, fast risks (hunger, child death) to systemic, slow ones (climate, debt, polarization, AI).</span>
+        </li>
+      </ol>
+    </aside>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · FIG. 16.1 — THE LEDGER -->
+<section class="bl-section bl-section-ledger" id="ledger">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; II &middot; FIG. 16.1</span>
+    <span>The ledger &mdash; 100 indicators</span>
+  </h2>
+  <p class="bl-note">
+    Each row is one indicator. Sparkline shows the trend. Direction badge shows whether the move is favorable, mixed, or unfavorable. Click a row to expand source and caveat. The year scrubber masks data after the chosen year. The COVID toggle highlights the 2020&ndash;21 dip on affected rows.
+  </p>
+
+  <div class="bl-controls">
+    <div class="bl-filter-group" role="group" aria-label="Filter by theme">
+      <span class="mono bl-filter-label">Theme</span>
+      <div class="bl-chips" id="bl-theme-chips" role="tablist">
+        <button class="bl-chip is-active" type="button" data-theme="all" role="tab" aria-selected="true">All</button>
+        <button class="bl-chip" type="button" data-theme="health" role="tab">Health &amp; survival</button>
+        <button class="bl-chip" type="button" data-theme="wealth" role="tab">Wealth &amp; education</button>
+        <button class="bl-chip" type="button" data-theme="tech" role="tab">Tech &amp; energy</button>
+        <button class="bl-chip" type="button" data-theme="env" role="tab">Environment</button>
+        <button class="bl-chip" type="button" data-theme="society" role="tab">Society &amp; governance</button>
+      </div>
+    </div>
+
+    <div class="bl-filter-group" role="group" aria-label="Filter by direction">
+      <span class="mono bl-filter-label">Direction</span>
+      <div class="bl-chips" id="bl-dir-chips" role="tablist">
+        <button class="bl-chip is-active" type="button" data-dir="all" role="tab" aria-selected="true">All</button>
+        <button class="bl-chip bl-chip-opt" type="button" data-dir="Optimistic" role="tab">Optimistic</button>
+        <button class="bl-chip bl-chip-mix" type="button" data-dir="Mixed" role="tab">Mixed</button>
+        <button class="bl-chip bl-chip-neg" type="button" data-dir="Negative" role="tab">Negative</button>
+      </div>
+    </div>
+
+    <div class="bl-filter-group bl-filter-toggles">
+      <label class="bl-toggle">
+        <input type="checkbox" id="bl-covid-toggle">
+        <span class="bl-toggle-track"><span class="bl-toggle-thumb"></span></span>
+        <span class="mono bl-toggle-label">COVID dip overlay</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="bl-scrubber">
+    <div class="bl-scrubber-head">
+      <span class="mono bl-scrubber-label">Year</span>
+      <span class="mono bl-scrubber-value" id="bl-year-value">2025</span>
+    </div>
+    <input type="range" id="bl-year-range" min="1990" max="2025" step="1" value="2025" aria-label="Year scrubber">
+    <div class="mono bl-scrubber-ticks" aria-hidden="true">
+      <span>1990</span><span>2000</span><span>2010</span><span>2020</span><span>2025</span>
+    </div>
+  </div>
+
+  <div class="bl-tallies mono" id="bl-tallies" aria-live="polite">
+    <span class="bl-tally"><span class="bl-tally-num" id="bl-tally-shown">100</span> shown</span>
+    <span class="bl-tally bl-tally-opt"><span class="bl-tally-num" id="bl-tally-opt">0</span> Optimistic</span>
+    <span class="bl-tally bl-tally-mix"><span class="bl-tally-num" id="bl-tally-mix">0</span> Mixed</span>
+    <span class="bl-tally bl-tally-neg"><span class="bl-tally-num" id="bl-tally-neg">0</span> Negative</span>
+  </div>
+
+  <div class="bl-ledger-head mono">
+    <div class="bl-col-name">Indicator</div>
+    <div class="bl-col-baseline">Baseline</div>
+    <div class="bl-col-current">Current</div>
+    <div class="bl-col-spark">Trend</div>
+    <div class="bl-col-dir">Direction</div>
+  </div>
+
+  <div class="bl-ledger" id="bl-ledger" role="list" aria-live="polite">
+    <div class="bl-ledger-empty mono">Loading the ledger...</div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § III · FIG. 16.2 — COST CURVES THAT CHANGED EVERYTHING -->
+<section class="bl-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; III &middot; FIG. 16.2</span>
+    <span>Cost curves that changed everything</span>
+  </h2>
+  <p class="bl-note">
+    Four indicators that moved by multiple orders of magnitude in the lifetime of one investor. Log scales, real dollars, milestone markers. The case for technological abundance does not rest on a single chart. It rests on this pattern repeating.
+  </p>
+
+  <div class="bl-cost-grid">
+    <article class="bl-cost-card">
+      <div class="mono bl-cost-head">A &middot; Cost of artificial light</div>
+      <h3 class="serif">From candles to LEDs.</h3>
+      <p class="bl-cost-stat">
+        <span class="bl-cost-from">$785 / 1,000 lumens</span>
+        <span class="bl-cost-arrow">&rarr;</span>
+        <span class="bl-cost-to">$0.23</span>
+      </p>
+      <p class="bl-cost-period">1800 to 1992. <strong>99.97%</strong> drop in real cost.</p>
+      <svg class="bl-cost-chart" id="bl-cost-light" viewBox="0 0 360 140" preserveAspectRatio="none" aria-label="Cost of light over time"></svg>
+      <p class="mono bl-cost-source">Nordhaus 1996, J. Econ. Perspectives.</p>
+    </article>
+
+    <article class="bl-cost-card">
+      <div class="mono bl-cost-head">B &middot; Cost to sequence a genome</div>
+      <h3 class="serif">Faster than Moore's law.</h3>
+      <p class="bl-cost-stat">
+        <span class="bl-cost-from">$95M</span>
+        <span class="bl-cost-arrow">&rarr;</span>
+        <span class="bl-cost-to">$200</span>
+      </p>
+      <p class="bl-cost-period">2001 to 2024. Roughly <strong>475,000&times;</strong> cheaper.</p>
+      <svg class="bl-cost-chart" id="bl-cost-genome" viewBox="0 0 360 140" preserveAspectRatio="none" aria-label="Genome sequencing cost over time"></svg>
+      <p class="mono bl-cost-source">NHGRI Sequencing Costs Data.</p>
+    </article>
+
+    <article class="bl-cost-card">
+      <div class="mono bl-cost-head">C &middot; Utility-scale solar LCOE</div>
+      <h3 class="serif">From premium to default.</h3>
+      <p class="bl-cost-stat">
+        <span class="bl-cost-from">$417 / MWh</span>
+        <span class="bl-cost-arrow">&rarr;</span>
+        <span class="bl-cost-to">$43</span>
+      </p>
+      <p class="bl-cost-period">2010 to 2024. <strong>90%</strong> drop, real dollars.</p>
+      <svg class="bl-cost-chart" id="bl-cost-solar" viewBox="0 0 360 140" preserveAspectRatio="none" aria-label="Solar LCOE over time"></svg>
+      <p class="mono bl-cost-source">IRENA, Renewable Power Generation Costs.</p>
+    </article>
+
+    <article class="bl-cost-card">
+      <div class="mono bl-cost-head">D &middot; Lithium-ion pack price</div>
+      <h3 class="serif">Storage caught up.</h3>
+      <p class="bl-cost-stat">
+        <span class="bl-cost-from">$1,474 / kWh</span>
+        <span class="bl-cost-arrow">&rarr;</span>
+        <span class="bl-cost-to">$108</span>
+      </p>
+      <p class="bl-cost-period">2010 to 2025. <strong>93%</strong> drop.</p>
+      <svg class="bl-cost-chart" id="bl-cost-battery" viewBox="0 0 360 140" preserveAspectRatio="none" aria-label="Battery pack price over time"></svg>
+      <p class="mono bl-cost-source">BloombergNEF Battery Price Survey.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · FIG. 16.3 — WHAT'S ACTUALLY GETTING WORSE -->
+<section class="bl-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; IV &middot; FIG. 16.3</span>
+    <span>What's actually getting worse</span>
+  </h2>
+  <p class="bl-note">
+    Four indicators that have moved unmistakably the wrong way in this century. Same scale, same period, no filtering. The point is the shape, not the specific numbers.
+  </p>
+
+  <div class="bl-worse-grid">
+    <article class="bl-worse-card">
+      <div class="mono bl-worse-head">CO<sub>2</sub> concentration (Mauna Loa)</div>
+      <svg class="bl-worse-chart" id="bl-worse-co2" viewBox="0 0 360 160" preserveAspectRatio="none" aria-label="Atmospheric CO2 concentration"></svg>
+      <p class="bl-worse-stat">
+        <span class="mono">1990</span> 354 ppm
+        <span class="bl-worse-arrow">&rarr;</span>
+        <span class="mono">2025</span> 425 ppm
+      </p>
+      <p class="mono bl-worse-source">NOAA Global Monitoring Laboratory.</p>
+    </article>
+
+    <article class="bl-worse-card">
+      <div class="mono bl-worse-head">Active state-based conflicts</div>
+      <svg class="bl-worse-chart" id="bl-worse-conflicts" viewBox="0 0 360 160" preserveAspectRatio="none" aria-label="Active conflicts count"></svg>
+      <p class="bl-worse-stat">
+        <span class="mono">2010</span> 31
+        <span class="bl-worse-arrow">&rarr;</span>
+        <span class="mono">2024</span> 61
+      </p>
+      <p class="mono bl-worse-source">Uppsala Conflict Data Program.</p>
+    </article>
+
+    <article class="bl-worse-card">
+      <div class="mono bl-worse-head">Forcibly displaced people</div>
+      <svg class="bl-worse-chart" id="bl-worse-displaced" viewBox="0 0 360 160" preserveAspectRatio="none" aria-label="Forcibly displaced people"></svg>
+      <p class="bl-worse-stat">
+        <span class="mono">2010</span> 43.7M
+        <span class="bl-worse-arrow">&rarr;</span>
+        <span class="mono">2024</span> 123.2M
+      </p>
+      <p class="mono bl-worse-source">UNHCR Global Trends.</p>
+    </article>
+
+    <article class="bl-worse-card">
+      <div class="mono bl-worse-head">Liberal democracy (pop-weighted)</div>
+      <svg class="bl-worse-chart" id="bl-worse-vdem" viewBox="0 0 360 160" preserveAspectRatio="none" aria-label="Liberal democracy index"></svg>
+      <p class="bl-worse-stat">
+        <span class="mono">2010</span> 0.42
+        <span class="bl-worse-arrow">&rarr;</span>
+        <span class="mono">2024</span> 0.27
+      </p>
+      <p class="mono bl-worse-source">V-Dem 2025 Democracy Report.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § V — RECEIPTS -->
+<section class="bl-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; V</span>
+    <span>Receipts &middot; sources and caveats</span>
+  </h2>
+
+  <div class="bl-receipts-grid">
+    <div class="bl-receipt">
+      <div class="bl-receipt-label mono">Sources</div>
+      <div class="bl-receipt-value">26 primary publishers</div>
+      <p class="bl-receipt-foot">World Bank, WHO, UN IGME, UNAIDS, UCDP, V-Dem, NOAA, NASA, NSIDC, IRENA, IEA, BloombergNEF, ITU, UNESCO UIS, FAO, IUCN, WWF/ZSL, UNHCR, IDMC, SIPRI, FAS, OECD, IMF, UNODC, World Inequality Lab, Carter Center.</p>
+    </div>
+    <div class="bl-receipt">
+      <div class="bl-receipt-label mono">Indicators</div>
+      <div class="bl-receipt-value">100 series</div>
+      <p class="bl-receipt-foot">Twenty per theme. Each with a baseline year, a latest year, a sparkline, a direction tag, and a one-line caveat. Hand-curated, not scraped.</p>
+    </div>
+    <div class="bl-receipt">
+      <div class="bl-receipt-label mono">Historical range</div>
+      <div class="bl-receipt-value">1820 &ndash; 2025</div>
+      <p class="bl-receipt-foot">Long-arc indicators (literacy, light cost, GDP per capita) reach back to the nineteenth century. Most series start 1990 or later.</p>
+    </div>
+    <div class="bl-receipt">
+      <div class="bl-receipt-label mono">License</div>
+      <div class="bl-receipt-value">CC BY 4.0 / source</div>
+      <p class="bl-receipt-foot">Each indicator inherits its original publisher's license. WB, WHO, and UN data are mostly CC BY; some IEA charts are restricted.</p>
+    </div>
+  </div>
+
+  <div class="bl-caveats">
+    <h3 class="serif">Six named caveats that always apply.</h3>
+    <ol class="bl-caveat-list">
+      <li><strong>The Living Planet Index is not "73% of animals lost."</strong> It is a geometric mean of monitored vertebrate populations, an average of trends, not a count. Methodology contested (Charles University 2024).</li>
+      <li><strong>The extreme-poverty line moved in June 2025.</strong> From $2.15 to $3 in 2021 PPP. The trend survives the change. The level does not. Show both lines, never one.</li>
+      <li><strong>GBD revisions shift back history.</strong> IHME re-estimates global cause-of-death series each cycle. Cite the GBD release year, not just the underlying year.</li>
+      <li><strong>The COVID dip is real and recovers unevenly.</strong> Life expectancy, schooling, extreme poverty, vaccine coverage, child labour all dipped in 2020 to 2021. Some series have re-established trend, others have not.</li>
+      <li><strong>V-Dem and WGI are expert-coded.</strong> Composite governance measures aggregate underlying source disagreement. Show at least two for the same concept.</li>
+      <li><strong>AI benchmarks saturate.</strong> By late 2024, MMLU is functionally saturated. Frontier capability has to be tracked on harder benchmarks (GPQA, SWE-bench, ARC-AGI) that themselves shift.</li>
+    </ol>
+  </div>
+
+  <div class="bl-related" aria-label="Related labs">
+    <div class="mono bl-related-head">Related labs</div>
+    <div class="bl-related-grid">
+      <a class="bl-related-card" href="/work/jobs-lab/">
+        <span class="mono bl-related-fig">S01</span>
+        <span class="serif bl-related-name">Jobs &amp; Robots</span>
+        <span class="bl-related-line">Where automation is actually landing in the labor market.</span>
+      </a>
+      <a class="bl-related-card" href="/work/agi-forecast-lab/">
+        <span class="mono bl-related-fig">S04</span>
+        <span class="serif bl-related-name">AGI Horizon</span>
+        <span class="bl-related-line">Aggregated AGI forecasts and where they cluster.</span>
+      </a>
+      <a class="bl-related-card" href="/work/semiconductor-lab/">
+        <span class="mono bl-related-fig">S08</span>
+        <span class="serif bl-related-name">Silicon Choke</span>
+        <span class="bl-related-line">Where the supply chain that runs the future actually lives.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — METHODOLOGY + LAB-NAV -->
+<section class="bl-section bl-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Methodology &amp; colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Pipeline</div>
+      <p>
+        The hundred series are hand-curated from primary-source URLs in a single static
+        <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/data/better/indicators.json" target="_blank" rel="noopener" style="border-bottom:1px solid">indicators.json &#8599;</a>
+        shipped with the page. Each entry has a baseline year and value, a latest year and value, a five-to-ten point series for the sparkline, a direction tag, and a one-line caveat. Numbers are checked against the publisher's most recent release as of May 2026.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Verdict</div>
+      <p>
+        By the metrics that matter most to human suffering and capability, the world is dramatically better off than at any prior point. By the metrics that matter to systemic risk, planetary boundaries, and political stability, the picture is troubling and in several dimensions actively worse. The next decade will be decided less by whether humanity can invent more progress and more by whether institutions can stabilize the progress already arriving.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://ourworldindata.org/" target="_blank" rel="noopener" style="border-bottom:1px solid">Our World in Data &#8599;</a><br>
+        <a href="https://pip.worldbank.org/" target="_blank" rel="noopener" style="border-bottom:1px solid">World Bank Poverty and Inequality Platform &#8599;</a><br>
+        <a href="https://www.v-dem.net/documents/54/v-dem_dr_2025_lowres.pdf" target="_blank" rel="noopener" style="border-bottom:1px solid">V-Dem 2025 Democracy Report &#8599;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Honest caveats</div>
+      <p>
+        A static snapshot in May 2026, not a live data layer. Indicators that revise back-history (GBD, MMEIG, PIP) will drift between annual updates. The Ray Dalio framing is intentional, an editorial choice, not a methodological claim. The page picks indicators that fit the level, trend, distribution rubric. Other curators would pick differently.
+      </p>
+    </div>
+  </div>
+
+  <nav class="lab-nav mono" aria-label="Story navigation">
+    <a href="/work/neurotransmitter-atlas-lab/">&larr; Prev: Neurotransmitter Atlas (S15)</a>
+    <span class="lab-nav-meta">Data story 16 of 16</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/blob/main/assets/data/better/indicators.json" target="_blank" rel="noopener" class="btn-outline">View the dataset on GitHub &#8599;</a>
+  </div>
+</section>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+</main>
+
+<!-- Row detail dialog (populated by JS on row click) -->
+<div class="bl-detail" id="bl-detail" hidden aria-hidden="true" role="dialog" aria-modal="false" aria-labelledby="bl-detail-name">
+  <div class="bl-detail-inner">
+    <button type="button" class="bl-detail-close" id="bl-detail-close" aria-label="Close">&times;</button>
+    <div class="mono bl-detail-tag" id="bl-detail-tag">Indicator</div>
+    <h3 class="serif" id="bl-detail-name">&mdash;</h3>
+    <p class="bl-detail-def" id="bl-detail-def">&mdash;</p>
+    <dl class="bl-detail-meta">
+      <div><dt class="mono">Baseline</dt><dd id="bl-detail-baseline">&mdash;</dd></div>
+      <div><dt class="mono">Latest</dt><dd id="bl-detail-latest">&mdash;</dd></div>
+      <div><dt class="mono">Unit</dt><dd id="bl-detail-unit">&mdash;</dd></div>
+      <div><dt class="mono">Direction</dt><dd id="bl-detail-direction">&mdash;</dd></div>
+    </dl>
+    <p class="bl-detail-caveat-label mono">Caveat</p>
+    <p class="bl-detail-caveat" id="bl-detail-caveat">&mdash;</p>
+    <p class="mono bl-detail-source-label">Source</p>
+    <p class="bl-detail-source"><a id="bl-detail-source" href="#" target="_blank" rel="noopener">&mdash;</a></p>
+  </div>
+</div>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight"></div>
+</div>
+
+<script src="/assets/js/main.js?v=17"></script>
+<script src="/assets/js/better-lab.js?v=1"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 > Editorial-style portfolio of live, interactive data and ML projects by Jacob Cuthbertson, a senior data analyst. The site emphasizes real receipts (no synthetic data), demonstrating concepts rather than describing them, and an editorial tone modeled after publications like the FT and NYT Upshot.
 
-The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 45 research tiles organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
+The site is hand-coded vanilla HTML, CSS, and JavaScript with no build step, and no backend except a single Cloudflare Pages Function for the model-picker lab. Every interactive lab runs entirely in the browser. Traffic is measured with privacy-respecting Cloudflare Web Analytics (no cookies, no fingerprinting, no third-party trackers). The site has 46 research tiles organized into four kinds of work — Working models, Data stories, Paper anatomies, and Algorithm primers — filterable from the homepage at /#research, plus a `/notes/` blog section updated three times per week.
 
 ## Working models (M01–M12)
 
@@ -21,7 +21,7 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M11 · Diffusion Lab](https://jakecuth.com/work/diffusion-lab/): A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion and DALL-E.
 - [M12 · Viral Nation Case Study](https://vn-case.vercel.app/): External case study deliverable built for Viral Nation interviews. Hosted on Vercel; the tile on jakecuth.com opens this site in a new tab.
 
-## Data stories (S01–S15)
+## Data stories (S01–S16)
 
 Editorial pieces. Real data, one thesis each. The longer reads, with charts that argue.
 
@@ -38,7 +38,9 @@ Editorial pieces. Real data, one thesis each. The longer reads, with charts that
 - [S11 · The Skills Surge](https://jakecuth.com/work/claude-skills-lab/): Six months after Anthropic's Oct 16, 2025 launch, the Claude Skills ecosystem has 17 official skills, 22+ vendor packs, and tens of thousands of community skills. Four hand-coded charts: power-law star distribution, surge timeline, architecture quadrant, and the verbs every skill author opens with.
 - [S12 · Inside Agent Memory](https://jakecuth.com/work/agent-memory-lab/): The 2026 map of agent memory, benchmarked across twelve approaches. MEMORY.md / CLAUDE.md beats vector RAG for solo coders (Letta filesystem 74.0% LoCoMo vs Mem0 graph 68.5%); Mastra Observational tops LongMemEval at 94.87% with GPT-5-mini; Mem0 raised $24M Oct 2025; Pinecone $50/mo minimum drove migration to pgvector. Four hand-coded charts plus a when-to-use-what decision matrix.
 - [S13 · Cosmic Engines](https://jakecuth.com/work/cosmic-engines-lab/): An interactive 3D field guide to the eight extreme objects that light the universe — quasar, black hole, pulsar, magnetar, gamma-ray burst, supernova, neutron-star merger, gravitational lens. Scroll-driven Three.js hero quasar (central shadow, accretion disk, polar jets), procedural Engine Room viewer with eight switchable scenes, side-by-side comparison matrix, NASA / ESA / LIGO / EHT sources. Optional Meshy GLB asset slot per object; pure procedural by default.
+- [S14 · Reservoir Teacup Map](https://jakecuth.com/work/reservoir-teacup-map-lab/): Twenty Western reservoirs drawn as USBR teacup small multiples. Current storage vs the 1991-2020 historical average for each cup. Lake Mead and Lake Powell elevation cliff with 2007 Interim Guidelines and 2019 DCP policy tiers, dead-pool floors at 895 ft (Mead) and 3,370 ft (Powell), and a basin-level snow-to-storage scatter. Static USBR RISE + USGS NWIS + CA DWR snapshot, vanilla JS, no build step.
 - [S15 · Neurotransmitter Atlas](https://jakecuth.com/work/neurotransmitter-atlas-lab/): A chapter-style 3D neuron, synapse close-up, and rotatable NIH 3D brain mesh for six major neurotransmitter systems. Three.js specimen with organic membranes, tapered dendrites, axon, myelin wraps, vesicles, receptors, transmitter particles, 12 representative brain-region highlights, a 6-step signal pathway, receptor timing table, glossary, misconceptions, and self-check prompts. Sources include NIH 3D, NCBI Bookshelf, BrainFacts, and PDB-101.
+- [S16 · Better?](https://jakecuth.com/work/better-lab/): A Dalio-style ledger of 100 indicators of human progress and regress, hand-curated from primary sources (WB, WHO, UN IGME, UCDP, V-Dem, NOAA, IRENA, UNHCR, IUCN, IMF, ITU, UNESCO, FAO). Year scrubber, theme and direction filters, COVID-dip overlay, four log-scale cost-curve hero charts, and a worsening small-multiples panel. Editorial verdict: yes in lived-material dimensions, no in several planetary and geopolitical dimensions.
 
 ## Paper anatomies (P01–P04)
 
