@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek-V4 Architecture Explained · Muon, CSA, FP4 KV Cache — Jake Cuth.</title>
+  <meta name="description" content="DeepSeek-V4 architecture explained in plain language. The Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache, hyper-connections, and what changed from V3.2.">
+
+  <link rel="canonical" href="https://www.jakecuth.com/notes/deepseek-v4-architecture/">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="DeepSeek-V4 Architecture Explained · Muon, CSA, FP4 KV Cache">
+  <meta property="og:description" content="DeepSeek-V4 architecture explained in plain language. The Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache, hyper-connections, and what changed from V3.2.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/notes/deepseek-v4-architecture/">
+  <meta property="article:published_time" content="2026-05-17T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-17T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeepSeek-V4 Architecture Explained · Muon, CSA, FP4 KV Cache">
+  <meta name="twitter:description" content="DeepSeek-V4 architecture explained in plain language. The Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache, hyper-connections, and what changed from V3.2.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <link rel="alternate" type="application/atom+xml" title="Jake Cuth. — Notes" href="/feed.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "DeepSeek-V4 Architecture Explained · Muon, CSA, FP4 KV Cache",
+    "description": "DeepSeek-V4 architecture explained in plain language. The Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache, hyper-connections, and what changed from V3.2.",
+    "datePublished": "2026-05-17",
+    "dateModified": "2026-05-17",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": "https://www.jakecuth.com/notes/deepseek-v4-architecture/",
+    "image": "https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the DeepSeek-V4 architecture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DeepSeek-V4 is a 1.6 trillion parameter mixture-of-experts large language model. It uses a hybrid attention design (Compressed Sparse Attention plus Heavily Compressed Attention), the Muon optimizer for most weights, FP4 quantization for the KV cache indexer, and manifold-constrained hyper-connections in place of standard residuals. The combination yields roughly 50x KV cache reduction relative to a BF16 GQA8 baseline at one-million-token context."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Compressed Sparse Attention (CSA) in DeepSeek-V4?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CSA is the first of two attention layer types. It groups every four consecutive tokens into a single compressed key-value entry, then a lightning indexer selects the top-1024 (Pro) or top-512 (Flash) most-relevant entries for each query. The query attends only to those selected entries plus a sliding window of recent uncompressed tokens, rather than attending to every previous token."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Muon optimizer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Muon is the optimizer DeepSeek-V4 uses in place of AdamW for most parameters. It orthogonalizes the gradient before stepping: the gradient matrix M is approximated by the polar factor UV^T of its singular value decomposition, computed via a ten-iteration hybrid Newton-Schulz, then the step is taken in that shape-only direction with all singular values normalized to one. The result is faster convergence and improved stability at trillion-parameter scale."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is FP4 KV cache and why does it matter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FP4 is a four-bit floating-point format. DeepSeek-V4 stores the lightning indexer's keys and values in FP4 rather than FP8 or BF16, cutting that part of the KV cache by 2x or 4x respectively. Combined with the CSA grouping (4 tokens per entry) and the per-layer mixed-precision design, this is one of the three multiplicative factors behind the 50x total KV cache reduction at one-million-token context."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is different between DeepSeek-V4 and V3.2?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "V4 differs from V3.2 across five compounding axes: hybrid CSA plus HCA attention rather than single-type attention, Muon optimizer rather than AdamW, mixed precision (FP8 main / BF16 rotary / FP4 indexer) rather than uniform precision, FP4 quantization-aware training rather than post-hoc quantization, and manifold-constrained hyper-connections rather than standard residuals. At one-million-token context V4-Pro uses roughly ten percent of V3.2's KV cache and twenty-seven percent of its FLOPs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where can I read the DeepSeek-V4 paper?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DeepSeek published a technical report alongside the model release. The full paper covers the attention design, optimizer math, mixed-precision schedule, and benchmark results. The interactive walkthrough at jakecuth.com/work/deepseek-v4-lab/ summarizes the key claims with diagrams and the five-architecture comparison."
+        }
+      }
+    ]
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">NOTE 006</span> &middot; MMXXVI &middot; LLM ARCHITECTURE</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <a href="/work/">Labs</a>
+    <a href="/notes/" class="active" aria-current="page">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="note-main">
+
+<section class="note-hero">
+  <h2 class="mono section-label">
+    <span class="idx">NOTE 006</span>
+    <span>2026-05-17 &middot; llm &middot; architecture</span>
+  </h2>
+  <h1 class="serif">
+    DeepSeek-V4 architecture,
+    <span class="serif-italic" style="color:var(--accent)">in plain language.</span>
+  </h1>
+  <div class="note-dateline">
+    <div><div class="label">Published</div><div class="value">May 17, 2026</div></div>
+    <div><div class="label">Read time</div><div class="value">9 min</div></div>
+    <div><div class="label">See also</div><div class="value"><a href="/work/deepseek-v4-lab/">Inside DeepSeek-V4 lab</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<article class="note-body">
+  <p class="note-lede">
+    DeepSeek-V4 is the open-weights frontier model that re-set the long-context bar in 2026. The headline number is a 50x KV cache reduction at one-million-token context relative to a standard BF16 baseline. The headline number is also misleading on its own, because it is the multiplicative product of five separate architectural choices, none of which would do it alone. This is the plain-language version of how those choices fit together.
+  </p>
+
+  <h2>The five things that compound</h2>
+
+  <ol>
+    <li><strong>Hybrid attention</strong>: Compressed Sparse Attention (CSA) + Heavily Compressed Attention (HCA).</li>
+    <li><strong>Mixed precision</strong> per tensor role: FP8 main, BF16 for rotary positional dims, FP4 for the indexer.</li>
+    <li><strong>Muon optimizer</strong>: orthogonalized gradient steps instead of AdamW.</li>
+    <li><strong>Manifold-constrained hyper-connections</strong>: residuals projected onto a learned manifold instead of summed naively.</li>
+    <li><strong>FP4 quantization-aware training</strong>: the model is trained <em>with</em> FP4 in the loop, not quantized after the fact.</li>
+  </ol>
+
+  <p>
+    Each of these by itself is a one-to-three-times improvement somewhere. The product is the 50x.
+  </p>
+
+  <h2>Compressed Sparse Attention, the CSA layer</h2>
+
+  <p>
+    Standard attention is <em>O(n&sup2;)</em> in sequence length because every query attends to every key. At one-million-token context the KV cache that has to sit in GPU memory becomes the limit, not the compute. CSA attacks the cache directly.
+  </p>
+
+  <p>
+    The mechanism, simplified:
+  </p>
+
+  <ul>
+    <li>Group every four consecutive tokens into one compressed key-value entry. The cache is now four times smaller per layer.</li>
+    <li>A lightweight network, the "lightning indexer," scores each compressed entry against the current query and picks the top 1,024 (Pro) or top 512 (Flash).</li>
+    <li>The query attends only to those selected entries, plus a sliding window of recent <em>uncompressed</em> tokens so the local detail is preserved.</li>
+  </ul>
+
+  <p>
+    The HCA layer does the same thing, more aggressively: 128 tokens per compressed entry instead of 4. CSA and HCA are interleaved so the model gets both fine and coarse views of history.
+  </p>
+
+  <h2>The Muon optimizer</h2>
+
+  <p>
+    AdamW is the default for trillion-parameter training. Muon replaces it for most parameters. The intuition is that AdamW's per-element adaptive step sizes are doing partial work that you can do better with a structural intervention on the whole matrix.
+  </p>
+
+  <p>
+    Pseudocode of the inner loop:
+  </p>
+
+  <pre><code>g = compute_gradient(W)               # the raw gradient matrix
+U, S, V = approx_svd_via_newton_schulz(g, iters=10)
+g_orth = U @ V.T                      # the polar factor: shape only
+W = W - lr * g_orth</code></pre>
+
+  <p>
+    All singular values are squashed to one. The step direction is preserved; the step magnitudes across directions are normalized. Empirically this stabilizes training at scale and converges faster per FLOP. The polar-factor trick is the math that turns "Muon" from a paper curiosity into an optimizer DeepSeek shipped a frontier model on.
+  </p>
+
+  <h2>FP4 KV cache, and why it does not destroy the model</h2>
+
+  <p>
+    Four-bit floats have sixteen distinct values. Storing a key or value tensor in FP4 sounds like it should be catastrophic for attention quality. It is not, for two reasons that compound:
+  </p>
+
+  <ul>
+    <li><strong>FP4 only stores the indexer keys and values</strong>, not the main attention path. The indexer's job is to <em>score and rank</em> compressed entries, not to attend to them directly. Rank is robust to quantization in a way that softmax-weighted summation is not.</li>
+    <li><strong>The model is trained with FP4 in the loop</strong> via quantization-aware training. The weights learn around the FP4 grid rather than being projected onto it after the fact.</li>
+  </ul>
+
+  <p>
+    Combined with the four-tokens-to-one CSA grouping and the per-layer mixed precision (FP8 main, BF16 rotary, FP4 indexer), you get the 50x KV cache reduction without the 50x quality drop you would expect from naive FP4.
+  </p>
+
+  <h2>How V4 compares to V3.2</h2>
+
+  <table>
+    <thead><tr><th>Axis</th><th>V3.2</th><th>V4-Pro</th></tr></thead>
+    <tbody>
+      <tr><td>KV cache at 1M context (relative)</td><td>1.0&times;</td><td>0.1&times;</td></tr>
+      <tr><td>FLOPs at 1M context (relative)</td><td>1.0&times;</td><td>0.27&times;</td></tr>
+      <tr><td>Attention type</td><td>MLA</td><td>CSA + HCA hybrid</td></tr>
+      <tr><td>Optimizer</td><td>AdamW</td><td>Muon (most params)</td></tr>
+      <tr><td>KV cache precision</td><td>BF16</td><td>FP8 / BF16 / FP4 mixed</td></tr>
+      <tr><td>Residual design</td><td>Standard</td><td>Manifold-constrained hyper-connections</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    At shorter contexts the gap narrows. The CSA grouping and FP4 indexer help most when the cache dominates memory, which happens past roughly 100k tokens. Under 32k tokens V4 is incrementally better than V3.2; over 256k tokens it is in a different cost regime.
+  </p>
+
+  <h2>The unsexy lessons</h2>
+
+  <p>
+    Three takeaways that generalize beyond DeepSeek:
+  </p>
+
+  <p>
+    <strong>One.</strong> The cache, not the compute, is the long-context bottleneck. Optimization research that ignores cache size will keep losing to research that does not.
+  </p>
+
+  <p>
+    <strong>Two.</strong> Multiplicative wins from independent axes beat any single architectural breakthrough. There is no "one big idea" in V4; there are five medium ones that touch different layers of the system.
+  </p>
+
+  <p>
+    <strong>Three.</strong> Open weights changed the dynamics. The architectural details above are not a leak. They are in the technical report, in the code, and reproducible by anyone with a few thousand GPUs and the patience to run it.
+  </p>
+
+  <h2>What to read next</h2>
+
+  <p>
+    The interactive walkthrough with diagrams of each layer, the CSA selection animation, and the five-way comparison to V3.2, Subquadratic SSA, Mamba, and Kimi Linear is at the <a href="/work/deepseek-v4-lab/">DeepSeek-V4 lab</a>. The companion <a href="/notes/subquadratic-explained/">Subquadratic note</a> covers the closed-weights long-context competitor. The <a href="/work/leworldmodel-lab/">LeWorldModel lab</a> covers the world-model angle on the same problem family.
+  </p>
+
+  <div class="note-tags-bar">
+    <span class="tag">llm</span>
+    <span class="tag">deepseek</span>
+    <span class="tag">attention</span>
+    <span class="tag">muon</span>
+    <span class="tag">fp4</span>
+  </div>
+</article>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight — Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+</body>
+</html>

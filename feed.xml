@@ -5,13 +5,49 @@
   <link href="https://www.jakecuth.com/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://www.jakecuth.com/notes/" rel="alternate" type="text/html"/>
   <id>https://www.jakecuth.com/feed.xml</id>
-  <updated>2026-05-05T00:00:00Z</updated>
+  <updated>2026-05-17T00:00:00Z</updated>
   <author>
     <name>Jacob Cuthbertson</name>
     <uri>https://www.jakecuth.com/</uri>
   </author>
   <rights>© Jacob Cuthbertson</rights>
   <generator uri="https://www.jakecuth.com/" version="1">jakecuth.com</generator>
+
+  <entry>
+    <title>LeWorldModel (LeWM) Explained · Yann LeCun's JEPA with SIGReg</title>
+    <link href="https://www.jakecuth.com/notes/leworldmodel-jepa-explained/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/leworldmodel-jepa-explained/</id>
+    <published>2026-05-17T12:00:00Z</published>
+    <updated>2026-05-17T12:00:00Z</updated>
+    <summary>LeWorldModel (LeWM) is the JEPA world model that replaces seven loss terms with one Gaussian-matching regularizer (SIGReg). Architecture, training, and GitHub code walkthrough.</summary>
+    <category term="jepa"/>
+    <category term="world-models"/>
+    <category term="self-supervised"/>
+  </entry>
+
+  <entry>
+    <title>DeepSeek-V4 Architecture Explained · Muon, CSA, FP4 KV Cache</title>
+    <link href="https://www.jakecuth.com/notes/deepseek-v4-architecture/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/deepseek-v4-architecture/</id>
+    <published>2026-05-17T12:00:00Z</published>
+    <updated>2026-05-17T12:00:00Z</updated>
+    <summary>DeepSeek-V4 architecture explained in plain language. The Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache, hyper-connections, and what changed from V3.2.</summary>
+    <category term="llm"/>
+    <category term="deepseek"/>
+    <category term="attention"/>
+  </entry>
+
+  <entry>
+    <title>What is Subquadratic? The SubQ Company, Paper, and Architecture</title>
+    <link href="https://www.jakecuth.com/notes/subquadratic-explained/" rel="alternate" type="text/html"/>
+    <id>https://www.jakecuth.com/notes/subquadratic-explained/</id>
+    <published>2026-05-17T12:00:00Z</published>
+    <updated>2026-05-17T12:00:00Z</updated>
+    <summary>Subquadratic AI is a Miami startup with a $29M seed and a one-million-token LLM called SubQ. Architecture, benchmarks, paper, and the case for and against.</summary>
+    <category term="llm"/>
+    <category term="subquadratic"/>
+    <category term="long-context"/>
+  </entry>
 
   <entry>
     <title>33 OG images in 80 lines of Python</title>

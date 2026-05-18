@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is Subquadratic? The SubQ Company, Paper, and Architecture — Jake Cuth.</title>
+  <meta name="description" content="Subquadratic AI is a Miami startup with a $29M seed and a one-million-token LLM called SubQ. Architecture (SSA), benchmarks, paper, GPU contract, the case for and against.">
+
+  <link rel="canonical" href="https://www.jakecuth.com/notes/subquadratic-explained/">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What is Subquadratic? The SubQ Company, Paper, and Architecture">
+  <meta property="og:description" content="Subquadratic AI is a Miami startup with a $29M seed and a one-million-token LLM called SubQ. Architecture, benchmarks, paper, and the case for and against.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/subquadratic-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/notes/subquadratic-explained/">
+  <meta property="article:published_time" content="2026-05-17T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-17T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What is Subquadratic? The SubQ Company, Paper, and Architecture">
+  <meta name="twitter:description" content="Subquadratic AI is a Miami startup with a $29M seed and a one-million-token LLM called SubQ. Architecture, benchmarks, paper, and the case for and against.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/subquadratic-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <link rel="alternate" type="application/atom+xml" title="Jake Cuth. — Notes" href="/feed.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "What is Subquadratic? The SubQ Company, Paper, and Architecture",
+    "description": "Subquadratic AI is a Miami startup with a $29M seed and a one-million-token LLM called SubQ. Architecture, benchmarks, paper, and the case for and against.",
+    "datePublished": "2026-05-17",
+    "dateModified": "2026-05-17",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": "https://www.jakecuth.com/notes/subquadratic-explained/",
+    "image": "https://www.jakecuth.com/assets/og/subquadratic-lab.png?v=1"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Subquadratic?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Subquadratic AI is a Miami-based artificial intelligence startup that emerged from stealth in May 2026 with a $29M seed round and a large language model called SubQ. The company is building a long-context LLM using an attention mechanism it calls Subquadratic Selective Attention (SSA), which is designed to scale better than standard quadratic attention for million-token context windows."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Subquadratic a public stock?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. As of May 2026, Subquadratic AI is a privately held startup. It is not listed on any public exchange and has no stock ticker. The company filed an SEC Form D for its seed round, but that is a private-placement filing, not a public offering. There is no Subquadratic stock to buy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is SubQ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SubQ is the name of Subquadratic AI's first large language model. The production preview, SubQ 1M-Preview, claims a one-million-token context window. A research configuration is said to extend to twelve million tokens, with fifty million targeted for Q4 2026. The model is closed-weights and accessed through Subquadratic's API."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Subquadratic Selective Attention (SSA)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SSA is the attention mechanism described in Subquadratic's launch paper. It is a content-dependent sparse attention where the token selection step itself runs in subquadratic time. Each query selects a small set of keys to attend to, and that selection is learned rather than fixed. The architecture sits in the same family as DeepSeek Sparse Attention, Kimi Linear, and the Mamba state-space models, but with the selection mechanism as the differentiator."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the SubQ paper on arXiv?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of May 17, 2026, Subquadratic has published a technical report on its own site but has not posted an arXiv preprint. The launch coverage references the report, but the lack of an arXiv version means there has been no community-wide preprint review."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are the SubQ benchmarks reproducible?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Partially. The headline benchmark numbers (RULER-128K of 95.0 and MRCR v2 of 65.9 for the production model) were confirmed by a single unnamed third party. The more extreme numbers (research-mode MRCR v2 of 83.0, the thousand-fold compute reduction at twelve-million-token context, the 92.1 percent needle-in-a-haystack at twelve million tokens) are self-reported, run once, on a closed model with no public weights and no independent replication. Treat the larger numbers as marketing until a third party with API access reproduces them."
+        }
+      }
+    ]
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">NOTE 005</span> &middot; MMXXVI &middot; LLM ARCHITECTURE</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <a href="/work/">Labs</a>
+    <a href="/notes/" class="active" aria-current="page">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="note-main">
+
+<section class="note-hero">
+  <h2 class="mono section-label">
+    <span class="idx">NOTE 005</span>
+    <span>2026-05-17 &middot; llm &middot; architecture</span>
+  </h2>
+  <h1 class="serif">
+    What is Subquadratic?
+    <span class="serif-italic" style="color:var(--accent)">The SubQ company, paper, and architecture.</span>
+  </h1>
+  <div class="note-dateline">
+    <div><div class="label">Published</div><div class="value">May 17, 2026</div></div>
+    <div><div class="label">Read time</div><div class="value">8 min</div></div>
+    <div><div class="label">See also</div><div class="value"><a href="/work/subquadratic-lab/">Inside Subquadratic lab</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<article class="note-body">
+  <p class="note-lede">
+    Subquadratic AI is a Miami startup with a $29M seed round, a closed-weights one-million-token LLM called SubQ, and a benchmark deck that has the rest of the field arguing. This note collects the facts, the architecture, and the honest reasons to be skeptical, in one place. If you came here from search for "subquadratic stock," skip to <a href="#stock">the stock question</a>.
+  </p>
+
+  <h2>The company in three sentences</h2>
+
+  <p>
+    Subquadratic AI emerged from stealth on May 5, 2026 with a $29M seed at a reported $500M valuation. The company is based in Miami and led by a credentialed CEO and CTO with prior work at large research labs. It has filed an SEC Form D for the seed, has an active hiring pipeline, and disclosed a $19.6M, 24-month GPU rental contract with the NASDAQ-listed Digi Power X.
+  </p>
+
+  <h2>What SubQ actually is</h2>
+
+  <p>
+    SubQ is the name of the model. The production preview, <strong>SubQ 1M-Preview</strong>, is a closed-weights long-context LLM with a one-million-token context window served over an API. A research configuration extends to twelve million tokens, with fifty million tokens targeted for Q4 2026. The architecture is called <strong>Subquadratic Selective Attention</strong> (SSA), and the selling point is that attention complexity grows slower than the standard <em>O(n&sup2;)</em> bound for long sequences.
+  </p>
+
+  <p>
+    The mechanism, as described in Subquadratic's technical report:
+  </p>
+
+  <ul>
+    <li>Each query token does not attend to every prior key.</li>
+    <li>A learned selector picks a small set of keys for each query.</li>
+    <li>The selector itself runs in subquadratic time, not just the attention that follows it. This is the technical hinge: prior "sparse attention" methods (top-k, sliding window) often sneak a quadratic step into the selection.</li>
+    <li>Attention is then computed only over the selected keys plus a local window.</li>
+  </ul>
+
+  <p>
+    It is the same family of ideas as Mamba (state-space sequence models), RWKV (linear recurrence), Kimi Linear, and DeepSeek Sparse Attention. The architectural debate is well-trodden, which is why SubQ's specific claim that <em>both</em> the selection step and the attention step are subquadratic is the part to argue about.
+  </p>
+
+  <h2>The benchmark situation</h2>
+
+  <p>
+    The production model's reported numbers are <strong>RULER-128K of 95.0</strong> and <strong>MRCR v2 of 65.9</strong>. A single unnamed third party confirmed both. That is the strongest, most reproducible thing on the launch page.
+  </p>
+
+  <p>
+    Then it gets harder. The research configuration claims:
+  </p>
+
+  <ul>
+    <li>MRCR v2 of 83.0 at the twelve-million-token configuration.</li>
+    <li>A thousand-fold compute reduction at twelve-million-token context, relative to a quadratic baseline.</li>
+    <li>92.1 percent needle-in-a-haystack accuracy at twelve million tokens.</li>
+  </ul>
+
+  <p>
+    Those numbers are self-reported, run once, on a closed model with no public weights and no arXiv preprint. The technical report concedes the single-run point directly. None of this is a fraud signal by itself; it is the normal state of a young lab. It is also the reason an independent reproduction by anyone with API access would be more interesting than the launch deck.
+  </p>
+
+  <h2 id="stock">Is there a Subquadratic stock?</h2>
+
+  <p>
+    No. As of May 2026 Subquadratic AI is a privately held startup. It has filed an SEC Form D, which is the standard private-placement notice, not a public-offering registration. There is no ticker symbol and no way to buy shares as a retail investor. The "subquadratic stock" search query is almost certainly people checking, just in case.
+  </p>
+
+  <h2>Why the AI community is skeptical</h2>
+
+  <p>
+    Three reasons, all separable from "is the team credentialed." The team is fine.
+  </p>
+
+  <p>
+    <strong>One.</strong> Prior subquadratic-attention claims at frontier scale have a mixed track record. Mamba and RWKV are truly subquadratic but underperform Transformer baselines at the largest scales. Kimi Linear is subquadratic in some configurations and quadratic in others. DeepSeek Sparse Attention is genuinely sparse but not strictly subquadratic in the selection step. The base rate for "we have subquadratic attention that matches quadratic at scale" is currently low.
+  </p>
+
+  <p>
+    <strong>Two.</strong> Magic.dev made a structurally identical pitch in August 2024: a hundred-million-token context model, roughly thousand-fold efficiency, over five hundred million dollars in funding. Twenty-one months later, no externally validated frontier model has shipped from that effort. The pattern matches enough to require some discount.
+  </p>
+
+  <p>
+    <strong>Three.</strong> The benchmark report explicitly states every number was run once. Frontier LLM evaluation has a known reproducibility floor that is wider than people admit; single-run benchmarks at the extreme end of context length are the wrong place to start.
+  </p>
+
+  <h2>The honest version</h2>
+
+  <p>
+    Subquadratic is a real, well-funded, recently launched closed-weights AI startup whose benchmark claims are aggressive and not yet independently reproduced. It is not Theranos. It is also not OpenAI or Anthropic. It is closer to Magic.dev: a real company with a real team and a launch deck whose extreme numbers should be treated as marketing pending third-party verification on a public API endpoint or an arXiv paper.
+  </p>
+
+  <p>
+    The full interactive breakdown lives at the <a href="/work/subquadratic-lab/">Subquadratic lab</a> on this site, with the SEC filing, GPU contract, benchmark table, comparison to DeepSeek and Kimi, and the &ldquo;is this Theranos&rdquo; question argued in both directions.
+  </p>
+
+  <h2>Where this fits in the long-context LLM map</h2>
+
+  <p>
+    SubQ is one of four long-context approaches currently in the conversation. The companion <a href="/work/deepseek-v4-lab/">DeepSeek-V4 architecture lab</a> covers the open-weights side of the same problem (CSA, Muon, FP4 KV cache). The <a href="/work/leworldmodel-lab/">LeWorldModel lab</a> covers the JEPA-style world-model angle. The four-way map is the most useful frame for reading any of these launches.
+  </p>
+
+  <div class="note-tags-bar">
+    <span class="tag">llm</span>
+    <span class="tag">subquadratic</span>
+    <span class="tag">long-context</span>
+    <span class="tag">attention</span>
+  </div>
+</article>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight — Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+</body>
+</html>

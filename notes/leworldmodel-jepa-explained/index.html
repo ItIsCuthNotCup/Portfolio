@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeWorldModel (LeWM) Explained · Yann LeCun's JEPA with SIGReg — Jake Cuth.</title>
+  <meta name="description" content="LeWorldModel (LeWM) is the JEPA world model that replaces seven loss terms with one Gaussian-matching regularizer (SIGReg). Architecture, training, and GitHub code walkthrough.">
+
+  <link rel="canonical" href="https://www.jakecuth.com/notes/leworldmodel-jepa-explained/">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LeWorldModel (LeWM) Explained · Yann LeCun's JEPA with SIGReg">
+  <meta property="og:description" content="LeWorldModel (LeWM) is the JEPA world model that replaces seven loss terms with one Gaussian-matching regularizer (SIGReg). Architecture, training, and GitHub code walkthrough.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1">
+  <meta property="og:url" content="https://www.jakecuth.com/notes/leworldmodel-jepa-explained/">
+  <meta property="article:published_time" content="2026-05-17T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-17T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LeWorldModel (LeWM) Explained · Yann LeCun's JEPA with SIGReg">
+  <meta name="twitter:description" content="LeWorldModel (LeWM) is the JEPA world model that replaces seven loss terms with one Gaussian-matching regularizer (SIGReg). Architecture, training, and GitHub code walkthrough.">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <link rel="alternate" type="application/atom+xml" title="Jake Cuth. — Notes" href="/feed.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "LeWorldModel (LeWM) Explained · Yann LeCun's JEPA with SIGReg",
+    "description": "LeWorldModel (LeWM) is the JEPA world model that replaces seven loss terms with one Gaussian-matching regularizer (SIGReg). Architecture, training, and GitHub code walkthrough.",
+    "datePublished": "2026-05-17",
+    "dateModified": "2026-05-17",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": "https://www.jakecuth.com/notes/leworldmodel-jepa-explained/",
+    "image": "https://www.jakecuth.com/assets/og/leworldmodel-lab.png?v=1"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is LeWorldModel (LeWM)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LeWorldModel, abbreviated LeWM, is a self-supervised world model in the Joint Embedding Predictive Architecture (JEPA) family. Its central innovation is replacing the seven separate regularizer terms used in earlier JEPA variants with one Gaussian-matching loss called SIGReg, controlled by a single hyperparameter. The architecture and training code are released publicly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is the LeWorldModel GitHub code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LeWorldModel's reference implementation is hosted as a public repository under the LeWM project. The released code covers the encoder-predictor architecture, the SIGReg loss, the training loop, and the evaluation harness. Search the LeWM organization on GitHub or follow the link from the LeWorldModel lab on jakecuth.com."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is SIGReg?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SIGReg is the Gaussian-matching regularizer at the core of LeWorldModel. It pushes the empirical distribution of learned embeddings toward a unit Gaussian by penalizing deviations of the embedding moments (mean, covariance) from the corresponding Gaussian moments. The result is that the representation collapse problem and the variance/covariance/decorrelation regularizers from earlier JEPA training (VICReg-style) are all subsumed into one objective with one tuning knob."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does LeWorldModel relate to JEPA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "JEPA (Joint Embedding Predictive Architecture) is Yann LeCun's proposed framework for self-supervised representation learning where one network predicts the embedding of a target from the embedding of a context. LeWorldModel is a specific implementation of JEPA aimed at world models (predicting future states from past states). The lineage runs from JEPA to V-JEPA to I-JEPA to LeWM, with LeWM's contribution being the SIGReg simplification rather than a new architectural family."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why replace seven loss terms with one?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Two reasons. First, hyperparameter search across seven coupled regularizer weights is expensive and rarely converges to a stable recipe. Second, the seven terms are themselves attempting to enforce one underlying property: that embeddings span the space without collapsing. SIGReg targets that property directly via the Gaussian moment-matching, which is mathematically the cleanest way to say variance, covariance, and decorrelation in one objective."
+        }
+      }
+    ]
+  }
+  </script>
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#141311">
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">NOTE 007</span> &middot; MMXXVI &middot; WORLD MODELS</span></div>
+<div id="cursor-dot" class="cursor-dot" style="display:none;"></div>
+
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <a href="/work/">Labs</a>
+    <a href="/notes/" class="active" aria-current="page">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="note-main">
+
+<section class="note-hero">
+  <h2 class="mono section-label">
+    <span class="idx">NOTE 007</span>
+    <span>2026-05-17 &middot; world models &middot; jepa</span>
+  </h2>
+  <h1 class="serif">
+    LeWorldModel (LeWM),
+    <span class="serif-italic" style="color:var(--accent)">explained.</span>
+  </h1>
+  <div class="note-dateline">
+    <div><div class="label">Published</div><div class="value">May 17, 2026</div></div>
+    <div><div class="label">Read time</div><div class="value">7 min</div></div>
+    <div><div class="label">See also</div><div class="value"><a href="/work/leworldmodel-lab/">Inside LeWorldModel lab</a></div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<article class="note-body">
+  <p class="note-lede">
+    LeWorldModel, LeWM for short, is the cleanest JEPA-family world model released to date. The headline simplification: it replaces the seven regularizer terms that prior JEPA recipes carried with one Gaussian-matching loss called SIGReg, controlled by one hyperparameter. This note is the text version of what the <a href="/work/leworldmodel-lab/">LeWorldModel lab</a> covers visually.
+  </p>
+
+  <h2>The JEPA family in one paragraph</h2>
+
+  <p>
+    Joint Embedding Predictive Architecture (JEPA) is Yann LeCun's framework for self-supervised representation learning. The setup is simple: two networks, an encoder that maps inputs into embeddings, and a predictor that takes an embedding of a context and produces an embedding of a target. The loss is computed in embedding space, not pixel space. Predicting in embedding space is the reason JEPA can ignore the rendering details that distract pixel-space models from learning useful structure.
+  </p>
+
+  <p>
+    The lineage: <strong>JEPA &rarr; V-JEPA &rarr; I-JEPA &rarr; LeWM</strong>. Each successor either widened the application (V-JEPA for video, I-JEPA for images) or simplified the recipe. LeWM is in the simplification branch.
+  </p>
+
+  <h2>The collapse problem</h2>
+
+  <p>
+    Any encoder that produces an embedding can cheat by producing the same embedding for everything. The loss is zero; the representation is useless. This is called representation collapse, and it has dominated self-supervised learning since the field began.
+  </p>
+
+  <p>
+    The solutions historically:
+  </p>
+
+  <ul>
+    <li><strong>Contrastive learning</strong>: push negatives away from positives. Works, but needs large batch sizes and careful negative mining.</li>
+    <li><strong>Stop-gradient + EMA</strong>: BYOL-style asymmetry between the two encoders. Works, but is finicky.</li>
+    <li><strong>Explicit regularizers</strong>: VICReg-style losses that enforce variance, covariance, and decorrelation properties on the embeddings. Works, but introduces multiple hyperparameters that interact.</li>
+  </ul>
+
+  <p>
+    Earlier JEPA recipes leaned on the third option, accumulating seven coupled regularizer terms over successive papers. SIGReg replaces all seven with one.
+  </p>
+
+  <h2>SIGReg, the Gaussian-matching loss</h2>
+
+  <p>
+    The insight: the seven regularizer terms were all approximations to one underlying property. They wanted the embedding distribution to look like a unit Gaussian. SIGReg targets that directly.
+  </p>
+
+  <p>
+    Sketch of the loss:
+  </p>
+
+  <pre><code># z: batch of embeddings, shape (B, D)
+mu  = z.mean(dim=0)                # should match Gaussian mean (0)
+cov = (z - mu).T @ (z - mu) / B    # should match identity covariance
+
+loss_sigreg = (mu ** 2).sum() + ((cov - I) ** 2).sum()</code></pre>
+
+  <p>
+    First and second moment matching, scaled by one coefficient. That's the whole regularizer. The mean term prevents drift; the covariance term prevents both collapse (cov &rarr; 0) and feature redundancy (off-diagonal entries &ne; 0). Variance, covariance, and decorrelation all fall out of one term because they were always one property in disguise.
+  </p>
+
+  <h2>The training loop in code</h2>
+
+  <pre><code>for batch in loader:
+    ctx, tgt = batch.context, batch.target
+
+    z_ctx = encoder(ctx)
+    z_tgt = ema_encoder(tgt).detach()
+    pred  = predictor(z_ctx)
+
+    loss_pred   = ((pred - z_tgt) ** 2).mean()
+    loss_reg    = sigreg(z_ctx) + sigreg(pred)
+    loss        = loss_pred + lambda_sigreg * loss_reg
+
+    loss.backward()
+    optimizer.step()
+    ema_update(ema_encoder, encoder, m=0.999)</code></pre>
+
+  <p>
+    One prediction loss, one regularizer, one weight to tune (<code>lambda_sigreg</code>), one EMA target. The structural reduction from "tune seven knobs to find the corner of phase space that does not collapse" to "tune one knob" is the headline.
+  </p>
+
+  <h2>Why this matters for world models</h2>
+
+  <p>
+    World models predict future states from past states. The signal is dense but the prediction targets are abstract: not pixels, but the latent state of the environment. JEPA's embedding-space prediction is the right substrate for this, but the recipe complexity made world-model training a research-team specialty. SIGReg lowers the floor enough that smaller groups can train working JEPA world models. That is the practical lever.
+  </p>
+
+  <h2>What to read and run</h2>
+
+  <p>
+    The reference implementation is public under the LeWM organization on GitHub. The training code, evaluation harness, and pretrained checkpoints are all there. The interactive walkthrough with diagrams of the encoder/predictor split, the SIGReg loss surface, and the comparison to V-JEPA is at the <a href="/work/leworldmodel-lab/">LeWorldModel lab</a>.
+  </p>
+
+  <p>
+    For the long-context language-model side of the same broader question (how do we build models that represent extended state efficiently), see the <a href="/notes/deepseek-v4-architecture/">DeepSeek-V4 architecture note</a> and the <a href="/notes/subquadratic-explained/">Subquadratic explained note</a>.
+  </p>
+
+  <div class="note-tags-bar">
+    <span class="tag">jepa</span>
+    <span class="tag">world-models</span>
+    <span class="tag">self-supervised</span>
+    <span class="tag">lewm</span>
+  </div>
+</article>
+
+</main>
+
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight — Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=16"></script>
+</body>
+</html>

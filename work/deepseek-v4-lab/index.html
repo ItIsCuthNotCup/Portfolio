@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inside DeepSeek-V4 · CSA, Muon, FP4 explained — Jake Cuth.</title>
-  <meta name="description" content="Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.">
+  <title>DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache — Jake Cuth.</title>
+  <meta name="description" content="DeepSeek-V4 architecture explained: Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache. What the paper does differently from V3.2 and other LLMs.">
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Inside DeepSeek-V4 · CSA, Muon, FP4 explained">
-  <meta property="og:description" content="Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.">
+  <meta property="og:title" content="DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache">
+  <meta property="og:description" content="DeepSeek-V4 architecture explained: Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache. What the paper does differently from V3.2 and other LLMs.">
   <meta property="og:image" content="https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://www.jakecuth.com/assets/twitter-thumbs/deepseek-v4-lab.png">
@@ -29,8 +29,8 @@
   <link rel="canonical" href="https://www.jakecuth.com/work/deepseek-v4-lab/">
   <meta property="article:published_time" content="2026-05-04T00:00:00Z">
   <meta property="article:modified_time" content="2026-05-04T00:00:00Z">
-  <meta name="twitter:title" content="Inside DeepSeek-V4 · CSA, Muon, FP4 explained">
-  <meta name="twitter:description" content="Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.">
+  <meta name="twitter:title" content="DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache">
+  <meta name="twitter:description" content="DeepSeek-V4 architecture explained: Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache. What the paper does differently from V3.2 and other LLMs.">
   <meta name="twitter:site" content="@ItsCuthulhu">
   <meta name="twitter:creator" content="@ItsCuthulhu">
   <script type="application/ld+json">
@@ -53,7 +53,7 @@
       {
         "@type": "ListItem",
         "position": 3,
-        "name": "Inside DeepSeek-V4",
+        "name": "DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache",
         "item": "https://www.jakecuth.com/work/deepseek-v4-lab/"
       }
     ]
@@ -63,8 +63,8 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Inside DeepSeek-V4",
-    "description": "Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead.",
+    "headline": "DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache",
+    "description": "DeepSeek-V4 architecture explained: Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache. What the paper does differently from V3.2 and other LLMs.",
     "image": "https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1",
     "datePublished": "2026-05-04",
     "dateModified": "2026-05-04",
@@ -140,8 +140,8 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Inside DeepSeek-V4 — CSA, Muon, FP4 explained",
-    "description": "Five things most people assume modern LLMs do, and what DeepSeek-V4 does instead. Compressed sparse attention, hyper-connections, the Muon optimizer, FP4 quantization-aware training.",
+    "name": "DeepSeek-V4 Architecture · Muon, CSA Attention, FP4 KV Cache",
+    "description": "DeepSeek-V4 architecture explained: Muon optimizer, Compressed Sparse Attention (CSA), FP4 KV cache. What the paper does differently from V3.2 and other LLMs.",
     "image": "https://www.jakecuth.com/assets/og/deepseek-v4-lab.png?v=1",
     "url": "https://www.jakecuth.com/work/deepseek-v4-lab/",
     "datePublished": "2026-05-04",
@@ -1205,7 +1205,16 @@
       <div class="faq-answer"><p>For long-context tasks, dramatically: at one-million-token context V4-Pro uses 10% of V3.2's KV cache and 27% of its FLOPs, with comparable or better quality on benchmark tasks. At shorter contexts the gap narrows. The improvement isn't from one big idea but from five compounding architectural changes: hybrid attention, manifold-constrained hyper-connections, the Muon optimizer, FP4 quantization-aware training, and per-layer mixed precision.</p></div>
     </details>
   </section>
-  <!-- Related labs -->
+  <!-- Related notes & labs -->
+<aside class="lab-see-also mono" style="max-width:880px;margin:3rem auto 0;padding:1.5rem;border-top:1px solid var(--ink-dim);font-size:0.92rem;">
+  <strong style="color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;">See also</strong>
+  <ul style="margin-top:0.6rem;list-style:none;padding:0;">
+    <li>&middot; <a href="/notes/deepseek-v4-architecture/">DeepSeek-V4 architecture, in plain language &mdash; the text walkthrough</a></li>
+    <li>&middot; <a href="/notes/subquadratic-explained/">What is Subquadratic? The SubQ company, paper, and architecture</a></li>
+    <li>&middot; <a href="/notes/leworldmodel-jepa-explained/">LeWorldModel (LeWM) explained &mdash; JEPA + SIGReg + code</a></li>
+  </ul>
+</aside>
+
 <nav class="lab-nav mono" aria-label="Test navigation">
   <a href="/work/productivity-predictions-lab/">&larr; Prev: Productivity Predictions (S10)</a>
   <span class="lab-nav-meta">Paper 01 of 04</span>
