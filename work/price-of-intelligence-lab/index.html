@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Price of Intelligence &middot; Historical commodity stress test — Jake Cuth.</title>
+  <meta name="description" content="Eleven commodities, seven centuries. An interactive stress test of the claim that AI is the first commodity with infinite demand.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/price-of-intelligence-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Price of Intelligence &middot; Historical commodity stress test">
+  <meta property="og:description" content="Eleven commodities, seven centuries. An interactive stress test of the claim that AI is the first commodity with infinite demand.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/price-of-intelligence-lab.png?v=1">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/twitter-thumbs/price-of-intelligence-lab.png">
+  <meta property="og:url" content="https://www.jakecuth.com/work/price-of-intelligence-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-25T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-25T00:00:00Z">
+  <meta name="twitter:title" content="The Price of Intelligence &middot; Historical commodity stress test">
+  <meta name="twitter:description" content="Eleven commodities, seven centuries. An interactive stress test of the claim that AI is the first commodity with infinite demand.">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/price-of-intelligence-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "The Price of Intelligence", "item": "https://www.jakecuth.com/work/price-of-intelligence-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Price of Intelligence — Historical commodity stress test",
+    "description": "Eleven commodities, seven centuries. An interactive stress test of the claim that AI is the first commodity with infinite demand.",
+    "image": "https://www.jakecuth.com/assets/og/price-of-intelligence-lab.png?v=1",
+    "datePublished": "2026-05-25",
+    "dateModified": "2026-05-25",
+    "url": "https://www.jakecuth.com/work/price-of-intelligence-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/price-of-intelligence-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "The Price of Intelligence &middot; Interactive commodity stress test",
+    "description": "Five interactive charts testing Chris Anderson's claim that AI is the first commodity with infinite demand, using seven centuries of price data.",
+    "image": "https://www.jakecuth.com/assets/og/price-of-intelligence-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/price-of-intelligence-lab/",
+    "datePublished": "2026-05-25",
+    "dateModified": "2026-05-25",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S18</span> &middot; MMXXVI &middot; PRICE OF INTELLIGENCE</span></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">47</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">17</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="pi-main">
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">The Price of Intelligence</span></li>
+  </ol>
+</nav>
+
+<!-- HERO -->
+<section class="pi-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S18</span>
+    <span>A seven-century commodity stress test</span>
+  </h2>
+  <h1 class="serif big-display pi-title">
+    Cheap has happened before.<br>
+    <span class="serif-italic" style="color:var(--accent)">This fast hasn't.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A seven-century stress test of Chris Anderson's claim that AI is the first commodity with infinite demand. Eleven commodities, from Babylonian lamp oil to GPT-4 tokens. The historical record says the pattern is familiar. The speed is not.
+  </p>
+  <p class="pi-kicker">
+    Scroll through five interactive charts built from Nordhaus, Fouquet, Epoch AI, IEA, and Goldman Sachs data. Each chart asks whether intelligence's price collapse is unprecedented, and if so, in kind or only in velocity. Toggle commodity lines. Hover for sources. The data answers its own question.
+  </p>
+  <div class="mono pi-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time">May 25, 2026</div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static data from 11 public sources</div></div>
+    <div><div class="label">Coverage</div><div class="value">5 charts &middot; 11 commodities &middot; 1300 to 2026</div></div>
+    <div><div class="label">Verdict</div><div class="value">Unprecedented velocity, familiar pattern</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- § I — THE CLAIM ANDERSON MADE -->
+<section class="pi-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The claim Anderson made</span>
+  </h2>
+  <div class="pi-prose">
+    <p class="pi-lede">
+      <em>On May 24, 2026, Chris Anderson posted a diagram to X and asked a question that sounded rhetorical: has there ever been a commodity with effectively infinite demand?</em>
+    </p>
+    <p>
+      The thesis is seductive. LLM inference costs are falling 10-50x per year, yet total token consumption and spend keep rising. The pattern looks like nothing any economist has ever documented. Anderson's diagram shows price falling and demand expanding simultaneously in what he calls "recursive expansion."
+    </p>
+    <p>
+      The problem is that the thesis, in its strong form, is empirically wrong. Not wrong about elasticity. Intelligence is plainly elastic. Wrong about uniqueness. At least six commodities in the historical record exhibit the same pattern: price collapses of multiple orders of magnitude, demand growth that outruns the price decline, and total spend that rises even as unit prices crater. The economists who documented this pattern have a name for it. They call it the Jevons paradox, and it is 161 years old.
+    </p>
+    <div class="pi-callout mono">
+      Anderson is right about elasticity. He is wrong about uniqueness. The interesting question is whether intelligence's <strong>velocity</strong> changes the implications.
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § II · S18.1 — THE LONG DESCENT -->
+<section class="pi-section pi-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S18.1</span>
+    <span>The Long Descent</span>
+  </h2>
+  <p class="pi-note">
+    Each line traces the real-price decline of one commodity from its "takeoff" year (defined as the first 10x price drop). The y-axis is logarithmic. Toggle commodities on or off. Intelligence's line is the steepest, but the shape is familiar.
+  </p>
+
+  <div class="pi-controls mono" aria-label="Long Descent controls">
+    <span class="pi-filter-label">Commodities</span>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="light" data-active="true">Light</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="compute" data-active="true">Compute</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="bandwidth" data-active="true">Bandwidth</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="solar" data-active="true">Solar PV</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="sequencing" data-active="true">Sequencing</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="storage" data-active="true">Storage</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="aluminium" data-active="true">Aluminium</button>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-commodity="intelligence" data-active="true">Intelligence</button>
+    <span class="pi-filter-divider"></span>
+    <span class="pi-filter-label">Reference lines</span>
+    <button type="button" class="pi-pill pi-pill-toggle active" data-ref="tenyear" data-active="true">10x line</button>
+    <button type="button" class="pi-pill pi-pill-toggle" data-ref="hundredyear" data-active="false">100x line</button>
+  </div>
+
+  <div class="pi-chart-wrap" id="pi-descent-wrap">
+    <svg id="pi-descent" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Log-scale price decline curves for eight commodities, aligned to years since takeoff"></svg>
+    <div id="pi-tooltip" class="pi-tooltip mono" hidden></div>
+  </div>
+
+  <figcaption class="pi-figcaption">
+    Intelligence's three-year, 1,000x decline is the steepest in the historical record. But every curve on this chart looked "unprecedented" at the same stage.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- § III · S18.2 — THE JEVONS TEST -->
+<section class="pi-section pi-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S18.2</span>
+    <span>The Jevons test</span>
+  </h2>
+  <p class="pi-note">
+    Each dot is one commodity. The x-axis measures how far the real price fell. The y-axis measures how much total demand grew. Everything above the diagonal consumed more than it saved. The Jevons signature.
+  </p>
+
+  <div class="pi-chart-wrap" id="pi-scatter-wrap">
+    <svg id="pi-scatter" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Scatter plot of price decline vs demand growth for eleven commodities"></svg>
+  </div>
+
+  <figcaption class="pi-figcaption">
+    Every elastic-demand commodity in the comparison set sits above the 45&deg; line. Jevons is the rule, not the exception.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- § IV · S18.3 — INTELLIGENCE, OVERLAID -->
+<section class="pi-section pi-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S18.3</span>
+    <span>Intelligence, overlaid</span>
+  </h2>
+  <p class="pi-note">
+    Three curves normalized to "year zero" of industrial-scale price collapse. Light begins at 1800, compute at 1940, intelligence at 2021. At the same elapsed time, intelligence's slope is roughly 10x steeper than compute's and 100x steeper than light's.
+  </p>
+
+  <div class="pi-controls mono" aria-label="Overlay controls">
+    <span class="pi-filter-label">Time window</span>
+    <button type="button" class="pi-pill active" data-overlay="zoom">First 20 years</button>
+    <button type="button" class="pi-pill" data-overlay="full">Full timeline (200 yr)</button>
+  </div>
+
+  <div class="pi-chart-wrap" id="pi-overlay-wrap">
+    <svg id="pi-overlay" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Three price-collapse curves normalized to first year of industrial-scale decline"></svg>
+  </div>
+
+  <figcaption class="pi-figcaption">
+    Intelligence at year 3 has already traversed the distance that took compute 15 years and light 80 years.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- § V · S18.4 — WHAT BINDS NEXT -->
+<section class="pi-section pi-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S18.4</span>
+    <span>What binds next</span>
+  </h2>
+  <p class="pi-note">
+    Every prior "infinite demand" commodity hit a physical ceiling. For intelligence, the binding constraint is upstream: electricity. The cascade below traces how a 10x drop in token price propagates through the infrastructure stack.
+  </p>
+
+  <div id="pi-cascade" class="pi-cascade">
+    <div class="pi-cascade-node pi-cascade-top">
+      <div class="pi-cascade-label mono">LLM Token Price</div>
+      <div class="pi-cascade-stat">1,000x <span class="pi-cascade-unit">decline in 3 years</span></div>
+    </div>
+    <div class="pi-cascade-arrow" aria-hidden="true">
+      <svg width="2" height="48" viewBox="0 0 2 48"><line x1="1" y1="0" x2="1" y2="40" stroke="currentColor" stroke-width="1.5"/><polygon points="0,40 2,40 1,48" fill="currentColor"/></svg>
+    </div>
+    <div class="pi-cascade-node">
+      <div class="pi-cascade-label mono">Compute Demand</div>
+      <div class="pi-cascade-stat">4-5x <span class="pi-cascade-unit">per year (training compute)</span></div>
+    </div>
+    <div class="pi-cascade-arrow" aria-hidden="true">
+      <svg width="2" height="48" viewBox="0 0 2 48"><line x1="1" y1="0" x2="1" y2="40" stroke="currentColor" stroke-width="1.5"/><polygon points="0,40 2,40 1,48" fill="currentColor"/></svg>
+    </div>
+    <div class="pi-cascade-node">
+      <div class="pi-cascade-label mono">Electricity Demand</div>
+      <div class="pi-cascade-stat">945 TWh <span class="pi-cascade-unit">by 2030 (IEA)</span></div>
+      <div class="pi-cascade-stat">6.7-12% <span class="pi-cascade-unit">of US electricity by 2028 (LBNL)</span></div>
+      <div class="pi-cascade-stat">1,350 TWh <span class="pi-cascade-unit">by 2030 (Goldman)</span></div>
+    </div>
+    <div class="pi-cascade-arrow pi-cascade-bottleneck" aria-hidden="true">
+      <svg width="2" height="48" viewBox="0 0 2 48"><line x1="1" y1="0" x2="1" y2="40" stroke="currentColor" stroke-width="2" stroke-dasharray="4,3"/><polygon points="0,40 2,40 1,48" fill="currentColor"/></svg>
+      <span class="pi-bottleneck-tag mono">Bottleneck</span>
+    </div>
+    <div class="pi-cascade-node pi-cascade-constraint">
+      <div class="pi-cascade-label mono">Grid Capacity</div>
+      <div class="pi-cascade-stat">$720B <span class="pi-cascade-unit">US grid spend needed</span></div>
+      <div class="pi-cascade-stat">10+ year <span class="pi-cascade-unit">lead time for transmission</span></div>
+    </div>
+    <div class="pi-cascade-quote">
+      <blockquote>
+        &ldquo;The cost of AI will converge to the cost of energy.&rdquo;
+      </blockquote>
+      <cite class="mono">Sam Altman, US Senate, May 2025</cite>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VI — RECEIPTS -->
+<section class="pi-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VI</span>
+    <span>Receipts</span>
+  </h2>
+
+  <div class="pi-receipts" id="pi-receipts">
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">GPT-3 quality decline</div>
+      <div class="pi-receipt-value">1,000x<span class="small">in 3 years</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">GPT-4 quality decline</div>
+      <div class="pi-receipt-value">62x<span class="small">since Mar 2023</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">Fastest current rate</div>
+      <div class="pi-receipt-value">40x<span class="small">per year (GPQA)</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">UK lighting decline</div>
+      <div class="pi-receipt-value">12,000x<span class="small">1300-2000</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">Data-centre power 2030</div>
+      <div class="pi-receipt-value">945<span class="small">TWh (IEA)</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">US share by 2028</div>
+      <div class="pi-receipt-value">6.7-12<span class="small">% (LBNL)</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">Enterprise LLM spend</div>
+      <div class="pi-receipt-value">$8.4B<span class="small">mid-2025</span></div>
+    </div>
+    <div class="pi-receipt">
+      <div class="pi-receipt-label">China tokens/day</div>
+      <div class="pi-receipt-value">180<span class="small">trillion (Feb 2026)</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- § VII — METHODOLOGY & COLOPHON -->
+<section class="pi-section pi-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; VII</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is hand-drawn in SVG by a small vanilla JavaScript module. No frameworks, no build step, no analytics beyond Cloudflare's page-view counter. Data is baked into the page as static arrays. Pill filters and hover tooltips redraw locally. Nothing is fetched from an API.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data sources</div>
+      <p>
+        Price-of-light series from Fouquet &amp; Pearson (2006) and Nordhaus (1996). Compute from Nordhaus (2007) and Epoch AI. LLM token pricing from Epoch AI's inference cost dataset and a16z's LLMflation analysis (Nov 2024). Solar PV from IRENA via Our World in Data. DNA sequencing from NHGRI. Energy demand from IEA Energy and AI (Apr 2025), LBNL (Dec 2024), and Goldman Sachs Research (Apr 2026). Elasticity estimates from Sorrell (2007) and Saunders (2000). Snapshot vintage: May 25, 2026.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://www.sciencedirect.com/journal/the-energy-journal" target="_blank" rel="noopener" style="border-bottom:1px solid">Fouquet &amp; Pearson 2006 &middot; Seven Centuries of Energy Services &nearr;</a><br>
+        <a href="https://epochai.org/data/llm-inference-price-trends" target="_blank" rel="noopener" style="border-bottom:1px solid">Epoch AI &middot; LLM inference price trends &nearr;</a><br>
+        <a href="https://a16z.com/llmflation/" target="_blank" rel="noopener" style="border-bottom:1px solid">a16z &middot; LLMflation report &nearr;</a><br>
+        <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener" style="border-bottom:1px solid">IEA &middot; Energy and AI (Apr 2025) &nearr;</a><br>
+        <a href="https://www.nber.org/papers/w5578" target="_blank" rel="noopener" style="border-bottom:1px solid">Nordhaus 1996 &middot; Do Real Output and Real Wage Measures Capture Reality &nearr;</a><br>
+        <a href="https://archive.org/details/coalaborquesti00jevo" target="_blank" rel="noopener" style="border-bottom:1px solid">Jevons 1865 &middot; The Coal Question (archive.org) &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        Pre-1800 light prices depend on Nordhaus's reconstruction and carry uncertainties of plus or minus 50% at the Babylonian end. LLM token pricing combines list prices across providers; cached, batched, and quantized prices can be 5-10x cheaper. Demand-side data for intelligence are recent and self-reported by OpenAI, Microsoft, OpenRouter, and the China National Data Bureau via Sina Finance. They are company-disclosed, not audited. The "GPT-4 equivalent" quality threshold drifts as benchmarks saturate. All forward-looking power figures (945 TWh, 1,350 TWh, 6.7-12%) are forecasts, not historical data. The Jevons/rebound literature is contested. This lab presents the data and the range, not a verdict on macro rebound.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lab nav -->
+  <nav class="lab-nav mono" aria-label="Story navigation">
+    <a href="/work/bubble-watch-lab/">&larr; Prev: Bubble Watch (S17)</a>
+    <span>Data story 18 of 18</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/work/price-of-intelligence-lab" target="_blank" rel="noopener" class="btn-outline">View the source on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- RELATED LABS ASIDE -->
+<aside class="pi-related" aria-label="Related labs">
+  <div class="mono section-label">
+    <span class="idx">Related labs</span>
+    <span>Other long-arc data stories on this site</span>
+  </div>
+  <div class="pi-related-grid">
+    <article class="pi-related-card">
+      <span class="pi-card-kicker">S17</span>
+      <h3><a href="/work/bubble-watch-lab/">Bubble Watch &rarr;</a></h3>
+      <p>Six charts on whether the U.S. market is in an AI bubble. The other side of the capex story. What happens when price collapses meet physical constraints.</p>
+    </article>
+    <article class="pi-related-card">
+      <span class="pi-card-kicker">S07</span>
+      <h3><a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a></h3>
+      <p>Seven charts on whether AI is approaching an intelligence explosion. Same instinct as this lab: public data, charts that argue.</p>
+    </article>
+    <article class="pi-related-card">
+      <span class="pi-card-kicker">S08</span>
+      <h3><a href="/work/semiconductor-lab/">Semiconductor Cartography &rarr;</a></h3>
+      <p>The geography of the AI chip supply chain. Where the electrons and silicon that bind intelligence physically live.</p>
+    </article>
+  </div>
+</aside>
+
+</main>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight, Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=17"></script>
+<script src="/assets/js/price-of-intelligence-lab.js?v=1"></script>
+</body>
+</html>
