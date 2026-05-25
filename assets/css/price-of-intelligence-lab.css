@@ -199,7 +199,8 @@
   letter-spacing: 0.08em;
   fill: var(--ink-dim);
 }
-.pi-grid-line {
+.pi-grid-line,
+.pi-grid {
   stroke: var(--pi-grid);
   stroke-width: 1;
 }
@@ -208,6 +209,38 @@
   font-size: 10px;
   letter-spacing: 0.06em;
   fill: var(--ink);
+}
+.pi-axis-title {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-soft);
+}
+.pi-scatter-label,
+.pi-series-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+}
+.pi-diag-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  font-style: italic;
+  fill: var(--ink-dim);
+}
+.pi-zone-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+.pi-zone-sub {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  fill: var(--ink-dim);
 }
 .pi-ref-line {
   stroke: var(--ink-dim);
