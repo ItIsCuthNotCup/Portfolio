@@ -152,18 +152,23 @@
     while (node.firstChild) node.removeChild(node.firstChild);
   }
 
-  function drawLine(svg, x1, y1, x2, y2, className) {
+  function drawLine(svg, x1, y1, x2, y2, className, stroke) {
     return createSVGEl('line', {
       class: className || '',
-      x1: x1, y1: y1, x2: x2, y2: y2
+      x1: x1, y1: y1, x2: x2, y2: y2,
+      stroke: stroke || 'var(--ink-dim)',
+      'stroke-width': 1
     }, svg);
   }
 
-  function drawText(svg, x, y, text, className, anchor) {
+  function drawText(svg, x, y, text, className, anchor, fill) {
     var t = createSVGEl('text', {
       class: className || '',
       x: x, y: y,
-      'text-anchor': anchor || 'start'
+      'text-anchor': anchor || 'start',
+      fill: fill || 'var(--ink)',
+      'font-family': '"DM Mono", ui-monospace, monospace',
+      'font-size': '10'
     }, svg);
     t.textContent = text;
     return t;
@@ -247,14 +252,14 @@
     }
 
     // Axes
-    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis');
-    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis');
+    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis', 'var(--ink)');
+    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis', 'var(--ink)');
 
     // Y-axis gridlines and labels (log scale)
     var yTicks = [100, 10, 1, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001];
     yTicks.forEach(function (v) {
       var ys = yS(v);
-      drawLine(svg, pad.l, ys, pad.l + iw, ys, 'pi-grid');
+      drawLine(svg, pad.l, ys, pad.l + iw, ys, 'pi-grid', 'var(--ink-dim)');
       var label;
       if (v >= 1) label = String(v);
       else if (v >= 0.1) label = '0.1';
@@ -263,23 +268,26 @@
       else if (v >= 0.0001) label = '10⁻⁴';
       else if (v >= 0.00001) label = '10⁻⁵';
       else label = '10⁻⁶';
-      drawText(svg, pad.l - 10, ys + 4, label, 'pi-axis-label', 'end');
+      drawText(svg, pad.l - 10, ys + 4, label, 'pi-axis-label', 'end', 'var(--ink-dim)');
     });
 
     // X-axis gridlines and labels
     var xTicks = [0, 25, 50, 75, 100, 125, 150, 175, 200];
     xTicks.forEach(function (t) {
       var xx = xS(t);
-      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid');
-      drawText(svg, xx, pad.t + ih + 20, String(t), 'pi-axis-label', 'middle');
+      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid', 'var(--ink-dim)');
+      drawText(svg, xx, pad.t + ih + 20, String(t), 'pi-axis-label', 'middle', 'var(--ink-dim)');
     });
 
     // Axis titles
-    drawText(svg, pad.l + iw / 2, pad.t + ih + 46, 'Years since takeoff', 'pi-axis-title', 'middle');
+    drawText(svg, pad.l + iw / 2, pad.t + ih + 46, 'Years since takeoff', 'pi-axis-title', 'middle', 'var(--ink-soft)');
     var yTitle = createSVGEl('text', {
       class: 'pi-axis-title',
       x: 18, y: pad.t + ih / 2,
       'text-anchor': 'middle',
+      fill: 'var(--ink-soft)',
+      'font-family': '"DM Mono", ui-monospace, monospace',
+      'font-size': '11',
       transform: 'rotate(-90, 18, ' + (pad.t + ih / 2) + ')'
     }, svg);
     yTitle.textContent = 'Price index (log, 100 = takeoff)';
@@ -344,7 +352,7 @@
       var ly = yS(last.p);
       var labelAnchor = last.t > 150 ? 'end' : 'start';
       var labelDx = last.t > 150 ? -8 : 8;
-      drawText(svg, lx + labelDx, ly + 4, commodity.name.split(' (')[0], 'pi-series-label', labelAnchor)
+      drawText(svg, lx + labelDx, ly + 4, commodity.name.split(' (')[0], 'pi-series-label', labelAnchor, 'var(--ink)')
         .setAttribute('fill', color);
     });
   }
@@ -391,38 +399,39 @@
     }
 
     // Axes
-    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis');
-    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis');
+    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis', 'var(--ink)');
+    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis', 'var(--ink)');
 
     // X-axis gridlines and labels
     for (var xp = 0; xp <= 12; xp += 2) {
       var xx = pad.l + (xp / xLogMax) * iw;
-      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid');
+      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid', 'var(--ink-dim)');
       var xLabel = xp === 0 ? '1' : '10^' + xp;
-      drawText(svg, xx, pad.t + ih + 20, xLabel, 'pi-axis-label', 'middle');
+      drawText(svg, xx, pad.t + ih + 20, xLabel, 'pi-axis-label', 'middle', 'var(--ink-dim)');
     }
 
     // Y-axis gridlines and labels
     for (var yp = 0; yp <= 7; yp += 1) {
       var yy = pad.t + ih - (yp / yLogMax) * ih;
-      drawLine(svg, pad.l, yy, pad.l + iw, yy, 'pi-grid');
+      drawLine(svg, pad.l, yy, pad.l + iw, yy, 'pi-grid', 'var(--ink-dim)');
       var yLabel = yp === 0 ? '1' : '10^' + yp;
-      drawText(svg, pad.l - 10, yy + 4, yLabel, 'pi-axis-label', 'end');
+      drawText(svg, pad.l - 10, yy + 4, yLabel, 'pi-axis-label', 'end', 'var(--ink-dim)');
     }
 
     // Axis titles
-    drawText(svg, pad.l + iw / 2, pad.t + ih + 48, 'Price decline multiple (log)', 'pi-axis-title', 'middle');
+    drawText(svg, pad.l + iw / 2, pad.t + ih + 48, 'Price decline multiple (log)', 'pi-axis-title', 'middle', 'var(--ink-soft)');
     var yTitle = createSVGEl('text', {
       class: 'pi-axis-title',
       x: 18, y: pad.t + ih / 2,
       'text-anchor': 'middle',
+      fill: 'var(--ink-soft)',
+      'font-family': '"DM Mono", ui-monospace, monospace',
+      'font-size': '11',
       transform: 'rotate(-90, 18, ' + (pad.t + ih / 2) + ')'
     }, svg);
     yTitle.textContent = 'Demand growth multiple (log)';
 
     // 45-degree diagonal line: unit elasticity
-    // unit elasticity means log(demand) = log(price), so y = x on log-log
-    // But our axes have different ranges, so we map it properly
     var diagPoints = [];
     for (var dv = 0; dv <= Math.min(xLogMax, yLogMax); dv += 0.5) {
       var dx = pad.l + (dv / xLogMax) * iw;
@@ -441,17 +450,17 @@
     // Label the diagonal
     var diagLabelX = pad.l + (5 / xLogMax) * iw;
     var diagLabelY = pad.t + ih - (5 / yLogMax) * ih;
-    drawText(svg, diagLabelX + 8, diagLabelY - 8, 'Unit elasticity', 'pi-diag-label', 'start');
+    drawText(svg, diagLabelX + 8, diagLabelY - 8, 'Unit elasticity', 'pi-diag-label', 'start', 'var(--ink-dim)');
 
     // Zone labels
     var jevonsX = pad.l + (2 / xLogMax) * iw;
     var jevonsY = pad.t + ih - (4.5 / yLogMax) * ih;
-    drawText(svg, jevonsX, jevonsY, 'Jevons zone', 'pi-zone-label', 'start');
-    drawText(svg, jevonsX, jevonsY + 16, '(demand outpaced price drop)', 'pi-zone-sub', 'start');
+    drawText(svg, jevonsX, jevonsY, 'Jevons zone', 'pi-zone-label', 'start', 'var(--ink-soft)');
+    drawText(svg, jevonsX, jevonsY + 16, '(demand outpaced price drop)', 'pi-zone-sub', 'start', 'var(--ink-dim)');
 
     var normalX = pad.l + (6 / xLogMax) * iw;
     var normalY = pad.t + ih - (1.5 / yLogMax) * ih;
-    drawText(svg, normalX, normalY, 'Normal zone', 'pi-zone-label', 'start');
+    drawText(svg, normalX, normalY, 'Normal zone', 'pi-zone-label', 'start', 'var(--ink-soft)');
 
     // Draw scatter dots
     SCATTER.forEach(function (d) {
@@ -483,10 +492,9 @@
       // Label next to dot
       var labelDx = isIntel ? 16 : 12;
       var labelDy = isIntel ? -4 : -2;
-      // Adjust label placement for crowded dots
       if (d.name === 'Steel' || d.name === 'Oil') labelDy = 14;
       if (d.name === 'Electricity') labelDy = -14;
-      drawText(svg, cx + labelDx, cy + labelDy, d.name, 'pi-scatter-label', 'start');
+      drawText(svg, cx + labelDx, cy + labelDy, d.name, 'pi-scatter-label', 'start', 'var(--ink)');
 
       // Hover
       dot.addEventListener('mouseenter', function (ev) {
@@ -531,14 +539,14 @@
     }
 
     // Axes
-    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis');
-    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis');
+    drawLine(svg, pad.l, pad.t + ih, pad.l + iw, pad.t + ih, 'pi-axis', 'var(--ink)');
+    drawLine(svg, pad.l, pad.t, pad.l, pad.t + ih, 'pi-axis', 'var(--ink)');
 
     // Y gridlines
     var yTicks = [100, 10, 1, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001];
     yTicks.forEach(function (v) {
       var ys = yS(v);
-      drawLine(svg, pad.l, ys, pad.l + iw, ys, 'pi-grid');
+      drawLine(svg, pad.l, ys, pad.l + iw, ys, 'pi-grid', 'var(--ink-dim)');
       var label;
       if (v >= 1) label = String(v);
       else if (v >= 0.1) label = '0.1';
@@ -547,23 +555,26 @@
       else if (v >= 0.0001) label = '10⁻⁴';
       else if (v >= 0.00001) label = '10⁻⁵';
       else label = '10⁻⁶';
-      drawText(svg, pad.l - 10, ys + 4, label, 'pi-axis-label', 'end');
+      drawText(svg, pad.l - 10, ys + 4, label, 'pi-axis-label', 'end', 'var(--ink-dim)');
     });
 
     // X gridlines
     var xStep = isZoom ? 2 : 25;
     for (var t = 0; t <= xMax; t += xStep) {
       var xx = xS(t);
-      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid');
-      drawText(svg, xx, pad.t + ih + 20, String(t), 'pi-axis-label', 'middle');
+      drawLine(svg, xx, pad.t, xx, pad.t + ih, 'pi-grid', 'var(--ink-dim)');
+      drawText(svg, xx, pad.t + ih + 20, String(t), 'pi-axis-label', 'middle', 'var(--ink-dim)');
     }
 
     // Axis titles
-    drawText(svg, pad.l + iw / 2, pad.t + ih + 46, 'Years since takeoff', 'pi-axis-title', 'middle');
+    drawText(svg, pad.l + iw / 2, pad.t + ih + 46, 'Years since takeoff', 'pi-axis-title', 'middle', 'var(--ink-soft)');
     var yTitle = createSVGEl('text', {
       class: 'pi-axis-title',
       x: 18, y: pad.t + ih / 2,
       'text-anchor': 'middle',
+      fill: 'var(--ink-soft)',
+      'font-family': '"DM Mono", ui-monospace, monospace',
+      'font-size': '11',
       transform: 'rotate(-90, 18, ' + (pad.t + ih / 2) + ')'
     }, svg);
     yTitle.textContent = 'Price index (log)';
@@ -625,7 +636,7 @@
       var ly = yS(last.p);
       var anchor = last.t > xMax * 0.75 ? 'end' : 'start';
       var dx = anchor === 'end' ? -8 : 8;
-      var label = drawText(svg, lx + dx, ly - 8, series.name, 'pi-series-label', anchor);
+      var label = drawText(svg, lx + dx, ly - 8, series.name, 'pi-series-label', anchor, 'var(--ink)');
       label.setAttribute('fill', color);
     });
 
