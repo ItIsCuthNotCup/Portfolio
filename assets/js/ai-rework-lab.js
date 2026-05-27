@@ -408,7 +408,7 @@
       'stroke-width': 1.5,
       'stroke-dasharray': '8,5'
     }, svg);
-    drawText(svg, pad.l + iw + 6, refY + 4, 'Entelligence claim', 'rw-ref-label', 'start', 'var(--rw-negative)');
+    drawText(svg, pad.l + iw - 4, refY - 8, 'Entelligence 82% claim', 'rw-ref-label', 'end', 'var(--rw-negative)');
 
     // Line connecting points
     var pts = '';
@@ -444,17 +444,28 @@
         'stroke-width': 2
       }, svg);
 
-      // Model label: alternate above/below to avoid overlap
-      var labelY = (i % 2 === 0) ? cy - 14 : cy + 22;
-      var labelAnchor = 'middle';
-      // Shift first label right, last label left
-      if (i === 0) labelAnchor = 'start';
-      if (i === SWEBENCH.length - 1) labelAnchor = 'end';
+      // Per-point label offsets to prevent overlaps
+      // 0: Claude 2 (4.8%) — below-right
+      // 1: Claude 3.5 Sonnet (49%) — below
+      // 2: OpenAI o1 (62.2%) — below-left, nudged left
+      // 3: OpenAI o3 (72%) — above-right, nudged right
+      // 4: Claude Opus 4.5 (80.9%) — well above (clear the 82% ref line)
+      // 5: GPT-5.5 (82.6%) — below
+      var offsets = [
+        { dy: 22, anchor: 'start' },
+        { dy: 26, anchor: 'middle' },
+        { dy: 26, anchor: 'end' },
+        { dy: -18, anchor: 'start' },
+        { dy: -28, anchor: 'middle' },
+        { dy: 22, anchor: 'end' }
+      ];
+      var off = offsets[i] || { dy: -14, anchor: 'middle' };
+      var labelY = cy + off.dy;
 
-      var lbl = drawText(svg, cx, labelY, d.label, 'rw-model-label', labelAnchor, 'var(--ink)');
+      var lbl = drawText(svg, cx, labelY, d.label, 'rw-model-label', off.anchor, 'var(--ink)');
       lbl.setAttribute('font-size', '9');
 
-      var scoreT = drawText(svg, cx, labelY + 12, d.score + '%', 'rw-model-score', labelAnchor, 'var(--ink-soft)');
+      var scoreT = drawText(svg, cx, labelY + 12, d.score + '%', 'rw-model-score', off.anchor, 'var(--ink-soft)');
       scoreT.setAttribute('font-size', '9');
 
       dot.addEventListener('mouseenter', function (ev) {
