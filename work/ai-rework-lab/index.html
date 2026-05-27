@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rework Tax &middot; Forensic teardown of the 82% viral claim — Jake Cuth.</title>
+  <meta name="description" content="Eight datasets stress-test the viral claim that 82% of AI tokens go to rework. The direction is right. The number is marketing.">
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <link rel="canonical" href="https://jakecuth.com/work/ai-rework-lab/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Rework Tax &middot; Forensic teardown of the 82% viral claim">
+  <meta property="og:description" content="Eight datasets stress-test the viral claim that 82% of AI tokens go to rework. The direction is right. The number is marketing.">
+  <meta property="og:image" content="https://www.jakecuth.com/assets/og/ai-rework-lab.png?v=1">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.jakecuth.com/assets/twitter-thumbs/ai-rework-lab.png">
+  <meta property="og:url" content="https://www.jakecuth.com/work/ai-rework-lab/">
+  <meta property="og:site_name" content="Jake Cuth.">
+  <meta property="og:locale" content="en_US">
+
+  <meta property="article:published_time" content="2026-05-27T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-27T00:00:00Z">
+  <meta name="twitter:title" content="The Rework Tax &middot; Forensic teardown of the 82% viral claim">
+  <meta name="twitter:description" content="Eight datasets stress-test the viral claim that 82% of AI tokens go to rework. The direction is right. The number is marketing.">
+  <meta name="twitter:site" content="@ItsCuthulhu">
+  <meta name="twitter:creator" content="@ItsCuthulhu">
+
+  <meta name="theme-color" content="#141311">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/main.css?v=48">
+  <link rel="stylesheet" href="/assets/css/ai-rework-lab.css?v=1">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.jakecuth.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://www.jakecuth.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "The Rework Tax", "item": "https://www.jakecuth.com/work/ai-rework-lab/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Rework Tax — Forensic teardown of the 82% viral claim",
+    "description": "Eight datasets stress-test the viral claim that 82% of AI tokens go to rework. The direction is right. The number is marketing.",
+    "image": "https://www.jakecuth.com/assets/og/ai-rework-lab.png?v=1",
+    "datePublished": "2026-05-27",
+    "dateModified": "2026-05-27",
+    "url": "https://www.jakecuth.com/work/ai-rework-lab/",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.jakecuth.com/work/ai-rework-lab/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "The Rework Tax &middot; Interactive forensic teardown of the 82% viral claim",
+    "description": "Eight interactive charts stress-testing the viral claim that 82% of AI tokens go to rework, using data from Faros, CodeRabbit, DORA, METR, Stack Overflow, GitClear, SWE-Bench, and McKinsey.",
+    "image": "https://www.jakecuth.com/assets/og/ai-rework-lab.png?v=1",
+    "url": "https://www.jakecuth.com/work/ai-rework-lab/",
+    "datePublished": "2026-05-27",
+    "dateModified": "2026-05-27",
+    "applicationCategory": "DataScienceApplication",
+    "operatingSystem": "Any (browser-based)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Jacob Cuthbertson", "url": "https://www.jakecuth.com/" },
+    "publisher": { "@type": "Person", "name": "Jacob Cuthbertson" }
+  }
+  </script>
+</head>
+<body>
+
+<div id="progress" class="progress"></div>
+<div class="lab-rail" aria-hidden="true"><span><span class="rail-fig">S19</span> &middot; MMXXVI &middot; REWORK TAX</span></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mono masthead-dateline">
+    Vol. <span style="color:var(--accent)">XII</span> &middot; No. <span id="masthead-issue">05</span> &middot; <span id="masthead-date">May 2026</span>
+  </div>
+  <div class="masthead-name">
+    <a href="/"><span class="serif">Jake <span class="serif-italic">Cuth.</span></span></a>
+  </div>
+  <nav class="mono masthead-nav">
+    <a href="/#projects">Projects</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-toggle has-active" type="button" aria-haspopup="menu" aria-expanded="false">
+        Research <span class="nav-caret" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="nav-dropdown-menu nav-research" role="menu">
+        <a href="/#research" class="nav-research-all" role="menuitem">All labs <span class="cat-count">48</span></a>
+        <a href="/#research?cat=m" role="menuitem">Working models <span class="cat-count">12</span></a>
+        <a href="/#research?cat=s" role="menuitem">Data stories <span class="cat-count">18</span></a>
+        <a href="/#research?cat=p" role="menuitem">Paper anatomies <span class="cat-count">4</span></a>
+        <a href="/#research?cat=atlas" role="menuitem">The Atlas <span class="cat-count">1</span></a>
+        <a href="/#research?cat=a" role="menuitem">Algorithm primers <span class="cat-count">13</span></a>
+      </div>
+    </div>
+    <a href="/notes/">Notes</a>
+    <a href="/#education">Education</a>
+    <a href="/#contact" class="btn-pill">Get in touch &#8599;</a>
+  </nav>
+</header>
+
+<main class="rw-main">
+
+<nav class="breadcrumb mono" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#research">Research</a></li>
+    <li><span aria-current="page">The Rework Tax</span></li>
+  </ol>
+</nav>
+
+<!-- HERO -->
+<section class="rw-hero">
+  <h2 class="mono section-label">
+    <span class="idx">S19</span>
+    <span>A forensic teardown of the 82% viral claim</span>
+  </h2>
+  <h1 class="serif big-display rw-title">
+    The rework number went viral.<br>
+    <span class="serif-italic" style="color:var(--accent)">The baseline didn't.</span>
+  </h1>
+  <p class="lab-biz-line">
+    A forensic teardown of the viral claim that 82% of AI tokens go to rework. Eight independent datasets, one rebuilt dollar. The direction is right. The number is marketing. The baseline is from 1978.
+  </p>
+  <p class="rw-kicker">
+    Scroll through eight interactive charts built from Faros, CodeRabbit, DORA, METR, Stack Overflow, GitClear, SWE-Bench, and McKinsey data. Each chart stress-tests one piece of the Entelligence screenshot. Toggle between the vendor's framing and what the independent telemetry actually shows.
+  </p>
+  <div class="mono rw-dateline">
+    <div><div class="label">Filed</div><div class="value" id="dateline-time">May 27, 2026</div></div>
+    <div><div class="label">Engine</div><div class="value">Vanilla JS &middot; SVG &middot; Static data from 8 independent sources</div></div>
+    <div><div class="label">Coverage</div><div class="value">8 charts &middot; 8 sources &middot; 2020 to 2026</div></div>
+    <div><div class="label">Verdict</div><div class="value">Directionally right, numerically dubious</div></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- &sect; I — THE SCREENSHOT THAT LAUNCHED A THOUSAND TAKES -->
+<section class="rw-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; I</span>
+    <span>The screenshot that launched a thousand takes</span>
+  </h2>
+  <div class="rw-prose">
+    <p class="rw-lede">
+      <em>In late May 2026, a dashboard screenshot from a startup called Entelligence went viral. It claimed that across 2,444 companies, 82% of AI-generated tokens go to bugs, rework, and review. Four cents of every dollar reaches a shipped feature.</em>
+    </p>
+    <p>
+      The number felt right to anyone who has watched an LLM confidently produce code that passes the linter and fails the user. Faros, CodeRabbit, DORA, GitClear, Stack Overflow, and Jellyfish had all, independently, published data pointing in the same direction. But "felt right" and "is right" are different claims with different evidence standards.
+    </p>
+    <p>
+      The chart is from Entelligence's own product dashboard. Entelligence sells AI code-review tools and engineering-intelligence dashboards. The 82% number is a sales asset for the product that fixes the problem the number describes. That does not make it wrong. It does mean the lab has to do what the screenshot did not: show the sources, name the assumptions, and rebuild the dollar from scratch.
+    </p>
+    <div class="rw-callout mono">
+      The claim is directionally consistent with six independent datasets. It is numerically suspect in the specific 82% / $0.04 framing. And it is missing the one number that changes everything: <strong>the pre-AI baseline.</strong>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; II &middot; S19.1 — THE BASELINE NOBODY MENTIONED -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.1</span>
+    <span>The baseline nobody mentioned</span>
+  </h2>
+  <p class="rw-note">
+    Pre-AI software engineering already spent 75-80% of effort on maintenance, debugging, and review. The 82% number looks alarming until you remember the baseline.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-baseline-wrap">
+    <svg id="rw-baseline" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Two-bar comparison: pre-AI baseline of 75-80% maintenance effort versus the Entelligence 82% claim">
+      <defs>
+        <linearGradient id="rw-grad-baseline" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--ink-soft)" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="var(--ink-soft)" stop-opacity="0.15"/>
+        </linearGradient>
+        <linearGradient id="rw-grad-claim" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.25"/>
+        </linearGradient>
+      </defs>
+      <!-- Axes -->
+      <line x1="120" y1="60" x2="120" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <line x1="120" y1="340" x2="780" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <!-- Y-axis labels -->
+      <text x="110" y="340" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">0%</text>
+      <text x="110" y="270" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">25%</text>
+      <text x="110" y="200" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">50%</text>
+      <text x="110" y="130" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">75%</text>
+      <text x="110" y="60" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">100%</text>
+      <!-- Grid lines -->
+      <line x1="120" y1="270" x2="780" y2="270" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <line x1="120" y1="200" x2="780" y2="200" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <line x1="120" y1="130" x2="780" y2="130" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <line x1="120" y1="60" x2="780" y2="60" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <!-- Bar 1: Pre-AI baseline 77.5% -->
+      <rect x="220" y="103" width="140" height="237" rx="3" fill="url(#rw-grad-baseline)" stroke="var(--ink-soft)" stroke-width="1"/>
+      <text x="290" y="93" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="16" font-weight="500">77.5%</text>
+      <text x="290" y="365" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="12">Pre-AI baseline (1978)</text>
+      <!-- Bar 2: Entelligence claim 82% -->
+      <rect x="540" y="89" width="140" height="251" rx="3" fill="url(#rw-grad-claim)" stroke="var(--accent)" stroke-width="1"/>
+      <text x="610" y="79" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="16" font-weight="500">82%</text>
+      <text x="610" y="365" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="12">Entelligence claim (2026)</text>
+      <!-- Delta annotation -->
+      <line x1="680" y1="103" x2="720" y2="103" stroke="var(--ink-dim)" stroke-width="0.5"/>
+      <line x1="680" y1="89" x2="720" y2="89" stroke="var(--ink-dim)" stroke-width="0.5"/>
+      <line x1="720" y1="89" x2="720" y2="103" stroke="var(--ink-dim)" stroke-width="0.5"/>
+      <text x="735" y="100" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="11">+4.5 pp</text>
+    </svg>
+    <div id="rw-tooltip" class="rw-tooltip mono" hidden></div>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    The shocking 82% is roughly the same number we have been quoting since the Carter administration. Source: Lientz, Swanson &amp; Tompkins, CACM 1978.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; III &middot; S19.2 — THE PERCEPTION GAP -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.2</span>
+    <span>The perception gap</span>
+  </h2>
+  <p class="rw-note">
+    The most-cited evidence that AI makes developers slower had to walk itself back. METR's 2025 RCT found a 19% slowdown. Their 2026 replication found 4%, with wide confidence intervals.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-metr-wrap">
+    <svg id="rw-metr" viewBox="0 0 1000 360" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Forest plot comparing predicted, self-reported, and actual developer productivity effects from METR studies">
+      <!-- Zero line -->
+      <line x1="500" y1="40" x2="500" y2="310" stroke="var(--ink-dim)" stroke-width="1" stroke-dasharray="6,4"/>
+      <text x="500" y="330" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">0%</text>
+      <!-- Axis labels -->
+      <text x="250" y="330" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">-50%</text>
+      <text x="375" y="330" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">-25%</text>
+      <text x="625" y="330" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">+25%</text>
+      <text x="750" y="330" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">+50%</text>
+      <!-- Light grid -->
+      <line x1="250" y1="40" x2="250" y2="310" stroke="var(--ink-dim)" stroke-width="0.3"/>
+      <line x1="375" y1="40" x2="375" y2="310" stroke="var(--ink-dim)" stroke-width="0.3"/>
+      <line x1="625" y1="40" x2="625" y2="310" stroke="var(--ink-dim)" stroke-width="0.3"/>
+      <line x1="750" y1="40" x2="750" y2="310" stroke="var(--ink-dim)" stroke-width="0.3"/>
+      <!-- Row 1: Predicted +24% -->
+      <text x="100" y="80" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Predicted</text>
+      <circle cx="620" cy="75" r="7" fill="var(--ink-soft)" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="640" y="80" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="11">+24%</text>
+      <!-- Row 2: Self-reported +20% -->
+      <text x="100" y="140" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Self-reported</text>
+      <circle cx="600" cy="135" r="7" fill="var(--ink-soft)" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="620" y="140" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="11">+20%</text>
+      <!-- Row 3: METR 2025 actual -19% (CI -39 to +1) -->
+      <text x="100" y="200" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">METR 2025</text>
+      <line x1="305" y1="195" x2="505" y2="195" stroke="var(--accent)" stroke-width="2" opacity="0.5"/>
+      <rect x="301" y="191" width="8" height="8" fill="var(--accent)" opacity="0.5"/>
+      <rect x="497" y="191" width="8" height="8" fill="var(--accent)" opacity="0.5"/>
+      <circle cx="405" cy="195" r="7" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="520" y="200" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11">-19% (CI: -39 to +1)</text>
+      <!-- Row 4: METR 2026 replication -4% (CI -15 to +9) -->
+      <text x="100" y="260" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">METR 2026</text>
+      <line x1="425" y1="255" x2="545" y2="255" stroke="var(--accent)" stroke-width="2" opacity="0.5"/>
+      <rect x="421" y="251" width="8" height="8" fill="var(--accent)" opacity="0.5"/>
+      <rect x="541" y="251" width="8" height="8" fill="var(--accent)" opacity="0.5"/>
+      <circle cx="480" cy="255" r="7" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="560" y="260" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11">-4% (CI: -15 to +9)</text>
+      <!-- Axis label -->
+      <text x="500" y="355" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">Slower &larr; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &rarr; Faster</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    Developers thought they were 20% faster. They were 19% slower. A year later, the effect shrank to 4% and stopped being significant. Source: METR 2025, 2026.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; IV &middot; S19.3 — THE CAPABILITY NOBODY CHARTED -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.3</span>
+    <span>The capability nobody charted</span>
+  </h2>
+  <p class="rw-note">
+    While the rework discourse raged, the underlying models got dramatically better at the exact task they were accused of failing.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-swebench-wrap">
+    <svg id="rw-swebench" viewBox="0 0 1100 440" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="SWE-Bench Verified scores over time, showing model capability climbing from 4.8% to 82.6% in 30 months">
+      <!-- Axes -->
+      <line x1="100" y1="40" x2="100" y2="380" stroke="var(--ink-dim)" stroke-width="1"/>
+      <line x1="100" y1="380" x2="1040" y2="380" stroke="var(--ink-dim)" stroke-width="1"/>
+      <!-- Y-axis: 0% to 100% -->
+      <text x="90" y="384" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">0%</text>
+      <text x="90" y="299" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">25%</text>
+      <text x="90" y="214" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">50%</text>
+      <text x="90" y="129" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">75%</text>
+      <text x="90" y="44" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">100%</text>
+      <!-- Grid -->
+      <line x1="100" y1="295" x2="1040" y2="295" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="210" x2="1040" y2="210" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="125" x2="1040" y2="125" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="40" x2="1040" y2="40" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <!-- X-axis labels (Oct 2023 to May 2026) -->
+      <text x="160" y="400" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">Oct 2023</text>
+      <text x="370" y="400" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">Apr 2024</text>
+      <text x="570" y="400" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">Oct 2024</text>
+      <text x="770" y="400" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">Apr 2025</text>
+      <text x="970" y="400" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">May 2026</text>
+      <!-- Line path: rising curve from 4.8% to 82.6% -->
+      <polyline points="160,364 280,352 370,330 450,295 530,260 610,220 690,180 770,140 850,110 970,100"
+                fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- Data points with model labels -->
+      <circle cx="160" cy="364" r="4" fill="var(--accent)"/>
+      <text x="160" y="355" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">SWE-Agent</text>
+      <text x="160" y="345" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">4.8%</text>
+      <circle cx="370" cy="330" r="4" fill="var(--accent)"/>
+      <text x="370" y="321" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">Devin</text>
+      <text x="370" y="311" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">14.7%</text>
+      <circle cx="530" cy="260" r="4" fill="var(--accent)"/>
+      <text x="530" y="251" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">OpenHands</text>
+      <text x="530" y="241" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">35.3%</text>
+      <circle cx="690" cy="180" r="4" fill="var(--accent)"/>
+      <text x="690" y="171" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">o3</text>
+      <text x="690" y="161" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">58.8%</text>
+      <circle cx="850" cy="110" r="4" fill="var(--accent)"/>
+      <text x="850" y="101" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">Claude 4</text>
+      <text x="850" y="91" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">72.7%</text>
+      <circle cx="970" cy="100" r="5" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="970" y="88" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">82.6%</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    From 4.8% to 82.6% in 30 months. By the time you read a benchmark, it is already wrong. Source: Princeton SWE-Bench, Vals AI leaderboard.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; V &middot; S19.4 — ACCELERATION WHIPLASH -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.4</span>
+    <span>Acceleration whiplash</span>
+  </h2>
+  <p class="rw-note">
+    Faros AI tracked 22,000 developers across 4,000+ teams for two years. The verdict: AI helps the top line and hurts the bottom at the same time.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-faros-wrap">
+    <svg id="rw-faros" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Diverging bar chart showing Faros AI metrics: wins and losses from AI-assisted development">
+      <!-- Center line -->
+      <line x1="550" y1="30" x2="550" y2="480" stroke="var(--ink-dim)" stroke-width="1"/>
+      <text x="550" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">0%</text>
+      <!-- Labels: left side negative scale, right side positive scale -->
+      <text x="310" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">-500%</text>
+      <text x="430" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">-250%</text>
+      <text x="670" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">+250%</text>
+      <text x="790" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">+500%</text>
+      <text x="910" y="500" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">+900%</text>
+      <!-- Wins (green bars, right side) -->
+      <!-- Epics +66% -->
+      <rect x="550" y="45" width="32" height="36" rx="2" fill="#4a9" opacity="0.7"/>
+      <text x="140" y="68" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Epics completed</text>
+      <text x="590" y="68" fill="#4a9" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+66%</text>
+      <!-- Tasks +33.7% -->
+      <rect x="550" y="95" width="16" height="36" rx="2" fill="#4a9" opacity="0.7"/>
+      <text x="140" y="118" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Tasks completed</text>
+      <text x="574" y="118" fill="#4a9" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+33.7%</text>
+      <!-- PRs +16.2% -->
+      <rect x="550" y="145" width="8" height="36" rx="2" fill="#4a9" opacity="0.7"/>
+      <text x="140" y="168" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">PRs merged</text>
+      <text x="566" y="168" fill="#4a9" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+16.2%</text>
+      <!-- Divider -->
+      <line x1="150" y1="200" x2="950" y2="200" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <!-- Losses (red bars, right side for positive metrics representing costs) -->
+      <!-- No-review merges +31.3% -->
+      <rect x="550" y="220" width="15" height="36" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="140" y="243" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">No-review merges</text>
+      <text x="573" y="243" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+31.3%</text>
+      <!-- Bugs/dev +54% -->
+      <rect x="550" y="270" width="26" height="36" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="140" y="293" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Bugs per developer</text>
+      <text x="584" y="293" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+54%</text>
+      <!-- Time to first review +156.6% -->
+      <rect x="550" y="320" width="75" height="36" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="140" y="343" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Time to first review</text>
+      <text x="633" y="343" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+156.6%</text>
+      <!-- Incidents/PR +242.7% -->
+      <rect x="550" y="370" width="117" height="36" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="140" y="393" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Incidents per PR</text>
+      <text x="675" y="393" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+242.7%</text>
+      <!-- Review time +441.5% -->
+      <rect x="550" y="420" width="212" height="36" rx="2" fill="var(--accent)" opacity="0.7"/>
+      <text x="140" y="443" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Review time</text>
+      <text x="770" y="443" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+441.5%</text>
+      <!-- Churn +861% (biggest bar) -->
+      <rect x="550" y="470" width="414" height="36" rx="2" fill="var(--accent)" opacity="0.8"/>
+      <text x="140" y="493" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Code churn</text>
+      <text x="972" y="493" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">+861%</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    AI doubled the speedometer and tripled the brake-wear bill. Source: Faros AI, April 2026, n=22,000 developers.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; VI &middot; S19.5 — THE QUALITY COST IS REAL -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.5</span>
+    <span>The quality cost is real</span>
+  </h2>
+  <p class="rw-note">
+    CodeRabbit analyzed 470 open-source PRs. AI-generated code had 1.7x more issues across every category.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-coderabbit-wrap">
+    <svg id="rw-coderabbit" viewBox="0 0 1000 420" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Ratio bars showing AI-generated code has 1.7x more issues than human-written code across all categories">
+      <!-- Axes -->
+      <line x1="200" y1="40" x2="200" y2="370" stroke="var(--ink-dim)" stroke-width="1"/>
+      <line x1="200" y1="370" x2="920" y2="370" stroke="var(--ink-dim)" stroke-width="1"/>
+      <!-- X-axis: ratio scale -->
+      <text x="200" y="390" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">0x</text>
+      <text x="400" y="390" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">1.0x</text>
+      <text x="600" y="390" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">2.0x</text>
+      <text x="800" y="390" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="10">3.0x</text>
+      <!-- 1.0x reference line (human baseline) -->
+      <line x1="400" y1="40" x2="400" y2="370" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="6,4"/>
+      <text x="400" y="30" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="10">Human baseline</text>
+      <!-- Bars: AI/Human ratio per category -->
+      <!-- Maintainability 1.8x -->
+      <text x="190" y="75" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Maintainability</text>
+      <rect x="200" y="58" width="360" height="28" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="568" y="77" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">1.8x</text>
+      <!-- Correctness 1.6x -->
+      <text x="190" y="125" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Correctness</text>
+      <rect x="200" y="108" width="320" height="28" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="528" y="127" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">1.6x</text>
+      <!-- Security 1.9x -->
+      <text x="190" y="175" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Security</text>
+      <rect x="200" y="158" width="380" height="28" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="588" y="177" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">1.9x</text>
+      <!-- Error handling 1.5x -->
+      <text x="190" y="225" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Error handling</text>
+      <rect x="200" y="208" width="300" height="28" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="508" y="227" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">1.5x</text>
+      <!-- Documentation 1.7x -->
+      <text x="190" y="275" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="12">Documentation</text>
+      <rect x="200" y="258" width="340" height="28" rx="2" fill="var(--accent)" opacity="0.6"/>
+      <text x="548" y="277" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="12" font-weight="500">1.7x</text>
+      <!-- Overall 1.7x -->
+      <text x="190" y="340" text-anchor="end" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="13" font-weight="500">Overall</text>
+      <rect x="200" y="323" width="340" height="28" rx="2" fill="var(--accent)" opacity="0.8" stroke="var(--accent)" stroke-width="1"/>
+      <text x="548" y="342" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="13" font-weight="500">1.7x</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    The rework cost is not a vendor invention. Source: CodeRabbit, Dec 2025, n=470 PRs.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; VII &middot; S19.6 — TRUST IS FALLING AS USAGE RISES -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.6</span>
+    <span>Trust is falling as usage rises</span>
+  </h2>
+  <p class="rw-note">
+    Developers are using AI more even as they trust it less. This is the human texture behind the rework claim.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-trust-wrap">
+    <svg id="rw-trust" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Two-line chart showing AI usage rising from 70% to 84% while trust falls from 40% to 29%, 2023 to 2025">
+      <!-- Axes -->
+      <line x1="100" y1="40" x2="100" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <line x1="100" y1="340" x2="800" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <!-- Y-axis -->
+      <text x="90" y="344" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">0%</text>
+      <text x="90" y="269" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">25%</text>
+      <text x="90" y="194" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">50%</text>
+      <text x="90" y="119" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">75%</text>
+      <text x="90" y="44" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">100%</text>
+      <!-- Grid -->
+      <line x1="100" y1="265" x2="800" y2="265" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="190" x2="800" y2="190" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="115" x2="800" y2="115" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="40" x2="800" y2="40" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <!-- X-axis: 2023, 2024, 2025 -->
+      <text x="200" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2023</text>
+      <text x="450" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2024</text>
+      <text x="700" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2025</text>
+      <!-- Usage line (rising): 70% > 76% > 84% -->
+      <polyline points="200,130 450,112 700,88"
+                fill="none" stroke="#4a9" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="200" cy="130" r="5" fill="#4a9"/>
+      <text x="200" y="120" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">70%</text>
+      <circle cx="450" cy="112" r="5" fill="#4a9"/>
+      <text x="450" y="102" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">76%</text>
+      <circle cx="700" cy="88" r="5" fill="#4a9"/>
+      <text x="700" y="78" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">84%</text>
+      <text x="750" y="88" fill="#4a9" font-family="'DM Mono', monospace" font-size="10">Usage</text>
+      <!-- Trust line (falling): 40% > ~35% > 29% -->
+      <polyline points="200,220 450,235 700,253"
+                fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="200" cy="220" r="5" fill="var(--accent)"/>
+      <text x="200" y="210" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">40%</text>
+      <circle cx="450" cy="235" r="5" fill="var(--accent)"/>
+      <text x="476" y="250" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">~35%</text>
+      <circle cx="700" cy="253" r="5" fill="var(--accent)"/>
+      <text x="700" y="270" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">29%</text>
+      <text x="750" y="253" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="10">Trust</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    84% of developers use AI tools. 29% trust them. Source: Stack Overflow 2023-2025, n=49,009.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; VIII &middot; S19.7 — COPY, DON'T REFACTOR -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.7</span>
+    <span>Copy, don't refactor</span>
+  </h2>
+  <p class="rw-note">
+    AI optimizes for producing more code, not leaving the codebase smaller. 2024 was the first year copy-pasted lines exceeded refactored lines.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-gitclear-wrap">
+    <svg id="rw-gitclear" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Two-line chart showing copy/pasted code rising from 8.3% to 12.3% while refactored code falls from 24.1% to 9.5%, 2020 to 2024">
+      <!-- Axes -->
+      <line x1="100" y1="40" x2="100" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <line x1="100" y1="340" x2="800" y2="340" stroke="var(--ink-dim)" stroke-width="1"/>
+      <!-- Y-axis: 0% to 30% -->
+      <text x="90" y="344" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">0%</text>
+      <text x="90" y="244" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">10%</text>
+      <text x="90" y="144" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">20%</text>
+      <text x="90" y="44" text-anchor="end" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">30%</text>
+      <!-- Grid -->
+      <line x1="100" y1="240" x2="800" y2="240" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="140" x2="800" y2="140" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <line x1="100" y1="40" x2="800" y2="40" stroke="var(--ink-dim)" stroke-width="0.3" stroke-dasharray="4,4"/>
+      <!-- X-axis -->
+      <text x="200" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2020</text>
+      <text x="350" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2021</text>
+      <text x="500" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2022</text>
+      <text x="650" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2023</text>
+      <text x="800" y="360" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">2024</text>
+      <!-- Copilot launch annotation -->
+      <line x1="500" y1="40" x2="500" y2="340" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="500" y="35" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="9">Copilot GA</text>
+      <!-- Refactored line (falling): 24.1% > 23% > 20% > 14% > 9.5% -->
+      <polyline points="200,99 350,109 500,140 650,200 800,247"
+                fill="none" stroke="#4a9" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="200" cy="99" r="5" fill="#4a9"/>
+      <text x="200" y="89" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">24.1%</text>
+      <circle cx="800" cy="247" r="5" fill="#4a9"/>
+      <text x="800" y="264" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">9.5%</text>
+      <text x="830" y="247" fill="#4a9" font-family="'DM Mono', monospace" font-size="9">Refactored</text>
+      <!-- Copy/pasted line (rising): 8.3% > 8.5% > 9% > 10.5% > 12.3% -->
+      <polyline points="200,257 350,255 500,250 650,235 800,217"
+                fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="200" cy="257" r="5" fill="var(--accent)"/>
+      <text x="200" y="274" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">8.3%</text>
+      <circle cx="800" cy="217" r="5" fill="var(--accent)"/>
+      <text x="800" y="210" text-anchor="middle" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="11" font-weight="500">12.3%</text>
+      <text x="830" y="217" fill="var(--accent)" font-family="'DM Mono', monospace" font-size="9">Copy/pasted</text>
+      <!-- Crossover annotation -->
+      <circle cx="730" cy="230" r="8" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="730" y="300" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">Crossover</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    The crossover happened in 2024. AI encourages duplication, not consolidation. Source: GitClear, 211M lines, 2020-2024.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; IX &middot; S19.8 — THE REBUILT DOLLAR -->
+<section class="rw-section rw-section-demo">
+  <h2 class="mono section-label">
+    <span class="idx">S19.8</span>
+    <span>The rebuilt dollar</span>
+  </h2>
+  <p class="rw-note">
+    Same dollar, three very different stories. Here is Sankar's framing, Jellyfish's data, and McKinsey's survey, side by side, with assumptions visible.
+  </p>
+
+  <div class="rw-chart-wrap" id="rw-dollar-wrap">
+    <svg id="rw-dollar" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Three stacked bar charts showing how one dollar of AI coding spend breaks down according to Entelligence, Jellyfish, and McKinsey">
+      <!-- Header labels -->
+      <text x="200" y="35" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="13" font-weight="500">Entelligence (Sankar)</text>
+      <text x="500" y="35" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="13" font-weight="500">Jellyfish-implied</text>
+      <text x="800" y="35" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="13" font-weight="500">McKinsey-implied</text>
+
+      <!-- Bar 1: Entelligence — $0.44 rework, $0.27 review, $0.25 other, $0.04 feature -->
+      <rect x="140" y="55" width="120" height="154" rx="2" fill="var(--accent)" opacity="0.7"/>
+      <text x="200" y="135" text-anchor="middle" fill="#fff" font-family="'DM Mono', monospace" font-size="11">$0.44</text>
+      <text x="200" y="150" text-anchor="middle" fill="#fff" font-family="'DM Mono', monospace" font-size="9">Rework</text>
+      <rect x="140" y="209" width="120" height="95" rx="2" fill="var(--accent)" opacity="0.45"/>
+      <text x="200" y="260" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="11">$0.27</text>
+      <text x="200" y="275" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="9">Review</text>
+      <rect x="140" y="304" width="120" height="88" rx="2" fill="var(--ink-dim)" opacity="0.4"/>
+      <text x="200" y="350" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="11">$0.25</text>
+      <text x="200" y="365" text-anchor="middle" fill="var(--ink-soft)" font-family="'DM Mono', monospace" font-size="9">Other overhead</text>
+      <rect x="140" y="392" width="120" height="14" rx="2" fill="#4a9" opacity="0.8"/>
+      <text x="200" y="425" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">$0.04</text>
+      <text x="200" y="440" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="9">Shipped feature</text>
+
+      <!-- Bar 2: Jellyfish — ~$0.50 overhead, ~$0.30 marginal rework, ~$0.20 delivered value -->
+      <rect x="440" y="55" width="120" height="175" rx="2" fill="var(--accent)" opacity="0.5"/>
+      <text x="500" y="145" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="11">~$0.50</text>
+      <text x="500" y="160" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="9">Overhead</text>
+      <rect x="440" y="230" width="120" height="105" rx="2" fill="var(--accent)" opacity="0.35"/>
+      <text x="500" y="285" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="11">~$0.30</text>
+      <text x="500" y="300" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="9">Marginal rework</text>
+      <rect x="440" y="335" width="120" height="71" rx="2" fill="#4a9" opacity="0.6"/>
+      <text x="500" y="375" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">~$0.20</text>
+      <text x="500" y="390" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="9">Delivered value</text>
+
+      <!-- Bar 3: McKinsey — ~$0.40 overhead, ~$0.40 productivity, ~$0.10-0.20 net savings -->
+      <rect x="740" y="55" width="120" height="140" rx="2" fill="var(--accent)" opacity="0.4"/>
+      <text x="800" y="128" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="11">~$0.40</text>
+      <text x="800" y="143" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="9">Overhead</text>
+      <rect x="740" y="195" width="120" height="140" rx="2" fill="var(--ink-soft)" opacity="0.3"/>
+      <text x="800" y="268" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="11">~$0.40</text>
+      <text x="800" y="283" text-anchor="middle" fill="var(--ink)" font-family="'DM Mono', monospace" font-size="9">Productivity</text>
+      <rect x="740" y="335" width="120" height="71" rx="2" fill="#4a9" opacity="0.5"/>
+      <text x="800" y="375" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="11" font-weight="500">~$0.10-0.20</text>
+      <text x="800" y="390" text-anchor="middle" fill="#4a9" font-family="'DM Mono', monospace" font-size="9">Net savings</text>
+
+      <!-- $1.00 bottom line -->
+      <line x1="140" y1="406" x2="860" y2="406" stroke="var(--ink-dim)" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <text x="500" y="465" text-anchor="middle" fill="var(--ink-dim)" font-family="'DM Mono', monospace" font-size="11">Each bar = $1.00 of AI coding spend</text>
+    </svg>
+  </div>
+
+  <figcaption class="rw-figcaption">
+    The $0.04 figure does not survive triangulation. The rework share does. Source: Entelligence, TechCrunch/Jellyfish Apr 2026, McKinsey 2025.
+  </figcaption>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; X — RECEIPTS -->
+<section class="rw-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; X</span>
+    <span>Receipts</span>
+  </h2>
+
+  <div class="rw-receipts" id="rw-receipts">
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Entelligence claim</div>
+      <div class="rw-receipt-value">82%<span class="small">tokens on rework</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Pre-AI baseline</div>
+      <div class="rw-receipt-value">75-80%<span class="small">on maintenance (1978)</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Faros code churn</div>
+      <div class="rw-receipt-value">+861%<span class="small">high-AI vs low-AI</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Faros incidents/PR</div>
+      <div class="rw-receipt-value">+242.7%<span class="small">high-AI vs low-AI</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">CodeRabbit issues</div>
+      <div class="rw-receipt-value">1.7x<span class="small">AI vs human PRs</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">SWE-Bench best</div>
+      <div class="rw-receipt-value">82.6%<span class="small">raw model (May 2026)</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Dev AI usage</div>
+      <div class="rw-receipt-value">84%<span class="small">Stack Overflow 2025</span></div>
+    </div>
+    <div class="rw-receipt">
+      <div class="rw-receipt-label">Dev AI trust</div>
+      <div class="rw-receipt-value">29%<span class="small">Stack Overflow 2025</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hair">
+
+<!-- &sect; XI — METHODOLOGY & COLOPHON -->
+<section class="rw-section rw-colophon-section">
+  <h2 class="mono section-label">
+    <span class="idx">&sect; XI</span>
+    <span>Methodology &amp; Colophon</span>
+  </h2>
+
+  <div class="method-grid">
+    <div>
+      <div class="mono method-head">Engine</div>
+      <p>
+        Every chart is hand-drawn in SVG by a small vanilla JavaScript module. No frameworks, no build step. Data is baked into the page as static arrays. Nothing is fetched from an API.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Data sources</div>
+      <p>
+        Entelligence dashboard screenshot (viral, May 2026). Faros AI Acceleration Whiplash report (Apr 2026, n=22,000 devs). CodeRabbit State of AI vs Human Code Generation (Dec 2025, n=470 PRs). METR RCT (Jul 2025, n=16; Feb 2026 replication, n=57). DORA State of DevOps 2024 (n=3,000) and 2025 (n=4,879). Stack Overflow Developer Survey 2025 (n=49,009). GitClear AI Copilot Code Quality 2025 (211M changed lines). SWE-Bench Verified leaderboard (Vals AI, May 2026). Jellyfish Q1 2026 (n=7,548, via TechCrunch). McKinsey State of AI 2025 (n=1,993). Lientz, Swanson &amp; Tompkins, CACM 1978.
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Reading list</div>
+      <p>
+        <a href="https://faros.ai/blog/ai-acceleration-whiplash-takeaways" target="_blank" rel="noopener" style="border-bottom:1px solid">Faros AI &middot; Acceleration Whiplash &nearr;</a><br>
+        <a href="https://coderabbit.ai" target="_blank" rel="noopener" style="border-bottom:1px solid">CodeRabbit &middot; State of AI vs Human Code &nearr;</a><br>
+        <a href="https://metr.org" target="_blank" rel="noopener" style="border-bottom:1px solid">METR &middot; AI developer productivity study &nearr;</a><br>
+        <a href="https://dora.dev" target="_blank" rel="noopener" style="border-bottom:1px solid">DORA &middot; State of AI-Assisted Software Development 2025 &nearr;</a><br>
+        <a href="https://survey.stackoverflow.co/2025" target="_blank" rel="noopener" style="border-bottom:1px solid">Stack Overflow &middot; Developer Survey 2025 &nearr;</a><br>
+        <a href="https://dl.acm.org" target="_blank" rel="noopener" style="border-bottom:1px solid">Lientz, Swanson &amp; Tompkins &middot; CACM 1978 &nearr;</a>
+      </p>
+    </div>
+    <div>
+      <div class="mono method-head">Limitations</div>
+      <p>
+        The Entelligence claim's methodology is opaque, self-reported, and commercially motivated. The "2,444 companies" figure almost certainly includes free-tier and trial accounts, not paying enterprise customers. The $0.04 net feature delivery number is inconsistent with every other published ROI estimate. SWE-Bench scores above 85% carry documented contamination concerns. The METR RCT's 2025 cohort was small (n=16) and the 2026 replication had severe selection bias. The pre-AI baseline of 75-80% is from 1978 and may not reflect contemporary practice. All forward-looking numbers are self-reported surveys, not controlled measurements.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lab nav -->
+  <nav class="lab-nav mono" aria-label="Story navigation">
+    <a href="/work/price-of-intelligence-lab/">&larr; Prev: The Price of Intelligence (S18)</a>
+    <span>Data story 19 of 19</span>
+    <a href="/#research">All research &rarr;</a>
+  </nav>
+
+  <div class="method-ctas">
+    <a href="/" class="btn-outline">&larr; Back to the portfolio</a>
+    <a href="https://github.com/ItIsCuthNotCup/Portfolio/tree/main/work/ai-rework-lab" target="_blank" rel="noopener" class="btn-outline">View the source on GitHub &nearr;</a>
+  </div>
+</section>
+
+<!-- RELATED LABS ASIDE -->
+<aside class="rw-related" aria-label="Related labs">
+  <div class="mono section-label">
+    <span class="idx">Related labs</span>
+    <span>Other data stories in the AI commentary cluster</span>
+  </div>
+  <div class="rw-related-grid">
+    <article class="rw-related-card">
+      <span class="rw-card-kicker">S18</span>
+      <h3><a href="/work/price-of-intelligence-lab/">The Price of Intelligence &rarr;</a></h3>
+      <p>Eleven commodities, seven centuries. The other side of the AI cost question: what happens when the price of intelligence collapses.</p>
+    </article>
+    <article class="rw-related-card">
+      <span class="rw-card-kicker">S11</span>
+      <h3><a href="/work/skills-surge-lab/">The Skills Surge &rarr;</a></h3>
+      <p>The Claude Skills ecosystem six months in. Same energy: charting a fast-moving AI landscape with public data.</p>
+    </article>
+    <article class="rw-related-card">
+      <span class="rw-card-kicker">S07</span>
+      <h3><a href="/work/escape-velocity-lab/">Escape Velocity &rarr;</a></h3>
+      <p>Seven charts on whether AI is approaching an intelligence explosion. Same method: public data, charts that argue.</p>
+    </article>
+  </div>
+</aside>
+
+</main>
+
+<!-- COLOPHON -->
+<footer class="colophon mono">
+  <div>Set in Newsreader &amp; DM Mono &middot; Printed on the open web</div>
+  <div>&copy; Jacob Cuthbertson &middot; MMXXVI</div>
+  <div>
+    <a href="https://github.com/jacobcuthbertson" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="https://www.codewars.com/users/jacobcuthbertson" target="_blank" rel="noopener">Codewars</a> &middot;
+    <a href="https://www.linkedin.com/in/jacobcuthbertson/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<div class="theme-switcher">
+  <div class="theme-btn" data-t="paper" title="Editorial Paper"></div>
+  <div class="theme-btn" data-t="blueprint" title="Blueprint"></div>
+  <div class="theme-btn" data-t="graphite" title="Graphite + Acid"></div>
+  <div class="theme-btn active" data-t="midnight" title="Midnight, Dark Graphite"></div>
+</div>
+
+<script src="/assets/js/main.js?v=17"></script>
+<script src="/assets/js/ai-rework-lab.js?v=1"></script>
+</body>
+</html>

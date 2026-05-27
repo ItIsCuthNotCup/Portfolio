@@ -21,7 +21,7 @@ Live ML demos. Move sliders, watch the economics change. Each one is a portfolio
 - [M11 · Diffusion Lab](https://jakecuth.com/work/diffusion-lab/): A toy 2D diffusion model in your browser. Draw a shape, watch it dissolve into Gaussian noise, then guide the reverse process step by step until structure re-emerges. The core idea behind Stable Diffusion and DALL-E.
 - [M12 · Viral Nation Case Study](https://vn-case.vercel.app/): External case study deliverable built for Viral Nation interviews. Hosted on Vercel; the tile on jakecuth.com opens this site in a new tab.
 
-## Data stories (S01–S18)
+## Data stories (S01–S19)
 
 Editorial pieces. Real data, one thesis each. The longer reads, with charts that argue.
 
@@ -43,6 +43,7 @@ Editorial pieces. Real data, one thesis each. The longer reads, with charts that
 - [S16 · Better?](https://jakecuth.com/work/better-lab/): A Dalio-style ledger of 100 indicators of human progress and regress, hand-curated from primary sources (WB, WHO, UN IGME, UCDP, V-Dem, NOAA, IRENA, UNHCR, IUCN, IMF, ITU, UNESCO, FAO). Year scrubber, theme and direction filters, COVID-dip overlay, four log-scale cost-curve hero charts, and a worsening small-multiples panel. Editorial verdict: yes in lived-material dimensions, no in several planetary and geopolitical dimensions.
 - [S17 · Bubble Watch](https://jakecuth.com/work/bubble-watch-lab/): Six interactive SVG charts on whether the U.S. market is in an AI bubble as of May 2026. Shiller CAPE (~42, second-highest reading in 145 years), top-10 S&P 500 concentration (~38%, fifty-year high), hyperscaler capex (~$725B in 2026) vs OpenAI + Anthropic ARR (~$54B), FINRA margin debt (3.83% of GDP), METR capability time-horizon doubling, and a 1929/2000/2007/2021/2026 indicator lineup. Sources include Robert Shiller, FactSet, FINRA, Stanford HAI, METR, and the hyperscaler filings. Editorial verdict: mixed, leaning bubble in narrow segments, not a broad-market 2000-style mania.
 - [S18 · The Price of Intelligence](https://jakecuth.com/work/price-of-intelligence-lab/): Five interactive SVG charts stress-testing Chris Anderson's claim that AI is the first commodity with infinite demand. Eleven commodities from Babylonian lamp oil to GPT-4 tokens. Log-scale price-collapse curves (1,000x in 3 years for intelligence vs 12,000x over 700 years for light), a Jevons elasticity scatter, an intelligence-vs-compute-vs-light overlay, and an IEA/LBNL/Goldman bottleneck cascade. Sources include Fouquet & Pearson, Nordhaus, Epoch AI, a16z, IEA, LBNL, and Goldman Sachs Research. Verdict: unprecedented velocity, familiar pattern.
+- [S19 · The Rework Tax](https://jakecuth.com/work/ai-rework-lab/): Eight interactive SVG charts forensically deconstructing the viral claim that 82% of AI tokens go to rework. Compares Entelligence's 82% against the 75-80% pre-AI maintenance baseline (Lientz, Swanson & Tompkins, CACM 1978), stress-tests with Faros (22,000 devs, +861% churn, +242.7% incidents/PR), CodeRabbit (1.7x more issues per AI PR), METR RCT (19% slowdown that shrank to 4% on replication), SWE-Bench trajectory (4.8% to 82.6% in 30 months), Stack Overflow trust/usage divergence, GitClear copy-vs-refactor crossover, and a rebuilt $1.00 unit economic from three independent sources. Verdict: directionally right, numerically dubious, missing the baseline.
 
 ## Paper anatomies (P01–P04)
 
