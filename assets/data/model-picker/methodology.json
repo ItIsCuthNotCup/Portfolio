@@ -1,7 +1,7 @@
 {
   "model_count": 0,
-  "last_refresh": "2026-06-28T06:14:42+00:00",
-  "last_refresh_human": "Jun 28, 2026 \u00b7 06:14 UTC",
+  "last_refresh": "2026-07-05T06:01:51+00:00",
+  "last_refresh_human": "Jul 05, 2026 \u00b7 06:01 UTC",
   "embedding_model": "google/gemini-embedding-2-preview",
   "generation_model": "google/gemini-2.0-flash-001",
   "avg_cost_per_query": "0.02",
