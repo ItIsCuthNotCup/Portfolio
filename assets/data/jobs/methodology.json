@@ -1,8 +1,8 @@
 {
   "occupation_count": 888,
   "with_bls_data": 86,
-  "last_refresh": "2026-09-05T09:51:25+00:00",
-  "last_refresh_human": "Sep 05, 2026 \u00b7 09:51 UTC",
+  "last_refresh": "2026-10-05T13:23:09+00:00",
+  "last_refresh_human": "Oct 05, 2026 \u00b7 13:23 UTC",
   "sources_count": 3,
   "composite_method": "Mean of z-scored AI exposure measures (Eloundou \u03b2, Felten AIOE, Yale Budget Lab PCA)",
   "robotics_method": "Heuristic by SOC major group with curated overrides"
