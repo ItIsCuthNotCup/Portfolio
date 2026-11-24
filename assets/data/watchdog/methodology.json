@@ -2,8 +2,8 @@
   "days_tracked": 30,
   "videos_per_pull": 50,
   "region": "US",
-  "last_refresh": "2026-11-23T22:24:41+00:00",
-  "last_refresh_human": "Nov 23, 2026 \u00b7 22:24 UTC",
+  "last_refresh": "2026-11-24T20:58:09+00:00",
+  "last_refresh_human": "Nov 24, 2026 \u00b7 20:58 UTC",
   "api_quota_per_day": 10,
   "api_quota_limit": 10000,
   "source": "YouTube Data API v3 \u00b7 /videos.list \u00b7 chart=mostPopular"
